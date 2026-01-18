@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Admin Panel || Manage Quizzes</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #0d564f;
+      --primary-light: #1a7a70;
+      --bg-color: #000915;
+      --text-color: #fcfcfc;
+      --card-bg: rgba(20, 30, 45, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-color: #4fd1c5;
+      --input-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'anek latin', sans-serif;
+      background:
+        radial-gradient(circle at 30% 30%, #0d564f33, transparent 40%),
+        radial-gradient(circle at 70% 60%, #0d564f33, transparent 40%);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: rgba(13, 86, 79, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      color: white;
+      font-size: 1.2rem;
+      text-decoration: none;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 20px;
+      width: 100%;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: var(--accent-color);
+      font-size: 1.3rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      margin: 20px 0 15px;
+      font-size: 1.1rem;
+      color: #ddd;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--primary-light);
+      color: var(--primary-light);
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .quiz-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .quiz-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .quiz-item:hover {
+      border-color: var(--accent-color);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .action-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-edit {
+      background: var(--primary-light);
+      color: white;
+    }
+
+    .btn-del {
+      background: #e53e3e;
+      color: white;
+    }
+
+    .btn-cancel {
+      background: transparent;
+      color: #aaa;
+      border: 1px solid #aaa;
+      padding: 5px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-cancel:hover {
+      color: white;
+      border-color: white;
+    }
+
+    .question-list {
+      list-style: none;
+      margin-top: 15px;
+    }
+
+    .question-item {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-left: 3px solid var(--accent-color);
+      position: relative;
+    }
+
+    .question-item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: white;
+    }
+
+    .question-item small {
+      color: #888;
+    }
+
+    .delete-q-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #e53e3e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .grid-options {
+      display: grid;
+      gap: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="admin.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <h1>Manage Quizzes</h1>
+  </header>
+
+  <div class="container">
+
+    <!-- Toggle / Dashboard -->
+    <div class="glass-card" id="dashboardCard">
+      <h2><i class="fas fa-tasks"></i> Existing Quizzes</h2>
+      <div id="quizList" class="quiz-list">
+        <p style="color:#aaa; text-align:center;">Loading available quizzes...</p>
+      </div>
+      <button class="btn btn-primary" onclick="showCreateMode()"><i class="fas fa-plus"></i> Create New Quiz</button>
+    </div>
+
+    <!-- Create/Edit Form (Hidden by default) -->
+    <div id="quizFormContainer" style="display:none;">
+
+      <div class="glass-card">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--card-border); padding-bottom:10px;">
+          <h2 id="formTitle" style="border:none; margin:0;"><i class="fas fa-pen-fancy"></i> Create Quiz</h2>
+          <button class="btn-cancel" onclick="showDashboard()">Cancel</button>
+        </div>
+
+        <label>Quiz Title (ID)</label>
+        <input type="text" id="quizTitle" placeholder="e.g. Islamic History" oninput="validateId(this)">
+        <small style="color:#888; display:block; margin-top:-10px; margin-bottom:10px;">Unique ID for the quiz (no
+          spaces, use underscores)</small>
+
+        <h3><i class="fas fa-plus-circle"></i> Add/Edit Question</h3>
+
+        <label>Question Text</label>
+        <textarea id="questionText" rows="3" placeholder="Type the question here..."></textarea>
+
+        <label>Options</label>
+        <div class="grid-options">
+          <input type="text" id="option0" placeholder="Option 1">
+          <input type="text" id="option1" placeholder="Option 2">
+          <input type="text" id="option2" placeholder="Option 3">
+        </div>
+
+        <label style="margin-top: 10px;">Correct Answer</label>
+        <select id="correctIndex">
+          <option value="" disabled selected>Select Correct Option</option>
+          <option value="0">Option 1</option>
+          <option value="1">Option 2</option>
+          <option value="2">Option 3</option>
+        </select>
+
+        <button class="btn btn-secondary" onclick="addQuestion()"><i class="fas fa-plus"></i> Add Question to
+          List</button>
+      </div>
+
+      <!-- Settings Card -->
+      <div class="glass-card">
+        <h3><i class="fas fa-cog"></i> Quiz Settings</h3>
+        <label>Timer per Question (seconds)</label>
+        <input type="number" id="quizTimer" placeholder="15" value="15" min="5" max="300">
+      </div>
+
+      <!-- Live Preview -->
+      <div class="glass-card">
+        <h2><i class="fas fa-list-ol"></i> Questions Preview <span id="qCountBadge"
+            style="font-size:0.8rem; background:var(--primary-color); padding:2px 8px; border-radius:10px;">0</span>
+        </h2>
+        <ul id="questionList" class="question-list">
+          <li style="color:#888; font-style:italic;">No questions added yet.</li>
+        </ul>
+
+        <button class="btn btn-success" id="saveBtn" onclick="saveQuiz()"><i class="fas fa-save"></i> Save Quiz</button>
+      </div>
+
+    </div>
+
+    <!-- Participants View (Hidden by default) -->
+    <div id="participantsContainer" style="display:none;">
+      <div class="glass-card">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--card-border); padding-bottom:10px;">
+          <h2 id="participantsTitle" style="border:none; margin:0;"><i class="fas fa-users"></i> Participants</h2>
+          <button class="btn-cancel" onclick="showDashboard()">Back</button>
+        </div>
+
+        <div id="participantsList" class="quiz-list">
+          <!-- Participants loaded here -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const db = window.firebaseDb || firebase.database();
+    let questions = [];
+    let isEditing = false;
+    let editingQuizId = null;
+
+    // --- Loading Quizzes ---
+    function loadQuizzes() {
+      const list = document.getElementById('quizList');
+      list.innerHTML = '<p style="color:#aaa;">Loading...</p>';
+
+      db.ref('quizzes').once('value', snap => {
+        const data = snap.val() || {};
+        list.innerHTML = '';
+
+        if (Object.keys(data).length === 0) {
+          list.innerHTML = '<p style="color:#aaa;">No quizzes found.</p>';
+          return;
+        }
+
+        for (let key in data) {
+          const div = document.createElement('div');
+          div.className = 'quiz-item';
+          div.innerHTML = `
+              <strong>${key}</strong>
+              <div class="action-group">
+                 <button class="btn-sm" style="background:var(--accent-color); color:#000;" onclick="viewParticipants('${key}')" title="View Participants"><i class="fas fa-users"></i></button>
+                 <button class="btn-sm btn-edit" onclick="editQuiz('${key}')"><i class="fas fa-edit"></i> Edit</button>
+                 <button class="btn-sm btn-del" onclick="deleteQuiz('${key}')"><i class="fas fa-trash"></i></button>
+              </div>
+           `;
+          list.appendChild(div);
+        }
+      });
+    }
+
+    // --- Mode Switching ---
+    function showDashboard() {
+      document.getElementById('dashboardCard').style.display = 'block';
+      document.getElementById('quizFormContainer').style.display = 'none';
+      document.getElementById('participantsContainer').style.display = 'none';
+      resetForm();
+      loadQuizzes();
+    }
+
+    function showCreateMode() {
+      isEditing = false;
+      editingQuizId = null;
+      document.getElementById('dashboardCard').style.display = 'none';
+      document.getElementById('quizFormContainer').style.display = 'block';
+      document.getElementById('formTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Create New Quiz';
+      document.getElementById('quizTitle').disabled = false;
+      document.getElementById('saveBtn').innerHTML = '<i class="fas fa-save"></i> Save Quiz';
+      document.getElementById('quizTimer').value = 15;
+      resetForm();
+    }
+
+    function editQuiz(quizId) {
+      isEditing = true;
+      editingQuizId = quizId;
+      document.getElementById('dashboardCard').style.display = 'none';
+      document.getElementById('quizFormContainer').style.display = 'block';
+      document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Edit ' + quizId;
+
+      const titleInput = document.getElementById('quizTitle');
+      titleInput.value = quizId;
+      titleInput.disabled = true; // Cannot change ID once created
+
+      document.getElementById('saveBtn').innerHTML = '<i class="fas fa-save"></i> Update Quiz';
+
+      // Load existing questions & settings
+      db.ref('quizzes/' + quizId).once('value', snap => {
+        const data = snap.val() || {};
+        questions = data.questions || [];
+        document.getElementById('quizTimer').value = data.timerLimit || 15;
+        renderQuestions();
+      });
+    }
+
+    // --- Actions ---
+    function deleteQuiz(quizId) {
+      if (confirm(`Are you sure you want to delete "${quizId}"? This cannot be undone.`)) {
+        db.ref('quizzes/' + quizId).remove()
+          .then(() => loadQuizzes())
+          .catch(err => alert(err.message));
+      }
+    }
+
+    // --- Participants View ---
+    function viewParticipants(quizId) {
+      document.getElementById('dashboardCard').style.display = 'none';
+      document.getElementById('participantsContainer').style.display = 'block';
+      document.getElementById('participantsTitle').innerText = 'Participants for: ' + quizId;
+
+      const list = document.getElementById('participantsList');
+      list.innerHTML = '<p style="color:#aaa;">Loading data...</p>';
+
+      db.ref('scores').orderByChild('quiz').equalTo(quizId).once('value', snap => {
+        const data = snap.val() || {};
+        list.innerHTML = '';
+
+        if (Object.keys(data).length === 0) {
+          list.innerHTML = '<p style="color:#aaa;">No participants found for this quiz.</p>';
+          return;
+        }
+
+        // Convert to array and sort by score (desc)
+        const participants = Object.values(data).sort((a, b) => b.score - a.score);
+
+        participants.forEach((p, index) => {
+          const div = document.createElement('div');
+          div.className = 'quiz-item'; // Reusing existing style
+          div.innerHTML = `
+            <div>
+              <span style="color:var(--accent-color); font-weight:bold; margin-right:10px;">#${index + 1}</span>
+              <strong>${p.username}</strong>
+            </div>
+            <div style="font-weight:bold; color:var(--primary-light);">
+              Score: ${p.score}
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      });
+    }
+
+    function addQuestion() {
+      const qText = document.getElementById('questionText').value.trim();
+      const opts = [
+        document.getElementById('option0').value.trim(),
+        document.getElementById('option1').value.trim(),
+        document.getElementById('option2').value.trim()
+      ];
+      const correctVal = document.getElementById('correctIndex').value;
+      const correct = parseInt(correctVal);
+
+      if (!qText || opts.some(o => o === "") || isNaN(correct)) {
+        alert("Please fill in all fields correctly.");
+        return;
+      }
+
+      questions.push({ q: qText, options: opts, correct });
+      renderQuestions();
+      clearInputs();
+    }
+
+    function removeQuestion(index) {
+      questions.splice(index, 1);
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      const list = document.getElementById('questionList');
+      document.getElementById('qCountBadge').textContent = questions.length;
+      list.innerHTML = '';
+
+      if (questions.length === 0) {
+        list.innerHTML = '<li style="color:#888; font-style:italic;">No questions added yet.</li>';
+        return;
+      }
+
+      questions.forEach((q, i) => {
+        const li = document.createElement('li');
+        li.className = 'question-item';
+        li.innerHTML = `
+          <button class="delete-q-btn" title="Delete Question" onclick="removeQuestion(${i})">&times;</button>
+          <strong>Q${i + 1}: ${q.q}</strong>
+          <small>Answer: ${q.options[q.correct]}</small>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function saveQuiz() {
+      const title = document.getElementById('quizTitle').value.trim();
+      const timerVal = parseInt(document.getElementById('quizTimer').value) || 15;
+
+      if (!title) return alert("Quiz Title is required");
+      if (questions.length === 0) return alert("Add at least one question");
+
+      const payload = {
+        questions,
+        timerLimit: timerVal,
+        updatedAt: Date.now()
+      };
+
+      db.ref('quizzes/' + title).set(payload)
+        .then(() => {
+          alert(isEditing ? "Quiz Updated!" : "Quiz Created!");
+          showDashboard();
+        })
+        .catch(err => alert("Error: " + err.message));
+    }
+
+    // --- Helpers ---
+    function resetForm() {
+      questions = [];
+      document.getElementById('quizTitle').value = '';
+      clearInputs();
+      renderQuestions();
+    }
+
+    function clearInputs() {
+      document.getElementById('questionText').value = "";
+      document.getElementById('option0').value = "";
+      document.getElementById('option1').value = "";
+      document.getElementById('option2').value = "";
+      document.getElementById('correctIndex').value = "";
+      document.getElementById('questionText').focus();
+    }
+
+    function validateId(input) {
+      input.value = input.value.replace(/[^a-zA-Z0-9_-]/g, "");
+    }
+
+    // Init
+    loadQuizzes();
+
+  </script>
+</body>
+
+</html>

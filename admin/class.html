@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin Page</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <div class="line4">
+      <br><br><br><br><br><br>
+      <a href="level1.html" class="level">level 1</a>
+      <a href="level2.html" class="level">level 2</a>
+      <a href="level3.html" class="level">level 3</a>
+      <a href="doubt.html" class="level">doubts</a>
+    </div>
+
+
+  <script>
+    // Firebase is initialized in firebase-config.js
+    const auth = window.firebaseAuth || firebase.auth();
+
+    // Check if user is logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // No user signed in, redirect to login
+        window.location.href = "login.html";
+      }
+      if(user.email!="piousbrotherscommunity@gmail.com"){
+        window.location.href="login.html"
+      }
+    });
+
+    // Logout function
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    }
+  </script>
+</body>
+</html>

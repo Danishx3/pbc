@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Ilmify || Quizzes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Join ilmify to explore Islamic knowledge through online quizzes.">
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="pbc.css">
+  <style>
+    :root {
+      --primary-color: #0d564f;
+      --primary-light: #1a7a70;
+      --bg-color: #000915;
+      --text-color: #fcfcfc;
+      --card-bg: rgba(20, 30, 45, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-color: #4fd1c5;
+      --correct-color: #4caf50;
+      --incorrect-color: #f44336;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'anek latin', sans-serif;
+      background:
+        radial-gradient(circle at 30% 30%, #0d564f40, transparent 40%),
+        radial-gradient(circle at 70% 60%, #0d564f40, transparent 40%);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+
+
+    .home-btn {
+      position: absolute;
+      left: 20px;
+      color: white;
+      font-size: 1.4rem;
+      text-decoration: none;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* Main Container */
+    .container {
+      flex: 1;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Cards */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .welcome-section {
+      text-align: center;
+    }
+
+    .welcome-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    /* Select */
+    .quiz-select-wrapper {
+      position: relative;
+      margin: 20px 0;
+    }
+
+    select {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--card-border);
+      color: rgb(146, 145, 145);
+      font-size: 1rem;
+      appearance: none;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .quiz-select-wrapper::after {
+      content: '\f107';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--accent-color);
+    }
+
+    /* Quiz Area */
+    .question {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 25px;
+      line-height: 1.4;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      padding: 15px 20px;
+      border-radius: 12px;
+      color: rgb(146, 145, 145);
+      text-align: left;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .option-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-color);
+    }
+
+    .option-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* States for Review/Result */
+    .option-btn.correct {
+      background: rgba(76, 175, 80, 0.2);
+      border-color: var(--correct-color);
+    }
+
+    .option-btn.wrong {
+      background: rgba(244, 67, 54, 0.2);
+      border-color: var(--incorrect-color);
+    }
+
+    .option-btn.selected {
+      border-width: 2px;
+    }
+
+    /* Timer & Progress */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .timer-badge {
+      background: rgba(79, 209, 197, 0.15);
+      color: var(--accent-color);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-color);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Leaderboard */
+    .leaderboard-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      border-left: 3px solid var(--primary-light);
+    }
+
+    .leaderboard-item .name {
+      font-weight: 600;
+    }
+
+    .leaderboard-item .score {
+      color: var(--accent-color);
+      font-weight: bold;
+    }
+
+    /* Score Animation */
+    #scoreChange {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 4rem;
+      font-weight: 800;
+      pointer-events: none;
+      z-index: 1000;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .anim-plus {
+      color: var(--correct-color);
+      animation: popScore 0.8s ease-out forwards;
+    }
+
+    .anim-minus {
+      color: var(--incorrect-color);
+      animation: popScore 0.8s ease-out forwards;
+    }
+
+    @keyframes popScore {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(-50%, -80%) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .btn-action {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    /* Review Mode Styles */
+    .review-question {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .review-question:last-child {
+      border-bottom: none;
+    }
+
+    .review-label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .share-btn {
+      position: absolute;
+      right: 20px;
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      display: none;
+      /* Hidden by default */
+    }
+
+    .share-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="/main.html" class="home-btn"><i class="fa fa-arrow-left"></i></a>
+    <h1>Ilmify Quiz</h1>
+    <button id="shareBtn" class="share-btn" onclick="shareQuiz()"><i class="fas fa-share-alt"></i></button>
+  </header>
+
+  <div class="container">
+
+    <!-- Welcome & Selection -->
+    <div id="introCard" class="glass-card welcome-section">
+      <h2 id="welcomeMessage">Welcome</h2>
+      <div class="score-badge">Your Score: <span id="score">0</span></div>
+
+      <div class="quiz-select-wrapper">
+        <select id="quizSelector">
+          <option disabled selected>Loading Quizzes...</option>
+        </select>
+      </div>
+
+      <div id="leaderboardSection" style="display:none; margin-top: 30px; text-align:left;">
+        <h3 style="margin-bottom:15px; color:#ddd;"><i class="fas fa-trophy" style="color:#ffd700;"></i> Leaderboard
+          (Top 5)
+        </h3>
+        <ul id="leaderboardList" class="leaderboard-list"></ul>
+      </div>
+    </div>
+
+    <!-- Active Quiz Card -->
+    <div id="quizCard" class="glass-card" style="display:none;">
+      <div class="quiz-header">
+        <span>Question <span id="qIndex">1</span>/<span id="qTotal">10</span></span>
+        <div class="timer-badge">
+          <i class="far fa-clock"></i> <span id="timer">15</span>s
+        </div>
+      </div>
+
+      <div class="question" id="questionText"></div>
+      <div class="options-grid" id="answersGrid"></div>
+
+      <div class="progress-track">
+        <div id="progressBar" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Review Card -->
+    <div id="reviewCard" class="glass-card" style="display:none;">
+      <h2 style="margin-bottom:20px;">Review Quiz</h2>
+      <div id="reviewContent"></div>
+      <button class="btn-action" onclick="closeReview()">Back to Menu</button>
+    </div>
+
+  </div>
+
+  <div id="scoreChange"></div>
+  <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+  <script>
+    const auth = window.firebaseAuth || firebase.auth();
+    const db = window.firebaseDb || firebase.database();
+
+    let username = "", userId = "", selectedQuiz = "";
+    let questions = [], current = 0, currentScore = 0;
+    let timerInterval, timeLeft = 15;
+    let quizTimerLimit = 15; // Default Timer Limit
+    let userAnswers = []; // Store indices of selected answers
+
+    // DOM Elements
+    const quizSelector = document.getElementById('quizSelector');
+    const introCard = document.getElementById('introCard');
+    const quizCard = document.getElementById('quizCard');
+    const reviewCard = document.getElementById('reviewCard');
+    const questionText = document.getElementById('questionText');
+    const answersGrid = document.getElementById('answersGrid');
+    const timerEl = document.getElementById('timer');
+    const progressBar = document.getElementById('progressBar');
+    const scoreEl = document.getElementById('score');
+    const scoreAnim = document.getElementById('scoreChange');
+    const leaderboardList = document.getElementById('leaderboardList');
+    const leaderboardSection = document.getElementById('leaderboardSection');
+
+    const shareBtn = document.getElementById('shareBtn');
+
+    // Init
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        if (user.email === "piousbrotherscommunity@gmail.com") window.location.href = "/admin/admin.html";
+        userId = user.uid;
+        db.ref('users/' + userId).once('value').then(snap => {
+          username = snap.val().username || "User";
+          document.getElementById("welcomeMessage").innerText = "Salam, " + username;
+          loadQuizzes();
+        });
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    function loadQuizzes() {
+      db.ref('quizzes').once('value', snapshot => {
+        const quizzes = snapshot.val() || {};
+        quizSelector.innerHTML = `<option disabled selected value="">Select a Quiz to Start</option>`;
+        for (let key in quizzes) {
+          const opt = document.createElement('option');
+          opt.value = key;
+          opt.textContent = key;
+          quizSelector.appendChild(opt);
+        }
+
+        // Check for URL Param
+        const urlParams = new URLSearchParams(window.location.search);
+        const refQuiz = urlParams.get('quiz');
+        if (refQuiz && quizzes[refQuiz]) {
+          quizSelector.value = refQuiz;
+          selectedQuiz = refQuiz;
+          loadLeaderboard(selectedQuiz);
+          checkStatus();
+          shareBtn.style.display = 'flex';
+        }
+      });
+    }
+
+    quizSelector.addEventListener('change', () => {
+      selectedQuiz = quizSelector.value;
+      shareBtn.style.display = 'flex';
+      loadLeaderboard(selectedQuiz);
+      checkStatus();
+    });
+
+    function shareQuiz() {
+      if (!selectedQuiz) return;
+      const url = window.location.origin + window.location.pathname + '?quiz=' + encodeURIComponent(selectedQuiz);
+      const title = "Take the " + selectedQuiz + " Quiz on Ilmify!";
+
+      if (navigator.share) {
+        navigator.share({
+          title: title,
+          text: "Challenge your knowledge with this quiz!",
+          url: url
+        }).catch(console.error);
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          alert("Link copied to clipboard!");
+        });
+      }
+    }
+
+    function checkStatus() {
+      // Reset score display initially
+      scoreEl.textContent = '0';
+
+      db.ref('attempts/' + userId + '/' + selectedQuiz).once('value', snap => {
+        if (snap.exists()) {
+          const data = snap.val();
+
+          // Update Score Display
+          if (data && data.score !== undefined) {
+            scoreEl.textContent = data.score;
+          }
+
+          // If detailed attempt data exists, allow review
+          if (typeof data === 'object' || data === true) {
+            const btn = document.createElement('button');
+            btn.className = 'btn-action';
+            btn.textContent = 'Review Previous Attempt';
+            btn.onclick = () => loadReviewMode(data);
+
+            // Clear existing review buttons if any
+            const existingBtn = introCard.querySelector('.btn-action');
+            if (existingBtn) existingBtn.remove();
+
+            introCard.appendChild(btn);
+          }
+        } else {
+          // Clean up review button
+          const existingBtn = introCard.querySelector('.btn-action');
+          if (existingBtn) existingBtn.remove();
+
+          startQuiz();
+        }
+      });
+    }
+
+    function startQuiz() {
+      db.ref('quizzes/' + selectedQuiz).once('value').then(snap => {
+        const data = snap.val();
+        if (!data || !data.questions) return alert("No questions found!");
+
+        questions = data.questions;
+        // Load custom timer from Firebase, default to 15 if not set
+        quizTimerLimit = data.timerLimit || 15;
+
+        current = 0;
+        currentScore = 0;
+        userAnswers = new Array(questions.length).fill(-1); // -1 means no answer
+
+        introCard.style.display = 'none';
+        reviewCard.style.display = 'none';
+        quizCard.style.display = 'block';
+
+        showQuestion();
+      });
+    }
+
+    function showQuestion() {
+      if (current >= questions.length) {
+        finishQuiz();
+        return;
+      }
+
+      const q = questions[current];
+      questionText.textContent = q.q;
+      document.getElementById('qIndex').textContent = current + 1;
+      document.getElementById('qTotal').textContent = questions.length;
+
+      answersGrid.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(i);
+        answersGrid.appendChild(btn);
+      });
+
+      resetTimer();
+      updateProgressBar();
+    }
+
+    function checkAnswer(selectedIndex) {
+      clearInterval(timerInterval);
+      userAnswers[current] = selectedIndex;
+
+      const correct = questions[current].correct;
+      const opts = answersGrid.children;
+
+      // Visual Feedback
+      if (selectedIndex === correct) {
+        opts[selectedIndex].classList.add('correct');
+        animateScore(10);
+        currentScore += 10;
+      } else {
+        opts[selectedIndex].classList.add('wrong');
+        opts[correct].classList.add('correct');
+        animateScore(-5);
+        currentScore -= 5;
+      }
+
+      // Delay next question
+      setTimeout(() => {
+        current++;
+        showQuestion();
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timeLeft = quizTimerLimit; // Use dynamic limit
+      timerEl.textContent = timeLeft;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          userAnswers[current] = -1; // Time out
+          animateScore(-5);
+          currentScore -= 5;
+          current++;
+          showQuestion();
+        }
+      }, 1000);
+    }
+
+    function updateProgressBar() {
+      const percent = ((current) / questions.length) * 100;
+      progressBar.style.width = percent + "%";
+    }
+
+    function animateScore(amount) {
+      scoreEl.innerText = parseInt(scoreEl.innerText) + amount;
+
+      scoreAnim.innerText = (amount > 0 ? '+' : '') + amount;
+      scoreAnim.className = amount > 0 ? 'anim-plus' : 'anim-minus';
+
+      // Remove class after anim to allow re-trigger
+      setTimeout(() => {
+        scoreAnim.className = '';
+      }, 800);
+    }
+
+    function finishQuiz() {
+      db.ref('scores/' + userId + '_' + selectedQuiz).set({
+        username: username,
+        score: currentScore,
+        quiz: selectedQuiz,
+        timestamp: Date.now()
+      });
+
+      // Save detailed attempt
+      db.ref('attempts/' + userId + '/' + selectedQuiz).set({
+        score: currentScore,
+        answers: userAnswers,
+        timestamp: Date.now()
+      });
+
+      alert(`Quiz Finished! Your score: ${currentScore}`);
+      introCard.style.display = 'block';
+      quizCard.style.display = 'none';
+
+      loadLeaderboard(selectedQuiz);
+      // Refresh status to show Review button
+      checkStatus();
+    }
+
+    // --- Review Mode ---
+    function loadReviewMode(attemptData) {
+      // We need questions first
+      db.ref('quizzes/' + selectedQuiz + '/questions').once('value').then(snap => {
+        const qs = snap.val();
+        const pastAnswers = attemptData.answers || []; // might be undefined for old records
+
+        introCard.style.display = 'none';
+        reviewCard.style.display = 'block';
+        const container = document.getElementById('reviewContent');
+        container.innerHTML = '';
+
+        qs.forEach((q, idx) => {
+          const userChoice = pastAnswers[idx];
+          const isCorrect = userChoice === q.correct;
+          const userChoiceText = userChoice >= 0 ? q.options[userChoice] : "Time Out / Skipped";
+
+          let statusClass = '';
+          if (userChoice === -1) statusClass = 'color: #e57373;';
+          else if (isCorrect) statusClass = 'color: var(--correct-color);';
+          else statusClass = 'color: var(--incorrect-color);';
+
+          const div = document.createElement('div');
+          div.className = 'review-question';
+          div.innerHTML = `
+                    <div style="font-weight:bold; margin-bottom:10px;">${idx + 1}. ${q.q}</div>
+                    <div style="font-size:0.9rem; margin-bottom:5px;">
+                        <span class="review-label">Correct Answer:</span> 
+                        <span style="color:var(--correct-color); font-weight:bold;">${q.options[q.correct]}</span>
+                    </div>
+                    ${attemptData.answers ? `
+                    <div style="font-size:0.9rem;">
+                        <span class="review-label">Your Answer:</span> 
+                        <span style="font-weight:bold; ${statusClass}">${userChoiceText}</span>
+                    </div>` : ''}
+                `;
+          container.appendChild(div);
+        });
+      });
+    }
+
+    function closeReview() {
+      reviewCard.style.display = 'none';
+      introCard.style.display = 'block';
+    }
+
+    function loadLeaderboard(quizName) {
+      leaderboardSection.style.display = 'block';
+      db.ref('scores').once('value', snap => {
+        const data = snap.val() || {};
+        leaderboardList.innerHTML = '';
+
+        const filtered = Object.values(data).filter(entry => entry.quiz === quizName);
+        const sorted = filtered.sort((a, b) => b.score - a.score).slice(0, 5);
+
+        if (sorted.length === 0) {
+          leaderboardList.innerHTML = '<li style="color:#888;">No scores yet.</li>';
+        } else {
+          sorted.forEach(entry => {
+            const li = document.createElement('li');
+            li.className = 'leaderboard-item';
+            li.innerHTML = `<span class="name">${entry.username}</span> <span class="score">${entry.score}</span>`;
+            leaderboardList.appendChild(li);
+          });
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

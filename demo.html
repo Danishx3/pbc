@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Ilmify – Daily Routine and Adhkar</title>
+  <meta name="description" content="ilmify-adhkars, Join ilmify to explore Islamic knowledge through online quizzes, lessons, videos, and a growing Muslim learning community. 100% free and easy to access.">
+<meta name="keywords" content="ilmify,adhkar, Islamic quiz, learn Islam, online Quran learning, Islamic education, Muslim community, Islamic website India, Pious Brothers, Islamic lessons, free Islamic resources">
+<meta name="author" content="ilmify || Pious Brothers Team">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logoo.png" type="image/icon type">
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+
+  <style>
+    body { background: #e8f5f2; font-family: 'Anek', sans-serif; }
+    .adhkar-card {
+      background: #afe9da;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border: 2px solid #2b5c52;
+    }
+    .adhkar-text { 
+      font-family: 'Amiri', sans-serif;
+      font-size: 1.4rem; white-space: pre-wrap; color: #090909; line-height: 2.2;
+      background-color: rgba(6, 114, 93, 0.6);
+      color: white;
+      border-radius: 12px;
+      min-height: 150px; /* Ensures a consistent height */
+    }
+    #autoScrollBtn { width: 200px; }
+    .li1{
+      border-radius: 12px;
+      background-color: rgba(6, 114, 93, 0.6);
+      color: rgb(254, 253, 253);
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="pbc.css">
+</head>
+<body class="black">
+<header class=" fix" style="width: 100%;">
+        <center>
+            <a style="position: fixed; left: 20px; color: rgb(247, 245, 245);" href="/main.html"><i class="fa fa-home"></i></a>
+            <h4 id="pageTitle" style="color: #fcfbfb;">Adhkar</h4>
+        </center> 
+    </header>
+  <div class="container py-4">
+
+  
+    <div class="text-center mb-5">
+    </div><br><br><br> 
+    <div class="card p-4 adhkar-card mb-3">
+      <h5 class="" id="adhkarIndex">Adhkar 1/…</h5><br>
+      <div class="adhkar-text li1" id="adhkarText"></div>
+    </div>
+
+    
+    <div class="d-flex justify-content-between mb-3">
+      <button id="prevBtn" class="btn btn-outline-dark rounded-pill px-4 text-white">
+        <i class="fas fa-arrow-left"></i> Previous
+      </button>
+      <button id="translateBtn" class="btn btn-outline-success rounded-pill px-4 text-white">
+        <i class="fas fa-language"></i> Translate
+      </button>
+      <button id="nextBtn" class="btn btn-outline-dark rounded-pill px-4 text-white">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+    <div style="display: none;" class="text-center mb-5 ">
+      <button id="autoScrollBtn" class="btn btn-success rounded-pill px-4">
+        <i class="fas fa-play"></i> Auto Scroll
+      </button>
+    </div>
+        
+        
+
+  </div>
+
+  <script>
+    
+    const adhkars = {
+      morning: [
+        { 
+            arabic: "Begin your day with remembrance\nالْحَمْدُ لِلهِ وَحْدَهُ، وَالصَّلاَةُ وَالسَّلاَمُ عَلَى مَنْ لاَ نَبِيَّ بَعْدَهُ", 
+            translation: "Begin your day with remembrance\nAll praise is for Allah alone, and peace and blessings be upon him after whom there is no other Prophet." 
+        },
+        { 
+            arabic: "(1 time)\nاللهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ", 
+            translation: "(1 time)\nAllah! There is no god but He - the Living, The Self-subsisting, Eternal..." 
+        },
+        { 
+            arabic: "(3 times)\nAl-Ikhlas, Al-Falaq, An-Nas", 
+            translation: "(3 times)\nRecite Surah Al-Ikhlas, Surah Al-Falaq, and Surah An-Nas." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلهِ ، وَالْحَمْدُ لِلهِ، لاَ إِلٰهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيكَ لَهُ ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذاَ الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ، وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وعَذَابٍ فِي الْقَبْرِ ", 
+            translation: "(1 time)\nWe have reached the morning and at this very time all sovereignty belongs to Allah..." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا ، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", 
+            translation: "(1 time)\nO Allah, by You we enter the morning and by You we enter the evening..." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إلَّا أَنْتَ ، خَلَقْتَنِي وَأَنَا عَبْدُكَ ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَااسْتَطَعْتُ، أَعُوذُبِكَ مِنْ شَرِّ مَا صَنَعْتُ ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ ", 
+            translation: "(1 time)\nO Allah, You are my Lord, none has the right to be worshipped except You..." 
+        },
+        { 
+            arabic: "(3 times)\n\
+      اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلٰهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّـي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالْفَقْرِ، اللَّهُمَّ إِنِّـي أَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلٰهَ إِلاَّ أَنْتَ", 
+            translation: "(3 times)\nO Allah, make me healthy in my body. O Allah, preserve for me my hearing..." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      اللَّهُمَّ إِنِّـي أسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ في الدُّنْيَا وَالْآخِرَة، اللَّهُمَّ إِنِّـي أسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَينِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي ", 
+            translation: "(1 time)\nO Allah, I ask You for forgiveness and well-being in this life and in the Hereafter..." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      اللَّهُمَّ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ ، عَالِمَ الْغَيْبِ وَالشَّهَادَةِ ، لَا إِلٰهَ إِلَّا أَنْتَ رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ ", 
+            translation: "(1 time)\nO Allah, Creator of the heavens and the earth, Knower of the unseen and the seen..." 
+        },
+        { 
+            arabic: "(3 times)\n\
+      بِسْمِ اللهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ ", 
+            translation: "(3 times)\nIn the Name of Allah, with Whose Name nothing on the earth or in the heaven can cause harm..." 
+        },
+        { 
+            arabic: "(3 times)\n\
+      رَضِيتُ بِاللهِ رَبًّا وَبِالْإسْلَامِ دِينًا وَبِمُحَمَّدٍﷺ نَبِيًّا ", 
+            translation: "(3 times)\nI am pleased with Allah as my Lord, with Islam as my religion and with Muhammad (ﷺ) as my Prophet." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ ، أَصْلِحْ لِي شَأْنِي كُلَّهُ ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ ", 
+            translation: "(1 time)\nO Ever Living, O Self-Subsisting and Supporter of all, by Your mercy I seek assistance..." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      أَصْبَحْنَا عَلَى فِطْرَةِ الإِسْلامِ ، وَكَلِمَةِ الإِخْلَاصِ، وَدِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ ، وَمِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا ، وَمَا كَانَ مِنَ الْمُشْرِكِينَ", 
+            translation: "(1 time)\nWe wake up upon the fitrah of Islam..." 
+        },
+        { 
+            arabic: "(100 times)\nسُبْحَانَ اللهِ وَبِحَمْدِهِ", 
+            translation: "(100 times)\nGlory is to Allah and praise is to Him." 
+        },
+        { 
+            arabic: "(100 times)\n\
+      لَا إِلٰهَ إِلاَّ اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيءٍ قَدِيرٌ ", 
+            translation: "(100 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
+        },
+        { 
+            arabic: "(10 times)\n\
+      لَا إِلٰهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، يُحْيِي وَيُمِيتُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِير", 
+            translation: "(10 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
+        },
+        { 
+            arabic: "(3 times)\n\
+      سُبْحَانَ اللهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ ", 
+            translation: "(3 times)\nGlory is to Allah and praise is to Him, by the multitude of His creation..." 
+        },
+        { 
+            arabic: "(After fajr 1 time)\n\
+      اللَّهُمَّ إِنِّـي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلاً مُتَقَبَّلاً ", 
+            translation: "(After fajr 1 time)\nO Allah, I ask You for beneficial knowledge, goodly provision and acceptable deeds." 
+        },
+        { 
+            arabic: "(Complete it before the day ends,100 times)\n\
+      أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ",
+            translation: "(100 times)\nI seek the forgiveness of Allah and repent to Him." 
+        }
+      ],
+      general: [
+        { 
+            arabic: "Fulfill these adhkars before the day ends.", 
+            translation: "Complete these remembrances before the end of the day." 
+        },
+        { 
+            arabic: "(100 times)\n\
+      لَا إِلٰهَ إِلاَّ اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيءٍ قَدِيرٌ ", 
+            translation: "(100 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
+        },
+        { 
+            arabic: "(100 times)\n\
+      أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ", 
+            translation: "(100 times)\nI seek the forgiveness of Allah and repent to Him." 
+        }
+      ], 
+      evening: [
+        { 
+            arabic: "Settle your heart with remembrance", 
+            translation: "Find peace in your heart through remembrance." 
+        },
+        { 
+            arabic: "(1 time)\n\
+      ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ ۚ لَّهُۥ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى ٱلْأَرْضِ ۗ مَن ذَا ٱلَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَىْءٍۢ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ ", 
+            translation: "(1 time)\nAllah! There is no god but He - the Living, The Self-subsisting, Eternal..." 
+        },
+        { 
+            arabic: "(3 times)\nAl-Ikhlas, Al-Falaq, An-Nas", 
+            translation: "(3 times)\nRecite Surah Al-Ikhlas, Surah Al-Falaq, and Surah An-Nas." 
+        },
+        { 
+            arabic: "(1 time)\nأَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلهِ...", 
+            translation: "(1 time)\nWe have reached the evening and at this very time all sovereignty belongs to Allah..." 
+        },
+        { 
+            arabic: "(1 time)\nاللَّهُمَّ بِكَ أَمْسَيْنَا...", 
+            translation: "(1 time)\nO Allah, by You we enter the evening and by You we enter the morning..." 
+        },
+        { 
+            arabic: "(1 time)\nاللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إلَّا أَنْتَ...", 
+            translation: "(1 time)\nO Allah, You are my Lord, none has the right to be worshipped except You..." 
+        },
+        { 
+            arabic: "(3 times)\nاللَّهُمَّ عَافِنِي فِي بَدَنِي...", 
+            translation: "(3 times)\nO Allah, make me healthy in my body. O Allah, preserve for me my hearing..." 
+        },
+        { 
+            arabic: "(1 time)\nاللَّهُمَّ إِنِّـي أسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ...", 
+            translation: "(1 time)\nO Allah, I ask You for forgiveness and well-being in this life and in the Hereafter..." 
+        },
+        { 
+            arabic: "(1 time)\nاللَّهُمَّ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ...", 
+            translation: "(1 time)\nO Allah, Creator of the heavens and the earth, Knower of the unseen and the seen..." 
+        },
+        { 
+            arabic: "(3 times)\nبِسْمِ اللهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ...", 
+            translation: "(3 times)\nIn the Name of Allah, with Whose Name nothing on the earth or in the heaven can cause harm..." 
+        },
+        { 
+            arabic: "(1 time)\nيَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ...", 
+            translation: "(1 time)\nO Ever Living, O Self-Subsisting and Supporter of all, by Your mercy I seek assistance..." 
+        },
+        { 
+            arabic: "(100 times)\nسُبْحَانَ اللهِ وَبِحَمْدِهِ", 
+            translation: "(100 times)\nGlory is to Allah and praise is to Him." 
+        },
+        { 
+            arabic: "(10 times)\nلَا إِلٰهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ...", 
+            translation: "(10 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
+        },
+        { 
+            arabic: "(3 times)\nأَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ", 
+            translation: "(3 times)\nI seek refuge in the perfect words of Allah from the evil of that which He has created." 
+        }
+      ],
+      night: [
+        { 
+            arabic: "Close the day with peace", 
+            translation: "End your day with a sense of peace." 
+        },
+        { 
+            arabic: "(1 time)\nAl-Ikhlas, Al-Falaq, An-Nas", 
+            translation: "(1 time)\nRecite Surah Al-Ikhlas, Surah Al-Falaq, and Surah An-Nas." 
+        },
+        { 
+            arabic: "(1 time)\nٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ...", 
+            translation: "(1 time)\nAllah! There is no god but He - the Living, The Self-subsisting, Eternal..." 
+        },
+        { 
+            arabic: "(1 time)\nءامن الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ...", 
+            translation: "(1 time)\nThe Messenger has believed in what was revealed to him from his Lord, and [so have] the believers..." 
+        },
+        { 
+            arabic: "(1 time)\nبِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي...", 
+            translation: "(1 time)\nIn Your name my Lord, I lie down and in Your name I rise..." 
+        },
+        { 
+            arabic: "(3 times)\nاللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ", 
+            translation: "(3 times)\nO Allah, save me from Your punishment on the day You resurrect Your servants." 
+        },
+        { 
+            arabic: "(1 time)\nبِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", 
+            translation: "(1 time)\nIn Your name O Allah, I die and I live." 
+        },
+        { 
+            arabic: "(33 times)\nسُبْحَانَ الله", 
+            translation: "(33 times)\nGlory is to Allah." 
+        },
+        { 
+            arabic: "(33 times)\nالْحَمْدُ لِله", 
+            translation: "(33 times)\nPraise is to Allah." 
+        },
+        { 
+            arabic: "(34 times)\nاللهُ أَكْبَرُ", 
+            translation: "(34 times)\nAllah is the Most Great." 
+        },
+        { 
+            arabic: "(1 time)\nاللَّهُمَّ رَبَّ السَّمَاوَاتِ وَرَبَّ الْأَرْضِ...", 
+            translation: "(1 time)\nO Allah, Lord of the seven heavens and Lord of the Mighty Throne..." 
+        },
+        { 
+            arabic: "(1 time)\nالْحَمْدُ لِلهِ الَّذِي أَطْعَمَنَا وَسَقَانَا...", 
+            translation: "(1 time)\nPraise is to Allah Who has provided us with food and drink..." 
+        },
+        { 
+            arabic: "(1 time)\nاللَّهُمَّ فَاطِرَ السَّمَوَاتِ وَالْأَرْضِ...", 
+            translation: "(1 time)\nO Allah, Creator of the heavens and the earth, Knower of the unseen and the seen..." 
+        },
+        { 
+            arabic: "(1 time)\nSurah Sajdah", 
+            translation: "(1 time)\nRecite Surah As-Sajdah." 
+        },
+        { 
+            arabic: "(1 time)\nSurah Mulk", 
+            translation: "(1 time)\nRecite Surah Al-Mulk." 
+        },
+        { 
+            arabic: "(1 time)\nاللَّهُمَّ أَسْلَمْتُ نَفْسِي إِلَيْكَ...", 
+            translation: "(1 time)\nO Allah, I submit myself to You, entrust my affairs to You..." 
+        },
+        { 
+            arabic: "(1 time)\nSurah Al-Kafirun", 
+            translation: "(1 time)\nRecite Surah Al-Kafirun." 
+        }
+      ]
+    };
+
+    const now = new Date().getHours();
+    const slot = now >= 5 && now < 9 ? 'morning'
+                 : now >=9 && now < 16 ? 'general'
+                 : now >=16 && now < 19 ? 'evening'
+                 : 'night';
+    let selectedAdhkar = adhkars[slot];
+    let index = 0;
+    let isTranslated = false; // To track translation state
+    let isAutoScrolling = false, autoScrollInterval;
+
+    const adhkarText = document.getElementById('adhkarText');
+    const adhkarIndex = document.getElementById('adhkarIndex');
+    const autoScrollBtn = document.getElementById('autoScrollBtn');
+    const translateBtn = document.getElementById('translateBtn');
+    document.getElementById('pageTitle').textContent = `Time For ${slot.charAt(0).toUpperCase() + slot.slice(1)} Adhkars`;
+
+    function showAdhkar() {
+      const currentAdhkar = selectedAdhkar[index];
+      if (isTranslated) {
+        adhkarText.textContent = currentAdhkar.translation;
+        translateBtn.innerHTML = '<i class="fas fa-book-open"></i> Show Arabic';
+        adhkarText.style.fontFamily = "'Anek', sans-serif";
+      } else {
+        adhkarText.textContent = currentAdhkar.arabic;
+        translateBtn.innerHTML = '<i class="fas fa-language"></i> Translate';
+        adhkarText.style.fontFamily = "'Amiri', sans-serif"; 
+      }
+      adhkarIndex.textContent = `Adhkar ${index + 1} of ${selectedAdhkar.length}`;
+    }
+
+    document.getElementById('nextBtn').onclick = () => {
+      if (index < selectedAdhkar.length - 1) {
+        index++;
+        isTranslated = false; 
+        showAdhkar();
+      }
+    };
+    document.getElementById('prevBtn').onclick = () => {
+      if (index > 0) {
+        index--;
+        isTranslated = false; 
+        showAdhkar();
+      }
+    };
+    
+    translateBtn.onclick = () => {
+        isTranslated = !isTranslated; 
+        showAdhkar();
+    };
+
+    autoScrollBtn.onclick = () => {
+      if (isAutoScrolling) {
+        clearInterval(autoScrollInterval);
+        isAutoScrolling = false;
+        autoScrollBtn.innerHTML = '<i class="fas fa-play"></i> Auto Scroll';
+        autoScrollBtn.classList.replace('btn-danger','btn-success');
+      } else {
+        isAutoScrolling = true;
+        autoScrollBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+        autoScrollBtn.classList.replace('btn-success','btn-danger');
+        autoScrollInterval = setInterval(() => {
+          if (index < selectedAdhkar.length - 1) {
+            index++; 
+            isTranslated = false; 
+            showAdhkar();
+          } else {
+            clearInterval(autoScrollInterval);
+            isAutoScrolling = false;
+            autoScrollBtn.innerHTML = '<i class="fas fa-play"></i> Auto Scroll';
+            autoScrollBtn.classList.replace('btn-danger','btn-success');
+          }
+        }, 5000);
+      }
+    };
+
+    showAdhkar();
+  </script>
+
+</body>
+</html>

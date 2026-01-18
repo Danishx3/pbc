@@ -1,0 +1,72 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin - Add Video Sections</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="../../firebase-config.js"></script>
+  <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body class="sections">
+  
+
+  <div class="section">
+    <h3><center>Level 3 <br>
+    aqeeda</center></h3>
+    <input class="sect" id="title" placeholder="Title"><br>
+    <input class="sect" id="subheading" placeholder="Subheading"><br>
+    <input class="sect" id="videoUrl" placeholder="YouTube Embed URL"><br>
+    <input class="sect" id="category" placeholder="Category (e.g. LEVEL 1)"><br>
+    <input class="sect" id="order" type="number" placeholder="Order"><br>
+    <button class="btnn2" onclick="addSection()">Add Section</button>
+  </div>
+  <br><br>
+  <h3>Existing Sections</h3>
+  <ul id="sectionsList"></ul>
+
+  <script>
+    // Firebase is initialized in firebase-config.js
+    const db = window.firebaseDb || firebase.database();
+
+    function addSection() {
+      const section = {
+        title: document.getElementById("title").value,
+        subheading: document.getElementById("subheading").value,
+        videoUrl: document.getElementById("videoUrl").value,
+        category: document.getElementById("category").value,
+        order: Number(document.getElementById("order").value)
+      };
+      const newRef = db.ref("level3").push();
+      newRef.set(section).then(() => {
+        alert("Section added!");
+        loadSections();
+      });
+    }
+
+    function loadSections() {
+      const list = document.getElementById("sectionsList");
+      list.innerHTML = "";
+      db.ref("level3").orderByChild("order").once("value", snapshot => {
+        snapshot.forEach(child => {
+          const data = child.val();
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${data.title}</strong> (${data.category}) 
+                          <button class="btnn3" onclick="deleteSection('${child.key}')">Delete</button>`;
+          list.appendChild(li);
+        });
+      });
+    }
+
+    function deleteSection(id) {
+      if (confirm("Delete this section?")) {
+        db.ref("level3/" + id).remove().then(loadSections);
+      }
+    }
+
+    loadSections();
+  </script>
+</body>
+</html>

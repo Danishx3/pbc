@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ilmify - Madeena book</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --radius: 14px;
+      --bg: #0f1f2d;
+      --card-bg: #e3f9f1;
+      --accent: rgba(4, 141, 114, 0.6);
+      --muted: #a0aebf;
+      --shadow: 0 24px 48px -12px rgba(0,0,0,0.35);
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      min-height:100vh;
+      background: 
+        radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+        radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+        radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+      background-color: #00060f;
+      color:#1f2f3f;
+      font-size:16px;
+      line-height:1.4;
+    }
+    .app-wrapper {
+      padding-top:80px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 5%;
+    }
+    .app {
+      width:100%;
+      max-width:540px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .card {
+      background: #d0f0ea;
+      border-radius:16px;
+      overflow:hidden;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .cover {
+      background: var(--accent);
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      color:#111;
+    }
+    .title-row {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content: space-between;
+      gap:8px;
+      align-items:center;
+    }
+    .main-title {
+      font-weight:700;
+      font-size:1.2rem;
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+    .volume-badge {
+      background:#fff;
+      padding:4px 12px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:.9rem;
+      display:inline-block;
+      margin-left:4px;
+    }
+    .sub {
+      font-size:.9rem;
+      margin-top:2px;
+    }
+    .controls {
+      padding:12px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .audio-player {
+      background:#fff;
+      border-radius:12px;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow: var(--shadow);
+      flex-wrap:wrap;
+      position: relative;
+    }
+    .play-btn {
+      width:44px;
+      height:44px;
+      border:none;
+      background: #111;
+      color:#fff;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex-shrink:0;
+      font-size:16px;
+      transition:filter .2s;
+    }
+    .play-btn:focus-visible {
+      outline: 2px solid #afe9da;
+      outline-offset:2px;
+    }
+    .progress-container {
+      flex:1;
+      min-width:140px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      margin-right:8px;
+    }
+    .progress {
+      position: relative;
+      height:6px;
+      background: #e3e3e3;
+      border-radius:3px;
+      cursor:pointer;
+      overflow:hidden;
+    }
+    .progress-filled {
+      height:100%;
+      width:0;
+      background:#111;
+      border-radius:3px;
+      transition: width .1s linear;
+    }
+    .time-row {
+      display:flex;
+      justify-content:space-between;
+      font-size:12px;
+      color: var(--muted);
+      margin-top:2px;
+    }
+    .volume-control {
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      min-width:100px;
+    }
+    .speed-control {
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      margin-left:8px;
+      flex-shrink:0;
+    }
+    .nav-bar {
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:6px;
+      padding:0 4px;
+    }
+    .btn {
+      padding:10px 16px;
+      border:none;
+      border-radius:999px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      transition:filter .2s;
+      background:#fff;
+      color:#111;
+      box-shadow:0 12px 30px -6px rgba(0,0,0,0.2);
+    }
+    .btn:focus-visible {
+      outline: 2px solid #afe9da;
+      outline-offset:2px;
+    }
+    .btn-primary {
+      background:#111;
+      color:#fff;
+    }
+    .pill {
+      background:rgba(255,255,255,0.9);
+      padding:6px 14px;
+      border-radius:999px;
+      font-size:.75rem;
+      display:inline-block;
+      margin-right:4px;
+      font-weight:600;
+    }
+    .notes-panel {
+      background:#3f9f8f;
+      padding:16px;
+      border-radius:14px;
+      color:#0f1f2d;
+      position:relative;
+      overflow:hidden;
+      display:none;
+      flex-direction:column;
+      gap:10px;
+    }
+    .notes-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .notes-title {
+      background:#fff;
+      padding:6px 14px;
+      border-radius:999px;
+      font-weight:600;
+      display:inline-block;
+    }
+    .note-item {
+      background: rgba(255,255,255,0.9);
+      border-radius:8px;
+      padding:10px 12px;
+      font-size:.9rem;
+      line-height:1.8;
+      position:relative;
+      margin-top: 5px;
+      text-align: right;
+      font-family: 'amiri', sans-serif;
+      font-size: large;
+    }
+    .pdf-embed {
+      width: 100%;
+      height: 240px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 14px 36px -4px rgba(0,0,0,0.35);
+      margin-bottom: 10px;
+    }
+    .lesson-meta {
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:8px;
+      align-items:center;
+    }
+    .volume-selector {
+      display:flex;
+      gap:6px;
+      flex-wrap:nowrap;
+      align-items:center;
+      overflow-x:auto;
+      padding-bottom:4px;
+      scrollbar-width: thin;
+    }
+    .volume-selector::-webkit-scrollbar {
+      height:8px;
+    }
+    .volume-selector::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius:4px;
+    }
+    select.part-select {
+      padding:6px 14px;
+      border-radius:999px;
+      border:none;
+      font-size:.9rem;
+      font-weight:600;
+      appearance:none;
+      background:rgba(255,255,255,0.9);
+      cursor:pointer;
+    }
+    .notes-toggle {
+      margin-left:auto;
+    }
+
+    .selector-btn {
+      position: relative;
+      padding: 8px 18px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff, #f0f8fc);
+      color: #1f2f3f;
+      letter-spacing: 0.5px;
+      transition: transform .2s ease, box-shadow .25s ease, background .3s ease;
+      box-shadow: 0 10px 30px -4px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(255,255,255,0.6);
+      margin: 0 4px 4px 0;
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+    }
+    .selector-btn::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      width: 0;
+      height: 3px;
+      background: #afe9da;
+      border-radius: 2px;
+      transition: width .3s ease, left .3s ease;
+    }
+    .selector-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px -6px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.8);
+      background: linear-gradient(135deg, #ffffff, #e0f0fa);
+    }
+    .selector-btn.active {
+      background: linear-gradient(135deg, #111827, #1f2f3f);
+      color: #fff;
+      box-shadow: 0 18px 50px -4px rgba(0,0,0,0.4), inset 0 0 8px rgba(255,255,255,0.1);
+    }
+    .selector-btn.active::after {
+      width: 60%;
+      left: 20%;
+    }
+    .selector-btn:focus-visible {
+      outline: 2px solid #ffd237;
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 720px) {
+      .audio-player {
+        flex-direction:column;
+        align-items:stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header style="position: fixed; z-index: 9999; background:linear-gradient(to bottom,transparent,#0d564f8c); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; width: 100%; font-size: larger; font-weight: bold; color: rgb(247, 246, 246);  padding: 20px;">
+    <a style="position: absolute; left:16px; top:20px; color: white;" href="arabic.html"><i class="fas fa-arrow-left"></i></a>
+    <div style="text-align:center;">DURŪS AL-LUGHAH</div>
+  </header><br><br><br>
+
+  <div class="app-wrapper">
+    <div class="app" aria-label="Lessons application">
+      <div class="card" role="region" aria-label="Lesson card">
+        <div class="cover">
+          <div class="title-row">
+            <div class="main-title">
+              <div id="course-name">DURŪS AL-LUGHAH</div>
+              <div class="volume-badge" id="volume-label">VOLUME 1</div>
+            </div>
+            <div class="notes-toggle">
+              <button class="btn" id="toggleNotesBtn" aria-expanded="false" aria-label="Toggle notes">📝 Notes</button>
+            </div>
+          </div>
+          <div class="sub" id="part-label">PART 1</div>
+          <div class="lesson-meta">
+            <div class="volume-selector" aria-label="Select volume" id="volume-selector"></div>
+            <div>
+              <label for="partSelect" style="font-size:.75rem; margin-right:6px;">Part:</label>
+              <select id="partSelect" class="part-select" aria-label="Select part"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="audio-player" aria-label="Audio player">
+            <button class="play-btn" aria-label="Play/Pause" id="playPause">▶</button>
+            <div class="progress-container">
+              <div class="progress" id="progressBar" aria-label="Progress bar" role="slider" tabindex="0">
+                <div class="progress-filled" id="progressFilled"></div>
+              </div>
+              <div class="time-row">
+                <div id="currentTime">0:00</div>
+                <div id="duration">0:00</div>
+              </div>
+            </div>
+            <div class="volume-control">
+              🔊
+              <input type="range" id="volume" min="0" max="1" step="0.01" aria-label="Volume" />
+            </div>
+            <div class="speed-control">
+              <label for="speedSelect" style="margin:0;">Speed:</label>
+              <select id="speedSelect" aria-label="Playback speed" style="padding:6px 10px; border-radius:8px; border:none; font-weight:600;">
+                <option value="0.5">0.5x</option>
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="nav-bar">
+            <div style="display:flex; gap:8px; flex:1; flex-wrap:wrap;">
+              <button class="btn" id="prevBtn"><i class="fas fa-arrow-left"></i></button>
+              <button class="btn" id="nextBtn"><i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="pill" id="pill-volume">Volume 1</span>
+              <span class="pill" id="pill-part">Part 1</span>
+            </div>
+          </div>
+
+          <div class="notes-panel" id="notes-panel" aria-label="Lesson notes">
+            <div class="notes-header">
+              <div class="notes-title">Note</div>
+              <div class="small" id="lesson-duration">مدة الدرس: --:-- دقيقة</div>
+            </div>
+            <iframe class="pdf-embed" id="pdfFrame" src="" title="Lesson PDF Notes" aria-label="PDF notes viewer"></iframe>
+            <div id="notes-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audio" preload="metadata"></audio>
+  <script>
+    const LESSONS = [
+      {
+        volume: 1,
+        pdf: "https://drive.google.com/file/d/1aOLnGu5pHZKl3rRe7GjnMz725XZdtjlZ/preview",
+        parts: [
+          {
+            part: 1,
+            title: "Lesson 1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754048892/iwzplgkn17potpzsiore.m4a",
+            notes: [
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "الدرس الأول - 1 📢",
+              "الجزء - 1 → Lesson -1 → part -1",
+              "ملاحظات إضافية: تأكد من مراجعة المفردات بعد الاستماع.",
+              "➖ها+ذا =هذا \n\
+➖هَا للتَّنْبِيهِ \n\
+➖ذا =اسم الإِشَارة \
+",
+"⬅️(هذا وَلَدٌ )\n\
+➖هذا -اسمُ الإِشَارَة \n\
+➖وَلدٌ -مُشَارٌ إليهِ \
+",
+"⬅️مُذَكَّرٌ × مُؤَنَّثٌ \n\
+\
+✒️مُذَكَّرٌ : പുല്ലിംഗം\n\
+✒️مُؤَنَّثٌ : സ്ത്രീലിംഗം\n\
+",
+"1️⃣مُفْرَدٌ - ഏകവചനം\n\
+\
+2️⃣مُثَنًّى- ദ്വിവചനം\n\
+\
+3️⃣جَمْعٌ - ബഹു വചനം\n\
+",
+"▪️وَلَدٌ :(مُفْرَدٌ): \n\
+ഒരു ആൺകുട്ടി\n\
+▪️وَلَدَانِ : (مُثَنًّى)\n\
+രണ്ട് ആൺകുട്ടികൾ\n\
+▪️أَوْلادٌ : (جَمْعٌ )\n\
+ആൺകുട്ടികൾ"
+            ],
+            durationText: "17:39"
+          },
+          {
+            part: 2,
+            title: "Lesson 1.1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754320743/gyy1zpunaidei7iicbtk.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "الدرس الأول - 1 📢",
+              "الجزء - 2 → Lesson -1 → part -2",
+              "⬅️'ما' الاسْتِفْهَامِيَّة\n\
+⬅️هَمْزَةُ الاستِفْهَام ",
+"⬅️مُتَرَادِفٌ - പര്യായപദം",
+"⬅️نَجْمٌ = كَوْكَبٌ : നക്ഷത്രം"
+            ],
+            durationText: "17:54"
+          },
+          {
+            part: 3,
+            title: "Lesson 1.2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754323311/cwdlmw3ccanexska9jja.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "الدرس الأول - 1 📢",
+              "الجزء - 3 → Lesson -1 → part -3",
+              "⬅️'مَنْ' الاستِفْهَامِيَّة \n\
+⬅️'مَنْ'  ' لِلعَاقِلِ \n\
+⬅️'مَا' لِغَيرِ العَاقِلِ",
+              "⬅️حِصَانٌ =فَرَسٌ ",
+              "⬅️ضِدٌّ : വിപരീതം",
+              "⬅️دِيكٌ ✖️دَجَاجَة\n\
+⬅️وَلَدٌ ✖️ بِنْتٌ"
+            ],
+            durationText: "23:36"
+          },
+          {
+            part: 4,
+            title: "Lesson 2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754509071/mssiarup34lkwlobhx1c.m4a",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الثاني -2",
+              "Lesson -2 ",
+              "⬅️ذا+لِ+كَ= ذلِكَ\n\
+⬅️ذا -اسْمُ الإِشارَةِ\n\
+⬅️ل - لِلبُعْدِ\n\
+⬅️كَ - لِلمُخََاطَبِ",
+              "⬅️سَرِيرٌ(ج)سُرُرٌ",
+              "⬅️سَرِيرٌ - കട്ടിൽ\n\
+⬅️سُرُرٌ - കട്ടിലുകൾ",
+              "⬅️مُدَرِّسٌ=مُعَلِّمٌ"
+            ],
+            durationText: "14:44"
+          },
+          {
+            part: 5,
+            title: "Lesson 3",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754509891/dsb2afuwwyfeeg8nf53l.m4a",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الثالث -٣",
+              "Lesson -3 ,part -1 ",
+              "⬅️أل + بيت = البيت\n\
+▪️بَيتٌ - نَكِرَةٌ\n\
+▪️البَيْتُ - مَعْرِفَةٌ",
+              "⬅️الألف واللام (أل ) علامة الاسم",
+              "⬅️ مُبْتَدَأٌ \n\
+⬅️ خَبَرٌ ",
+              "⬅️البيت جميل \n\
+➖البيت -مُبْتَدَأٌ \n\
+➖جميل - خَبَرٌ \
+",
+             "⬅️لَبَنٌ مُتَرَادِفُهُ حَلِيبٌ"
+            ],
+            durationText: "25:26"
+          },
+          {
+            part: 6,
+            title: "Lesson 3.1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754510930/j8ux98nlsbcjjni8xvkb.m4a",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الثالث -٣",
+              "Lesson -3 ,part -2 ",
+             "⬅️مُبْتَدَأٌ +خَبَرٌ =جُمْلَةٌ اسْمِيَّةٌ",
+             "⬅️فِعْلٌ+فَاعِلٌ= جُمْلَةٌ فِعْلِيَّةٌ",
+             "📌البَيتُ جَمِيلٌ : جُمْلَةٌ اسْمِيَّةٌ",
+             "📌جَاءَ زَيْدٌ :  جُمْلَةٌ فِعْلِيَّةٌ"
+            ],
+            durationText: "20:12"
+          },
+          {
+            part: 7,
+            title: "Lesson 3.2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754511309/jfm7xiptpk2lh8pyogpj.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الثالث -٣",
+              "Lesson -3 ,part -3 ",
+             "⬅️ دَفْتَرٌ=كُرَّاسَةٌ\n\
+⬅️ صَدِيقٌ=رَفِيقٌ",
+             "⬅️ الحُرُوفُ الشَّمْسِيَّةُ\n\
+⬅️ الحُرُوفُ القَمَرِيَّةُ\
+",
+             "⬅️ أَلْ + شَ = اَلشَّ\n\
+⬅️ أَلْ +بَ = اَلْبَ",
+            ],
+            durationText: "20:12"
+          },
+          {
+            part: 8,
+            title: "Lesson 4",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755237043/ohtpk5xxwrn6kxd85zpp.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الرابع -٤",
+              "Lesson -4 ,part -1 ",
+             "➖فِي -حَرْفُ جَرٍّ\n\
+➖عَلَى -حَرْفُ جَرٍّ\
+",
+             "⬅️ آمِنَةُ ✅ بلا التنوين\n\
+⬅️ آمِنَةٌ ❎ مع التنوين\
+",
+             "⬅️ فَاطِمَةُ ✅ بلا التنوين\n\
+⬅️ فَاطِمَةٌ  ❎ مع التنوين",
+             "⬅️أَيْنَ الاسْتِفْهَامِيَّةُ\n\
+⬅️ أَيْنَ- എവിടെ",
+             "⬅️مَاذَا \n\
+എന്താകുന്നു..?\n\n\
+⬅️ضَمِيرٌ \n\
+സർവ്വനാമം\n\n\
+⬅️هُوَ - ضَمِيرٌ\n\
+ അവൻ/അത്\n\n\
+⬅️هِيَ- ضَمِيرٌ\n\
+അവൾ / അത്\
+"
+            ],
+            durationText: "24:16"
+          },
+          {
+            part: 9,
+            title: "Lesson 4.1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755237837/wo8fkb81ftu5okjnajhw.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الرابع -٤",
+              "Lesson -4 ,part -2 ",
+             "⬅️مِنْ -حَرْفُ جَرٍّ\n\
+➖مِنَ البَيْتِ",
+             "⬅️إلىَ -حَرْفُ جَرِّ\n\
+➖إلىَ البَيْتِ",
+             "⬅️عَنْ -حَرْفُ جَرٍّ \n\
+➖عَنِ البَيْتِ",
+           "⬅️الْتِقَاءُ السَّاكِنَيْنِ",
+           "⬅️مِنْ+ الْبَيْت =مِنَ البَيْتِ",
+           "⬅️ هَمْزَةُ الوَصْلِ \n\
+⬅️ هَمْزَةُ القَطْعِ"
+            ],
+            durationText: "21:30"
+          },
+          {
+            part: 10,
+            title: "Lesson 4.2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755238612/i9jnxgvqlqbym8n0guw2.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الرابع -٤",
+              "Lesson -4 ,part -3 ",
+             "⬅️ الفَصْلُ = الصَّفُّ\n\
+⬅️ الغُرْفَةُ= الحُجْرَةُ\n\
+⬅️ ذَهَبَ =رَاحَ",
+             "⬅️عَنْ + الحَدِيثِ= عَنِ الحَدِيثِ\n\
+⬅️لَمْ يَكُنْ +الّذِينَ =لَمْ يَكُنِ الّذينَ",
+             "⬅️مِنْ +المَسْجِدِ=مِنَ المَسْجِد\n\
+⬅️مِنْ+الخَاسِرِينَ= مِنَ الخَاسِرِينَ",
+             "⬅️هُمْ +الكَافِرُونَ =هُمُ الكَافِرُونَ \n\
+⬅️عَلَيكُمْ + السَّلاَمُ = عَلَيكُمُ السَّلاَمُ"
+            ],
+            durationText: "17:02"
+          },
+          {
+            part: 11,
+            title: "Lesson 5",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755239834/akpvqf0b0wihr5ial6kw.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الخامس -٥",
+              "Lesson -5 ,part -1 ",
+              "⬅️ مُضافٌ \n\
+⬅️ مُضَافٌ إلَيهِ\n\
+⬅️قَلَمٌ (اسم )+مُحَمَّدٌ (اسم ) = قَلَمُ مُحَمَّدٍ",
+              "⬅️ قَلَمُ - مُضَافٌ \n\
+⬅️ مُحَمَّدٍ- مُضَافٌ إلَيهِ\n\
+\n\
+➖قَلَمُ مُحَمَّدٍ  ✅\n\
+➖قَلَمٌ مُحَمَّدًا ❎\n\
+➖قَلَمٌ مُحَمَّدٌ  ❎",
+              "⬅️ يَا حَامِدُ\n\
+⬅️ حَرْفُ النِّداءِ -يَا\n\
+⬅️المُنادَى - حَامِدُ\n\n\
+➖يَا حَامِدُ ✅\n\
+➖يَا حَامِدَ ❎\n\
+➖ياَ حَامِدِ ❎"
+            ],
+            durationText: "21:15"
+          },
+          {
+            part: 12,
+            title: "Lesson 5.1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755240384/b4jqgzs4uvs9ohfapruy.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الخامس -٥",
+              "Lesson -5 ,part -2 ",
+              "📝بعض الكلمات من الدرس 📝",
+              "⬅️تَمْرِينٌ (ج) تَمَارِينُ :\
+അഭ്യാസം",
+              "⬅️حِماَرٌ :\
+കഴുത"
+            ],
+            durationText: "8:19"
+          },
+          {
+            part: 13,
+            title: "Lesson 5.2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755240666/ea0edl0bmliwcu6usslf.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الخامس -٥",
+              "Lesson -5 ,part -3 ",
+              "▪️بَيْتُ المُدَرِّسِ ✅\n\
+▪️بَيتٌٍ المُدَرِّسِ ❎",
+              "➡️മുളാഫിന് (مُضَاف) തൻവീൻ വരില്ല",
+              "(⬅️ اِسْم  ⬅️ اِبْن)\n\
+ഈ രണ്ട് പദങ്ങളിലെ ഹംസ(همزة ) വസ് ലിന്റെ (همزة الوصل ) ആകുന്നു..."
+            ],
+            durationText: "23:33"
+          },
+          {
+            part: 14,
+            title: "Lesson 5.3",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755240971/bkkrvycusyzfdzjlwgdb.mp3",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الخامس -٥",
+              "Lesson -5 ,part -4 ",
+              "⬅️عَمٌّ - أَخُو الأَبِ\n\
+⬅️خَالٌ- أَخُو الأُمِّ\n\
+⬅️جُمْلَةٌ (ج)جُمَلٌ"
+            ],
+            durationText: "12:54"
+          },
+          {
+            part: 15,
+            title: "Lesson 5.4",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755241077/takp1f62zoxlf9p1ykf0.m4a",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الخامس -٥",
+              "Lesson -5 ,part -5 "
+            ],
+            durationText: "11:49"
+          },
+          {
+            part: 16,
+            title: "Lesson 5.5",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755241355/ad8maueifvqorwzpxytn.m4a",
+            notes: [
+               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📢الدرس الخامس -٥",
+              "Lesson -5 ,part -6 ",
+              "⬅️ عَمٌّ - أَخُو الأَبِ\n\
+⬅️ عَمَّةٌ - أُخْتُ الأب\n\
+ഉപ്പയുടെ സഹോദരി",
+              "⬅️خَال - أَخُو الأُمِّ\n\
+⬅️خَالَةٌ - أُخْتُ الأم \n\
+ഉമ്മയുടെ സഹോദരി",
+              "⬅️صُورَةٌ (ج) صُوَرٌ\n\
+ചിത്രം, രൂപം"
+            ],
+            durationText: "5:59"
+          },
+          {
+            part: 17,
+            title: "Lesson 6",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755789485/ltv7sql3uq5vailvnfke.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس السادس -٦\n",
+              "Lesson -6,part 1",
+              "➖فَعَلَ -فَاعِلٌ (اسمُ الفَاعِلِ)",
+              "➖كَتَب -كَاتِبٌ  (اسمُ الفَاعِلِ)",
+              "➖جَلَسَ - ഇരുന്നു\n➖جَالِسٌ - ഇരിക്കുന്നവൻ",
+            ],
+            durationText: "13:52"
+          },
+          {
+            part: 18,
+            title: "Lesson 6.1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755789951/lofwc5p5czgpmpcjxkrl.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس السادس -٦\n",
+              "Lesson -6,part 2",
+              "⬅️ﻻَﻡُ ﺍﻟﻤِﻠْﻚِ \n\
+➖الكِتَابُ لِزيدٍ (ل -لام الملك +زيد )",
+              "⬅️ل (ِ ﻻَﻡُ ﺍﻟﻤِﻠْﻚِ) -حَرْفُ جَرٍّ\n\
+ശരീരത്തിലെ ജോടിയായ അവയവങ്ങൾ പൊതുവെ സ്ത്രീലിംഗമായാണ് അറബികൾ ഉപയോഗിക്കാറ്.. അപവാദങ്ങൾ ഉണ്ട് ഉദാ:\n\
+خَدٌّ- കവിൾ\n\
+ഇത് ജോടിയാണങ്കിലും പുല്ലിംഗമായാണ് ഉപയോഗിക്കുക.."
+            ],
+            durationText: "17:01"
+          },
+          {
+            part: 19,
+            title: "Lesson 6.2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755790414/fqjl8zvnkvjaxmzxkmuf.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس السادس -٦\n",
+              "Lesson -6,part 3",
+              "الطَّالِبُ جَدِيدٌ  ✅\n\
+الطَّالِبُ جَدِيدَةٌ ❌\n\
+الطَّالِبَةُ جَدِيدَةٌ ✅\n\
+الطَّالِبَةُ جَدِيدٌ  ❌",
+              "➖الطَّالِبُ- مُبْتَدَأٌ مُذَكَّرٌ\n\
+➖جَدِيدٌ - خَبَرٌ مُذَكَّرٌ",
+              "⬅️الطَّالِبَةٌُ - مُبْتَدَأٌ مُؤَنّّثٌ\n\
+⬅️جَدِيدَةٌ-  خَبَرٌ مُؤَنّّثٌ"
+            ],
+            durationText: "17:50"
+          },
+          {
+            part: 20,
+            title: "Lesson 7",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755791125/tg213v8lf2vfxsp5minr.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس السابع -٧ \n",
+              "Lesson -7,part 1",
+            ],
+            durationText: "15:03"
+          },
+          {
+            part: 21,
+            title: "Lesson 8",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755791543/en1d6862feq69rk4ngl5.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس الثامن -٨\n",
+              "Lesson -8,part 1",
+              "⬅️هذَا الرَّجُلُ تَاجِرٌ\n\
+ഈ പുരുഷൻ കച്ചവടക്കാരാനകുന്നു\n\
+➖هذَا -مُبْتَدَأ\n\
+➖الرَّجُلُ- بَدَلٌ\n\
+➖ تَاجِرٌ- خَبَرٌ",
+             "⬅️هذا رَجُلٌ\n\
+ഇത് പുരുഷനാകുന്നു\n\
+➖هذا-مُبْتَدَأ\n\
+➖ رَجُلٌ-خَبَرٌ",
+             "⬅️ أَمَامَ -ظَرْفُ المَكَانِ\n\
+⬅️ خَلْفَ-ظَرْفُ المَكَانِ"
+            ],
+            durationText: "14:51"
+          },
+          {
+            part: 22,
+            title: "Lesson 8.1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755792460/jzfmksvhahiinatky9js.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس الثامن -٨\n",
+              "Lesson -8,part 2",
+              "⬅️الألِفُ لاَ تَقبَلُ الحَرَكَاتِ ( وهي الضَّمَّةُ والفَتْحَةُ والكَسْرَةُ )وَإنَّمَا تُقَدَّرُ عَلَيْهَا\n\
+⬅️في أمريكا -إلى أمريكا -من أمريكا"
+            ],
+            durationText: "14:27"
+          },
+          {
+            part: 23,
+            title: "Lesson 8.2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755793185/qmjhobzpvwdiicev4rx9.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس الثامن -٨\n",
+              "Lesson -8,part 3",
+              "⬅️ ذَهَبَ حَامِدٌ\n\
+➖ ذَهَبَ- فِعْلٌ\n\
+➖ حَامِدٌ - فَاعِلٌ مَرْفُوعٌ",
+              "⬅️الآنَ - ظَرْفُ الزَّمَانِ",
+              "⬅️ أَمَامَ - ظَرْفُ المَكان\n\
+⬅️ خَلْفَ -ظَرْفُ المَكان"
+            ],
+            durationText: "16:24"
+          },
+          {
+            part: 24,
+            title: "Lesson 9",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1756460431/pxbqsatcdkgszkfpxvpt.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس التاسع -٩\n",
+              "Lesson -9,part 1",
+              "⬅️صِفَةٌ =نَعْتٌ\n\
+⬅️مَوْصُوفٌ =مَنْعُوتٌ",
+              "⬅️ أنَا طَالِبٌ جَدِيدٌ \n\
+➖طَالِبٌ -مَنْعُوتٌ\n\
+➖جَدِيدٌ- نَعْتٌ"
+             
+            ],
+            durationText: "14:02"
+          },
+          {
+            part: 25,
+            title: "Lesson 9.1",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1756460615/siceoupkwfkfp0xyumcg.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس التاسع -٩\n",
+              "Lesson -9,part 2",
+              "⬅️فَعلاَنُ (بِلاَ تَنوينٍ) مِثلُ :  غَضبانُ -كَسلانُ...",
+              "⬅️نَكِرَةٌ و مَعْرِفَةٌ",
+              "➖رَجُلٌ -\n\
+➖الرَّجُلُ- مَعْرِفَةٌ\n\
+➖مُحمَّد -زيدٌ -يوسُف -أَحمد ... (كلها معرفة )"
+             
+            ],
+            durationText: "22:50"
+          },
+          {
+            part: 26,
+            title: "Lesson 9.2",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1756461094/opy0tthsga8og85ondrr.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس التاسع -٩\n",
+              "Lesson -9,part 3",
+              "⬅️ الآنَ -ظرفُ الزَّمَان \n\
+              -مُذَكَّرٌ /2-مُؤَنَّثٌ ⃣\n\
+3-مُفْردٌ /4-مُثَنًّى /5-جَمْعٌ ⃣\n\
+6-نَكِرَةٌ / 7- مَعْرِفَةٌ\n\
+8-مَرْفُوعٌ/9-مَنصُوبٌ 10-مَجْرُورٌ ⃣\
+              "
+            ],
+            durationText: "14:32"
+          },
+          {
+            part: 26,
+            title: "Lesson 9.3",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1756461107/wjfqkbrzoujjbqqqdhko.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس التاسع -٩\n",
+              "Lesson -9,part 4",
+              "⬅️جُمْلَةٌ اسْمِيَّةٌ\n\
+⬅️جُمْلَةٌ فِعْلِيَّةٌ\n\
+⬅️شِبْهُ الجُمْلَةِ",
+              "✏️مُبْتَدَأٌ+خَبَرٌ =جُمْلَةٌ اسْمِيَّةٌ\n\
+➖مثال :البَيْتُ جَمِيلٌ\n\
+",
+"\
+✏️فِعلٌ+فاعِلٌ =جُمْلَةٌ فِعْلِيَّةٌ\n\
+➖مِثَالٌ :ذهَبَ مُحَمَّدٌ\n\
+","\
+✏️شِبْهُ الجُمْلَةِ \n\
+➖مِثَالٌ :علَى المَكتَبِ\n\
+             :في الغُرفَةِ",
+            ],
+            durationText: "15:21"
+          }, 
+          {
+            part: 27,
+            title: "Lesson 9.4",
+            audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1756461544/bldespeakbecfhcgjffs.mp3",
+            notes: [
+              "📝دروس اللغة العربية لغير الناطقين بها (الجزء الأول) 📝\n\
+📢الدرس التاسع -٩\n",
+              "Lesson -9,part 5",
+              "⬅️الَّذِي- الاسْمُ المَوصُولُ"
+            ],
+            durationText: "17:36"
+          },
+
+        ]
+      },
+      {
+        volume: 2,
+        pdf: "",
+        parts: [
+          {
+            part: 1,
+            title: "Part 1",
+            audio: "audio3.mp3",
+            notes: [
+              "We upload soon"
+            ],
+            durationText: "--:--"
+          }
+        ]
+      },
+      {
+        volume: 3,
+        pdf: "",
+        parts: [
+          {
+            part: 1,
+            title: "Part 1",
+            audio: "audio4.mp3",
+            notes: [
+              "We upload soon"
+            ],
+            durationText: "--:--"
+          },
+          {
+            part: 2,
+            title: "Part 2",
+            audio: "audio5.mp3",
+            notes: ["We upload soon"],
+            durationText: "--:--"
+          }
+        ]
+      }
+    ];
+
+    let currentVolumeIdx = 0;
+    let currentPartIdx = 0;
+
+    const volumeLabel = document.getElementById("volume-label");
+    const partLabel = document.getElementById("part-label");
+    const pillVolume = document.getElementById("pill-volume");
+    const pillPart = document.getElementById("pill-part");
+    const notesPanel = document.getElementById("notes-panel");
+    const toggleNotesBtn = document.getElementById("toggleNotesBtn");
+    const notesContainer = document.getElementById("notes-container");
+    const lessonDuration = document.getElementById("lesson-duration");
+    const volumeSelector = document.getElementById("volume-selector");
+    const partSelect = document.getElementById("partSelect");
+    const audioEl = document.getElementById("audio");
+    const playPause = document.getElementById("playPause");
+    const progressBar = document.getElementById("progressBar");
+    const progressFilled = document.getElementById("progressFilled");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationEl = document.getElementById("duration");
+    const volumeSlider = document.getElementById("volume");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const speedSelect = document.getElementById("speedSelect");
+    const pdfFrame = document.getElementById("pdfFrame");
+
+    function clearAudioError() {
+      const existing = document.getElementById('audio-error');
+      if (existing) existing.remove();
+    }
+
+    function loadUI() {
+      renderVolumeButtons();
+      populatePartSelect();
+      loadCurrentLesson();
+    }
+
+    function renderVolumeButtons() {
+      volumeSelector.innerHTML = "";
+      LESSONS.forEach((v, vi) => {
+        const btn = document.createElement("button");
+        btn.textContent = `Volume ${v.volume}`;
+        btn.className = "selector-btn" + (vi === currentVolumeIdx ? " active" : "");
+        btn.addEventListener("click", () => {
+          currentVolumeIdx = vi;
+          currentPartIdx = 0;
+          renderVolumeButtons();
+          populatePartSelect();
+          loadCurrentLesson();
+        });
+        volumeSelector.appendChild(btn);
+      });
+    }
+
+    function populatePartSelect() {
+      partSelect.innerHTML = "";
+      const parts = LESSONS[currentVolumeIdx].parts;
+      parts.forEach((p, pi) => {
+        const opt = document.createElement("option");
+        opt.value = pi;
+        opt.textContent = p.title;
+        if (pi === currentPartIdx) opt.selected = true;
+        partSelect.appendChild(opt);
+      });
+      partSelect.onchange = () => {
+        currentPartIdx = parseInt(partSelect.value, 10);
+        loadCurrentLesson();
+      };
+    }
+
+    function loadCurrentLesson() {
+      const volumeObj = LESSONS[currentVolumeIdx];
+      const partObj = volumeObj.parts[currentPartIdx];
+
+      volumeLabel.textContent = `VOLUME ${volumeObj.volume}`;
+      partLabel.textContent = partObj.title;
+      pillVolume.textContent = `Volume ${volumeObj.volume}`;
+      pillPart.textContent = `${partObj.title}`;
+      lessonDuration.textContent = `مدة الدرس: ${partObj.durationText} دقيقة`;
+
+      // PDF per volume: clear any old no-pdf note
+      const existingNoPdf = document.getElementById('no-pdf-note');
+      if (existingNoPdf) existingNoPdf.remove();
+      if (volumeObj.pdf) {
+        pdfFrame.src = volumeObj.pdf;
+        pdfFrame.style.display = "block";
+      } else {
+        pdfFrame.style.display = "none";
+      }
+
+      // Notes: clear previous notes but keep no-pdf fallback added below
+      notesContainer.innerHTML = "";
+      if (!volumeObj.pdf) {
+        const note = document.createElement('div');
+        note.id = 'no-pdf-note';
+        note.className = 'note-item';
+        note.textContent = 'لا يوجد ملف ملاحظات متاح لهذا الـ Volume بعد.';
+        notesContainer.appendChild(note);
+      }
+      partObj.notes.forEach(n => {
+        const div = document.createElement("div");
+        div.className = "note-item";
+        div.innerHTML = n.replace(/\n/g, "<br>");
+        notesContainer.appendChild(div);
+      });
+
+      // Audio: clear previous error and set new source
+      clearAudioError();
+      audioEl.src = partObj.audio;
+      audioEl.load();
+
+      // Prev/next state
+      prevBtn.disabled = !hasPrev();
+      nextBtn.disabled = !hasNext();
+      partSelect.value = currentPartIdx;
+    }
+
+    function hasPrev() {
+      if (currentPartIdx > 0) return true;
+      return currentVolumeIdx > 0 && LESSONS[currentVolumeIdx - 1].parts.length > 0;
+    }
+    function hasNext() {
+      if (currentPartIdx + 1 < LESSONS[currentVolumeIdx].parts.length) return true;
+      return currentVolumeIdx + 1 < LESSONS.length && LESSONS[currentVolumeIdx + 1].parts.length > 0;
+    }
+    function goPrev() {
+      if (!hasPrev()) return;
+      if (currentPartIdx > 0) {
+        currentPartIdx--;
+      } else {
+        currentVolumeIdx--;
+        currentPartIdx = LESSONS[currentVolumeIdx].parts.length - 1;
+        renderVolumeButtons();
+        populatePartSelect();
+      }
+      loadCurrentLesson();
+    }
+    function goNext() {
+      if (!hasNext()) return;
+      if (currentPartIdx + 1 < LESSONS[currentVolumeIdx].parts.length) {
+        currentPartIdx++;
+      } else {
+        currentVolumeIdx++;
+        currentPartIdx = 0;
+        renderVolumeButtons();
+        populatePartSelect();
+      }
+      loadCurrentLesson();
+    }
+
+    // Audio logic
+    audioEl.volume = 0.7;
+    volumeSlider.value = audioEl.volume;
+
+    playPause.addEventListener("click", () => {
+      if (audioEl.paused) audioEl.play();
+      else audioEl.pause();
+    });
+
+    audioEl.addEventListener("play", () => {
+      playPause.textContent = "❚❚";
+      playPause.setAttribute("aria-label", "Pause");
+    });
+    audioEl.addEventListener("pause", () => {
+      playPause.textContent = "▶";
+      playPause.setAttribute("aria-label", "Play");
+    });
+    audioEl.addEventListener("loadedmetadata", () => {
+      durationEl.textContent = formatTime(audioEl.duration);
+    });
+    audioEl.addEventListener("timeupdate", () => {
+      currentTimeEl.textContent = formatTime(audioEl.currentTime);
+      const percent = (audioEl.currentTime / audioEl.duration) * 100;
+      progressFilled.style.width = percent + "%";
+    });
+    audioEl.addEventListener('canplay', () => {
+      clearAudioError();
+    });
+    audioEl.addEventListener('error', () => {
+      if (!document.getElementById('audio-error')) {
+        const err = document.createElement('div');
+        err.id = 'audio-error';
+        err.style.background = '#ffdce0';
+        err.style.padding = '8px';
+        err.style.borderRadius = '6px';
+        err.style.marginTop = '6px';
+        err.textContent = 'This part is not available for now';
+        document.querySelector('.audio-player').appendChild(err);
+      }
+    });
+
+    function formatTime(sec) {
+      if (isNaN(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60).toString().padStart(2, "0");
+      return `${m}:${s}`;
+    }
+
+    progressBar.addEventListener("click", (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const ratio = Math.min(Math.max(clickX / rect.width, 0), 1);
+      audioEl.currentTime = ratio * audioEl.duration;
+    });
+    progressBar.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") audioEl.currentTime = Math.min(audioEl.currentTime + 5, audioEl.duration);
+      if (e.key === "ArrowLeft") audioEl.currentTime = Math.max(audioEl.currentTime - 5, 0);
+    });
+    volumeSlider.addEventListener("input", (e) => {
+      audioEl.volume = e.target.value;
+    });
+
+    if (speedSelect) {
+      speedSelect.addEventListener('change', () => {
+        audioEl.playbackRate = parseFloat(speedSelect.value);
+      });
+    }
+
+    prevBtn.addEventListener("click", goPrev);
+    nextBtn.addEventListener("click", goNext);
+
+    toggleNotesBtn.addEventListener("click", () => {
+      const expanded = toggleNotesBtn.getAttribute("aria-expanded") === "true";
+      if (expanded) {
+        notesPanel.style.display = "none";
+        toggleNotesBtn.setAttribute("aria-expanded", "false");
+      } else {
+        notesPanel.style.display = "flex";
+        toggleNotesBtn.setAttribute("aria-expanded", "true");
+        notesPanel.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+
+    // Init
+    loadUI();
+  </script>
+</body>
+</html>

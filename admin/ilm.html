@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin Page</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+   
+    <div class="line2">
+      <center>
+        <h2>
+          Qur'an and ILM
+        </h2>
+      </center>
+        <textarea class="txt" id="newText" rows="6" cols="60" placeholder="Enter content to display..."></textarea><br>
+  <button class="add" onclick="addText()">Add Content</button>
+      <div id="contentList"></div>
+  </div>
+  <script>
+    // Firebase is initialized in firebase-config.js
+    const auth = window.firebaseAuth || firebase.auth();
+    const db = window.firebaseDb || firebase.database();
+    const contentList = document.getElementById("contentList");
+
+
+    // Check if user is logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // No user signed in, redirect to login
+        window.location.href = "login.html";
+      }
+      if(user.email!="piousbrotherscommunity@gmail.com"){
+        window.location.href="login.html"
+      }
+    });
+
+    // Logout function
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (!user) window.location.href = "login.html";
+      else loadContent();
+    });
+
+    // Add content
+    function addText() {
+      const content = document.getElementById("newText").value.trim();
+      if (!content) return alert("Please enter some text!");
+      db.ref("muslimContent").push({ text: content })
+        .then(() => {
+          document.getElementById("newText").value = "";
+          loadContent();
+        });
+    }
+
+    // Load and display content
+    function loadContent() {
+      db.ref("muslimContent").once("value", snapshot => {
+        contentList.innerHTML = "";
+        snapshot.forEach(child => {
+          const div = document.createElement("div");
+          div.style.border = "1px solid #ccc";
+          div.style.margin = "10px";
+          div.style.padding = "10px";
+          div.style.borderRadius = "6px";
+          div.style.backgroundColor = "#7ba17b";
+
+          const p = document.createElement("p");
+          p.textContent = child.val().text;
+
+          const delBtn = document.createElement("button");
+          delBtn.textContent = "Delete";
+          delBtn.style.marginLeft = "10px";
+          delBtn.onclick = () => deleteContent(child.key);
+
+          div.appendChild(p);
+          div.appendChild(delBtn);
+          contentList.appendChild(div);
+        });
+      });
+    }
+
+    // Delete content
+    function deleteContent(key) {
+      if (confirm("Are you sure you want to delete this content?")) {
+        db.ref("muslimContent").child(key).remove()
+          .then(() => {
+            alert("Content deleted.");
+            loadContent();
+          });
+      }
+    }
+
+    
+  </script>
+</body>
+</html>
