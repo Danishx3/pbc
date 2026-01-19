@@ -23,10 +23,9 @@ const firebaseConfig = {
   measurementId: "G-5GYBVCJY9P"
 };
 
-// Initialize Firebase (only if Firebase SDK is loaded)
 if (typeof firebase !== 'undefined') {
   firebase.initializeApp(firebaseConfig);
-  
+
   // Make db and auth globally available for convenience
   // Note: You can also access them via firebase.database() and firebase.auth() directly
   if (typeof window !== 'undefined') {
