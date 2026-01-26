@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ILMIFY || Prayer Times</title>
-    <meta name="description" content="Get accurate prayer times based on your current location.">
+    <meta name="description" content="Get accurate prayer times based on search.">
     <meta name="keywords" content="prayer times, salah times, namaz times, islamic prayer times">
     <meta name="author" content="ilmify Pious Brothers Team">
     <link rel="stylesheet" href="pbc.css">
@@ -64,6 +64,13 @@
         .fa-spin-pulse {
             animation: fa-spin 1s infinite steps(8);
         }
+
+        .settings-panel {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -80,10 +87,23 @@
     <div class="content intro">
         <center>
             <div class="prayer-card" style="max-width: 500px;">
-                <h3 class="title p-2" style="background: transparent;">Today's Prayer Times</h3>
+                <h3 class="title p-2" style="background: transparent;">Prayer Times</h3>
+
+                <div class="settings-panel">
+                    <div style="text-align: left; margin-bottom: 5px; font-size: 0.8rem; color: #aaa;">Search Location
+                    </div>
+                    <div class="d-flex gap-2">
+                        <input type="text" id="cityInput" class="form-control" style="background-color: #afe9da;"
+                            placeholder="City (e.g. checked)">
+                        <input type="text" id="countryInput" class="form-control" style="background-color: #afe9da;"
+                            placeholder="Country (e.g. UK)">
+                    </div>
+
+                    <button class="btn btn-success w-100 mt-2" onclick="saveAndFetch()">Get Prayer Times</button>
+                </div>
 
                 <div id="locationDisplay" class="location-info">
-                    <i class="fa fa-map-marker-alt"></i> <span id="locText">Detecting location...</span>
+                    <i class="fa fa-map-marker-alt"></i> <span id="locText">Enter location above</span>
                 </div>
 
                 <div id="prayerData" style="display: none;">
@@ -94,6 +114,10 @@
                     <div class="prayer-time-row">
                         <span class="prayer-name">Sunrise</span>
                         <span class="time-value" id="sunriseTime">--:--</span>
+                    </div>
+                    <div class="prayer-time-row">
+                        <span class="prayer-name">Dhuha</span>
+                        <span class="time-value" id="dhuhaTime">--:--</span>
                     </div>
                     <div class="prayer-time-row">
                         <span class="prayer-name">Dhuhr</span>
@@ -111,6 +135,18 @@
                         <span class="prayer-name">Isha</span>
                         <span class="time-value" id="ishaTime">--:--</span>
                     </div>
+                    <div class="prayer-time-row">
+                        <span class="prayer-name">First Third</span>
+                        <span class="time-value" id="firstThirdTime">--:--</span>
+                    </div>
+                    <div class="prayer-time-row">
+                        <span class="prayer-name">Midnight</span>
+                        <span class="time-value" id="midnightTime">--:--</span>
+                    </div>
+                    <div class="prayer-time-row">
+                        <span class="prayer-name">Last Third</span>
+                        <span class="time-value" id="lastThirdTime">--:--</span>
+                    </div>
                 </div>
 
                 <div id="loader" style="margin: 20px;">
@@ -120,106 +156,111 @@
 
                 <div id="errorMsg" style="display: none; color: #ff6b6b; margin: 10px;">
                     <i class="fa fa-exclamation-circle"></i> <span id="errorText"></span>
-                    <br>
-                    <button class="btn btn-outline-light btn-sm mt-2" onclick="getLocationAndFetch()">Try Again</button>
                 </div>
             </div>
 
             <p class="text-white mt-3" style="font-size: 0.8rem; opacity: 0.7;">
-                Calculation Method: ISNA / Standard
+                Calculation Method: University of Islamic Sciences, Karachi
             </p>
         </center>
     </div>
 
     <script src="pbc.js"></script>
     <script>
+        // State
+        let userSettings = {
+            city: '',
+            country: ''
+        };
+
+        // Hardcoded Method: 1 = University of Islamic Sciences, Karachi
+        const CALCULATION_METHOD = 1;
+
         document.addEventListener('DOMContentLoaded', () => {
-            getLocationAndFetch();
+            loadSettings();
+            init();
         });
 
-        function getLocationAndFetch() {
-            const locText = document.getElementById('locText');
-            const prayerData = document.getElementById('prayerData');
-            const loader = document.getElementById('loader');
-            const errorMsg = document.getElementById('errorMsg');
-
-            prayerData.style.display = 'none';
-            errorMsg.style.display = 'none';
-            loader.style.display = 'block';
-            locText.innerText = "Requesting location access...";
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            } else {
-                showError({ message: "Geolocation is not supported by this browser." });
+        function loadSettings() {
+            const saved = localStorage.getItem('prayerSettings_v4'); // v4 for manual-only
+            if (saved) {
+                userSettings = JSON.parse(saved);
+                document.getElementById('cityInput').value = userSettings.city || '';
+                document.getElementById('countryInput').value = userSettings.country || '';
             }
         }
 
-        function showPosition(position) {
-            const lat = position.coords.latitude;
-            const long = position.coords.longitude;
-
-            document.getElementById('locText').innerText = `Lat: ${lat.toFixed(2)}, Long: ${long.toFixed(2)}`;
-
-            fetchPrayerTimes(lat, long);
+        function saveSettings() {
+            userSettings.city = document.getElementById('cityInput').value.trim();
+            userSettings.country = document.getElementById('countryInput').value.trim();
+            localStorage.setItem('prayerSettings_v4', JSON.stringify(userSettings));
         }
 
-        function showError(error) {
-            const loader = document.getElementById('loader');
-            const errorMsg = document.getElementById('errorMsg');
-            const locText = document.getElementById('locText');
+        function init() {
+            if (userSettings.city) fetchManualTimes();
+        }
 
-            loader.style.display = 'none';
-            errorMsg.style.display = 'block';
-
-            let msg = "An error occurred.";
-            if (error.code === error.PERMISSION_DENIED) {
-                msg = "User denied the request for Geolocation.";
-            } else if (error.code === error.POSITION_UNAVAILABLE) {
-                msg = "Location information is unavailable.";
-            } else if (error.code === error.TIMEOUT) {
-                msg = "The request to get user location timed out.";
-            } else if (error.message) {
-                msg = error.message;
+        function saveAndFetch() {
+            saveSettings();
+            if (!userSettings.city) {
+                alert("Please enter a city name.");
+                return;
             }
-
-            document.getElementById('errorText').innerText = msg;
-            locText.innerText = "Location access failed";
+            fetchManualTimes();
         }
 
-        function fetchPrayerTimes(lat, long) {
+        function getCommonDateString() {
             const date = new Date();
-            // Format date as DD-MM-YYYY for Aladhan API if needed, 
-            // but the 'timings' endpoint usually takes a unix timestamp or just defaults to today if we use the 'timings' endpoint with date string
-            // Actually, querying the API with /v1/timings/<date_string> is standard.
-            // Let's use the current timestamp approach or just the formatted date.
-
             // Using DD-MM-YYYY
             const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
-            const dateString = `${day}-${month}-${year}`;
+            return `${day}-${month}-${year}`;
+        }
 
-            // method=2 is ISNA. Can be configurable later.
-            const apiUrl = `https://api.aladhan.com/v1/timings/${dateString}?latitude=${lat}&longitude=${long}&method=2`;
+        function fetchManualTimes() {
+            const city = document.getElementById('cityInput').value;
+            const country = document.getElementById('countryInput').value;
+            const loader = document.getElementById('loader');
+            const prayerData = document.getElementById('prayerData');
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!city) return;
+
+            prayerData.style.display = 'none';
+            errorMsg.style.display = 'none';
+            loader.style.display = 'block';
+            document.getElementById('locText').innerText = `Searching for ${city}...`;
+
+            const apiUrl = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${CALCULATION_METHOD}`;
 
             fetch(apiUrl)
                 .then(response => response.json())
-                .then(data => {
-                    if (data.code === 200 && data.data) {
-                        displayTimes(data.data);
-                    } else {
-                        throw new Error("API call failed");
-                    }
-                })
+                .then(data => handleApiResponse(data))
                 .catch(err => {
-                    showError({ message: "Failed to fetch prayer data from API. " + err.message });
+                    handleApiError(err);
                 });
+        }
+
+        function handleApiResponse(data) {
+            if (data.code === 200 && data.data) {
+                displayTimes(data.data);
+            } else {
+                throw new Error("API call failed or returned no data");
+            }
+        }
+
+        function handleApiError(err) {
+            const loader = document.getElementById('loader');
+            const errorMsg = document.getElementById('errorMsg');
+            loader.style.display = 'none';
+            errorMsg.style.display = 'block';
+            document.getElementById('errorText').innerText = "Failed to fetch prayer data. " + err.message;
         }
 
         function displayTimes(data) {
             const timings = data.timings;
-            const meta = data.meta;
+            // const meta = data.meta;
 
             document.getElementById('fajrTime').innerText = convertTo12Hour(timings.Fajr);
             document.getElementById('sunriseTime').innerText = convertTo12Hour(timings.Sunrise);
@@ -228,17 +269,43 @@
             document.getElementById('maghribTime').innerText = convertTo12Hour(timings.Maghrib);
             document.getElementById('ishaTime').innerText = convertTo12Hour(timings.Isha);
 
-            // Update location text if API provides a timezone or we can infer something, 
-            // but for now coordinates + timezone is fine.
-            document.getElementById('locText').innerText = `${meta.timezone} (${meta.method.name})`;
+            // Extra times
+            if (timings.Midnight) document.getElementById('midnightTime').innerText = convertTo12Hour(timings.Midnight);
+            if (timings.Firstthird) document.getElementById('firstThirdTime').innerText = convertTo12Hour(timings.Firstthird);
+            if (timings.Lastthird) document.getElementById('lastThirdTime').innerText = convertTo12Hour(timings.Lastthird);
+
+            // Calculate Dhuha (Sunrise + 20 mins)
+            if (timings.Sunrise) {
+                document.getElementById('dhuhaTime').innerText = calculateDhuha(timings.Sunrise);
+            }
+
+            // Update location text
+            const city = document.getElementById('cityInput').value;
+            const country = document.getElementById('countryInput').value;
+            document.getElementById('locText').innerText = `${city}${country ? ', ' + country : ''}`;
 
             document.getElementById('loader').style.display = 'none';
             document.getElementById('prayerData').style.display = 'block';
         }
 
+        function calculateDhuha(sunriseTime) {
+            // sunriseTime is HH:mm (24h)
+            let cleanTime = sunriseTime.split(' ')[0]; // safely handle just in case
+            let [hours, minutes] = cleanTime.split(':').map(Number);
+            let date = new Date();
+            date.setHours(hours);
+            date.setMinutes(minutes + 20); // Add 20 minutes
+
+            let h = date.getHours();
+            let m = date.getMinutes();
+
+            // Format back to HH:mm string for conversion
+            let timeStr = `${h}:${m < 10 ? '0' + m : m}`;
+            return convertTo12Hour(timeStr);
+        }
+
         function convertTo12Hour(time) {
             // time format is "HH:mm" (24h)
-            // Remove any potential timezone suffix like " (EST)"
             let cleanTime = time.split(' ')[0];
             let [hours, minutes] = cleanTime.split(':');
             hours = parseInt(hours);
