@@ -96,7 +96,7 @@
                         <input type="text" id="cityInput" class="form-control" style="background-color: #afe9da;"
                             placeholder="City (e.g. checked)">
                         <input type="text" id="countryInput" class="form-control" style="background-color: #afe9da;"
-                            placeholder="Country (e.g. UK)">
+                            placeholder="Country (e.g. INDIA)">
                     </div>
 
                     <button class="btn btn-success w-100 mt-2" onclick="saveAndFetch()">Get Prayer Times</button>
@@ -161,6 +161,7 @@
 
             <p class="text-white mt-3" style="font-size: 0.8rem; opacity: 0.7;">
                 Calculation Method: University of Islamic Sciences, Karachi
+
             </p>
         </center>
     </div>
@@ -270,9 +271,8 @@
             document.getElementById('ishaTime').innerText = convertTo12Hour(timings.Isha);
 
             // Extra times
-            if (timings.Midnight) document.getElementById('midnightTime').innerText = convertTo12Hour(timings.Midnight);
-            if (timings.Firstthird) document.getElementById('firstThirdTime').innerText = convertTo12Hour(timings.Firstthird);
-            if (timings.Lastthird) document.getElementById('lastThirdTime').innerText = convertTo12Hour(timings.Lastthird);
+            // Custom Salaf Calculation for Night Times (Maghrib to Fajr)
+            calculateAndDisplaySalafTimes(timings.Maghrib, timings.Fajr);
 
             // Calculate Dhuha (Sunrise + 20 mins)
             if (timings.Sunrise) {
@@ -286,6 +286,49 @@
 
             document.getElementById('loader').style.display = 'none';
             document.getElementById('prayerData').style.display = 'block';
+        }
+
+        function calculateAndDisplaySalafTimes(maghribTime, fajrTime) {
+            // Helper to get minutes from HH:mm
+            const getMinutes = (timeStr) => {
+                const [h, m] = timeStr.split(' ')[0].split(':').map(Number);
+                return h * 60 + m;
+            };
+
+            let maghribMin = getMinutes(maghribTime);
+            let fajrMin = getMinutes(fajrTime);
+
+            // If Fajr is technically "smaller" than Maghrib, it means it's the next day, so add 24h
+            if (fajrMin < maghribMin) {
+                fajrMin += 24 * 60;
+            }
+
+            const nightDuration = fajrMin - maghribMin;
+
+            // Calculations
+            const firstThirdMin = maghribMin + (nightDuration / 3);
+            const midnightMin = maghribMin + (nightDuration / 2);
+            const lastThirdMin = maghribMin + (2 * nightDuration / 3);
+
+            // Update DOM
+            document.getElementById('firstThirdTime').innerText = minutesTo12Hour(firstThirdMin);
+            document.getElementById('midnightTime').innerText = minutesTo12Hour(midnightMin);
+            document.getElementById('lastThirdTime').innerText = minutesTo12Hour(lastThirdMin);
+        }
+
+        function minutesTo12Hour(totalMinutes) {
+            // Visualize time over 24h as needed
+            let h = Math.floor(totalMinutes / 60);
+            let m = Math.floor(totalMinutes % 60);
+
+            // Normalize hours if > 24 (e.g., 25:00 is 1:00 AM)
+            if (h >= 24) h -= 24;
+
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            h = h ? h : 12; // 0 becomes 12
+
+            return `${h}:${m < 10 ? '0' + m : m} ${ampm}`;
         }
 
         function calculateDhuha(sunriseTime) {
