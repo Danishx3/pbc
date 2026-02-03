@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Quran Reader - ILMIFY</title>
+    <meta name="description" content="Read the Holy Quran with translation and audio. Track your reading progress.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="logoo.png" type="image/icon type">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&family=Amiri:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Anek Latin', sans-serif;
+            background:
+                radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+                radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+                radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+            background-color: #00060f;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .quran-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        /* Nav & Banner Styles */
+        .resume-banner {
+            background: linear-gradient(135deg, #0d564f, #1a7a70);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 20px rgba(13, 86, 79, 0.3);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .surah-selector {
+            background: rgba(13, 86, 79, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(13, 86, 79, 0.3);
+        }
+
+        .surah-selector label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1a7a70;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .surah-selector select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #0d564f;
+            background: white;
+            color: #000;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .surah-selector select:focus {
+            outline: none;
+            border-color: #1a7a70;
+            box-shadow: 0 0 0 3px rgba(13, 86, 79, 0.1);
+        }
+
+        /* Ayah Display Styles */
+        .ayah-display {
+            background: linear-gradient(135deg, rgba(13, 86, 79, 0.05), rgba(26, 122, 112, 0.05));
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid rgba(13, 86, 79, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ayah-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(13, 86, 79, 0.03) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .ayah-number {
+            background: linear-gradient(135deg, #0d564f, #1a7a70);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(13, 86, 79, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .ayah-arabic {
+            font-family: 'Amiri', serif;
+            font-size: 2.2rem;
+            line-height: 2.2;
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 30px;
+            direction: rtl;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ayah-translation {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #b3b2b2;
+            font-style: italic;
+            max-width: 700px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Audio Player Styling */
+        .audio-wrapper {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        audio {
+            width: 100%;
+            max-width: 500px;
+            height: 40px;
+            border-radius: 25px;
+        }
+
+        .navigation-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #0d564f, #1a7a70);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(13, 86, 79, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 86, 79, 0.4);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .nav-btn:disabled {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #ffffff;
+            font-size: 1.2rem;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .surah-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(13, 86, 79, 0.05);
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .surah-info h3 {
+            color: #fbffff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .surah-info p {
+            color: #98beba;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ayah-arabic {
+                font-size: 1.8rem;
+                line-height: 2;
+            }
+
+            .ayah-translation {
+                font-size: 1rem;
+            }
+
+            .ayah-display {
+                padding: 25px;
+                min-height: 350px;
+            }
+
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">ILMIFY</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Quran</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="quran-container">
+        <div class="resume-banner" id="resumeBanner">
+            <div>
+                <h5 class="mb-1"><i class="fas fa-bookmark"></i> Continue Reading</h5>
+                <p class="mb-0 small" id="resumeText"></p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-light btn-sm" onclick="resumeReading()">Resume</button>
+                <button class="btn btn-outline-light btn-sm" onclick="closeResumeBanner()">✕</button>
+            </div>
+        </div>
+
+        <div class="surah-selector">
+            <label for="surahSelect">Select Surah</label>
+            <select id="surahSelect" onchange="loadSurah()">
+                <option value="">-- Choose --</option>
+            </select>
+        </div>
+
+        <div class="ayah-display" id="ayahDisplay">
+            <div class="text-center py-5">
+                <i class="fas fa-book-open fa-3x mb-3" style="color: #1a7a70;"></i>
+                <p>Select a Surah to begin reading</p>
+            </div>
+        </div>
+
+        <div class="navigation-controls">
+            <button class="nav-btn" id="prevBtn" onclick="previousAyah()" disabled>
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button class="nav-btn" id="nextBtn" onclick="nextAyah()" disabled>
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Surah data (Abbreviated for performance, but you can include all 114)
+        const surahNames = [
+            { number: 1, arabic: "الفاتحة", english: "Al-Fatihah", translation: "The Opening", verses: 7 },
+            { number: 2, arabic: "البقرة", english: "Al-Baqarah", translation: "The Cow", verses: 286 },
+            { number: 18, arabic: "الكهف", english: "Al-Kahf", translation: "The Cave", verses: 110 },
+            { number: 36, arabic: "يس", english: "Ya-Sin", translation: "Ya Sin", verses: 83 },
+            { number: 67, arabic: "الملك", english: "Al-Mulk", translation: "The Sovereignty", verses: 30 },
+            { number: 112, arabic: "الإخلاص", english: "Al-Ikhlas", translation: "Sincerity", verses: 4 },
+            { number: 113, arabic: "الفلق", english: "Al-Falaq", translation: "Daybreak", verses: 5 },
+            { number: 114, arabic: "الناس", english: "An-Nas", translation: "Mankind", verses: 6 }
+            // ... Add others as needed
+        ];
+
+        let currentSurah = null;
+        let currentAyahNumber = 1;
+        let surahData = null;
+
+        window.onload = () => {
+            populateSurahDropdown();
+            checkResumeReading();
+            setupAutoPlay();
+        };
+
+        function populateSurahDropdown() {
+            const select = document.getElementById('surahSelect');
+            surahNames.forEach(s => {
+                const opt = new Option(`${s.number}. ${s.english} (${s.arabic})`, s.number);
+                select.add(opt);
+            });
+        }
+
+        async function loadSurah(startAyah = 1) {
+            const num = document.getElementById('surahSelect').value;
+            if (!num) return;
+
+            currentSurah = parseInt(num);
+            currentAyahNumber = startAyah;
+            const display = document.getElementById('ayahDisplay');
+            display.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+
+            try {
+                // Fetch Audio and Arabic text together
+                const resAr = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`);
+                const dataAr = await resAr.json();
+
+                // Fetch Translation
+                const resEn = await fetch(`https://api.alquran.cloud/v1/surah/${num}/en.asad`);
+                const dataEn = await resEn.json();
+
+                surahData = { arabic: dataAr.data, translation: dataEn.data };
+                displayAyah();
+            } catch (e) {
+                display.innerHTML = '<p class="text-danger text-center">Failed to load content.</p>';
+            }
+        }
+
+        function displayAyah() {
+            const idx = currentAyahNumber - 1;
+            const ar = surahData.arabic.ayahs[idx];
+            const en = surahData.translation.ayahs[idx];
+            const info = surahNames.find(s => s.number === currentSurah);
+
+            let text = ar.text;
+            // Clean Bismillah from first ayah (except Surah 1 and 9)
+            if (currentAyahNumber === 1 && currentSurah !== 1 && currentSurah !== 9) {
+                const bism = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
+                text = text.replace(bism, "").trim();
+            }
+
+            const bismHeader = (currentAyahNumber === 1 && currentSurah !== 9) ?
+                `<div class="ayah-arabic" style="font-size:1.5rem; color:#1a7a70;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : '';
+
+            document.getElementById('ayahDisplay').innerHTML = `
+                <div class="surah-info">
+                    <h3>${info.english}</h3>
+                    <p class="small text-muted">${info.translation}</p>
+                </div>
+                <div class="ayah-number">Ayah ${currentAyahNumber} / ${info.verses}</div>
+                
+                <div class="audio-wrapper">
+                    <audio id="mainAudio" controls autoplay>
+                        <source src="${ar.audio}" type="audio/mpeg">
+                    </audio>
+                </div>
+
+                ${bismHeader}
+                <div class="ayah-arabic">${text}</div>
+                <div class="ayah-translation">${en.text}</div>
+            `;
+
+            document.getElementById('prevBtn').disabled = currentAyahNumber === 1;
+            document.getElementById('nextBtn').disabled = currentAyahNumber === info.verses;
+
+            saveProgress();
+        }
+
+        function nextAyah() {
+            const info = surahNames.find(s => s.number === currentSurah);
+            if (currentAyahNumber < info.verses) {
+                currentAyahNumber++;
+                displayAyah();
+            }
+        }
+
+        function previousAyah() {
+            if (currentAyahNumber > 1) {
+                currentAyahNumber--;
+                displayAyah();
+            }
+        }
+
+        function setupAutoPlay() {
+            document.addEventListener('ended', (e) => {
+                if (e.target.id === 'mainAudio') nextAyah();
+            }, true);
+        }
+
+        function saveProgress() {
+            localStorage.setItem('quranProgress', JSON.stringify({
+                surah: currentSurah,
+                ayah: currentAyahNumber
+            }));
+        }
+
+        function checkResumeReading() {
+            const saved = localStorage.getItem('quranProgress');
+            if (saved) {
+                const p = JSON.parse(saved);
+                document.getElementById('resumeText').innerText = `Surah ${p.surah}, Ayah ${p.ayah}`;
+                document.getElementById('resumeBanner').style.display = 'flex';
+            }
+        }
+
+        function resumeReading() {
+            const p = JSON.parse(localStorage.getItem('quranProgress'));
+            document.getElementById('surahSelect').value = p.surah;
+            loadSurah(p.ayah);
+            closeResumeBanner();
+        }
+
+        function closeResumeBanner() {
+            document.getElementById('resumeBanner').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
