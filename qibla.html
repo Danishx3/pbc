@@ -404,7 +404,7 @@
                 <div class="compass-inner" id="compassRose">
                     <!-- Degree markers -->
                     <div id="degreeMarkers"></div>
-                    
+
                     <!-- Direction markers rotate with compass -->
                     <div class="direction-marker marker-n">N</div>
                     <div class="direction-marker marker-ne">NE</div>
@@ -529,7 +529,7 @@
         function createDegreeMarkers() {
             const markersContainer = document.getElementById('degreeMarkers');
             markersContainer.innerHTML = '';
-            
+
             // Create 360 degree markers (every 5 degrees, major every 30)
             for (let i = 0; i < 360; i += 5) {
                 const marker = document.createElement('div');
@@ -604,10 +604,10 @@
                     document.getElementById('degreeDisplay').style.display = 'block';
                     document.getElementById('locationInfo').style.display = 'block';
                     document.getElementById('findQiblaBtn').style.display = 'none';
-                    
+
                     // Create degree markers
                     createDegreeMarkers();
-                    
+
                     // Initialize Kaaba icon position
                     if (qiblaDirection !== null) {
                         document.getElementById('kaabaIcon').style.transform = `rotate(${qiblaDirection}deg)`;
@@ -663,7 +663,7 @@
             // iOS devices - use webkitCompassHeading if available (most accurate)
             if (event.webkitCompassHeading !== undefined && event.webkitCompassHeading !== null) {
                 heading = event.webkitCompassHeading;
-            } 
+            }
             // Android/Chrome - use alpha with proper conversion
             else if (event.alpha !== null && event.alpha !== undefined) {
                 if (event.absolute === true) {
@@ -683,7 +683,7 @@
                 // This is less accurate but can work as fallback
                 const beta = event.beta;
                 const gamma = event.gamma;
-                
+
                 // Simple approximation (not as accurate as alpha)
                 if (Math.abs(beta) < 45) {
                     // Device is relatively flat

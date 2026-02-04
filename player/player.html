@@ -1,546 +1,671 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Music Player with Lyrics & Song Selection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
+    <title>Quran Player - ILMIFY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="icon" href="../logoo.png" type="image/icon type">
+    <link rel="stylesheet" href="/pbc.css">
 
     <style>
-        .line5{
-            font-family: "anek latin", sans-serif;
+        :root {
+            --primary-color: #0d564f;
+            --primary-hover: #1a7a70;
+            --bg-dark: #00060f;
+            --card-bg: rgba(13, 86, 79, 0.15);
+            --text-main: #ffffff;
+            --text-secondary: #b3b2b2;
+            --accent: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Anek Latin', sans-serif;
+            background:
+                radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+                radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+                radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+            background-color: var(--bg-dark);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 30px;
+        }
+
+        .header-custom {
+            background: linear-gradient(135deg, rgba(13, 86, 79, 0.95), rgba(26, 122, 112, 0.95));
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(26, 122, 112, 0.5);
+        }
+
+        .header-custom .home-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-main);
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .header-custom .home-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .header-custom h4 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .player-card {
+            background: linear-gradient(135deg, rgba(13, 86, 79, 0.2), rgba(26, 122, 112, 0.15));
+            border-radius: 25px;
+            padding: 35px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(26, 122, 112, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .song-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 25px;
             text-align: center;
-            color: rgb(253, 250, 250);
-            margin: 2%;
-            border-radius: 10px;
-            width: 96%;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
         }
-        .player {
-            background: #afe9da;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            width: 300px;
-            box-shadow: 0 8px 5px rgba(8, 8, 8, 0.3);
-            color: #101010;
+
+        .progress-section {
+            margin: 25px 0;
         }
-        button, select {
-            background: rgba(1, 56, 45, 0.6);
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+            border-radius: 10px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(26, 122, 112, 0.6);
+        }
+
+        .progress-container:hover .progress-bar {
+            box-shadow: 0 0 15px rgba(26, 122, 112, 0.8);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn-control {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
             color: white;
             border: none;
-            padding: 10px;
-            margin: 5px;
             cursor: pointer;
-            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(13, 86, 79, 0.4);
         }
-        button:hover, select:hover {
-            background: #00231c;
+
+        .btn-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(13, 86, 79, 0.6);
         }
-        #progress-container {
+
+        .btn-control:active {
+            transform: scale(0.95);
+        }
+
+        .btn-play {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary-hover), var(--primary-color));
+        }
+
+        .btn-control.active {
+            background: linear-gradient(135deg, var(--accent), #ffed4e);
+            color: var(--bg-dark);
+        }
+
+        .song-selector-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(26, 122, 112, 0.3);
+        }
+
+        .song-selector-container label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .song-select {
             width: 100%;
-            background: #6a867e;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid rgba(26, 122, 112, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-main);
+            font-size: 1rem;
             cursor: pointer;
-            height: 8px;
-            margin: 10px 0;
+            transition: all 0.3s;
+            font-family: 'Anek Latin', sans-serif;
         }
-        #progress {
-            width: 0%;
-            height: 100%;
-            background: #101010;
-            border-radius: 5px;
+
+        .song-select:focus {
+            outline: none;
+            border-color: var(--primary-hover);
+            box-shadow: 0 0 0 3px rgba(26, 122, 112, 0.2);
         }
-        #lyrics {
-            background-color: transparent;
+
+        .song-select option {
+            background: var(--bg-dark);
+            color: var(--text-main);
             padding: 10px;
-            margin-top: 10px;
+        }
+
+        .extra-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-group label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .volume-slider,
+        .speed-slider {
+            width: 100px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
-            font-size: 14px;
-            color:  #f0f7f2;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
         }
-        .intro {
-            opacity: 0;
-            animation: slideIn 1.5s ease-out forwards;
+
+        .volume-slider::-webkit-slider-thumb,
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--primary-hover);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(26, 122, 112, 0.6);
         }
-@keyframes slideIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
+
+        .volume-slider::-moz-range-thumb,
+        .speed-slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--primary-hover);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(26, 122, 112, 0.6);
+        }
+
+        .lyrics-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid rgba(26, 122, 112, 0.3);
+            min-height: 100px;
+        }
+
+        .lyrics-container h2 {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .lyrics-placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+            text-align: center;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px 15px;
             }
-            to {
-                transform: translateY(0);
+
+            .player-card {
+                padding: 25px 20px;
+            }
+
+            .song-title {
+                font-size: 1.2rem;
+            }
+
+            .btn-control {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+
+            .btn-play {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .extra-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                justify-content: space-between;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
                 opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
             }
         }
     </style>
 </head>
+
 <body>
-<div class="line5">
-    <br>
-    <h2 class="">Quran Player</h2>
+    <header class="fix intro" style="z-index: 1000;">
+        <center>
+            <a style="position: fixed; left: 20px; color: rgb(251, 249, 249);" href="/main.html"><i
+                    class="fa fa-home"></i></a>
+            Quran meanings
+        </center>
+    </header><br><br><br>
 
-    <!-- Song Selector -->
-    <label  for="song-selector"></label>
-    <select class="" id="song-selector" onchange="selectSong()">
-        <option value="0">1.fatihah</option>
-        <option value="1">2.baqarah</option>
-        <option value="2">3.Al imran</option>
-        <option value="3">4.An-nisa</option>
-        <option value="4">5.Al-Ma'ida</option>
-        <option value="5">6.Al-An'am</option>
-        <option value="6">7.AlAraf</option>
-        <option value="7">8.AlAnfal</option>
-        <option value="8">9.AtTawbah</option>
-        <option value="9">10.Yunus</option>
-        <option value="10">11.Hud</option>
-        <option value="11">12.Yusuf</option>
-        <option value="12">13.ArRad</option>
-        <option value="13">14.Ibrahim</option>
-        <option value="14">15.Al-Hijr</option>
-        <option value="15">16.An-Nahl</option>
-        <option value="16">17.Al-Israh</option>
-        <option value="17">18.Al-Kahf</option>
-        <option value="18">19.Mariam</option>
-        <option value="19">20.Ta-h</option>
-        <option value="20">21.Al-Anbiya</option>
-        <option value="21">22.Al-Hajj</option>
-        <option value="22">23.Al-Mumenoon</option>
-        <option value="23">24.Al-Noor</option>
-        <option value="24">25.Al-Furqan</option>
-        <option value="25">26.Al-Shuara</option>
-        <option value="26">27.Al-Naml</option>
-        <option value="27">28.Al-Qasas</option>
-        <option value="28">29.Al-Ankaboot</option>
-        <option value="29">30.Room</option>
-        <option value="30">31.Luqman</option>
-        <option value="31">32.As.Sajda</option>
-        <option value="32">33.Al-Ahzab</option>
-        <option value="33">34.Saba</option>
-        <option value="34">35.Fatir</option>
-        <option value="35">36.Ya-Seen</option>
-        <option value="36">37.As-Saaffat</option>
-        <option value="37">38.Sad</option>
-        <option value="38">39.Az-Zumar</option>
-        <option value="39">40.Ghafir</option>
-        <option value="40">41.Fussilat</option>
-        <option value="41">42.Ash-Shura</option>
-        <option value="42">43.Az-Zukhruf</option>
-        <option value="43">44.Ad-Dukhan </option>
-        <option value="44">45.Al-Jathiya</option>
-        <option value="45">46.Al.Ahqaf</option>
-        <option value="46">47.muhammed</option>
-        <option value="47">48.Al-Fath</option>
-        <option value="48">49.Al-Hujraat</option>
-        <option value="49">50.Qaf</option>
-        <option value="50">51.Adh-Dhariyat</option>
-        <option value="51">52.At-Tur</option>
-        <option value="52">53.An-Najm</option>
-        <option value="53">54.Al-Qamar</option>
-        <option value="54">55.Ar-Rahman </option>
-        <option value="55">56.Al-Waqia</option>
-        <option value="56">57.Al-Hadid</option>
-        <option value="57">58.Al-Mujadila</option>
-        <option value="58">59.Al-Hashr</option>
-        <option value="59">60.Al-Mumtahina</option>
-        <option value="60">61.As-Saff</option>
-        <option value="61">62.Al-Jummua</option>
-        <option value="62">63.Al-Munafiqoon</option>
-        <option value="63">64.At-Taghabun</option>
-        <option value="64">65.At-Talaq</option>
-        <option value="65">66.At-Tahrim</option>
-        <option value="66">67.Al-Mulk</option>
-        <option value="67">68.Al-Qalam</option>
-        <option value="68">69.Al-Haaqqa</option>
-        <option value="69">70.Al-Maarij</option>
-        <option value="70">71.Nooh</option>
-        <option value="71">72.Al-Jinn</option>
-        <option value="72">73.Al-Muzzammil</option>
-        <option value="73">74.Al-Muddaththir</option>
-        <option value="74">75.Al-Qiyama</option>
-        <option value="75">76.Al-Insan</option>
-        <option value="76">77.Al-Mursalat</option>
-        <option value="77">78.An-Naba</option>
-        <option value="78">79.An-Naziat</option>
-        <option value="79">80.Abasa</option>
-        <option value="80">81.At-Takwir</option>
-        <option value="81">82.Al-Infitar</option>
-        <option value="82">83.Al-Mutaffifin</option>
-        <option value="83">84.Al-Inshiqaq</option>
-        <option value="84">85.Al-Burooj</option>
-        <option value="85">86.At-Tariq</option>
-        <option value="86">87.Al-Ala</option>
-        <option value="87">88.Al-Ghashiya</option>
-        <option value="88">89.Al-Fajr</option>
-        <option value="89">90.Al-Balad</option>
-        <option value="90">91.Ash-Shams</option>
-        <option value="91">92.Al-Lail</option>
-        <option value="92">93.Ad-Dhuha</option>
-        <option value="93">94.Al-Inshirah</option>
-        <option value="94">95.At-Tin</option>
-        <option value="95">96.Al-Alaq</option>
-        <option value="96">97.Al-Qadr</option>
-        <option value="97">98.Al-Bayyina</option>
-        <option value="98">99.Al-Zalzala</option>
-        <option value="99">100.Al-Adiyat</option>
-        <option value="100">101.Al-Qaria</option>
-        <option value="101">102.At-Takathur</option>
-        <option value="102">103.Al-Asr</option>
-        <option value="103">104.Al-Humaza</option>
-        <option value="104">105.Al-Fil</option>
-        <option value="105">106.Quraish</option>
-        <option value="106">107.Al-Maun</option>
-        <option value="107">108.Al-Kauther</option>
-        <option value="108">109.Al-Kafiroon</option>
-        <option value="109">110.An-Nasr</option>
-        <option value="110">111.Al-Masadd</option>
-        <option value="111">112.Al-Ikhlas</option>
-        <option value="112">113.Al-Falaq</option>
-        <option value="113">114.An-Nas</option>
-    </select><br><br>
-    <div class="player"> 
-        <p id="song-title"></p>
-        <audio id="audio-player"></audio>
-        
-        <!-- Progress Bar -->
-        <div id="progress-container" onclick="seek(event)">
-            <div id="progress"></div>
+    <div class="main-container">
+        <div class="song-selector-container">
+            <label for="song-selector"><i class="fas fa-list"></i> Select Surah</label>
+            <select class="song-select" id="song-selector" onchange="selectSong()">
+                <option value="0">1. Al-Fatihah</option>
+                <option value="1">2. Al-Baqarah</option>
+                <option value="2">3. Ali 'Imran</option>
+                <option value="3">4. An-Nisa</option>
+                <option value="4">5. Al-Ma'idah</option>
+                <option value="5">6. Al-An'am</option>
+                <option value="6">7. Al-A'raf</option>
+                <option value="7">8. Al-Anfal</option>
+                <option value="8">9. At-Tawbah</option>
+                <option value="9">10. Yunus</option>
+                <option value="10">11. Hud</option>
+                <option value="11">12. Yusuf</option>
+                <option value="12">13. Ar-Ra'd</option>
+                <option value="13">14. Ibrahim</option>
+                <option value="14">15. Al-Hijr</option>
+                <option value="15">16. An-Nahl</option>
+                <option value="16">17. Al-Isra</option>
+                <option value="17">18. Al-Kahf</option>
+                <option value="18">19. Maryam</option>
+                <option value="19">20. Ta-Ha</option>
+                <option value="20">21. Al-Anbya</option>
+                <option value="21">22. Al-Hajj</option>
+                <option value="22">23. Al-Mu'minun</option>
+                <option value="23">24. An-Nur</option>
+                <option value="24">25. Al-Furqan</option>
+                <option value="25">26. Ash-Shu'ara</option>
+                <option value="26">27. An-Naml</option>
+                <option value="27">28. Al-Qasas</option>
+                <option value="28">29. Al-'Ankabut</option>
+                <option value="29">30. Ar-Rum</option>
+                <option value="30">31. Luqman</option>
+                <option value="31">32. As-Sajdah</option>
+                <option value="32">33. Al-Ahzab</option>
+                <option value="33">34. Saba</option>
+                <option value="34">35. Fatir</option>
+                <option value="35">36. Ya-Sin</option>
+                <option value="36">37. As-Saffat</option>
+                <option value="37">38. Sad</option>
+                <option value="38">39. Az-Zumar</option>
+                <option value="39">40. Ghafir</option>
+                <option value="40">41. Fussilat</option>
+                <option value="41">42. Ash-Shuraa</option>
+                <option value="42">43. Az-Zukhruf</option>
+                <option value="43">44. Ad-Dukhan</option>
+                <option value="44">45. Al-Jathiyah</option>
+                <option value="45">46. Al-Ahqaf</option>
+                <option value="46">47. Muhammad</option>
+                <option value="47">48. Al-Fath</option>
+                <option value="48">49. Al-Hujurat</option>
+                <option value="49">50. Qaf</option>
+                <option value="50">51. Adh-Dhariyat</option>
+                <option value="51">52. At-Tur</option>
+                <option value="52">53. An-Najm</option>
+                <option value="53">54. Al-Qamar</option>
+                <option value="54">55. Ar-Rahman</option>
+                <option value="55">56. Al-Waqi'ah</option>
+                <option value="56">57. Al-Hadid</option>
+                <option value="57">58. Al-Mujadila</option>
+                <option value="58">59. Al-Hashr</option>
+                <option value="59">60. Al-Mumtahanah</option>
+                <option value="60">61. As-Saf</option>
+                <option value="61">62. Al-Jumu'ah</option>
+                <option value="62">63. Al-Munafiqun</option>
+                <option value="63">64. At-Taghabun</option>
+                <option value="64">65. At-Talaq</option>
+                <option value="65">66. At-Tahrim</option>
+                <option value="66">67. Al-Mulk</option>
+                <option value="67">68. Al-Qalam</option>
+                <option value="68">69. Al-Haqqah</option>
+                <option value="69">70. Al-Ma'arij</option>
+                <option value="70">71. Nuh</option>
+                <option value="71">72. Al-Jinn</option>
+                <option value="72">73. Al-Muzzammil</option>
+                <option value="73">74. Al-Muddaththir</option>
+                <option value="74">75. Al-Qiyamah</option>
+                <option value="75">76. Al-Insan</option>
+                <option value="76">77. Al-Mursalat</option>
+                <option value="77">78. An-Naba</option>
+                <option value="78">79. An-Nazi'at</option>
+                <option value="79">80. 'Abasa</option>
+                <option value="80">81. At-Takwir</option>
+                <option value="81">82. Al-Infitar</option>
+                <option value="82">83. Al-Mutaffifin</option>
+                <option value="83">84. Al-Inshiqaq</option>
+                <option value="84">85. Al-Buruj</option>
+                <option value="85">86. At-Tariq</option>
+                <option value="86">87. Al-A'la</option>
+                <option value="87">88. Al-Ghashiyah</option>
+                <option value="88">89. Al-Fajr</option>
+                <option value="89">90. Al-Balad</option>
+                <option value="90">91. Ash-Shams</option>
+                <option value="91">92. Al-Layl</option>
+                <option value="92">93. Ad-Duhaa</option>
+                <option value="93">94. Ash-Sharh</option>
+                <option value="94">95. At-Tin</option>
+                <option value="95">96. Al-'Alaq</option>
+                <option value="96">97. Al-Qadr</option>
+                <option value="97">98. Al-Bayyinah</option>
+                <option value="98">99. Az-Zalzalah</option>
+                <option value="99">100. Al-'Adiyat</option>
+                <option value="100">101. Al-Qari'ah</option>
+                <option value="101">102. At-Takathur</option>
+                <option value="102">103. Al-'Asr</option>
+                <option value="103">104. Al-Humazah</option>
+                <option value="104">105. Al-Fil</option>
+                <option value="105">106. Quraysh</option>
+                <option value="106">107. Al-Ma'un</option>
+                <option value="107">108. Al-Kawthar</option>
+                <option value="108">109. Al-Kafirun</option>
+                <option value="109">110. An-Nasr</option>
+                <option value="110">111. Al-Masad</option>
+                <option value="111">112. Al-Ikhlas</option>
+                <option value="112">113. Al-Falaq</option>
+                <option value="113">114. An-Nas</option>
+            </select>
         </div>
-        <button onclick="prevSong()"><i class="fas fa-backward"></i></button>
-        <button id="toggleBtn" onclick="playPause()"><i id="icon" class="fas fa-pause"></i></button>
-        <button onclick="nextSong()"><i class="fas fa-forward"></i></button>
-        <button onclick="toggleRepeat()"><i class="fas fa-repeat"></i></button>
-    </div>
-    <div id="lyrics">
-        <h2 style="line-height: 2;" id="song-lyrics"></h2>
-    </div>
-</div>
-    <script>
-        function togglePlayPause() {
-  const icon = document.getElementById("icon");
-  if (icon.classList.contains("fa-pause")) {
-    icon.classList.remove("fa-pause");
-    icon.classList.add("fa-play");
-  } else {
-    icon.classList.remove("fa-play");
-    icon.classList.add("fa-pause");
-  }
-}
-        let songs = [
-            { title: "Surah Al-fatihah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748115904/gm9mlwradrfafoaqotya.mp4", lyrics:
-            ""},
-            { title: "Surah Al-Baqarah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749041416/nze2mqaoytkrapk87uux.mp3", lyrics: 
-            ""},
-            { title: "Surah Al_'Imran", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749040948/cpiqnv8eiwamsxludmhv.mp3", lyrics: 
-            "" },
-            { title: "Surah An-Nisa", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749040491/yiw4txbekdwzxcvnzf31.mp3", lyrics: 
-            "" },
-            { title: "Surah Al-Ma'ida", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748867171/akhbg9hguiaypezb2nji.mp4", lyrics: 
-            "" },
-            { title: "Surah Al-An'am", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749040090/wgakza0k9gx0eskn1ejq.mp3", lyrics: 
-            "" },
-            { title: "Surah AlAraf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749039122/l4fu2dnwrotchtitvs36.mp3", lyrics: 
-            "" },
-            { title: "Surah AlAnfal", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866910/lymbtfgaqrovbtlpsygi.mp4", lyrics: 
-            "" },
-            { title: "Surah AtTawbah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866806/dpbeys2f2ejtl4ynugrk.mp4", lyrics: 
-            "" },
-            { title: "Surah Yunus", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866631/pij4ymplc09qcxj6cjc4.mp4", lyrics: 
-            "" },
-            { title: "Surah Hud", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866531/eqznolkdehm9wrsahftd.mp4", lyrics: 
-            "" },
-            { title: "Surah Yusuf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866401/gmygictedyi0gzryooyr.mp4", lyrics: 
-            "" },
-            { title: "Surah ArRad", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866203/trgmpvnzml3fd7w6qrrc.mp4", lyrics: 
-            "" },
-            { title: "Surah Ibrahim", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866116/zlfvyozoivvncoqjukcc.mp4", lyrics: 
-            "" },
-            { title: "Surah Al-Hijr", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749037741/sf3uu6dyhzz1fftr7pqg.mp4", lyrics: 
-            "" },
-            { title: "Surah An-Nahl", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866029/rnfltachrjtthdejsiqq.mp4", lyrics: 
-            "" },
-            { title: "Surah Al-Isra", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865888/bqawnrmstswz3z24zxa9.mp4", lyrics: 
-            "" },
-            { title: "Surah Al-Kahf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749037451/w84veobhazxbecnduvny.mp4", lyrics: 
-            "" },
-            { title: "Surah Mariam", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865756/fzyoyhzbvtfg7euzsnqh.mp4", lyrics: 
-            "" },
-            { title: "Surah Ta-h", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865655/cohlmmhtkrtr58pspjqj.mp4", lyrics: 
-            "" },
-            { title:"Surah Al-Anbiya", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748865561/jnjvercrfsehqcy0oiag.mp4", lyrics:
-            ""},
-            { title:"Surah Al-Hajj", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748865483/t2psj6zhxgxlwvonnxib.mp4", lyrics:""
-            },
-            { title:"Surah Al-Mumenoon", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748865420/erp2n1zrb0zhxs1ewz9d.mp4", lyrics:""
-            },
-            { title:"Surah Al-Noor", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748865330/jmbqgisg0szxpn9ud5il.mp4", lyrics:""
-            },
-            { title:"Surah Al-Furqan", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748865271/oubpaefwz1csnlnqurcx.mp4", lyrics:""
-            },
-            { title:"Surah Al-Shuara", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748865208/w0lbeljh8tgcgh7m3hzd.mp4", lyrics:""
-            },
-            { title:"Surah Al-Naml", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748865134/l6c8dn8zcobgc3azrgcy.mp4", lyrics:""
-            },
-            { title:"Surah Al-Qasas", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748864978/fmfeilrdqukaszg3tix0.mp4", lyrics:""
-            },
-            { title:"Surah Al-Ankaboot", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748864588/twen2n9wtxw2h1bfbc13.mp4", lyrics:""
-            },
-            { title:"Surah Ar-room", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748616421/zdeoaxrstim8lyfxlwg0.mp4", lyrics:""
-            },
-            { title:"Surah Luqman", src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748616237/wntylsaj1z3bevj0li4m.mp4", lyrics:""
-            },
-            {
-                title:"As-Sajda",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748616101/cesfme3mslxhs31ubiik.mp4",lyrics:""
-            },
-            {
-                title:"Al-Ahzab",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748619301/fdiktykh8p2vqcttu1qu.mp4",lyrics:""
-            },
-            {
-                title:"Saba",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615960/utgie7omyl7jdy4tll0o.mp4",lyrics:""
-            },
-            {
-                title:"Fatir",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615914/l0dkuikhzphf77siaa89.mp4",lyrics:""
-            },
-            {
-                title:"Ya-Seen",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615865/vvxprwuopiupwye6hceo.mp4",lyrics:""
-            },
-            {
-                title:"As-Saaffat",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615791/d5uqhrcbwnxfn8myga5w.mp4",lyrics:""
-            },
-            {
-                title:"Sad",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615651/mtjiwi4ng2bd0dilsgf0.mp4",lyrics:""
-            },
-            {
-                title:"Az-Zumar",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615594/cbsnljplwbimvakkaxv6.mp4",lyrics:""
-            },
-            {
-                title:"Ghafir",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615512/tqdckt0axgbffxs0xxi8.mp4",lyrics:""
-            },
-            {
-                title:"Fassilat",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615433/acnjhbagweh2tuewzafc.mp4",lyrics:""
-            },
-            {
-                title:"Ash-Shura",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615234/ix4wjyeskjgaef0gszrt.mp4",lyrics:""
-            },
-            {
-                title:"Az-Zukhruf",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615160/nfvwqqjsgvz7v2umqsm8.mp4",lyrics:""
-            },
-            {
-                title:"Ad-Dukhan",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748615049/yta9sbrsalmbbhqffmds.mp4",lyrics:""
-            },
-            {
-                title:"Al-Jathiya",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748614942/xagteukumibakj2opdmk.mp4",lyrics:""
-            },
-            {
-                title:"Al-Ahqaf",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748614625/afv6t1rmruei8ejkgicu.mp4",lyrics:""
-            },
-            {
-                title:"Muhammed",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748611035/lsg9vqt6lordpenumueh.mp4",lyrics:""
-            },
-            {
-                title:"Al-Fath",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748610832/aqhndcrgazyparkgrfjx.mp4",lyrics:""
-            },
-            {
-                title:"Al-Hujraat",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748610566/kb4qkkvb9gnhqyv95h9s.mp4",lyrics:""
-            },
-            {
-                title:"Qaf",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546708/t4vpdaz3uvsns17wvha0.mp4",lyrics:""
-            },
-            {
-                title:"Adh-Dhariyat",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546650/zeipxqzu3qgpkdzkxj7f.mp4",lyrics:""
-            },
-            {
-                title:"At-Tur",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546617/qy5sjt8ugn6rblyiwrgz.mp4",lyrics:""
-            },
-            {
-                title:"An-Najm",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748608463/clwem2pyjntwcgzkgh0v.mp4",lyrics:""
-            },
-            {
-                title:"Al-Qamar",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546528/hryelu3ilsuxocccq7mf.mp4",lyrics:""
-            },
-            {
-                title:"Ar-Rahman",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546480/hsynw6w0t25n1zdfr63e.mp4",lyrics:""
-            },
-            {
-                title:"Al-Waqia",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546424/t0alcvatkf47ezee7uy4.mp4",lyrics:""
-            },
-            {
-                title:"Al-Hadid",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546216/ut0zt3lmhuko8scswsa2.mp4",lyrics:""
-            },
-            {
-                title:"Al-Mujadila",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546388/r8ucsbaaocvz4em2ckg9.mp4",lyrics:""
-            },
-            {
-                title:"Al-Hashr",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546155/kqhenadvzdatnnwdgmgm.mp4",lyrics:""
-            },
-            {
-                title:"Al-Mumtahina",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546094/rszqczvtwqg18vkwgfqb.mp4",lyrics:""
-            },
-            {
-                title:"As-Saff",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748546043/foi13pa8norpll6bncxe.mp4",lyrics:""
-            },
-            {
-                title:"Al-Jumua",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545990/ahdieuwgrzz2r27gjt80.mp4",lyrics:""
-            },
-            {
-                title:"Al-Munafiqoon",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1749037154/vcjrq0pqlejks8yoncsc.mp4",lyrics:""
-            },
-            {
-                title:"at-Taghabun",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545884/ibdumq6tmq6o2ru2z7zm.mp4",lyrics:""
-            },
-            {
-                title:"At-Talaq",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545830/idh1ai39er90ff0j4q05.mp4",lyrics:""
-            },
-            {
-                title:"At-Tahrim",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545788/h9efqivmaudgkhoujchg.mp4",lyrics:""
-            },
-            {
-                title:"Al-Mulk",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545675/bs79nn3vlfujmzktqffj.mp4",lyrics:""
-            },
-            {
-                title:"Al-Qalam",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545613/ntor6rr2e9a6tjvlp5vr.mp4",lyrics:""
-            },
-            {
-                title:"Al-Haaqqa",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545450/faiktwy3tdwyxzma3t6q.mp4",lyrics:""
-            },
-            {
-                title:"Al-Maarij",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508525/ptpwgrglw2falq0m5bfp.mp4",lyrics:""
-            },
-            {
-                title:"Nooh",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508478/fs4xthij48ppue3enr6z.mp4",lyrics:""
-            },
-            {
-                title:"Al-Jinn",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508419/phabjjlhwmbtlp9oyr25.mp4",lyrics:""
-            },
-            {
-                title:"Al-Muzzammil",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748545204/ooufgzknhkcojp5sklte.mp4",lyrics:""
-            },
-            {
-                title:"Al-Muddaththir",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508331/lcftvq7uh8xomy3hzytc.mp4",lyrics:""
-            },
-            {
-                title:"Al-Qiyama",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508276/ibeau9skedhdedfmottu.mp4",lyrics:""
-            },
-            {
-                title:"Al-Insan",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508240/pioarfwcdmdyck42cri0.mp4",lyrics:""
-            },
-            {
-                title:"Al-Mursalat",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508176/kming2nfvsiiunit7msg.mp4",lyrics:""
-            },
-            {
-                title:"An-Naba",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508128/cfv7zumo2r0nde11y9dk.mp4",lyrics:""
-            },
-            {
-                title:"An-Naziat",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748508053/wwkf0hagu0zozkegp9le.mp4",lyrics:""
-            },
-            {
-                title:"Abasa",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748507064/aypbv2pdoulc6vlxbxwg.mp4",lyrics:""
-            },
-            {
-                title:"At-Takwir",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748507027/isoywcmjxmitcsgthbdk.mp4",lyrics:""
-            },
-            {
-                title:"Al-Infitar",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506990/huv8mrxbbyydwi0wxopm.mp4",lyrics:""
-            },
-            {
-                title:"Al-Mutaffifin",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506936/comadncql13zoehvvk83.mp4",lyrics:""
-            },
-            {
-                title:"Al-Inshiqaq",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506901/wslmihxwzqz5nve9f3of.mp4",lyrics:""
-            },
-            {
-                title:"Al-Burooj",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506858/xi0bjc3jopke3emjbs2a.mp4",lyrics:""
-            },
-            {
-                title:"At-Tariq",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506804/ogcjbp81ohtgbxo97i1t.mp4",lyrics:""
-            },
-            {
-                title:"Al-Ala",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506757/sealtbojreec0h3gsl2y.mp4",lyrics:""
-            },
-            {
-                title:"Al-Ghashiya",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506686/lsralfpwhq1nxx2mvryd.mp4",lyrics:""
-            },
-            {
-                title:"Al-Fajr",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748506510/ppxmihzsxazudfw6cxjk.mp4",lyrics:""
-            },
-            {
-                title:"Al-Balad",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255547/e90rp3shom6dqbndttuw.mp4",lyrics:""
-            },
-            {
-                title:"Ash-Shams",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255451/llqez0oaqobb6m3b4ufq.mp4",lyrics:""
-            },
-            {
-                title:"Al-Lail",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255398/ezg6b6zorqfkwzz4avwm.mp4",lyrics:""
-            },
-            {
-                title:"Ad-Dhuha",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255345/wrv4otqdstinbvpiyf1h.mp4",lyrics:""
-            },
-            {
-                title:"Ash-Sharh",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255289/quscdjlwfamcrq7x6kvn.mp4",lyrics:""
-            },
-            {
-                title:"At-Tin",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255238/vdyuoh8nrzk9mzkv4gzo.mp4",lyrics:""
-            },
-            {
-                title:"Al-Alaq",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255184/y2egsc53c6qzs4si8xtn.mp4",lyrics:""
-            },
-            {
-                title:"Al-Qadr",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255106/tbml3hrtmafs2r3ctevf.mp4",lyrics:""
-            },
-            {
-                title:"Al-Bayyina",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748255031/eoi8dtzweabmmqonyxdy.mp4",lyrics:""
-            },
-            {
-                title:"Al-Zalzala",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748254849/wlpp0wcu73fg1l4pwefi.mp4",lyrics:""
-            },
-            {
-                title:"Al-Adiyat",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748199092/mfp9d7whxyi5bqv6vbpw.mp4",lyrics:""
-            },
-            {
-                title:"Al-Qaria",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198999/tmmdnhfmlorxdovjwymq.mp4",lyrics:""
-            },
-            {
-                title:"Al-Takathur",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198940/f4i0yhbradfe1pmocyax.mp4",lyrics:""
-            },
-            {
-                title:"Al-Asr",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198887/uqtfkentgoqrimm3qo6j.mp4",lyrics:""
-            },
-            {
-                title:"Al-Humaza",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198826/adj5la7cumnnxsim2gzs.mp4",lyrics:""
-            },
-            {
-                title:"Al-Fil",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198687/gvqeufzd2de7hakvg60z.mp4",lyrics:""
-            },
-            {
-                title:"Quraish",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198593/hrmwd5q8dpj1thximvkm.mp4",lyrics:""
-            },
-            {
-                title:"Al-Maun",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198091/qfslagugkl91dmkuwu5d.mp4",lyrics:""
-            },
-            {
-                title:"Al-Kauther",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748198035/ny31rgoeqnbcdqazh2ji.mp4",lyrics:""
-            },
-            {
-                title:"Al-Kafiroon",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748197971/a0mykz3w3l1mzcc5yq4w.mp4",lyrics:""
-            },
-            {
-                title:"An-Nasr",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748197879/mls8vyu7ncokth9omwik.mp4",lyrics:""
-            },
-            {
-                title:"Al-Masadd",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748197669/brvf9k26tsxrzsilua0b.mp4",lyrics:""
-            },
-            {
-                title:"Al-Ikhlas",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748138103/zvxjcfllsks2552fs36l.mp4",lyrics:""
-            },
-            {
-                title:"Al-Falaq",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748137946/nbqilfpcc3099h32z04v.mp4",lyrics:""
-            },
-            {
-                title:"An-Nas",src:"https://res.cloudinary.com/dobw6i86s/video/upload/v1748134648/vckieuvvefuct1a4lfd2.mp4",lyrics:""
-            },
-        ];
 
+        <div class="player-card">
+            <div class="song-title" id="song-title">Select a Surah</div>
+
+            <audio id="audio-player"></audio>
+
+            <div class="progress-section">
+                <div class="time-display">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
+                <div class="progress-container" onclick="seek(event)">
+                    <div class="progress-bar" id="progress"></div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-control" onclick="prevSong()" title="Previous">
+                    <i class="fas fa-backward"></i>
+                </button>
+                <button class="btn-control btn-play" id="toggleBtn" onclick="playPause()" title="Play/Pause">
+                    <i id="icon" class="fas fa-play"></i>
+                </button>
+                <button class="btn-control" onclick="nextSong()" title="Next">
+                    <i class="fas fa-forward"></i>
+                </button>
+                <button class="btn-control" id="repeatBtn" onclick="toggleRepeat()" title="Repeat">
+                    <i class="fas fa-repeat"></i>
+                </button>
+            </div>
+
+            <div class="extra-controls">
+                <div class="control-group">
+                    <label><i class="fas fa-volume-up"></i> Volume</label>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100"
+                        oninput="setVolume(this.value)">
+                    <span id="volumeValue">100%</span>
+                </div>
+                <div class="control-group">
+                    <label><i class="fas fa-tachometer-alt"></i> Speed</label>
+                    <input type="range" class="speed-slider" id="speedSlider" min="0.5" max="2" step="0.1" value="1"
+                        oninput="setSpeed(this.value)">
+                    <span id="speedValue">1.0x</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <a class="text-white" style=" font-weight: bold; color: #ffffff;"
+                href="https://drive.google.com/file/d/1v3ms5z3ZaG0tU-zjCQkE3gYSXlCxqcN9/view?usp=sharing">Click here for
+                thafseer</a>
+        </div>
+    </div>
+
+    <script>
+        let songs = [
+            { title: "Surah Al-Fatihah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748115904/gm9mlwradrfafoaqotya.mp4", lyrics: "" },
+            { title: "Surah Al-Baqarah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749041416/nze2mqaoytkrapk87uux.mp3", lyrics: "" },
+            { title: "Surah Ali 'Imran", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749040948/cpiqnv8eiwamsxludmhv.mp3", lyrics: "" },
+            { title: "Surah An-Nisa", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749040491/yiw4txbekdwzxcvnzf31.mp3", lyrics: "" },
+            { title: "Surah Al-Ma'idah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748867171/akhbg9hguiaypezb2nji.mp4", lyrics: "" },
+            { title: "Surah Al-An'am", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749040090/wgakza0k9gx0eskn1ejq.mp3", lyrics: "" },
+            { title: "Surah Al-A'raf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749039122/l4fu2dnwrotchtitvs36.mp3", lyrics: "" },
+            { title: "Surah Al-Anfal", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866910/lymbtfgaqrovbtlpsygi.mp4", lyrics: "" },
+            { title: "Surah At-Tawbah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866806/dpbeys2f2ejtl4ynugrk.mp4", lyrics: "" },
+            { title: "Surah Yunus", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866631/pij4ymplc09qcxj6cjc4.mp4", lyrics: "" },
+            { title: "Surah Hud", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866531/eqznolkdehm9wrsahftd.mp4", lyrics: "" },
+            { title: "Surah Yusuf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866401/gmygictedyi0gzryooyr.mp4", lyrics: "" },
+            { title: "Surah Ar-Ra'd", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866203/trgmpvnzml3fd7w6qrrc.mp4", lyrics: "" },
+            { title: "Surah Ibrahim", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866116/zlfvyozoivvncoqjukcc.mp4", lyrics: "" },
+            { title: "Surah Al-Hijr", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749037741/sf3uu6dyhzz1fftr7pqg.mp4", lyrics: "" },
+            { title: "Surah An-Nahl", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748866029/rnfltachrjtthdejsiqq.mp4", lyrics: "" },
+            { title: "Surah Al-Isra", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865888/bqawnrmstswz3z24zxa9.mp4", lyrics: "" },
+            { title: "Surah Al-Kahf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749037451/w84veobhazxbecnduvny.mp4", lyrics: "" },
+            { title: "Surah Maryam", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865756/fzyoyhzbvtfg7euzsnqh.mp4", lyrics: "" },
+            { title: "Surah Ta-Ha", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865655/cohlmmhtkrtr58pspjqj.mp4", lyrics: "" },
+            { title: "Surah Al-Anbiya", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865561/jnjvercrfsehqcy0oiag.mp4", lyrics: "" },
+            { title: "Surah Al-Hajj", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865483/t2psj6zhxgxlwvonnxib.mp4", lyrics: "" },
+            { title: "Surah Al-Mu'minun", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865420/erp2n1zrb0zhxs1ewz9d.mp4", lyrics: "" },
+            { title: "Surah An-Nur", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865330/jmbqgisg0szxpn9ud5il.mp4", lyrics: "" },
+            { title: "Surah Al-Furqan", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865271/oubpaefwz1csnlnqurcx.mp4", lyrics: "" },
+            { title: "Surah Ash-Shu'ara", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865208/w0lbeljh8tgcgh7m3hzd.mp4", lyrics: "" },
+            { title: "Surah An-Naml", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748865134/l6c8dn8zcobgc3azrgcy.mp4", lyrics: "" },
+            { title: "Surah Al-Qasas", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748864978/fmfeilrdqukaszg3tix0.mp4", lyrics: "" },
+            { title: "Surah Al-'Ankabut", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748864588/twen2n9wtxw2h1bfbc13.mp4", lyrics: "" },
+            { title: "Surah Ar-Rum", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748616421/zdeoaxrstim8lyfxlwg0.mp4", lyrics: "" },
+            { title: "Surah Luqman", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748616237/wntylsaj1z3bevj0li4m.mp4", lyrics: "" },
+            { title: "Surah As-Sajdah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748616101/cesfme3mslxhs31ubiik.mp4", lyrics: "" },
+            { title: "Surah Al-Ahzab", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748619301/fdiktykh8p2vqcttu1qu.mp4", lyrics: "" },
+            { title: "Surah Saba", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615960/utgie7omyl7jdy4tll0o.mp4", lyrics: "" },
+            { title: "Surah Fatir", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615914/l0dkuikhzphf77siaa89.mp4", lyrics: "" },
+            { title: "Surah Ya-Sin", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615865/vvxprwuopiupwye6hceo.mp4", lyrics: "" },
+            { title: "Surah As-Saffat", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615791/d5uqhrcbwnxfn8myga5w.mp4", lyrics: "" },
+            { title: "Surah Sad", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615651/mtjiwi4ng2bd0dilsgf0.mp4", lyrics: "" },
+            { title: "Surah Az-Zumar", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615594/cbsnljplwbimvakkaxv6.mp4", lyrics: "" },
+            { title: "Surah Ghafir", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615512/tqdckt0axgbffxs0xxi8.mp4", lyrics: "" },
+            { title: "Surah Fussilat", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615433/acnjhbagweh2tuewzafc.mp4", lyrics: "" },
+            { title: "Surah Ash-Shura", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615234/ix4wjyeskjgaef0gszrt.mp4", lyrics: "" },
+            { title: "Surah Az-Zukhruf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615160/nfvwqqjsgvz7v2umqsm8.mp4", lyrics: "" },
+            { title: "Surah Ad-Dukhan", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748615049/yta9sbrsalmbbhqffmds.mp4", lyrics: "" },
+            { title: "Surah Al-Jathiyah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748614942/xagteukumibakj2opdmk.mp4", lyrics: "" },
+            { title: "Surah Al-Ahqaf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748614625/afv6t1rmruei8ejkgicu.mp4", lyrics: "" },
+            { title: "Surah Muhammad", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748611035/lsg9vqt6lordpenumueh.mp4", lyrics: "" },
+            { title: "Surah Al-Fath", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748610832/aqhndcrgazyparkgrfjx.mp4", lyrics: "" },
+            { title: "Surah Al-Hujurat", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748610566/kb4qkkvb9gnhqyv95h9s.mp4", lyrics: "" },
+            { title: "Surah Qaf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546708/t4vpdaz3uvsns17wvha0.mp4", lyrics: "" },
+            { title: "Surah Adh-Dhariyat", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546650/zeipxqzu3qgpkdzkxj7f.mp4", lyrics: "" },
+            { title: "Surah At-Tur", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546617/qy5sjt8ugn6rblyiwrgz.mp4", lyrics: "" },
+            { title: "Surah An-Najm", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748608463/clwem2pyjntwcgzkgh0v.mp4", lyrics: "" },
+            { title: "Surah Al-Qamar", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546528/hryelu3ilsuxocccq7mf.mp4", lyrics: "" },
+            { title: "Surah Ar-Rahman", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546480/hsynw6w0t25n1zdfr63e.mp4", lyrics: "" },
+            { title: "Surah Al-Waqi'ah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546424/t0alcvatkf47ezee7uy4.mp4", lyrics: "" },
+            { title: "Surah Al-Hadid", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546216/ut0zt3lmhuko8scswsa2.mp4", lyrics: "" },
+            { title: "Surah Al-Mujadila", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546388/r8ucsbaaocvz4em2ckg9.mp4", lyrics: "" },
+            { title: "Surah Al-Hashr", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546155/kqhenadvzdatnnwdgmgm.mp4", lyrics: "" },
+            { title: "Surah Al-Mumtahanah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546094/rszqczvtwqg18vkwgfqb.mp4", lyrics: "" },
+            { title: "Surah As-Saf", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748546043/foi13pa8norpll6bncxe.mp4", lyrics: "" },
+            { title: "Surah Al-Jumu'ah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545990/ahdieuwgrzz2r27gjt80.mp4", lyrics: "" },
+            { title: "Surah Al-Munafiqun", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1749037154/vcjrq0pqlejks8yoncsc.mp4", lyrics: "" },
+            { title: "Surah At-Taghabun", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545884/ibdumq6tmq6o2ru2z7zm.mp4", lyrics: "" },
+            { title: "Surah At-Talaq", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545830/idh1ai39er90ff0j4q05.mp4", lyrics: "" },
+            { title: "Surah At-Tahrim", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545788/h9efqivmaudgkhoujchg.mp4", lyrics: "" },
+            { title: "Surah Al-Mulk", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545675/bs79nn3vlfujmzktqffj.mp4", lyrics: "" },
+            { title: "Surah Al-Qalam", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545613/ntor6rr2e9a6tjvlp5vr.mp4", lyrics: "" },
+            { title: "Surah Al-Haqqah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545450/faiktwy3tdwyxzma3t6q.mp4", lyrics: "" },
+            { title: "Surah Al-Ma'arij", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508525/ptpwgrglw2falq0m5bfp.mp4", lyrics: "" },
+            { title: "Surah Nuh", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508478/fs4xthij48ppue3enr6z.mp4", lyrics: "" },
+            { title: "Surah Al-Jinn", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508419/phabjjlhwmbtlp9oyr25.mp4", lyrics: "" },
+            { title: "Surah Al-Muzzammil", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748545204/ooufgzknhkcojp5sklte.mp4", lyrics: "" },
+            { title: "Surah Al-Muddaththir", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508331/lcftvq7uh8xomy3hzytc.mp4", lyrics: "" },
+            { title: "Surah Al-Qiyamah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508276/ibeau9skedhdedfmottu.mp4", lyrics: "" },
+            { title: "Surah Al-Insan", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508240/pioarfwcdmdyck42cri0.mp4", lyrics: "" },
+            { title: "Surah Al-Mursalat", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508176/kming2nfvsiiunit7msg.mp4", lyrics: "" },
+            { title: "Surah An-Naba", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508128/cfv7zumo2r0nde11y9dk.mp4", lyrics: "" },
+            { title: "Surah An-Nazi'at", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748508053/wwkf0hagu0zozkegp9le.mp4", lyrics: "" },
+            { title: "Surah 'Abasa", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748507064/aypbv2pdoulc6vlxbxwg.mp4", lyrics: "" },
+            { title: "Surah At-Takwir", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748507027/isoywcmjxmitcsgthbdk.mp4", lyrics: "" },
+            { title: "Surah Al-Infitar", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506990/huv8mrxbbyydwi0wxopm.mp4", lyrics: "" },
+            { title: "Surah Al-Mutaffifin", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506936/comadncql13zoehvvk83.mp4", lyrics: "" },
+            { title: "Surah Al-Inshiqaq", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506901/wslmihxwzqz5nve9f3of.mp4", lyrics: "" },
+            { title: "Surah Al-Buruj", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506858/xi0bjc3jopke3emjbs2a.mp4", lyrics: "" },
+            { title: "Surah At-Tariq", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506804/ogcjbp81ohtgbxo97i1t.mp4", lyrics: "" },
+            { title: "Surah Al-A'la", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506757/sealtbojreec0h3gsl2y.mp4", lyrics: "" },
+            { title: "Surah Al-Ghashiyah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506686/lsralfpwhq1nxx2mvryd.mp4", lyrics: "" },
+            { title: "Surah Al-Fajr", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748506510/ppxmihzsxazudfw6cxjk.mp4", lyrics: "" },
+            { title: "Surah Al-Balad", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255547/e90rp3shom6dqbndttuw.mp4", lyrics: "" },
+            { title: "Surah Ash-Shams", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255451/llqez0oaqobb6m3b4ufq.mp4", lyrics: "" },
+            { title: "Surah Al-Layl", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255398/ezg6b6zorqfkwzz4avwm.mp4", lyrics: "" },
+            { title: "Surah Ad-Duhaa", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255345/wrv4otqdstinbvpiyf1h.mp4", lyrics: "" },
+            { title: "Surah Ash-Sharh", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255289/quscdjlwfamcrq7x6kvn.mp4", lyrics: "" },
+            { title: "Surah At-Tin", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255238/vdyuoh8nrzk9mzkv4gzo.mp4", lyrics: "" },
+            { title: "Surah Al-'Alaq", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255184/y2egsc53c6qzs4si8xtn.mp4", lyrics: "" },
+            { title: "Surah Al-Qadr", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255106/tbml3hrtmafs2r3ctevf.mp4", lyrics: "" },
+            { title: "Surah Al-Bayyinah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748255031/eoi8dtzweabmmqonyxdy.mp4", lyrics: "" },
+            { title: "Surah Az-Zalzalah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748254849/wlpp0wcu73fg1l4pwefi.mp4", lyrics: "" },
+            { title: "Surah Al-'Adiyat", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748199092/mfp9d7whxyi5bqv6vbpw.mp4", lyrics: "" },
+            { title: "Surah Al-Qari'ah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198999/tmmdnhfmlorxdovjwymq.mp4", lyrics: "" },
+            { title: "Surah At-Takathur", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198940/f4i0yhbradfe1pmocyax.mp4", lyrics: "" },
+            { title: "Surah Al-'Asr", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198887/uqtfkentgoqrimm3qo6j.mp4", lyrics: "" },
+            { title: "Surah Al-Humazah", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198826/adj5la7cumnnxsim2gzs.mp4", lyrics: "" },
+            { title: "Surah Al-Fil", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198687/gvqeufzd2de7hakvg60z.mp4", lyrics: "" },
+            { title: "Surah Quraysh", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198593/hrmwd5q8dpj1thximvkm.mp4", lyrics: "" },
+            { title: "Surah Al-Ma'un", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198091/qfslagugkl91dmkuwu5d.mp4", lyrics: "" },
+            { title: "Surah Al-Kawthar", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748198035/ny31rgoeqnbcdqazh2ji.mp4", lyrics: "" },
+            { title: "Surah Al-Kafirun", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748197971/a0mykz3w3l1mzcc5yq4w.mp4", lyrics: "" },
+            { title: "Surah An-Nasr", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748197879/mls8vyu7ncokth9omwik.mp4", lyrics: "" },
+            { title: "Surah Al-Masad", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748197669/brvf9k26tsxrzsilua0b.mp4", lyrics: "" },
+            { title: "Surah Al-Ikhlas", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748138103/zvxjcfllsks2552fs36l.mp4", lyrics: "" },
+            { title: "Surah Al-Falaq", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748137946/nbqilfpcc3099h32z04v.mp4", lyrics: "" },
+            { title: "Surah An-Nas", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748134648/vckieuvvefuct1a4lfd2.mp4", lyrics: "" },
+        ];
 
         let currentIndex = 0;
         let audio = document.getElementById("audio-player");
@@ -548,71 +673,129 @@
         let lyrics = document.getElementById("song-lyrics");
         let progressBar = document.getElementById("progress");
         let songSelector = document.getElementById("song-selector");
+        let currentTimeEl = document.getElementById("current-time");
+        let totalTimeEl = document.getElementById("total-time");
+        let volumeSlider = document.getElementById("volumeSlider");
+        let speedSlider = document.getElementById("speedSlider");
+        let volumeValue = document.getElementById("volumeValue");
+        let speedValue = document.getElementById("speedValue");
+        let repeatBtn = document.getElementById("repeatBtn");
         let isRepeating = false;
 
-        // Load the first song
+        // Format time
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Load song
         function loadSong() {
             audio.src = songs[currentIndex].src;
-            title.innerText = "Now Playing: " + songs[currentIndex].title;
-            lyrics.innerText = songs[currentIndex].lyrics;
+            title.textContent = songs[currentIndex].title;
+            lyrics.textContent = songs[currentIndex].lyrics || "Lyrics will appear here if available";
+            if (!songs[currentIndex].lyrics) {
+                lyrics.className = "lyrics-placeholder";
+            } else {
+                lyrics.className = "";
+            }
             songSelector.value = currentIndex;
-            audio.play();
+            progressBar.style.width = "0%";
+            currentTimeEl.textContent = "0:00";
+
+            audio.addEventListener('loadedmetadata', () => {
+                totalTimeEl.textContent = formatTime(audio.duration);
+            });
         }
-        loadSong();
 
+        // Play/Pause
         function playPause() {
-  const icon = document.getElementById("icon");
+            const icon = document.getElementById("icon");
+            if (audio.paused) {
+                audio.play();
+                icon.className = "fas fa-pause";
+            } else {
+                audio.pause();
+                icon.className = "fas fa-play";
+            }
+        }
 
-  if (audio.paused) {
-    audio.play();
-    icon.classList.remove("fa-play");
-    icon.classList.add("fa-pause");
-  } else {
-    audio.pause();
-    icon.classList.remove("fa-pause");
-    icon.classList.add("fa-play");
-  }
-}
-
+        // Next song
         function nextSong() {
             currentIndex = (currentIndex + 1) % songs.length;
             loadSong();
+            if (!audio.paused) {
+                audio.play();
+                document.getElementById("icon").className = "fas fa-pause";
+            }
         }
 
+        // Previous song
         function prevSong() {
             currentIndex = (currentIndex - 1 + songs.length) % songs.length;
             loadSong();
+            if (!audio.paused) {
+                audio.play();
+                document.getElementById("icon").className = "fas fa-pause";
+            }
         }
+
+        // Toggle repeat
         function toggleRepeat() {
             isRepeating = !isRepeating;
             audio.loop = isRepeating;
-            alert("Repeat is " + (isRepeating ? "ON" : "OFF"));
+            repeatBtn.classList.toggle("active", isRepeating);
         }
-        
-        // Automatically play the next song when the current song ends
-        audio.addEventListener("ended", () => {
-            if (!isRepeating) nextSong();
-        });
 
-        // Update the progress bar
-        audio.addEventListener("timeupdate", () => {
-            let progressPercent = (audio.currentTime / audio.duration) * 100;
-            progressBar.style.width = progressPercent + "%";
-        });
+        // Set volume
+        function setVolume(value) {
+            audio.volume = value / 100;
+            volumeValue.textContent = value + "%";
+        }
 
-        // Seek through the progress bar
+        // Set playback speed
+        function setSpeed(value) {
+            audio.playbackRate = parseFloat(value);
+            speedValue.textContent = value + "x";
+        }
+
+        // Seek
         function seek(event) {
-            let progressContainer = document.getElementById("progress-container");
-            let clickPosition = event.offsetX / progressContainer.offsetWidth;
-            audio.currentTime = clickPosition * audio.duration;
-
+            const progressContainer = document.getElementById("progress-container");
+            const clickPosition = event.offsetX / progressContainer.offsetWidth;
+            if (audio.duration) {
+                audio.currentTime = clickPosition * audio.duration;
+            }
         }
 
-        // Change song based on selection
+        // Select song
         function selectSong() {
             currentIndex = parseInt(songSelector.value);
             loadSong();
+            audio.play();
+            document.getElementById("icon").className = "fas fa-pause";
         }
+
+        // Update progress bar
+        audio.addEventListener("timeupdate", () => {
+            if (audio.duration) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = progressPercent + "%";
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+            }
+        });
+
+        // Auto play next song
+        audio.addEventListener("ended", () => {
+            if (!isRepeating) {
+                nextSong();
+            }
+        });
+
+        // Initialize
+        loadSong();
     </script>
 </body>
+
 </html>
