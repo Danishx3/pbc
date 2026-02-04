@@ -176,13 +176,7 @@
     // REMOVE THIS LINE IF YOU WANT TO ENFORCE AUTH
     loadAllContent();
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        loadAllContent();
-      } else {
-        window.location.href = "/login.html";
-      }
-    });
+
 
     function loadAllContent() {
       const promises = paths.map(path =>

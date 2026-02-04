@@ -502,10 +502,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
+    <script src="guest-utils.js"></script>
 
     <!-- QR Code Payment System - No external payment gateway needed -->
 
     <script>
+        // Check if guest mode - redirect to login
+        if (isGuestMode()) {
+            requireAuth('Please login to make a donation', 'donation.html');
+        }
+
         // Firebase initialization
         const db = window.firebaseDb || firebase.database();
         const auth = window.firebaseAuth || firebase.auth();
@@ -817,8 +823,7 @@
                 });
         }
 
-        // Update Statistics (called by admin when approving donation)
-        // This function is no longer called directly from user donation submission
+
     </script>
 </body>
 

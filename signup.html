@@ -406,6 +406,38 @@
       color: #86efac;
     }
 
+    .guest-btn {
+      width: 100%;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: #afe9da;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .guest-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #afe9da;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(175, 233, 218, 0.2);
+    }
+
+    .guest-btn:active {
+      transform: translateY(0);
+    }
+
+    .guest-btn i {
+      font-size: 20px;
+    }
+
     @media (max-width: 480px) {
       .signup-card {
         padding: 32px 24px;
@@ -485,6 +517,14 @@
       <div class="login-link">
         <a href="login.html">Sign In</a>
       </div>
+
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <button type="button" class="guest-btn" onclick="continueAsGuest()">
+        <i class="fas fa-user-circle"></i> Continue as Guest
+      </button>
     </div>
   </div><br><br><br>
 
@@ -614,6 +654,16 @@
           signupBtn.classList.remove('loading');
           signupBtn.disabled = false;
         });
+    }
+
+    // Continue as Guest function
+    function continueAsGuest() {
+      // Set guest mode in localStorage
+      localStorage.setItem('guestMode', 'true');
+      localStorage.setItem('guestStartTime', Date.now().toString());
+
+      // Redirect to main page
+      window.location.href = 'main.html';
     }
   </script>
 </body>
