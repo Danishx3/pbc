@@ -1,130 +1,621 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Sign Up</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="description" content="ilmify, Join Pious Brothers to explore Islamic knowledge through online quizzes, lessons, videos, and a growing Muslim learning community. 100% free and easy to access.">
-<meta name="keywords" content="ilmify, Islamic quiz, learn Islam, online Quran learning, Islamic education, Muslim community, Islamic website India, Pious Brothers, Islamic lessons, free Islamic resources">
-<meta name="author" content="ilmify Pious Brothers Team">
+  <title>Sign Up - ILMIFY</title>
+  <meta name="description"
+    content="ilmify, Join Pious Brothers to explore Islamic knowledge through online quizzes, lessons, videos, and a growing Muslim learning community. 100% free and easy to access.">
+  <meta name="keywords"
+    content="ilmify, Islamic quiz, learn Islam, online Quran learning, Islamic education, Muslim community, Islamic website India, Pious Brothers, Islamic lessons, free Islamic resources">
+  <meta name="author" content="ilmify Pious Brothers Team">
 
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <script src="firebase-config.js"></script>
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-         background: 
-  radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
-  radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
-  radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
-background-color: #00060f;
-  color: #fff;
-      font-family: 'Poppins', sans-serif;
-      height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(13, 86, 79, 0.3), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(26, 122, 112, 0.3), transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(13, 86, 79, 0.2), transparent 60%);
+      background-color: #00060f;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      position: relative;
     }
 
-    .container {
-      color: black;
-      padding: 30px 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      animation: slideDown 0.6s ease;
-      width: 300px;
+    /* Animated background particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(175, 233, 218, 0.1);
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .particle:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .particle:nth-child(2) {
+      width: 120px;
+      height: 120px;
+      top: 60%;
+      right: 10%;
+      animation-delay: 5s;
+    }
+
+    .particle:nth-child(3) {
+      width: 60px;
+      height: 60px;
+      bottom: 20%;
+      left: 20%;
+      animation-delay: 10s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.3;
+      }
+
+      50% {
+        transform: translateY(-50px) translateX(50px);
+        opacity: 0.6;
+      }
+    }
+
+    .signup-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 450px;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .signup-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    }
+
+    .logo-section {
       text-align: center;
-      background-color: #afe9;
+      margin-bottom: 40px;
     }
 
-    input {
-      width: 250px;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      transition: 0.3s;
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(13, 86, 79, 0.4);
     }
 
-    input:focus {
-      border-color: #74ebd5;
-      outline: none;
-      box-shadow: 0 0 5px #74ebd5;
+    .logo-icon i {
+      font-size: 32px;
+      color: #afe9da;
     }
 
-    button {
-      background: #afe9da;
-      color: black;
-      padding: 10px;
-      border: none;
-      width: 100px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s;
+    h1 {
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    button:hover {
-      background: #afe9;
-    }
-
-    a {
-      text-decoration: none;
-      color: #fcfbfb;
+    .subtitle {
+      color: rgba(255, 255, 255, 0.6);
       font-size: 14px;
     }
 
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      color: #afe9da;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 18px;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px 14px 48px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #1a7a70;
+      box-shadow: 0 0 0 3px rgba(26, 122, 112, 0.1);
+    }
+
+    input:focus+.input-icon {
+      color: #afe9da;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 18px;
+      transition: color 0.3s ease;
+    }
+
+    .password-toggle:hover {
+      color: #afe9da;
+    }
+
+    .password-strength {
+      margin-top: 8px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .password-strength.show {
+      display: block;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .strength-weak {
+      width: 33%;
+      background: #ef4444;
+    }
+
+    .strength-medium {
+      width: 66%;
+      background: #eab308;
+    }
+
+    .strength-strong {
+      width: 100%;
+      background: #22c55e;
+    }
+
+    .password-hint {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 8px;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(13, 86, 79, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .signup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(13, 86, 79, 0.6);
+    }
+
+    .signup-btn:active {
+      transform: translateY(0);
+    }
+
+    .signup-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .signup-btn .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .signup-btn.loading .btn-text {
+      display: none;
+    }
+
+    .signup-btn.loading .spinner {
+      display: block;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 32px 0;
+      position: relative;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .divider span {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      padding: 0 16px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-link {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #afe9da;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+      color: #1a7a70;
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      display: none;
+      animation: slideDown 0.3s ease-out;
+    }
+
     @keyframes slideDown {
-      0% { transform: translateY(-50px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .alert-success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+
+    @media (max-width: 480px) {
+      .signup-card {
+        padding: 32px 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h2>Create Account</h2>
-    <input type="text" id="username" placeholder="Username" required>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Password" required><br><br>
-    <button onclick="signUp()">Sign Up</button>
-    <p>Already have an account? <a href="login.html">Login here</a></p>
-  </div>
+  <!-- Background particles -->
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+
+  <div class="signup-container">
+    <div class="signup-card">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div>
+          <img style="width: 100px;" src="logoo.png" alt="">
+        </div>
+        <h1>Join ILMIFY</h1>
+        <p class="subtitle">Start your journey of Islamic knowledge today</p>
+      </div>
+
+      <!-- Alert Message -->
+      <div id="alertMessage" class="alert"></div>
+
+      <!-- Signup Form -->
+      <form id="signupForm" onsubmit="signUp(event)">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="username" placeholder="Choose a username" required minlength="3">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="email" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" placeholder="Create a strong password" required minlength="6"
+              oninput="checkPasswordStrength()">
+            <button type="button" class="password-toggle" onclick="togglePassword()">
+              <i class="fas fa-eye" id="toggleIcon"></i>
+            </button>
+          </div>
+          <div class="password-strength" id="passwordStrength">
+            <div class="password-strength-bar" id="strengthBar"></div>
+          </div>
+          <p class="password-hint">Minimum 6 characters</p>
+        </div>
+
+        <button type="submit" class="signup-btn" id="signupBtn">
+          <span class="btn-text">Create Account</span>
+          <div class="spinner"></div>
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>Already have an account?</span>
+      </div>
+
+      <div class="login-link">
+        <a href="login.html">Sign In</a>
+      </div>
+    </div>
+  </div><br><br><br>
 
   <script>
     // Firebase is initialized in firebase-config.js
     const auth = window.firebaseAuth || firebase.auth();
     const db = window.firebaseDb || firebase.database();
 
-    function signUp() {
+    // Toggle password visibility
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('toggleIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      }
+    }
+
+    // Check password strength
+    function checkPasswordStrength() {
+      const password = document.getElementById('password').value;
+      const strengthBar = document.getElementById('strengthBar');
+      const strengthContainer = document.getElementById('passwordStrength');
+
+      if (password.length === 0) {
+        strengthContainer.classList.remove('show');
+        return;
+      }
+
+      strengthContainer.classList.add('show');
+
+      // Remove all strength classes
+      strengthBar.className = 'password-strength-bar';
+
+      // Calculate strength
+      let strength = 0;
+      if (password.length >= 6) strength++;
+      if (password.length >= 10) strength++;
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+      if (/\d/.test(password)) strength++;
+      if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+      // Apply strength class
+      if (strength <= 2) {
+        strengthBar.classList.add('strength-weak');
+      } else if (strength <= 4) {
+        strengthBar.classList.add('strength-medium');
+      } else {
+        strengthBar.classList.add('strength-strong');
+      }
+    }
+
+    // Show alert message
+    function showAlert(message, type = 'error') {
+      const alertDiv = document.getElementById('alertMessage');
+      alertDiv.textContent = message;
+      alertDiv.className = `alert alert-${type} show`;
+
+      setTimeout(() => {
+        alertDiv.classList.remove('show');
+      }, 5000);
+    }
+
+    // Sign up function
+    function signUp(event) {
+      event.preventDefault();
+
       const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
+      const signupBtn = document.getElementById('signupBtn');
 
+      // Validation
       if (!username || !email || !password) {
-        alert("All fields are required.");
+        showAlert('Please fill in all fields');
         return;
       }
+
+      if (username.length < 3) {
+        showAlert('Username must be at least 3 characters');
+        return;
+      }
+
+      if (password.length < 6) {
+        showAlert('Password must be at least 6 characters');
+        return;
+      }
+
+      // Show loading state
+      signupBtn.classList.add('loading');
+      signupBtn.disabled = true;
 
       auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           return db.ref('users/' + user.uid).set({
             username: username,
-            email: email
+            email: email,
+            createdAt: Date.now()
           });
         })
         .then(() => {
-          alert('Sign Up successful! 🎉');
-          window.location.href = 'index.html'; // Redirect to login
+          showAlert('Account created successfully! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
         })
         .catch((error) => {
-          console.error(error);
-          alert(error.message);
+          console.error('Signup error:', error);
+          let errorMessage = 'Failed to create account. Please try again.';
+
+          if (error.code === 'auth/email-already-in-use') {
+            errorMessage = 'This email is already registered. Please login instead.';
+          } else if (error.code === 'auth/invalid-email') {
+            errorMessage = 'Invalid email address.';
+          } else if (error.code === 'auth/weak-password') {
+            errorMessage = 'Password is too weak. Please use a stronger password.';
+          }
+
+          showAlert(errorMessage);
+          signupBtn.classList.remove('loading');
+          signupBtn.disabled = false;
         });
     }
   </script>
 </body>
+
 </html>

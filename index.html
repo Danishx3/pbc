@@ -1,122 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ILMIFY</title>
-<meta name="description" content="ilmify, Join ilmify to explore Islamic knowledge through online quizzes, lessons, videos, and a growing Muslim learning community. 100% free and easy to access.">
-<meta name="keywords" content="ilmify, Islamic quiz, learn Islam, online Quran learning, Islamic education, Muslim community, Islamic website India, Pious Brothers, Islamic lessons, free Islamic resources">
-<meta name="author" content="ilmify Pious Brothers Team">
-<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="logoo.png" type="image/icon type">
+  <meta name="description"
+    content="ilmify, Join ilmify to explore Islamic knowledge through online quizzes, lessons, videos, and a growing Muslim learning community. 100% free and easy to access.">
+  <meta name="keywords"
+    content="ilmify, Islamic quiz, learn Islam, online Quran learning, Islamic education, Muslim community, Islamic website India, Pious Brothers, Islamic lessons, free Islamic resources">
+  <meta name="author" content="ilmify Pious Brothers Team">
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-  display: grid; 
-  font-family: 'anek latin';
-  justify-content: center;
-  margin-top: 150px;
-  height: 100vh;
-  background: 
-  radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
-  radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
-  radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
-background-color: #00060f;
-}
+      display: grid;
+      font-family: 'anek latin';
+      justify-content: center;
+      margin-top: 150px;
+      height: 100vh;
+      background:
+        radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+        radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+        radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+      background-color: #00060f;
+    }
 
-.intro-logo {
-  width: 200px;
-  border-radius: 40px;
-  opacity: 0;
-  transform: scale(0.8);
-  animation: fadeInZoom 1.6s ease forwards;
-}
+    .intro-logo {
+      width: 200px;
+      border-radius: 40px;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: fadeInZoom 1.6s ease forwards;
+    }
 
-@keyframes fadeInZoom {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-.loading-container {
-  width: 100%;
-  height: 10px;
-  background-color: rgb(3, 48, 28);
-  border-radius: 5px;
-  overflow: hidden;
-}
+    @keyframes fadeInZoom {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
 
-.loading-bar {
-  width: 0%; 
-  height: 100%;
-  background-color: #f3f4f5; /* Green */
-  animation: loadingAnim 4s linear infinite;
-}
+    .loading-container {
+      width: 100%;
+      height: 10px;
+      background-color: rgb(3, 48, 28);
+      border-radius: 5px;
+      overflow: hidden;
+    }
 
-@keyframes loadingAnim {
-  0% { width: 0%; }
-  50% { width: 100%; }
-  100% { width: 0%; }
-}
-  </style>
-</head>
-<body>
-  <div class="intro-container">
-  <img style="margin-left: 20px;" src="logoo.png" alt="Logo" class="intro-logo" />
-  <center><h1 style="color: white; margin-top: 0; margin-bottom: 5px;">ilmify.me</h1></center>
-  <center style="color: white;">Your Knowledge Seeking Companion</center><br>
-  <div class="loading-container">
-  <div class="loading-bar"></div>
-</div>
-</div>
-<div style="margin-bottom: 100px; color: white;">
-  <center>
-     <p>from</p>
-    <img src="pbc.png" style="width: 90px;" alt="">
-    <p style="font-size: 10px; margin-top: 0; font-family: 'anek latin';">PIOUS BROTHERS COMMUNITY</p><br>
-  </center>
-</div>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="firebase-config.js"></script>
+    .loading-bar {
+      width: 0%;
+      height: 100%;
+      background-color: #f3f4f5;
+      /* Green */
+      animation: loadingAnim 4s linear infinite;
+    }
 
-<script>
-  // Firebase is initialized in firebase-config.js
-  const db = window.firebaseDb || firebase.database();
-  const auth = window.firebaseAuth || firebase.auth();
-  
-      auth.onAuthStateChanged(user => {
-  if (user) {
-    if(user.email=="piousbrotherscommunity@gmail.com"){
-    window.location.href="/admin/admin.html";
-  }
-  else{
-    // User is logged in, now fetch their username
-    db.ref('users/' + user.uid).once('value')
-      .then(snapshot => {
-        const username = snapshot.val().username;
-        document.getElementById("welcomeMessage").innerText = `Welcome ${username}`;
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-  }
-  else {
-    window.location.href = "login.html"; // Not logged in, redirect
-  }
-});
-
-  
-      // Logout function
-      function logout() {
-        auth.signOut().then(() => {
-          window.location.href = "login.html";
-        });
+    @keyframes loadingAnim {
+      0% {
+        width: 0%;
       }
 
- setTimeout(function() {
-  window.location.href = "main.html"
-}, 1500);
-</script>
+      50% {
+        width: 100%;
+      }
+
+      100% {
+        width: 0%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="intro-container">
+    <img style="margin-left: 20px;" src="logoo.png" alt="Logo" class="intro-logo" />
+    <center>
+      <h1 style="color: white; margin-top: 0; margin-bottom: 5px;">ilmify.me</h1>
+    </center>
+    <center style="color: white;">Your Knowledge Seeking Companion</center><br>
+    <div class="loading-container">
+      <div class="loading-bar"></div>
+    </div>
+  </div>
+  <div style="margin-bottom: 100px; color: white;">
+    <center>
+      <p>from</p>
+      <img src="pbc.png" style="width: 90px;" alt="">
+      <p style="font-size: 10px; margin-top: 0; font-family: 'anek latin';">PIOUS BROTHERS COMMUNITY</p><br>
+    </center>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    // Firebase is initialized in firebase-config.js
+    const db = window.firebaseDb || firebase.database();
+    const auth = window.firebaseAuth || firebase.auth();
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        if (user.email == "piousbrotherscommunity@gmail.com") {
+          window.location.href = "/admin/admin.html";
+        }
+        else {
+          // User is logged in, now fetch their username
+          db.ref('users/' + user.uid).once('value')
+            .then(snapshot => {
+              const username = snapshot.val().username;
+              document.getElementById("welcomeMessage").innerText = `Welcome ${username}`;
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }
+      }
+      else {
+        window.location.href = "login.html"; // Not logged in, redirect
+      }
+    });
+
+
+    // Logout function
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    }
+
+    setTimeout(function () {
+      window.location.href = "main.html"
+    }, 1500);
+  </script>
 </body>
+
 </html>

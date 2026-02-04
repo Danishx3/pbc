@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Donation Management - ILMIFY Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../pbc.css">
+    <link rel="icon" href="../logoo.png" type="image/icon type">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .donation-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(13, 86, 79, 0.15);
+            border: 1px solid rgba(13, 86, 79, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #1a7a70;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #afe9da;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(13, 86, 79, 0.2);
+            border: 2px solid #0d564f;
+            color: #afe9da;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #0d564f, #1a7a70);
+            color: #fff;
+        }
+
+        .filter-btn:hover {
+            background: rgba(13, 86, 79, 0.4);
+        }
+
+        .donations-list {
+            background: rgba(13, 86, 79, 0.1);
+            border: 1px solid rgba(13, 86, 79, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .donation-item {
+            background: rgba(13, 86, 79, 0.15);
+            border: 1px solid rgba(13, 86, 79, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .donation-item:hover {
+            background: rgba(13, 86, 79, 0.25);
+            transform: translateX(5px);
+        }
+
+        .donation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .donation-user {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #afe9da;
+        }
+
+        .donation-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a7a70;
+        }
+
+        .donation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+
+        .transaction-id {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #afe9da;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-approve {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-reject {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-reject:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fde047;
+        }
+
+        .status-verified {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .donation-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .donation-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</head>
+
+<body class="black">
+    <!-- Navigation -->
+    <nav class="nav navbar navbar-expand-lg text-white">
+        <div class="container-fluid">
+            <img src="../logoo.png" style="margin-right: 10px; border-radius: 70px; width: 40px; height: 40px;" alt="">
+            <center><a style="font-weight: bold;" href="#" class="navbar-brand text-white"> &#8193;ILMIFY ADMIN</a>
+            </center>
+            <button style="border: transparent;" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span><i class="fa fa-bars text-white"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="admin.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" aria-current="page" href="donations.html">Donations</a>
+                    </li>
+                </ul>
+                <button
+                    style="border-radius: 20px; border-color: transparent; color: #fff; background-color: rgb(43, 44, 43);"
+                    onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="donation-container">
+        <div class="intro">
+            <center>
+                <h2 style="color: #afe9da; margin-bottom: 10px;"><i class="fas fa-hand-holding-dollar"></i> Donation
+                    Management</h2>
+                <p style="color: rgba(255, 255, 255, 0.7);">Review and verify donation submissions</p>
+            </center>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid intro">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-value"><span id="pendingCount">0</span></div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value"><span id="verifiedCount">0</span></div>
+                <div class="stat-label">Verified</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                <div class="stat-value">₹<span id="totalVerified">0</span></div>
+                <div class="stat-label">Total Verified</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+                <div class="stat-value">₹<span id="pendingAmount">0</span></div>
+                <div class="stat-label">Pending Amount</div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs intro">
+            <button class="filter-btn active" onclick="filterDonations('pending')">
+                <i class="fas fa-clock"></i> Pending
+            </button>
+            <button class="filter-btn" onclick="filterDonations('verified')">
+                <i class="fas fa-check-circle"></i> Verified
+            </button>
+            <button class="filter-btn" onclick="filterDonations('rejected')">
+                <i class="fas fa-times-circle"></i> Rejected
+            </button>
+            <button class="filter-btn" onclick="filterDonations('all')">
+                <i class="fas fa-list"></i> All
+            </button>
+        </div>
+
+        <!-- Donations List -->
+        <div class="donations-list intro" id="donationsList">
+            <div class="empty-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading donations...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase initialization
+        const db = window.firebaseDb || firebase.database();
+        const auth = window.firebaseAuth || firebase.auth();
+
+        let currentFilter = 'pending';
+        let allDonations = [];
+
+        // Authentication Check
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "../login.html";
+            } else if (user.email !== "piousbrotherscommunity@gmail.com") {
+                window.location.href = "../login.html";
+            } else {
+                loadDonations();
+                loadStatistics();
+            }
+        });
+
+        // Logout function
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = "../login.html";
+            });
+        }
+
+        // Load Statistics
+        function loadStatistics() {
+            // Listen for real-time updates
+            db.ref('donations/stats').on('value', snapshot => {
+                const stats = snapshot.val() || { totalAmount: 0, pendingAmount: 0 };
+                document.getElementById('totalVerified').textContent = (stats.totalAmount || 0).toLocaleString('en-IN');
+                document.getElementById('pendingAmount').textContent = (stats.pendingAmount || 0).toLocaleString('en-IN');
+            });
+
+            // Count pending donations
+            db.ref('donations/pending').on('value', snapshot => {
+                const count = snapshot.numChildren();
+                document.getElementById('pendingCount').textContent = count;
+            });
+
+            // Count verified donations
+            db.ref('donations/verified').on('value', snapshot => {
+                const count = snapshot.numChildren();
+                document.getElementById('verifiedCount').textContent = count;
+            });
+        }
+
+        // Load Donations
+        function loadDonations() {
+            allDonations = [];
+
+            // Load pending donations
+            db.ref('donations/pending').on('value', pendingSnapshot => {
+                // Load verified donations
+                db.ref('donations/verified').on('value', verifiedSnapshot => {
+                    // Load rejected donations
+                    db.ref('donations/rejected').on('value', rejectedSnapshot => {
+                        allDonations = [];
+
+                        pendingSnapshot.forEach(child => {
+                            allDonations.push({ id: child.key, ...child.val() });
+                        });
+
+                        verifiedSnapshot.forEach(child => {
+                            allDonations.push({ id: child.key, ...child.val() });
+                        });
+
+                        rejectedSnapshot.forEach(child => {
+                            allDonations.push({ id: child.key, ...child.val() });
+                        });
+
+                        // Sort by timestamp (newest first)
+                        allDonations.sort((a, b) => b.timestamp - a.timestamp);
+
+                        displayDonations();
+                    });
+                });
+            });
+        }
+
+        // Filter Donations
+        function filterDonations(status) {
+            currentFilter = status;
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.filter-btn').classList.add('active');
+
+            displayDonations();
+        }
+
+        // Display Donations
+        function displayDonations() {
+            const listContainer = document.getElementById('donationsList');
+            let filteredDonations = allDonations;
+
+            if (currentFilter !== 'all') {
+                filteredDonations = allDonations.filter(d => d.status === currentFilter);
+            }
+
+            if (filteredDonations.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No ${currentFilter === 'all' ? '' : currentFilter} donations found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = filteredDonations.map(donation => `
+                <div class="donation-item">
+                    <div class="donation-header">
+                        <div>
+                            <div class="donation-user"><i class="fas fa-user"></i> ${donation.username}</div>
+                            <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">
+                                ${new Date(donation.timestamp).toLocaleString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            })}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="donation-amount">₹${donation.amount.toLocaleString('en-IN')}</div>
+                            <span class="status-badge status-${donation.status}">${donation.status.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    <div class="donation-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Transaction ID</div>
+                            <div class="detail-value transaction-id">${donation.transactionId}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">User ID</div>
+                            <div class="detail-value" style="font-family: monospace; font-size: 0.85rem;">${donation.userId}</div>
+                        </div>
+                        ${donation.verifiedBy ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Verified By</div>
+                            <div class="detail-value">${donation.verifiedBy}</div>
+                        </div>
+                        ` : ''}
+                        ${donation.verifiedAt ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Verified At</div>
+                            <div class="detail-value">${new Date(donation.verifiedAt).toLocaleString('en-IN')}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${donation.status === 'pending' ? `
+                    <div class="action-buttons">
+                        <button class="btn-approve" onclick="approveDonation('${donation.id}', ${donation.amount}, '${donation.userId}')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="btn-reject" onclick="rejectDonation('${donation.id}', ${donation.amount}, '${donation.userId}')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Approve Donation
+        function approveDonation(donationId, amount, userId) {
+            if (!confirm('Are you sure you want to approve this donation?')) {
+                return;
+            }
+
+            const adminEmail = auth.currentUser.email;
+
+            // Get the donation data
+            db.ref('donations/pending/' + donationId).once('value')
+                .then(snapshot => {
+                    const donationData = snapshot.val();
+
+                    // Move to verified
+                    return db.ref('donations/verified/' + donationId).set({
+                        ...donationData,
+                        status: 'verified',
+                        verifiedBy: adminEmail,
+                        verifiedAt: Date.now()
+                    });
+                })
+                .then(() => {
+                    // Update user's donation record
+                    return db.ref('donations/users/' + userId + '/' + donationId).update({
+                        status: 'verified',
+                        verifiedBy: adminEmail,
+                        verifiedAt: Date.now()
+                    });
+                })
+                .then(() => {
+                    // Remove from pending
+                    return db.ref('donations/pending/' + donationId).remove();
+                })
+                .then(() => {
+                    // Update statistics
+                    return db.ref('donations/stats').transaction(currentStats => {
+                        if (currentStats === null) {
+                            return {
+                                totalAmount: amount,
+                                totalDonors: 1,
+                                pendingAmount: 0,
+                                lastUpdated: Date.now()
+                            };
+                        }
+
+                        return {
+                            totalAmount: (currentStats.totalAmount || 0) + amount,
+                            totalDonors: (currentStats.totalDonors || 0) + 1,
+                            pendingAmount: Math.max(0, (currentStats.pendingAmount || 0) - amount),
+                            lastUpdated: Date.now()
+                        };
+                    });
+                })
+                .then(() => {
+                    alert('Donation approved successfully!');
+                })
+                .catch(error => {
+                    console.error('Error approving donation:', error);
+                    alert('Error approving donation. Please try again.');
+                });
+        }
+
+        // Reject Donation
+        function rejectDonation(donationId, amount, userId) {
+            const reason = prompt('Enter reason for rejection (optional):');
+            if (reason === null) {
+                return; // User cancelled
+            }
+
+            const adminEmail = auth.currentUser.email;
+
+            // Get the donation data
+            db.ref('donations/pending/' + donationId).once('value')
+                .then(snapshot => {
+                    const donationData = snapshot.val();
+
+                    // Move to rejected
+                    return db.ref('donations/rejected/' + donationId).set({
+                        ...donationData,
+                        status: 'rejected',
+                        rejectedBy: adminEmail,
+                        rejectedAt: Date.now(),
+                        rejectionReason: reason || 'No reason provided'
+                    });
+                })
+                .then(() => {
+                    // Update user's donation record
+                    return db.ref('donations/users/' + userId + '/' + donationId).update({
+                        status: 'rejected',
+                        rejectedBy: adminEmail,
+                        rejectedAt: Date.now(),
+                        rejectionReason: reason || 'No reason provided'
+                    });
+                })
+                .then(() => {
+                    // Remove from pending
+                    return db.ref('donations/pending/' + donationId).remove();
+                })
+                .then(() => {
+                    // Update pending amount
+                    return db.ref('donations/stats/pendingAmount').transaction(current => {
+                        return Math.max(0, (current || 0) - amount);
+                    });
+                })
+                .then(() => {
+                    alert('Donation rejected.');
+                })
+                .catch(error => {
+                    console.error('Error rejecting donation:', error);
+                    alert('Error rejecting donation. Please try again.');
+                });
+        }
+    </script>
+</body>
+
+</html>
