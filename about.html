@@ -4,16 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>About Me</title>
+  <title>About ILMIFY - Pious Brothers Community</title>
   <meta name="description"
     content="ilmify, Join ilmify to explore Islamic knowledge through online quizzes, lessons, videos, and a growing Muslim learning community. 100% free and easy to access.">
   <meta name="keywords"
     content="ilmify, Islamic quiz, learn Islam, online Quran learning, Islamic education, Muslim community, Islamic website India, Pious Brothers, Islamic lessons, free Islamic resources">
   <meta name="author" content="ilmify Pious Brothers Team">
-  <link rel="stylesheet" href="pbc.css">
   <link rel="icon" href="logoo.png" type="image/icon type">
-  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     * {
       margin: 0;
@@ -22,98 +26,441 @@
     }
 
     body {
-      display: grid;
-      justify-content: center;
-      font-family: "anek latin", sans-serif;
-      background-color: #f0f4f8;
-      color: #ffffff;
-      line-height: 1.6;
-    }
-
-    header {
-      position: fixed;
-      background: linear-gradient(to bottom, transparent, #0d564f8c);
-      color: rgb(12, 12, 12);
-      padding: 5px 0;
-    }
-
-    header h1 {
-      font-size: 2.5em;
-    }
-
-    .main {
-      color: rgb(9, 9, 9);
-      margin: 5%;
-      width: 90%;
-      max-width: 800px;
-      background: #afe9da;
-      padding: 40px;
-      border-radius: 30px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      font-family: "anek latin", sans-serif;
-    }
-
-    #about h2 {
-      font-size: 2em;
-      margin-bottom: 20px;
-      color: #fafdfb;
-    }
-
-    #about p {
-      font-size: 1.1em;
-      margin-bottom: 20px;
-      color: #fcf9f9;
-    }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      text-align: center;
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(13, 86, 79, 0.3), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(26, 122, 112, 0.3), transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(13, 86, 79, 0.2), transparent 60%);
+      background-color: #00060f;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
-      background-color: #83a888;
-      color: rgb(14, 13, 13);
-      font-weight: bold;
+      position: relative;
+      color: #fff;
     }
 
-    .white {
-      color: #ffffff;
-      font-size: small;
+    /* Animated background particles */
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(175, 233, 218, 0.1);
+      animation: float 20s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    .particle:nth-child(1) {
+      width: 100px;
+      height: 100px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .particle:nth-child(2) {
+      width: 150px;
+      height: 150px;
+      top: 60%;
+      right: 10%;
+      animation-delay: 5s;
+    }
+
+    .particle:nth-child(3) {
+      width: 80px;
+      height: 80px;
+      bottom: 20%;
+      left: 20%;
+      animation-delay: 10s;
+    }
+
+    .particle:nth-child(4) {
+      width: 120px;
+      height: 120px;
+      top: 40%;
+      right: 30%;
+      animation-delay: 15s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.3;
+      }
+
+      50% {
+        transform: translateY(-50px) translateX(50px);
+        opacity: 0.6;
+      }
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 20px 30px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: slideDown 0.6s ease-out;
+      z-index: 10;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .home-btn {
+      position: absolute;
+      left: 20px;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #afe9da;
+      font-size: 20px;
       text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .home-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #afe9da;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(175, 233, 218, 0.2);
+    }
+
+    header h2 {
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* Main Content Container */
+    .about-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 900px;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .about-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    }
+
+    /* Logo Section */
+    .logo-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(13, 86, 79, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .logo-icon img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .logo-section h1 {
+      color: #fff;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: #afe9da;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .bismillah {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* Content Section */
+    .content-section {
+      margin-bottom: 40px;
+    }
+
+    .content-section p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      text-align: justify;
+    }
+
+    .content-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+      margin: 40px 0;
+    }
+
+    /* Signature Section */
+    .signature-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .from-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .pbc-title {
+      color: #afe9da;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+
+    .pbc-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      letter-spacing: 3px;
+      margin-bottom: 24px;
+    }
+
+    /* Tags */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .tag {
+      background: rgba(175, 233, 218, 0.1);
+      border: 1px solid rgba(175, 233, 218, 0.3);
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: #afe9da;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+      background: rgba(175, 233, 218, 0.2);
+      border-color: #afe9da;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(175, 233, 218, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      header {
+        padding: 15px 20px;
+        margin-bottom: 20px;
+      }
+
+      header h2 {
+        font-size: 22px;
+      }
+
+      .home-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      .about-card {
+        padding: 32px 24px;
+      }
+
+      .logo-section h1 {
+        font-size: 26px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+
+      .content-section p {
+        font-size: 15px;
+      }
+
+      .pbc-title {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .about-card {
+        padding: 24px 20px;
+      }
+
+      .logo-icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      .logo-icon img {
+        width: 48px;
+        height: 48px;
+      }
+
+      .content-section p {
+        text-align: left;
+      }
     }
   </style>
   <script src="guest-utils.js"></script>
 </head>
 
-<body class="black intro">
+<body>
+  <!-- Background particles -->
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
 
-  <header class="intro">
-    <center>
-      <a style="position: fixed; left: 20px; top: 14px; color: rgb(254, 252, 252); " ; color: black;"
-        href="/main.html"><i class="fa fa-home"></i></a>
-      <h2 style="color: rgb(250, 248, 248);">About</h2>
-    </center>
-  </header><br><br><br><br>
+  <!-- Header -->
+  <header>
+    <a href="/main.html" class="home-btn">
+      <i class="fa fa-home"></i>
+    </a>
+    <h2>About ILMIFY</h2>
+  </header>
 
-  <div class="main">
-    <p>
+  <!-- Main Content -->
+  <div class="about-container">
+    <div class="about-card">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-icon">
+          <img src="logoo.png" alt="ILMIFY Logo">
+        </div>
+        <h1>Welcome to ILMIFY</h1>
+        <p class="subtitle">Pious Brothers Community</p>
+        <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      </div>
 
-      In the name of Allah, the Most Gracious, the Most Merciful, we welcome you to a space dedicated to sharing
-      authentic Islamic knowledge, wisdom, and inspiration. <br>
+      <!-- Content Section -->
+      <div class="content-section">
+        <p>
+          In the name of Allah, the Most Gracious, the Most Merciful, we welcome you to a space dedicated to sharing
+          authentic Islamic knowledge, wisdom, and inspiration.
+        </p>
 
-      Our goal is to provide guidance rooted in the Quran and Sunnah, fostering a deeper connection to Allah (SWT) and a
-      greater understanding of the beauty of Islam. Whether you are seeking spiritual growth, learning about Islamic
-      history, or striving to improve your daily worship, this page is here to support your journey. <br>
+        <p>
+          Our goal is to provide guidance rooted in the Quran and Sunnah, fostering a deeper connection to Allah (SWT)
+          and a
+          greater understanding of the beauty of Islam. Whether you are seeking spiritual growth, learning about Islamic
+          history, or striving to improve your daily worship, this page is here to support your journey.
+        </p>
 
-      Join us as we explore the timeless teachings of Islam, reflect on its principles, and strive to implement them in
-      our lives. May Allah bless us all with beneficial knowledge and guide us on the Straight Path. <br>
+        <p>
+          Join us as we explore the timeless teachings of Islam, reflect on its principles, and strive to implement them
+          in
+          our lives. May Allah bless us all with beneficial knowledge and guide us on the Straight Path.
+        </p>
 
-      Let’s learn, grow, and inspire together. <br><br></p><br>
-    <p>from</p>
-    <p style="font-weight: bolder; font-size: larger; margin-bottom: 0; margin-top: 10px;">PBC</p>
-    <p style="font-size: 10px; margin-top: 0;">PIOUS BROTHERS COMMUNITY</p><br>
-    <p class="clink"> #Knowledge #Islam #Quran #Sunnah <br></p>
-  </div><br><br><br>
+        <p>
+          Let's learn, grow, and inspire together.
+        </p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Signature Section -->
+      <div class="signature-section">
+        <p class="from-text">With love and dedication from</p>
+        <p class="pbc-title">PBC</p>
+        <p class="pbc-subtitle">PIOUS BROTHERS COMMUNITY</p>
+
+        <!-- Tags -->
+        <div class="tags">
+          <span class="tag">#Knowledge</span>
+          <span class="tag">#Islam</span>
+          <span class="tag">#Quran</span>
+          <span class="tag">#Sunnah</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
