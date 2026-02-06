@@ -518,7 +518,6 @@
         window.onload = () => {
             populateSurahDropdown();
             checkResumeReading();
-            setupAutoPlay();
         };
 
         function populateSurahDropdown() {
@@ -539,55 +538,55 @@
             display.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
 
             try {
-                // Fetch Audio and Arabic text together
-                const resAr = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`);
-                const dataAr = await resAr.json();
+                // Fetch Arabic text (Simple script)
+                const resArabic = await fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-simple`);
+                const dataArabic = await resArabic.json();
 
-                // Fetch English Translation
-                const resEn = await fetch(`https://api.alquran.cloud/v1/surah/${num}/en.asad`);
+                const resEn = await fetch(`https://api.alquran.cloud/v1/surah/${num}/en.hilali`);
                 const dataEn = await resEn.json();
 
-                // Fetch Malayalam Translation
+                const resAudio = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`);
+                const dataAudio = await resAudio.json();
+
                 const resMl = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ml.abdulhameed`);
                 const dataMl = await resMl.json();
 
                 surahData = {
-                    arabic: dataAr.data,
+                    arabicText: dataArabic.data,
+                    arabicAudio: dataAudio.data,
                     english: dataEn.data,
                     malayalam: dataMl.data
                 };
                 displayAyah();
             } catch (e) {
-                display.innerHTML = '<p class="text-danger text-center">Failed to load content.</p>';
+                console.error('API Error:', e);
+                display.innerHTML = '<p class="text-danger text-center">Failed to load content. Please check your internet connection and try again.</p>';
             }
         }
 
         function displayAyah(autoPlay = false) {
             const idx = currentAyahNumber - 1;
-            const ar = surahData.arabic.ayahs[idx];
+            const arText = surahData.arabicText.ayahs[idx];
+            const arAudio = surahData.arabicAudio.ayahs[idx];
             const en = surahData.english.ayahs[idx];
             const ml = surahData.malayalam.ayahs[idx];
             const info = surahNames.find(s => s.number === currentSurah);
-            const juz = ar.juz;
+            const juz = arAudio.juz;
 
             // Base Arabic text for the ayah
-            let text = ar.text;
+            let text = arText.text;
 
             // Remove Bismillah from the first ayah of all surahs except 1 and 9
-            // Surah 1 keeps Bismillah inside the first ayah (no separate header).
             if (currentAyahNumber === 1 && currentSurah !== 1 && currentSurah !== 9) {
-                // Common written variants (with/without small diacritics)
                 const bismVariants = [
-                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-                    "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                    "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+                    "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ",
                     "بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ",
-                    "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
-                    "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ"
+                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
                 ];
 
                 let cleaned = text;
-
-                // Try to strip known full-phrase variants at the start
                 for (const phrase of bismVariants) {
                     if (cleaned.startsWith(phrase)) {
                         cleaned = cleaned.slice(phrase.length).trim();
@@ -595,11 +594,14 @@
                     }
                 }
 
-                // Fallback: if it still starts with "بسم" and contains "الرحيم",
-                // cut everything from beginning through the first "الرحيم".
-                if (cleaned.startsWith("بسم") || cleaned.startsWith("بِسْم")) {
+                if (cleaned.startsWith("بسم") || cleaned.startsWith("بِسْم") || cleaned.startsWith("بِسۡم")) {
                     const rahimIdx = cleaned.indexOf("الرحيم");
-                    if (rahimIdx !== -1) {
+                    if (rahimIdx === -1) {
+                        const rahimIdx2 = cleaned.indexOf("ٱلرَّحِیمِ");
+                        if (rahimIdx2 !== -1) {
+                            cleaned = cleaned.slice(rahimIdx2 + "ٱلرَّحِیمِ".length).trim();
+                        }
+                    } else {
                         cleaned = cleaned.slice(rahimIdx + "الرحيم".length).trim();
                     }
                 }
@@ -610,7 +612,7 @@
             // Show Bismillah header for first ayah of every surah except 1 and 9
             const showBismHeader = (currentAyahNumber === 1 && currentSurah !== 1 && currentSurah !== 9);
             const bismHeader = showBismHeader
-                ? `<div class="ayah-arabic" style="font-size:2rem; color:#1a7a70; background: transparent; box-shadow: none; padding: 0; margin-bottom: 10px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`
+                ? `<div class="ayah-arabic" style="font-size:2rem; color:#1a7a70; background: transparent; box-shadow: none; padding: 0; margin-bottom: 10px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`
                 : '';
 
             document.getElementById('ayahDisplay').innerHTML = `
@@ -628,7 +630,7 @@
                         <i class="fas fa-play" id="playIcon"></i>
                     </button>
                     <audio id="mainAudio" style="display:none;" onended="resetPlayIcon()">
-                        <source src="${ar.audio}" type="audio/mpeg">
+                        <source src="${arAudio.audio}" type="audio/mpeg">
                     </audio>
                 </div>
 
