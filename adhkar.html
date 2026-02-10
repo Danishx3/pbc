@@ -722,6 +722,7 @@
     // localStorage keys
     const STORAGE_KEY_PREFIX = 'adhkar_progress_';
     const STORAGE_KEY_INDEX = 'adhkar_index_';
+    const STORAGE_KEY_DATE = 'adhkar_date_';
 
     const adhkarText = document.getElementById('adhkarText');
     const adhkarMalayalam = document.getElementById('adhkarMalayalam');
@@ -747,16 +748,29 @@
     document.getElementById('pageTitle').textContent = `${slotNames[slot]} Adhkar`;
     timeBadge.textContent = `${slotNames[slot]} Adhkar`;
 
+    // Helper to get logical date string
+    // For night slot (19:00 - 05:00), hours 00:00-04:59 count as part of "yesterday"
+    function getLogicalDateStr() {
+      const d = new Date();
+      if (slot === 'night' && now < 5) {
+        d.setDate(d.getDate() - 1);
+      }
+      return d.toDateString();
+    }
+
     // Save progress to localStorage
     function saveProgress() {
       try {
         const progressKey = STORAGE_KEY_PREFIX + slot;
         const indexKey = STORAGE_KEY_INDEX + slot;
+        const dateKey = STORAGE_KEY_DATE + slot;
 
         // Save completed indices as array
         localStorage.setItem(progressKey, JSON.stringify(Array.from(completedIndices)));
         // Save current index
         localStorage.setItem(indexKey, index.toString());
+        // Save date
+        localStorage.setItem(dateKey, getLogicalDateStr());
       } catch (e) {
         console.error('Error saving progress:', e);
       }
@@ -767,6 +781,17 @@
       try {
         const progressKey = STORAGE_KEY_PREFIX + slot;
         const indexKey = STORAGE_KEY_INDEX + slot;
+        const dateKey = STORAGE_KEY_DATE + slot;
+
+        // Check date first
+        const savedDate = localStorage.getItem(dateKey);
+        const currentDate = getLogicalDateStr();
+
+        if (savedDate !== currentDate) {
+          // If stored date doesn't match current logical date, start fresh
+          clearProgress();
+          return;
+        }
 
         // Load completed indices
         const savedProgress = localStorage.getItem(progressKey);
@@ -793,8 +818,11 @@
       try {
         const progressKey = STORAGE_KEY_PREFIX + slot;
         const indexKey = STORAGE_KEY_INDEX + slot;
+        const dateKey = STORAGE_KEY_DATE + slot;
+
         localStorage.removeItem(progressKey);
         localStorage.removeItem(indexKey);
+        localStorage.removeItem(dateKey);
         completedIndices.clear();
         index = 0;
         updateProgress();
