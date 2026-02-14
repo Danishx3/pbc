@@ -867,7 +867,7 @@
         index++;
         showAdhkar();
         scrollToTop();
-        saveProgress(); // Save progress after navigation
+        saveProgress();
       }
     }
 
@@ -876,7 +876,7 @@
         index--;
         showAdhkar();
         scrollToTop();
-        saveProgress(); // Save progress after navigation
+        saveProgress();
       }
     }
 
@@ -945,6 +945,33 @@
     loadProgress();
     showAdhkar();
     updateProgress();
+
+    // Swipe Gestures
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50;
+
+    document.querySelector('.adhkar-card').addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.querySelector('.adhkar-card').addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const distance = touchEndX - touchStartX;
+      if (Math.abs(distance) > minSwipeDistance) {
+        if (distance < 0) {
+          // Swipe Left -> Next
+          nextAdhkar();
+        } else {
+          // Swipe Right -> Previous
+          prevAdhkar();
+        }
+      }
+    }
   </script>
 </body>
 

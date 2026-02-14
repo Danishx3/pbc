@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&family=Amiri:wght@400;700&family=Noto+Sans+Malayalam:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&family=Amiri:wght@400;700&family=Noto+Sans+Malayalam:wght@400;700&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -28,18 +28,18 @@
         }
 
         .quran-container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 15px;
         }
 
         /* Nav & Banner Styles */
         .resume-banner {
             background: linear-gradient(135deg, #0d564f, #1a7a70);
             color: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             display: none;
             align-items: center;
             justify-content: space-between;
@@ -61,28 +61,28 @@
 
         .surah-selector {
             background: rgba(13, 86, 79, 0.1);
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border: 2px solid rgba(13, 86, 79, 0.3);
         }
 
         .surah-selector label {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #1a7a70;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: block;
         }
 
         .surah-selector select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-radius: 10px;
             border: 2px solid #0d564f;
             background: white;
             color: #000;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -96,10 +96,10 @@
         /* Ayah Display Styles */
         .ayah-display {
             background: linear-gradient(135deg, rgba(13, 86, 79, 0.05), rgba(26, 122, 112, 0.05));
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
-            margin-bottom: 30px;
-            min-height: 400px;
+            margin-bottom: 20px;
+            min-height: 350px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -135,11 +135,11 @@
         .ayah-number {
             background: linear-gradient(135deg, #0d564f, #1a7a70);
             color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: bold;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(13, 86, 79, 0.3);
             position: relative;
             z-index: 1;
@@ -147,27 +147,27 @@
 
         .ayah-arabic {
             font-family: 'Amiri', serif;
-            font-size: 2.8rem;
-            line-height: 2.2;
+            font-size: 2.2rem;
+            line-height: 2.0;
             text-align: center;
             color: #000000;
-            margin: 20px 0;
+            margin: 15px 0;
             direction: rtl;
             position: relative;
             z-index: 1;
             background-color: #ffffff;
             border-radius: 20px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .ayah-translation {
-            font-size: 1.2rem;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.6;
             text-align: center;
             color: #b3b2b2;
             font-style: italic;
-            max-width: 700px;
+            max-width: 650px;
             position: relative;
             z-index: 1;
         }
@@ -343,6 +343,27 @@
                 font-size: 0.9rem;
             }
         }
+
+        /* Settings Panel */
+        #settingsPanel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(13, 86, 79, 0.249);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 999;
+            padding: 80px 20px 20px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+            border-bottom: 2px solid #1a7a70;
+        }
+
+        #settingsPanel.active {
+            transform: translateY(0);
+        }
     </style>
     <script src="guest-utils.js"></script>
 </head>
@@ -353,8 +374,52 @@
             <a style="position: fixed; left: 20px; color: rgb(251, 249, 249);" href="/main.html"><i
                     class="fa fa-home"></i></a>
             Quran
+            <a style="position: fixed; right: 20px; color: rgb(251, 249, 249); cursor: pointer;"
+                onclick="toggleSettings()"><i class="fa fa-cog" id="settingsIcon"></i></a>
         </center>
     </header><br><br><br>
+
+    <!-- Settings Panel -->
+    <div id="settingsPanel">
+        <div class="container" style="max-width: 600px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0"><i class="fas fa-sliders-h"></i> Settings</h5>
+                <button class="btn btn-sm btn-outline-light" onclick="toggleSettings()"><i class="fas fa-times"></i>
+                    Close</button>
+            </div>
+
+            <div class="row g-3">
+                <div class="mb-3">
+                    <label class="form-label">Arabic Font</label>
+                    <select class="form-select" id="fontSelect" onchange="changeFont()">
+                        <option value="Amiri">Amiri</option>
+                        <option value="Scheherazade New">Scheherazade New</option>
+                        <option value="Noto Naskh Arabic">Noto Naskh Arabic (Default)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Reciter</label>
+                    <select class="form-select" id="reciterSelect" onchange="changeReciter()">
+                        <option value="ar.alafasy">Mishary Rashid Alafasy</option>
+                        <option value="ar.abdulbasitmurattal">Abdul Basit (Murattal)</option>
+                        <option value="ar.abdurrahmaansudais">Abdurrahmaan As-Sudais</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-3">
+
+            <h6 class="mb-2 small text-white-50 text-uppercase"><i class="fas fa-heart text-danger"></i> Saved Ayahs
+            </h6>
+            <div id="savedAyahsList"
+                style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px;">
+                <!-- Saved items will appear here -->
+                <p class="text-white-50 small text-center m-0">No saved ayahs yet.</p>
+            </div>
+        </div>
+    </div>
+
+
 
     <div class="quran-container">
         <div class="resume-banner" id="resumeBanner">
@@ -517,9 +582,129 @@
 
         window.onload = () => {
             populateSurahDropdown();
+            loadSettings();
             checkResumeReading();
+            updateBookmarkIcon();
         };
 
+        let savedAyahs = JSON.parse(localStorage.getItem('savedAyahs') || '[]');
+        let currentReciter = localStorage.getItem('quranReciter') || 'ar.alafasy';
+        let currentFont = localStorage.getItem('quranFont') || 'Noto Naskh Arabic';
+
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            const icon = document.getElementById('settingsIcon');
+
+            panel.classList.toggle('active');
+
+            if (panel.classList.contains('active')) {
+                icon.classList.remove('fa-cog');
+                icon.classList.add('fa-times');
+                document.getElementById('fontSelect').value = currentFont;
+                document.getElementById('reciterSelect').value = currentReciter;
+                renderSavedAyahs();
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-cog');
+            }
+        }
+
+        function changeFont() {
+            currentFont = document.getElementById('fontSelect').value;
+            localStorage.setItem('quranFont', currentFont);
+            applyFont();
+        }
+
+        function applyFont() {
+            const ayahText = document.querySelector('.ayah-arabic');
+            if (ayahText) {
+                ayahText.style.fontFamily = `"${currentFont}", serif`;
+            }
+        }
+
+        function changeReciter() {
+            currentReciter = document.getElementById('reciterSelect').value;
+            localStorage.setItem('quranReciter', currentReciter);
+            // Reload if currently playing or just update for next
+            if (surahData) {
+                loadSurah(currentAyahNumber); // Reload to fetch new audio
+            }
+        }
+
+        function loadSettings() {
+            // Apply font if ayah is displayed, otherwise it will be applied on displayAyah
+        }
+
+        function toggleBookmark() {
+            const id = `${currentSurah}:${currentAyahNumber}`;
+            const index = savedAyahs.findIndex(item => item.id === id);
+
+            if (index === -1) {
+                const info = surahNames.find(s => s.number === currentSurah);
+                savedAyahs.push({
+                    id: id,
+                    surah: currentSurah,
+                    ayah: currentAyahNumber,
+                    name: info.english
+                });
+            } else {
+                savedAyahs.splice(index, 1);
+            }
+
+            localStorage.setItem('savedAyahs', JSON.stringify(savedAyahs));
+            updateBookmarkIcon();
+            renderSavedAyahs();
+        }
+
+        function updateBookmarkIcon() {
+            const btn = document.getElementById('bookmarkBtn');
+            if (!btn) return;
+
+            const id = `${currentSurah}:${currentAyahNumber}`;
+            const isSaved = savedAyahs.some(item => item.id === id);
+
+            if (isSaved) {
+                btn.innerHTML = '<i class="fas fa-heart text-danger"></i>';
+            } else {
+                btn.innerHTML = '<i class="far fa-heart"></i>';
+            }
+        }
+
+        function renderSavedAyahs() {
+            const list = document.getElementById('savedAyahsList');
+            if (savedAyahs.length === 0) {
+                list.innerHTML = '<p class="text-white-50 small text-center">No saved ayahs yet.</p>';
+                return;
+            }
+
+            let html = '<ul class="list-group list-group-flush bg-transparent">';
+            savedAyahs.forEach(item => {
+                html += `
+                    <li class="list-group-item bg-transparent text-white border-bottom border-secondary d-flex justify-content-between align-items-center px-0">
+                        <span style="cursor: pointer;" onclick="loadSavedAyah(${item.surah}, ${item.ayah})" data-bs-dismiss="modal">
+                            ${item.name} - Ayah ${item.ayah}
+                        </span>
+                        <button class="btn btn-sm btn-link text-danger" onclick="deleteSaved('${item.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            list.innerHTML = html;
+        }
+
+        function deleteSaved(id) {
+            savedAyahs = savedAyahs.filter(item => item.id !== id);
+            localStorage.setItem('savedAyahs', JSON.stringify(savedAyahs));
+            renderSavedAyahs();
+            updateBookmarkIcon();
+        }
+
+        function loadSavedAyah(surah, ayah) {
+            document.getElementById('surahSelect').value = surah;
+            loadSurah(ayah);
+        }
         function populateSurahDropdown() {
             const select = document.getElementById('surahSelect');
             surahNames.forEach(s => {
@@ -545,7 +730,7 @@
                 const resEn = await fetch(`https://api.alquran.cloud/v1/surah/${num}/en.hilali`);
                 const dataEn = await resEn.json();
 
-                const resAudio = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`);
+                const resAudio = await fetch(`https://api.alquran.cloud/v1/surah/${num}/${currentReciter}`);
                 const dataAudio = await resAudio.json();
 
                 const resMl = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ml.abdulhameed`);
@@ -622,6 +807,9 @@
                     <div class="mt-2 text-white-50" style="font-size: 0.9rem;">
                         <span class="badge rounded-pill bg-teal me-2" style="background-color: rgba(26, 122, 112, 0.5); border: 1px solid rgba(255,255,255,0.2);">Juz ${juz} / 30</span>
                         <span>Ayah ${currentAyahNumber} / ${info.verses}</span>
+                        <button id="bookmarkBtn" class="btn btn-sm btn-link text-white ms-2" onclick="toggleBookmark()">
+                            <i class="far fa-heart"></i>
+                        </button>
                     </div>
                 </div>
                 
@@ -653,6 +841,8 @@
                 toggleAudio();
             }
 
+            applyFont(); // Apply selected font
+            updateBookmarkIcon(); // Update icon state
             saveProgress();
         }
 
@@ -717,6 +907,33 @@
 
         function closeResumeBanner() {
             document.getElementById('resumeBanner').style.display = 'none';
+        }
+
+        // Swipe Gestures
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const minSwipeDistance = 50;
+
+        document.getElementById('ayahDisplay').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.getElementById('ayahDisplay').addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const distance = touchEndX - touchStartX;
+            if (Math.abs(distance) > minSwipeDistance) {
+                if (distance < 0) {
+                    // Swipe Left -> Next
+                    nextAyah();
+                } else {
+                    // Swipe Right -> Previous
+                    previousAyah();
+                }
+            }
         }
     </script>
 </body>
