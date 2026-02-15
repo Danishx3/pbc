@@ -14,6 +14,12 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Firebase Rules -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
     <style>
         body {
             font-family: 'Anek Latin', sans-serif;
@@ -379,14 +385,92 @@
         </center>
     </header><br><br><br>
 
+    <!-- Entry Selection Screen -->
+    <!-- Entry Selection Screen -->
+    <!-- Entry Selection Screen -->
+    <div id="entryOverlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 30%, #0d564f, transparent 40%), radial-gradient(circle at 70% 40%, #0d564f, transparent 40%), radial-gradient(circle at 50% 70%, #0d564f, transparent 40%); background-color: #00060f; z-index: 2000; overflow-y: auto; overflow-x: hidden; padding: 15px;">
+        <div class="container"
+            style="min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 30px; padding-bottom: 30px;">
+            <div class="text-center mb-4 intro">
+                <h1 class="display-6 fw-bold text-white mb-2 d-md-none" style="font-family: 'Anek Latin', sans-serif;">
+                    Welcome to<br>Quran Reader</h1>
+                <h1 class="display-4 fw-bold text-white mb-3 d-none d-md-block"
+                    style="font-family: 'Anek Latin', sans-serif;">Welcome to Quran Reader</h1>
+                <p class="lead text-white-50" style="font-family: 'Anek Latin', sans-serif; font-size: 1rem;">Choose
+                    your reading mode</p>
+            </div>
+
+            <div class="row g-3 justify-content-center w-100 intro" style="max-width: 900px; animation-delay: 0.2s;">
+                <!-- Regular Reading Card -->
+                <div class="col-12 col-md-6">
+                    <div class="card h-100 border-0"
+                        style="background: linear-gradient(135deg, rgba(13, 86, 79, 0.4), rgba(8, 56, 51, 0.6)); backdrop-filter: blur(10px); border: 1px solid rgba(13, 86, 79, 0.5); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;"
+                        onclick="selectMode('regular')"
+                        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 12px 40px 0 rgba(13, 86, 79, 0.5)'"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px 0 rgba(0, 0, 0, 0.37)'">
+                        <div class="card-body text-center p-4 p-lg-5">
+                            <div class="mb-3 d-inline-block p-3 rounded-circle"
+                                style="background: rgba(13, 86, 79, 0.3);">
+                                <i class="fas fa-book-open fa-2x" style="color: #4db6ac;"></i>
+                            </div>
+                            <h3 class="text-white mb-2"
+                                style="font-family: 'Anek Latin', sans-serif; font-size: 1.25rem;">Regular Reading</h3>
+                            <p class="text-light mb-0 small" style="font-family: 'Anek Latin', sans-serif;">Read at your
+                                own pace. Resume anytime.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ramadan Challenge Card -->
+                <div class="col-12 col-md-6">
+                    <div class="card h-100 border-0"
+                        style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(218, 165, 32, 0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(184, 134, 11, 0.3); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;"
+                        onclick="selectMode('ramadan')"
+                        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 12px 40px 0 rgba(184, 134, 11, 0.4)'"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px 0 rgba(0, 0, 0, 0.37)'">
+                        <div class="card-body text-center p-4 p-lg-5">
+                            <div class="mb-3 d-inline-block p-3 rounded-circle"
+                                style="background: rgba(184, 134, 11, 0.2);">
+                                <i class="fas fa-kaaba fa-2x" style="color: #ffd700;"></i>
+                            </div>
+                            <h3 class="text-white mb-2"
+                                style="font-family: 'Anek Latin', sans-serif; font-size: 1.25rem;">Ramadan Challenge
+                            </h3>
+                            <p class="text-white-50 mb-0 small" style="font-family: 'Anek Latin', sans-serif;">Complete
+                                whole Quran. Track stats.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Friday Kahf Challenge Card -->
+                <div class="col-12 col-md-6" id="kahfCard" style="display: none;">
+                    <div class="card h-100 border-0"
+                        style="background: linear-gradient(135deg, rgba(26, 188, 156, 0.2), rgba(22, 160, 133, 0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(26, 188, 156, 0.3); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;"
+                        onclick="selectMode('kahf')"
+                        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 12px 40px 0 rgba(26, 188, 156, 0.4)'"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px 0 rgba(0, 0, 0, 0.37)'">
+                        <div class="card-body text-center p-4 p-lg-5">
+                            <div class="mb-3 d-inline-block p-3 rounded-circle"
+                                style="background: rgba(26, 188, 156, 0.2);">
+                                <i class="fas fa-mosque fa-2x" style="color: #1abc9c;"></i>
+                            </div>
+                            <h3 class="text-white mb-2"
+                                style="font-family: 'Anek Latin', sans-serif; font-size: 1.25rem;">Friday Kahf
+                            </h3>
+                            <p class="text-white-50 mb-0 small" style="font-family: 'Anek Latin', sans-serif;">Read
+                                Surah
+                                Al-Kahf. Resets weekly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Panel -->
     <div id="settingsPanel">
         <div class="container" style="max-width: 600px;">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="m-0"><i class="fas fa-sliders-h"></i> Settings</h5>
-                <button class="btn btn-sm btn-outline-light" onclick="toggleSettings()"><i class="fas fa-times"></i>
-                    Close</button>
-            </div>
 
             <div class="row g-3">
                 <div class="mb-3">
@@ -403,13 +487,19 @@
                         <option value="ar.alafasy">Mishary Rashid Alafasy</option>
                         <option value="ar.abdulbasitmurattal">Abdul Basit (Murattal)</option>
                         <option value="ar.abdurrahmaansudais">Abdurrahmaan As-Sudais</option>
+                        <option value="ar.ahmedajamy">Ahmed Al-Ajamy</option>
+                        <option value="ar.mahermuaiqly">Maher Al Muaiqly</option>
+                        <option value="ar.saoodshuraym">Saood Ash-Shuraym</option>
+                        <option value="ar.hudhaify">Ali Al-Hudhaify</option>
                     </select>
                 </div>
+
             </div>
 
             <hr class="border-secondary my-3">
 
-            <h6 class="mb-2 small text-white-50 text-uppercase"><i class="fas fa-heart text-danger"></i> Saved Ayahs
+            <h6 id="savedAyahsTitle" class="mb-2 small text-white-50 text-uppercase"><i
+                    class="fas fa-heart text-danger"></i> Saved Ayahs
             </h6>
             <div id="savedAyahsList"
                 style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px;">
@@ -430,6 +520,39 @@
             <div class="d-flex gap-2">
                 <button class="btn btn-light btn-sm" onclick="resumeReading()">Resume</button>
                 <button class="btn btn-outline-light btn-sm" onclick="closeResumeBanner()">Dismiss</button>
+            </div>
+        </div>
+
+        <!-- Ramadan Challenge Dashboard -->
+        <div id="ramadanDashboard"
+            style="display: none; background: linear-gradient(135deg, #155e55, #0d3838); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0 text-warning"><i class="fas fa-moon"></i> Ramadan Challenge</h5>
+                <span class="badge bg-warning text-dark" id="ramadanProgressText">0% Complete</span>
+            </div>
+
+            <div class="progress mb-3" style="height: 20px; background-color: rgba(255,255,255,0.1);">
+                <div id="ramadanProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated"
+                    role="progressbar" style="width: 0%"></div>
+            </div>
+
+            <div class="row text-center g-2">
+                <div class="col-6">
+                    <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
+                        <small class="text-white-50 d-block">Completed Juz</small>
+                        <strong class="text-white" id="completedJuzText">0 / 30</strong>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
+                        <small class="text-white-50 d-block">Remaining</small>
+                        <strong class="text-white" id="remainingPercentageText">100%</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2 text-center">
+                <small class="text-light fst-italic" style="font-size: 0.8rem;">Changes are saved separately from
+                    regular reading.</small>
             </div>
         </div>
 
@@ -583,13 +706,205 @@
         window.onload = () => {
             populateSurahDropdown();
             loadSettings();
-            checkResumeReading();
             updateBookmarkIcon();
+            // Check if we need to show entry screen
+            // We show it every time on page load as requested, unless we want to persist session?
+            // User said "when entering to page show boxes", implying on load.
+            document.getElementById('entryOverlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
         };
 
         let savedAyahs = JSON.parse(localStorage.getItem('savedAyahs') || '[]');
         let currentReciter = localStorage.getItem('quranReciter') || 'ar.alafasy';
         let currentFont = localStorage.getItem('quranFont') || 'Noto Naskh Arabic';
+        let isKahfMode = false;
+
+        // Check Kahf Window on Load
+        window.addEventListener('DOMContentLoaded', checkKahfWindow);
+        // Also check periodically? Maybe just on load is enough as requested.
+
+        function checkKahfWindow() {
+            const now = new Date();
+            const day = now.getDay(); // 0=Sun, 4=Thu, 5=Fri
+            const hour = now.getHours();
+            const min = now.getMinutes();
+
+            // Window: Thursday 18:40 to Friday 18:40
+            let isOpen = false;
+
+            if (day === 4) { // Thursday
+                // After 18:40
+                if (hour > 18 || (hour === 18 && min >= 40)) {
+                    isOpen = true;
+                }
+            } else if (day === 5) { // Friday
+                // Before 18:40
+                if (hour < 18 || (hour === 18 && min < 40)) {
+                    isOpen = true;
+                }
+            }
+
+            const card = document.getElementById('kahfCard');
+            if (card) {
+                card.style.display = isOpen ? 'block' : 'none';
+                // Adjust layout if needed (if 3 cards, col-md-4? currently col-md-6, so it wraps. Fine for now.)
+            }
+        }
+
+        // Helper to get global ayah index (1-based)
+        function getGlobalAyahIndex(surahNum, ayahNum) {
+            let count = 0;
+            for (let i = 0; i < surahNum - 1; i++) {
+                count += surahNames[i].verses;
+            }
+            return count + ayahNum;
+        }
+
+        function selectMode(mode) {
+            const overlay = document.getElementById('entryOverlay');
+
+            if (mode === 'ramadan') {
+                isRamadanMode = true;
+                isKahfMode = false;
+                setupRamadanMode();
+            } else if (mode === 'kahf') {
+                isRamadanMode = false;
+                isKahfMode = true;
+                setupKahfMode();
+            } else {
+                isRamadanMode = false;
+                isKahfMode = false;
+                setupRegularMode();
+            }
+
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 500);
+        }
+
+        function setupKahfMode() {
+            // Hide Surah Selector
+            document.querySelector('.surah-selector').style.display = 'none';
+            document.getElementById('ramadanDashboard').style.display = 'none';
+
+            // Identify "Current Friday" to handle resets
+            // We can calculate the Friday date string.
+            const now = new Date();
+            // Adjust to get the *upcoming* or *current* Friday based on the window
+            // If Thu > 18:40, Friday is tomorrow. If Fri < 18:40, Friday is today.
+            let fridayDate = new Date();
+            if (now.getDay() === 4) {
+                fridayDate.setDate(now.getDate() + 1);
+            }
+            const fridayStr = fridayDate.toISOString().split('T')[0];
+
+            const lastKahfDate = localStorage.getItem('lastKahfDate');
+
+            if (lastKahfDate !== fridayStr) {
+                // New Week / Reset
+                currentSurah = 18; // Kahf
+                currentAyahNumber = 1;
+                localStorage.setItem('lastKahfDate', fridayStr);
+                // Clear old progress?
+                localStorage.removeItem('kahfProgress');
+            } else {
+                // Same Week, Load Progress
+                const saved = localStorage.getItem('kahfProgress');
+                if (saved) {
+                    const p = JSON.parse(saved);
+                    currentSurah = p.surah;
+                    currentAyahNumber = p.ayah;
+                } else {
+                    currentSurah = 18;
+                    currentAyahNumber = 1;
+                }
+            }
+
+            // Sync UI?
+            // Maybe show a small banner "Friday Kahf Challenge"?
+            // For now just load.
+            loadSurah(currentAyahNumber);
+        }
+
+        function setupRamadanMode() {
+            // Hide Surah Selector
+            document.querySelector('.surah-selector').style.display = 'none';
+            // Show Dashboard
+            document.getElementById('ramadanDashboard').style.display = 'block';
+
+            // Load Ramadan Progress
+            const ramadanSaved = localStorage.getItem('ramadanProgress');
+            if (ramadanSaved) {
+                const p = JSON.parse(ramadanSaved);
+                currentSurah = p.surah;
+                currentAyahNumber = p.ayah;
+            } else {
+                currentSurah = 1;
+                currentAyahNumber = 1;
+            }
+
+            // Sync dropdown so loadSurah works (it reads from dom)
+            const select = document.getElementById('surahSelect');
+            if (select) {
+                select.value = currentSurah;
+            }
+
+            // Load content
+            loadSurah(currentAyahNumber);
+        }
+
+        function setupRegularMode() {
+            // Show Surah Selector
+            document.querySelector('.surah-selector').style.display = 'block';
+            // Hide Dashboard
+            document.getElementById('ramadanDashboard').style.display = 'none';
+
+            // Check Resume for Regular
+            checkResumeReading();
+        }
+
+        function updateRamadanStats() {
+            if (!isRamadanMode || !currentSurah) return;
+
+            const globalIndex = getGlobalAyahIndex(currentSurah, currentAyahNumber);
+            const percentage = (globalIndex / totalAyahsInQuran) * 100;
+            const remaining = 100 - percentage;
+
+            // Estimate Juz (Approximate, simplified logic: 1 juz ~= 20 pages or ~200 ayahs, but length varies. 
+            // Better to use metadata if available, but for now we can use the juz info from the API response if loaded, or estimate.)
+            // Since we have `surahData.arabicAudio.ayahs[idx].juz` when playing, we can use that if available.
+            // If not available immediately (e.g. on load before API), we might show last known.
+
+            // Let's rely on what we have in `surahData` if available, otherwise just percentage.
+            let currentJuz = 1;
+            if (surahData && surahData.arabicAudio && surahData.arabicAudio.ayahs) {
+                // Try to get juz from current ayah data 
+                // Note: surahData might be for the whole surah, so we find the ayah.
+                // The API response structure: data.ayahs[index].juz
+                const idx = currentAyahNumber - 1;
+                if (surahData.arabicAudio.ayahs[idx]) {
+                    currentJuz = surahData.arabicAudio.ayahs[idx].juz;
+                }
+            }
+
+            // Update UI elements
+            const progressBar = document.getElementById('ramadanProgressBar');
+            const progressText = document.getElementById('ramadanProgressText');
+            const juzText = document.getElementById('completedJuzText');
+            const remainingText = document.getElementById('remainingPercentageText');
+
+            if (progressBar) progressBar.style.width = `${percentage}%`;
+            if (progressText) progressText.innerText = `${percentage.toFixed(1)}%`;
+            // "Completed" Juz is roughly (Current Juz - 1) + partial. 
+            // Let's just show "Current Juz: X" or "Completed: X/30" where X is calculated.
+            // Requirement was "completed juz". 
+            // If we are in Juz 5, we have completed 4.
+            const completedJuz = Math.max(0, currentJuz - 1);
+            if (juzText) juzText.innerText = `${completedJuz} / 30`;
+            if (remainingText) remainingText.innerText = `${remaining.toFixed(1)}%`;
+        }
 
         function toggleSettings() {
             const panel = document.getElementById('settingsPanel');
@@ -602,7 +917,20 @@
                 icon.classList.add('fa-times');
                 document.getElementById('fontSelect').value = currentFont;
                 document.getElementById('reciterSelect').value = currentReciter;
-                renderSavedAyahs();
+
+                // Hide Saved Ayahs in Ramadan Mode, Show in Regular
+                const list = document.getElementById('savedAyahsList');
+                const title = document.getElementById('savedAyahsTitle');
+
+                if (isRamadanMode) {
+                    if (list) list.style.display = 'none';
+                    if (title) title.style.display = 'none';
+                } else {
+                    if (list) list.style.display = 'block';
+                    if (title) title.style.display = 'block';
+                    renderSavedAyahs();
+                }
+
             } else {
                 icon.classList.remove('fa-times');
                 icon.classList.add('fa-cog');
@@ -834,8 +1162,8 @@
                 </div>
             `;
 
-            document.getElementById('prevBtn').disabled = currentAyahNumber === 1;
-            document.getElementById('nextBtn').disabled = currentAyahNumber === info.verses;
+            document.getElementById('prevBtn').disabled = (currentSurah === 1 && currentAyahNumber === 1);
+            document.getElementById('nextBtn').disabled = (currentSurah === 114 && currentAyahNumber === info.verses);
 
             if (autoPlay) {
                 toggleAudio();
@@ -844,6 +1172,9 @@
             applyFont(); // Apply selected font
             updateBookmarkIcon(); // Update icon state
             saveProgress();
+            if (isRamadanMode) {
+                updateRamadanStats();
+            }
         }
 
         function toggleAudio() {
@@ -860,7 +1191,6 @@
         }
 
         function resetPlayIcon() {
-
             nextAyah(true);
         }
 
@@ -870,8 +1200,31 @@
                 currentAyahNumber++;
                 displayAyah(autoPlay);
             } else {
-                // End of surah, reset icon
-                document.getElementById('playIcon').className = 'fas fa-play';
+                // Check if there is a next surah
+                if (currentSurah < 114) {
+                    currentSurah++;
+                    currentAyahNumber = 1;
+
+                    // Update dropdown for Regular mode or just internal state
+                    const select = document.getElementById('surahSelect');
+                    if (select) {
+                        select.value = currentSurah;
+                    }
+
+                    // Load the new Surah
+                    loadSurah(1).then(() => {
+                        if (autoPlay) {
+                            // Wait for DOM update
+                            setTimeout(() => {
+                                toggleAudio();
+                            }, 1000); // Small delay to let audio load
+                        }
+                    });
+
+                } else {
+                    // End of Quran
+                    document.getElementById('playIcon').className = 'fas fa-play';
+                }
             }
         }
 
@@ -879,29 +1232,79 @@
             if (currentAyahNumber > 1) {
                 currentAyahNumber--;
                 displayAyah();
+            } else if (currentSurah > 1) {
+                // Go to previous Surah
+                currentSurah--;
+                const prevInfo = surahNames.find(s => s.number === currentSurah);
+                // We want to start at the LAST ayah of the previous surah?? 
+                // Usually "Previous" just goes back one ayah.
+                // So if we are at Surah 2, Ayah 1 -> Surah 1, Ayah 7.
+                currentAyahNumber = prevInfo.verses;
+
+                // Update dropdown
+                const select = document.getElementById('surahSelect');
+                if (select) {
+                    select.value = currentSurah;
+                }
+
+                loadSurah(currentAyahNumber);
             }
         }
 
         function saveProgress() {
-            localStorage.setItem('quranProgress', JSON.stringify({
-                surah: currentSurah,
-                ayah: currentAyahNumber
-            }));
+            if (isRamadanMode) {
+                localStorage.setItem('ramadanProgress', JSON.stringify({
+                    surah: currentSurah,
+                    ayah: currentAyahNumber
+                }));
+                if (typeof updateRamadanStats === 'function') updateRamadanStats();
+            } else if (isKahfMode) {
+                localStorage.setItem('kahfProgress', JSON.stringify({
+                    surah: currentSurah,
+                    ayah: currentAyahNumber
+                }));
+            } else {
+                localStorage.setItem('quranProgress', JSON.stringify({
+                    surah: currentSurah,
+                    ayah: currentAyahNumber
+                }));
+            }
         }
 
         function checkResumeReading() {
-            const saved = localStorage.getItem('quranProgress');
-            if (saved) {
-                const p = JSON.parse(saved);
-                document.getElementById('resumeText').innerText = `Surah ${p.surah}, Ayah ${p.ayah}`;
-                document.getElementById('resumeBanner').style.display = 'flex';
+            // Only for regular mode now, handled in setupRegularMode/selectMode
+            if (!isRamadanMode) {
+                const saved = localStorage.getItem('quranProgress');
+                if (saved) {
+                    const p = JSON.parse(saved);
+                    // Automatically load the saved progress without showing banner
+                    currentSurah = p.surah;
+                    currentAyahNumber = p.ayah;
+
+                    // Update dropdown
+                    const select = document.getElementById('surahSelect');
+                    if (select) {
+                        select.value = currentSurah;
+                    }
+
+                    // Load it
+                    loadSurah(currentAyahNumber);
+                }
             }
         }
 
         function resumeReading() {
-            const p = JSON.parse(localStorage.getItem('quranProgress'));
-            document.getElementById('surahSelect').value = p.surah;
-            loadSurah(p.ayah);
+            let p;
+            if (isRamadanMode) {
+                p = JSON.parse(localStorage.getItem('ramadanProgress'));
+            } else {
+                p = JSON.parse(localStorage.getItem('quranProgress'));
+            }
+
+            if (p) {
+                document.getElementById('surahSelect').value = p.surah;
+                loadSurah(p.ayah);
+            }
             closeResumeBanner();
         }
 
@@ -932,6 +1335,156 @@
                 } else {
                     // Swipe Right -> Previous
                     previousAyah();
+                }
+            }
+        }
+
+        // --- Firebase & Analytics Integration ---
+
+        // Initialize Firebase if accessible (script loaded in head)
+        const db = (window.firebaseDb || (typeof firebase !== 'undefined' ? firebase.database() : null));
+        const STATS_REF = "quran_stats";
+        const CONFIG_REF = "ramadan_config";
+
+        if (db) {
+            // 1. Analytics: Increment Total Views (Once per session/day)
+            const today = new Date().toISOString().split('T')[0];
+            const lastVisit = localStorage.getItem('last_visit_date');
+
+            if (lastVisit !== today) {
+                // Increment Daily View
+                const dailyRef = db.ref(`${STATS_REF}/daily/${today}`);
+                dailyRef.transaction(current => (current || 0) + 1);
+
+                // Increment Total View
+                const totalRef = db.ref(`${STATS_REF}/total`);
+                totalRef.transaction(current => (current || 0) + 1);
+
+                localStorage.setItem('last_visit_date', today);
+            }
+
+            // 2. Ramadan Config Listener
+            const ramadanCard = document.querySelector('.card[onclick="selectMode(\'ramadan\')"]');
+            if (ramadanCard) {
+                const cardBody = ramadanCard.querySelector('.card-body');
+                const cardTitle = ramadanCard.querySelector('h3');
+                const cardIcon = ramadanCard.querySelector('i');
+                const cardDesc = ramadanCard.querySelector('p');
+                const originalTitle = cardTitle ? cardTitle.innerText : "Ramadan Challenge";
+
+                // Progress Bar Logic
+                updateRamadanCardProgress(cardBody);
+
+                db.ref(CONFIG_REF).on('value', snapshot => {
+                    const config = snapshot.val() || {};
+                    const isLive = config.isLive === true; // Default false if undefined
+                    const targetDate = config.targetDate ? new Date(config.targetDate) : null;
+                    const now = new Date();
+
+                    // Logic:
+                    // If Live: Show normal card
+                    // If Not Live AND Timer Future: Show Countdown
+                    // If Not Live AND No Timer/Past: Hide Card (or show "Coming Soon")
+
+                    if (isLive) {
+                        ramadanCard.style.display = 'block';
+                        ramadanCard.parentElement.classList.add('col-md-6'); // Restore layout
+                        ramadanCard.classList.remove('disabled');
+                        ramadanCard.style.opacity = '1';
+                        ramadanCard.style.pointerEvents = 'auto';
+                        if (cardTitle) cardTitle.innerText = originalTitle;
+                        // Restore click
+                        ramadanCard.onclick = () => selectMode('ramadan');
+                    } else {
+                        if (targetDate && targetDate > now) {
+                            // Show Timer
+                            ramadanCard.style.display = 'block';
+                            ramadanCard.style.opacity = '0.7';
+                            ramadanCard.style.pointerEvents = 'none'; // Disable click
+                            ramadanCard.onclick = null;
+
+                            // Update Timer
+                            if (window.ramadanTimerInterval) clearInterval(window.ramadanTimerInterval);
+
+                            const updateTimer = () => {
+                                const currentTime = new Date();
+                                const diff = targetDate - currentTime;
+
+                                if (diff <= 0) {
+                                    clearInterval(window.ramadanTimerInterval);
+                                    // Refresh logic? just reload or wait for isLive update
+                                    if (cardTitle) cardTitle.innerText = "Challenge Starting Soon...";
+                                    return;
+                                }
+
+                                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                                if (cardTitle) cardTitle.innerHTML = `Starts in:<br>${days}d ${hours}h ${minutes}m ${seconds}s`;
+                            };
+
+                            updateTimer();
+                            window.ramadanTimerInterval = setInterval(updateTimer, 1000);
+
+                        } else {
+                            // Hide completely
+                            ramadanCard.style.display = 'none';
+                            // Adjust layout of the other card to center if needed?
+                            // The Regular card is col-md-6. If we hide this, regular might be left aligned or centered depending on justify-content-center class on row.
+                            // The row has 'justify-content-center', so single card will be centered.
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateRamadanCardProgress(cardBody) {
+            // Check for saved progress
+            const saved = localStorage.getItem('ramadanProgress');
+            if (saved) {
+                try {
+                    const p = JSON.parse(saved);
+                    // Calculate percentage
+                    // Total Ayahs approx 6236.
+                    // We need a helper to calc total ayah number from surah/ayah.
+                    // For now, let's use the 'percentage' stored if we have it, or estimate?
+                    // Wait, 'updateRamadanStats' calculates percentage. Let's see if we store it.
+                    // We store: {surah, ayah, date}
+                    // We don't store percentage directly in 'ramadanProgress' object usually, but let's check.
+                    // If not, we can't easily calculate accurate global % without the surahNames array which logic we have.
+                    // Let's use the `surahNames` to calculate cumulative ayahs.
+
+                    let totalAyahsPassed = 0;
+                    for (let i = 0; i < p.surah - 1; i++) {
+                        if (surahNames[i]) totalAyahsPassed += surahNames[i].verses;
+                    }
+                    totalAyahsPassed += p.ayah;
+
+                    const totalAyahsInQuran = 6236;
+                    const percent = (totalAyahsPassed / totalAyahsInQuran) * 100;
+
+                    // Add Progress Bar to Card
+                    const progressDiv = document.createElement('div');
+                    progressDiv.className = 'mt-3';
+                    progressDiv.innerHTML = `
+                    <div class="d-flex justify-content-between text-white small mb-1">
+                        <span>Current Progress</span>
+                        <span>${percent.toFixed(1)}%</span>
+                    </div>
+                    <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: ${percent}%;" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-white-50 small mt-1 mb-0">Surah ${p.surah}, Ayah ${p.ayah}</p>
+                `;
+
+                    // Insert before the description or append?
+                    // Let's append
+                    cardBody.appendChild(progressDiv);
+
+                } catch (e) {
+                    console.error("Error parsing progress", e);
                 }
             }
         }
