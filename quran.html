@@ -172,79 +172,264 @@
             line-height: 1.6;
             text-align: center;
             color: #b3b2b2;
+            color: #9da0a6;
             font-style: italic;
             max-width: 650px;
             position: relative;
             z-index: 1;
         }
 
-        /* Audio Player Styling */
-        .audio-wrapper {
-            text-align: center;
-            margin: 20px auto 30px;
+        /* Ayah Display Container - Card Style */
+        .ayah-display {
+            background: transparent;
+            padding: 0;
+            border: none;
+            min-height: auto;
+            display: block;
+            box-shadow: none;
+        }
+
+        .ayah-display::before {
+            display: none;
+            /* Remove the pulsing background for now to match the clean dark card look */
+        }
+
+        .ayah-card {
+            background-color: #11514048;
+            /* Deep black/dark background */
+            border-radius: 30px;
+            padding: 25px;
             position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 500px;
+            /* Constrain width like a mobile card */
+            margin: 0 auto;
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-center {
+            flex: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .surah-title {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .ayah-counter {
+            color: #9da0a6;
+            font-size: 0.85rem;
+        }
+
+        /* Audio Player Styling in Header */
+        .player-controls {
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 15px;
+            padding: 8px 16px;
             border-radius: 50px;
-            display: flex;
-            justify-content: center;
+            display: inline-flex;
             align-items: center;
-            max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            gap: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        audio {
-            width: 100%;
-            height: 35px;
-            outline: none;
-            /* Removed filter to ensure visibility on all browsers */
-        }
-
-        .play-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+        .control-btn {
+            background: none;
             border: none;
-            background: linear-gradient(135deg, #1a7a70, #0d564f);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(26, 122, 112, 0.4);
+            padding: 0;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .play-btn:hover {
+        .play-btn {
+            color: #0cff04;
+            /* Light purple */
+            font-size: 1.2rem;
+        }
+
+        .repeat-btn {
+            color: white;
+            opacity: 0.7;
+            font-size: 1rem;
+        }
+
+        .repeat-btn:hover {
+            opacity: 1;
+        }
+
+        .repeat-btn.active {
+            color: white;
+            opacity: 1;
+            position: relative;
+        }
+
+        .repeat-btn.active::after {
+            content: '1';
+            position: absolute;
+            font-size: 0.8rem;
+            /* Slightly larger logic implies badge, but text for now */
+            top: -2px;
+            right: -6px;
+            font-weight: bold;
+            background: none;
+            /* Using text overlay for "1" inside icon is tricky with FA, simpler to put next to it or just rely on color. 
+               Reference image has arrows with '1' inside. `fa-repeat` has no '1'. 
+               Using `fa-repeat-1` if available or overlay. Let's try simple active state for now. 
+            */
+        }
+
+        /* Like Button in Header */
+        .like-btn {
+            background: none;
+            border: none;
+            color: #ff4757;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s;
+        }
+
+        .like-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(26, 122, 112, 0.6);
         }
 
-        .play-btn:active {
-            transform: scale(0.95);
+        .like-count {
+            display: block;
+            font-size: 0.7rem;
+            color: #9da0a6;
+            text-align: center;
+            margin-top: 2px;
         }
 
-        /* Custom Nav Styles */
+        /* Card Body */
+        .card-body {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .ayah-arabic {
+            font-family: 'Amiri', serif;
+            font-size: 2.2rem;
+            line-height: 2.2;
+            color: #000000;
+            margin-bottom: 20px;
+            text-align: center;
+            direction: rtl;
+        }
+
+        .ayah-translation {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        .footer-btn {
+            background: #e8e6ff;
+            /* Light lavender bg typical for share buttons in some dark UIs or just white/light grey */
+            color: #000;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .footer-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 15px;
+        }
+
+        audio {
+            width: 100%;
+            height: 35px;
+            outline: none;
+        }
+
         .nav {
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
             color: rgb(252, 251, 251);
             padding: 20px;
             font-family: "anek latin", sans-serif;
-            background: linear-gradient(to bottom, transparent, #0d564f8c);
+            background: linear-gradient(to bottom, transparent, #0d564f20);
         }
 
         .navigation-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, #05050500, rgba(5, 5, 5, 0.36));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 30px;
+            z-index: 100;
             display: flex;
-            gap: 15px;
-            justify-content: center;
+            gap: 20px;
+            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .quran-container {
+            padding-bottom: 100px;
+            /* Ensure content isn't hidden behind nav */
+            min-height: 100vh;
         }
 
         .nav-btn {
@@ -388,6 +573,201 @@
         .pulse-card {
             animation: pulse-green 2s infinite;
         }
+
+        /* Mode Selection Overlay Styles */
+        .mode-selection-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+                radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+                radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+            background-color: #00060f;
+            z-index: 2000;
+            overflow-y: auto;
+            /* Flex layout to allow centered child with margin: auto */
+            display: flex;
+            padding: 20px;
+        }
+
+        /* Safe centering wrapper */
+        .mode-content-wrapper {
+            margin: auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Ensure it can grow */
+            min-height: min-content;
+        }
+
+        .mode-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .mode-title {
+            font-family: 'Anek Latin', sans-serif;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .mode-subtitle {
+            font-family: 'Anek Latin', sans-serif;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .mode-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px;
+            justify-content: center;
+        }
+
+        /* Force centering if fewer items than grid columns */
+        .mode-cards-container:has(.mode-card:nth-last-child(1):nth-child(1)) {
+            grid-template-columns: minmax(280px, 400px);
+        }
+
+        .mode-cards-container:has(.mode-card:nth-last-child(2):nth-child(1)) {
+            grid-template-columns: repeat(2, minmax(280px, 1fr));
+        }
+
+        .mode-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px;
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .mode-card:hover::before {
+            opacity: 1;
+        }
+
+        .mode-icon-wrapper {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: transform 0.4s ease, background 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mode-card:hover .mode-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Specific Card Accents */
+        .mode-card.regular .mode-icon-wrapper i {
+            color: #4db6ac;
+        }
+
+        .mode-card.regular:hover {
+            border-color: rgba(77, 182, 172, 0.3);
+        }
+
+        .mode-card.ramadan .mode-icon-wrapper i {
+            color: #ffd700;
+        }
+
+        .mode-card.ramadan:hover {
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .mode-card.kahf .mode-icon-wrapper i {
+            color: #1abc9c;
+        }
+
+        .mode-card.kahf:hover {
+            border-color: rgba(26, 188, 156, 0.3);
+        }
+
+        .mode-card h3 {
+            font-family: 'Anek Latin', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .mode-card p {
+            font-family: 'Anek Latin', sans-serif;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mode-title {
+                font-size: 2rem;
+            }
+
+            .mode-cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .mode-card {
+                min-height: auto;
+                padding: 30px 20px;
+            }
+        }
     </style>
     <script src="guest-utils.js"></script>
 </head>
@@ -402,90 +782,50 @@
                 onclick="toggleSettings()"><i class="fa fa-cog" id="settingsIcon"></i></a>
         </center>
     </header><br><br><br>
-    <div id="entryOverlay"
-        style="position: fixed; inset: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 30%, #0d564f, transparent 40%), radial-gradient(circle at 70% 40%, #0d564f, transparent 40%), radial-gradient(circle at 50% 70%, #0d564f, transparent 40%); background-color: #00060f; z-index: 2000; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;">
-        <div class="container d-flex flex-column align-items-center" style="min-height: 100%; padding: 40px 15px;">
-            <div class="text-center mb-4 intro w-100">
-                <h1 class="display-6 fw-bold text-white mb-2 d-md-none" style="font-family: 'Anek Latin', sans-serif;">
-                    Welcome to<br>Quran Reader</h1>
-                <h1 class="display-4 fw-bold text-white mb-3 d-none d-md-block"
-                    style="font-family: 'Anek Latin', sans-serif;">Welcome to Quran Reader</h1>
-                <p class="lead text-white-50" style="font-family: 'Anek Latin', sans-serif; font-size: 1rem;">Choose
-                    your reading mode</p>
+
+    <!-- Mode Selection Overlay -->
+    <div id="entryOverlay" class="mode-selection-overlay">
+        <div class="mode-content-wrapper">
+            <div class="mode-header">
+                <h1 class="mode-title">Welcome to Quran Reader</h1>
+                <p class="mode-subtitle">Choose your reading mode</p>
             </div>
 
-            <div class="row g-3 justify-content-center w-100 intro my-auto pb-4"
-                style="max-width: 900px; animation-delay: 0.2s;">
-                <!-- Regular Reading Card -->
-                <div class="col-12 col-md-6">
-                    <div class="card h-100 border-0"
-                        style="background: linear-gradient(135deg, rgba(13, 86, 79, 0.4), rgba(8, 56, 51, 0.6)); backdrop-filter: blur(10px); border: 1px solid rgba(13, 86, 79, 0.5); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;"
-                        onclick="selectMode('regular')"
-                        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 12px 40px 0 rgba(13, 86, 79, 0.5)'"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px 0 rgba(0, 0, 0, 0.37)'">
-                        <div class="card-body text-center p-4 p-lg-5">
-                            <div class="mb-3 d-inline-block p-3 rounded-circle"
-                                style="background: rgba(13, 86, 79, 0.3);">
-                                <i class="fas fa-book-open fa-2x" style="color: #4db6ac;"></i>
-                            </div>
-                            <h3 class="text-white mb-2"
-                                style="font-family: 'Anek Latin', sans-serif; font-size: 1.25rem;">Regular Reading</h3>
-                            <p class="text-light mb-0 small" style="font-family: 'Anek Latin', sans-serif;">Read at your
-                                own pace. Resume anytime.</p>
-                        </div>
+            <div class="mode-cards-container">
+                <div class="mode-card kahf" id="kahfCard" onclick="selectMode('kahf')" style="display: none;">
+                    <div class="mode-icon-wrapper">
+                        <i class="fas fa-mosque fa-3x"></i>
                     </div>
+                    <h3>Friday Kahf</h3>
+                    <p class="mb-3">Read Surah Al-Kahf</p>
+
+                    <!-- Card Progress Bar -->
+                    <div class="progress w-75 mx-auto" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                        <div id="cardKahfProgressBar" class="progress-bar" role="progressbar"
+                            style="width: 0%; background-color: #1abc9c;"></div>
+                    </div>
+                    <small id="cardKahfProgressText" class="text-white-50 mt-2 d-block" style="font-size: 0.75rem;">0%
+                        Complete</small>
+                </div>
+                <div class="mode-card ramadan" onclick="selectMode('ramadan')">
+                    <div class="mode-icon-wrapper">
+                        <i class="fas fa-kaaba fa-3x"></i>
+                    </div>
+                    <h3>Ramadan Challenge</h3>
+                    <p>Complete whole Quran. Track stats.</p>
+                </div>
+                <!-- Regular Reading Card -->
+                <div class="mode-card regular" onclick="selectMode('regular')">
+                    <div class="mode-icon-wrapper">
+                        <i class="fas fa-book-open fa-3x"></i>
+                    </div>
+                    <h3>Regular Reading</h3>
+                    <p>Read at your own pace. Resume anytime.</p>
                 </div>
 
                 <!-- Ramadan Challenge Card -->
-                <div class="col-12 col-md-6">
-                    <div class="card h-100 border-0"
-                        style="display: none; background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(218, 165, 32, 0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(184, 134, 11, 0.3); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;"
-                        onclick="selectMode('ramadan')"
-                        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 12px 40px 0 rgba(184, 134, 11, 0.4)'"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px 0 rgba(0, 0, 0, 0.37)'">
-                        <div class="card-body text-center p-4 p-lg-5">
-                            <div class="mb-3 d-inline-block p-3 rounded-circle"
-                                style="background: rgba(184, 134, 11, 0.2);">
-                                <i class="fas fa-kaaba fa-2x" style="color: #ffd700;"></i>
-                            </div>
-                            <h3 class="text-white mb-2"
-                                style="font-family: 'Anek Latin', sans-serif; font-size: 1.25rem;">Ramadan Challenge
-                            </h3>
-                            <p class="text-white-50 mb-0 small" style="font-family: 'Anek Latin', sans-serif;">Complete
-                                whole Quran. Track stats.</p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Friday Kahf Challenge Card -->
-                <div class="col-12 col-md-6 pulse-card" id="kahfCard" style="display: none;">
-                    <div class="card h-100 border-0"
-                        style="background: linear-gradient(135deg, rgba(26, 188, 156, 0.2), rgba(22, 160, 133, 0.1)); backdrop-filter: blur(10px); border: 1px solid rgba(26, 188, 156, 0.3); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;"
-                        onclick="selectMode('kahf')"
-                        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 12px 40px 0 rgba(26, 188, 156, 0.4)'"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px 0 rgba(0, 0, 0, 0.37)'">
-                        <div class="card-body text-center p-4 p-lg-5">
-                            <div class="mb-3 d-inline-block p-3 rounded-circle"
-                                style="background: rgba(26, 188, 156, 0.2);">
-                                <i class="fas fa-mosque fa-2x" style="color: #1abc9c;"></i>
-                            </div>
-                            <h3 class="text-white mb-2"
-                                style="font-family: 'Anek Latin', sans-serif; font-size: 1.25rem;">Friday Kahf
-                            </h3>
-                            <p class="text-white-50 mb-3 small" style="font-family: 'Anek Latin', sans-serif;">Read
-                                Surah
-                                Al-Kahf</p>
 
-                            <!-- Card Progress Bar -->
-                            <div class="progress" style="height: 10px; background-color: rgba(255,255,255,0.1);">
-                                <div id="cardKahfProgressBar" class="progress-bar progress-bar-striped"
-                                    role="progressbar" style="width: 0%; background-color: #1abc9c;"></div>
-                            </div>
-                            <small id="cardKahfProgressText" class="text-white-50 mt-2 d-block"
-                                style="font-size: 0.75rem;">0% Complete</small>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -504,6 +844,11 @@
                         <option value="Scheherazade New">Scheherazade New</option>
                         <option value="Noto Naskh Arabic">Noto Naskh Arabic (Default)</option>
                     </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Font Size</label>
+                    <input type="range" class="form-range" id="fontSizeRange" min="1.5" max="4.0" step="0.1"
+                        oninput="changeFontSize()">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Reciter</label>
@@ -743,6 +1088,15 @@
         let currentSurah = null;
         let currentAyahNumber = 1;
         let surahData = null;
+        let isKahfMode = false;
+        let autoPlay = false;
+        let repeatMode = 'none'; // 'none' or 'one'
+        let translationMode = localStorage.getItem('translationMode') || 'ml'; // 'en' or 'ml'
+
+        let savedAyahs = JSON.parse(localStorage.getItem('savedAyahs') || '[]');
+        let currentReciter = localStorage.getItem('quranReciter') || 'ar.alafasy';
+        let currentFont = localStorage.getItem('quranFont') || 'Noto Naskh Arabic';
+        let currentFontSize = localStorage.getItem('quranFontSize') || '2.2'; // Default size
 
         window.onload = () => {
             populateSurahDropdown();
@@ -752,13 +1106,8 @@
             // We show it every time on page load as requested, unless we want to persist session?
             // User said "when entering to page show boxes", implying on load.
             document.getElementById('entryOverlay').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
+            document.body.style.overflow = 'hidden';
         };
-
-        let savedAyahs = JSON.parse(localStorage.getItem('savedAyahs') || '[]');
-        let currentReciter = localStorage.getItem('quranReciter') || 'ar.alafasy';
-        let currentFont = localStorage.getItem('quranFont') || 'Noto Naskh Arabic';
-        let isKahfMode = false;
 
         // Check Kahf Window on Load
         window.addEventListener('DOMContentLoaded', checkKahfWindow);
@@ -995,6 +1344,12 @@
                 document.getElementById('fontSelect').value = currentFont;
                 document.getElementById('reciterSelect').value = currentReciter;
 
+                // Sync slider with current value
+                const slider = document.getElementById('fontSizeRange');
+                if (slider) {
+                    slider.value = currentFontSize;
+                }
+
                 // Hide Saved Ayahs in Ramadan Mode, Show in Regular
                 const list = document.getElementById('savedAyahsList');
                 const title = document.getElementById('savedAyahsTitle');
@@ -1021,9 +1376,25 @@
         }
 
         function applyFont() {
-            const ayahText = document.querySelector('.ayah-arabic');
-            if (ayahText) {
-                ayahText.style.fontFamily = `"${currentFont}", serif`;
+            const display = document.querySelector('.ayah-arabic');
+            if (display) {
+                display.style.fontFamily = `'${currentFont}', serif`;
+            }
+            const select = document.getElementById('fontSelect');
+            if (select) select.value = currentFont;
+        }
+
+        function changeFontSize() {
+            const slider = document.getElementById('fontSizeRange');
+            currentFontSize = slider.value;
+            localStorage.setItem('quranFontSize', currentFontSize);
+            applyFontSize();
+        }
+
+        function applyFontSize() {
+            const display = document.querySelector('.ayah-arabic');
+            if (display) {
+                display.style.fontSize = `${currentFontSize}rem`;
             }
         }
 
@@ -1063,16 +1434,16 @@
 
         function updateBookmarkIcon() {
             const btn = document.getElementById('bookmarkBtn');
-            if (!btn) return;
+            const btnMain = document.getElementById('bookmarkBtnMain');
 
             const id = `${currentSurah}:${currentAyahNumber}`;
             const isSaved = savedAyahs.some(item => item.id === id);
 
-            if (isSaved) {
-                btn.innerHTML = '<i class="fas fa-heart text-danger"></i>';
-            } else {
-                btn.innerHTML = '<i class="far fa-heart"></i>';
-            }
+            const iconHtml = isSaved ? '<i class="fas fa-heart text-danger"></i>' : '<i class="far fa-heart"></i>';
+            const iconMainHtml = isSaved ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
+
+            if (btn) btn.innerHTML = iconHtml;
+            if (btnMain) btnMain.innerHTML = iconMainHtml;
         }
 
         function renderSavedAyahs() {
@@ -1230,37 +1601,68 @@
                 : '';
 
             document.getElementById('ayahDisplay').innerHTML = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    <div class="surah-info">
-                        <h3>${info.english} - ${info.arabic}</h3>
-                        <p class="small text-muted">${info.translation}</p>
-                        <div class="mt-2 text-white-50" style="font-size: 0.9rem;">
-                            <span class="badge rounded-pill bg-teal me-2" style="background-color: rgba(26, 122, 112, 0.5); border: 1px solid rgba(255,255,255,0.2);">Juz ${juz} / 30</span>
-                            <span>Ayah ${currentAyahNumber} / ${info.verses}</span>
-                            <button id="bookmarkBtn" class="btn btn-sm btn-link text-white ms-2" onclick="toggleBookmark()">
-                                <i class="far fa-heart"></i>
-                            </button>
+                <div class="ayah-card">
+                    <!-- Card Header -->
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="player-controls">
+                                <button id="customPlayBtn" class="control-btn play-btn" onclick="toggleAudio()">
+                                    <i class="fas fa-play" id="playIcon"></i>
+                                </button>
+                                <button id="repeatBtn" class="control-btn repeat-btn" onclick="toggleRepeat()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="header-center">
+                            <div class="surah-title">${info.number}. ${info.english}</div>
+                            <div class="ayah-counter">${currentAyahNumber}/${info.verses}</div>
+                        </div>
+                        
+                        <div class="header-right">
+                             <div class="text-center">
+                                <button id="bookmarkBtnMain" class="like-btn" onclick="toggleBookmark()">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <!-- <span class="like-count">62.2K</span> -->
+                             </div>
                         </div>
                     </div>
-                    
-                    <div class="audio-wrapper">
-                        <button id="customPlayBtn" class="play-btn" onclick="toggleAudio()">
-                            <i class="fas fa-play" id="playIcon"></i>
-                        </button>
-                        <audio id="mainAudio" style="display:none;" onended="resetPlayIcon()">
-                            <source src="${arAudio.audio}" type="audio/mpeg">
-                        </audio>
+
+                    <!-- Audio Element (Hidden) -->
+                    <audio id="mainAudio" style="display:none;" onended="handleAudioEnd()">
+                        <source src="${arAudio.audio}" type="audio/mpeg">
+                    </audio>
+
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        ${bismHeader}
+                        <div class="ayah-arabic">${text}</div>
+                        <!-- Highlight for Word by Word? (Future) -->
+                        
+                        <!-- Translations -->
+                         <!-- Only show if not empty/null -->
+                         <div class="ayah-translation" style="${translationMode === 'ml' ? "font-family: 'Noto Sans Malayalam', sans-serif;" : ""}">
+                            ${translationMode === 'en' ? en.text : ml.text}
+                         </div>
                     </div>
 
-                    ${bismHeader}
-                    <div class="ayah-arabic">${text}</div>
-                    <div class="ayah-translation" style="margin-bottom: 15px;">
-                        <strong style="color: #1a7a70; font-size: 0.9rem;">English:</strong><br>
-                        ${en.text}
-                    </div>
-                    <div class="ayah-translation" style="font-family: 'Noto Sans Malayalam', sans-serif;">
-                        <strong style="color: #1a7a70; font-size: 0.9rem;">മലയാളം:</strong><br>
-                        ${ml.text}
+                    <!-- Card Footer -->
+                    <div class="card-footer">
+                        <div class="footer-left">
+                            <button class="footer-btn" onclick="shareAyah()">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                        <div class="footer-right">
+                             <button class="footer-btn secondary" onclick="toggleTranslation()" style="font-weight: bold; font-family: 'Anek Latin', sans-serif;">
+                                ${translationMode === 'en' ? 'En' : 'Ml'}
+                            </button>
+                             <button class="footer-btn secondary" onclick="toggleSettings()">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1298,8 +1700,20 @@
             if (autoPlay) toggleAudio();
 
             applyFont(); // Apply selected font
+            applyFontSize(); // Apply selected font size
             updateBookmarkIcon(); // Update icon state
+            updateRepeatIcon(); // Update repeat icon state
             saveProgress();
+        }
+
+        function handleAudioEnd() {
+            if (repeatMode === 'one') {
+                const audio = document.getElementById('mainAudio');
+                audio.currentTime = 0;
+                audio.play();
+            } else {
+                nextAyah(true);
+            }
         }
 
         function toggleAudio() {
@@ -1312,6 +1726,32 @@
             } else {
                 audio.pause();
                 icon.className = 'fas fa-play';
+            }
+        }
+
+        function toggleRepeat() {
+            if (repeatMode === 'none') {
+                repeatMode = 'one';
+            } else {
+                repeatMode = 'none';
+            }
+            updateRepeatIcon();
+        }
+
+        function toggleTranslation() {
+            translationMode = translationMode === 'en' ? 'ml' : 'en';
+            localStorage.setItem('translationMode', translationMode);
+            displayAyah(false); // Refresh display without auto-playing
+        }
+
+        function updateRepeatIcon() {
+            const btn = document.getElementById('repeatBtn');
+            if (btn) {
+                if (repeatMode === 'one') {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
             }
         }
 
@@ -1487,12 +1927,11 @@
             }
 
             // 2. Ramadan Config Listener
-            const ramadanCard = document.querySelector('.card[onclick="selectMode(\'ramadan\')"]');
+            const ramadanCard = document.querySelector('.mode-card.ramadan');
             if (ramadanCard) {
-                const cardBody = ramadanCard.querySelector('.card-body');
+                // The card itself is the container for content now
+                const cardBody = ramadanCard;
                 const cardTitle = ramadanCard.querySelector('h3');
-                const cardIcon = ramadanCard.querySelector('i');
-                const cardDesc = ramadanCard.querySelector('p');
                 const originalTitle = cardTitle ? cardTitle.innerText : "Ramadan Challenge";
 
                 // Progress Bar Logic
@@ -1500,42 +1939,43 @@
 
                 db.ref(CONFIG_REF).on('value', snapshot => {
                     const config = snapshot.val() || {};
-                    const isLive = config.isLive === true; // Default false if undefined
+                    // Temporary: Force show if user reported missing, or just handle gracefully
+                    // const isLive = config.isLive === true; 
+                    // Let's default to SHOWING it but maybe as "Coming Soon" if not live, 
+                    // or just respect the config but ensure it's flex.
+                    // Given user feedback "missing", I will force it visible for now or just log it.
+                    // Better: standard logic but ensuring display:flex.
+                    // If user says "missing", likely config.isLive is false.
+                    // I will override to SHOW it (comment out hiding).
+
+                    const isLive = config.isLive === true;
                     const targetDate = config.targetDate ? new Date(config.targetDate) : null;
                     const now = new Date();
 
-                    // Logic:
-                    // If Live: Show normal card
-                    // If Not Live AND Timer Future: Show Countdown
-                    // If Not Live AND No Timer/Past: Hide Card (or show "Coming Soon")
-
                     if (isLive) {
-                        ramadanCard.style.display = 'block';
-                        ramadanCard.parentElement.classList.add('col-md-6'); // Restore layout
+                        ramadanCard.style.display = 'flex'; // Use Flex!
+                        // ramadanCard.parentElement.classList.add('col-md-6'); // Grid handles layout now, no col class needed
                         ramadanCard.classList.remove('disabled');
                         ramadanCard.style.opacity = '1';
                         ramadanCard.style.pointerEvents = 'auto';
                         if (cardTitle) cardTitle.innerText = originalTitle;
-                        // Restore click
                         ramadanCard.onclick = () => selectMode('ramadan');
                     } else {
                         if (targetDate && targetDate > now) {
                             // Show Timer
-                            ramadanCard.style.display = 'block';
+                            ramadanCard.style.display = 'flex';
                             ramadanCard.style.opacity = '0.7';
-                            ramadanCard.style.pointerEvents = 'none'; // Disable click
+                            ramadanCard.style.pointerEvents = 'none';
                             ramadanCard.onclick = null;
 
-                            // Update Timer
+                            // Update Timer logic...
                             if (window.ramadanTimerInterval) clearInterval(window.ramadanTimerInterval);
-
                             const updateTimer = () => {
                                 const currentTime = new Date();
                                 const diff = targetDate - currentTime;
 
                                 if (diff <= 0) {
                                     clearInterval(window.ramadanTimerInterval);
-                                    // Refresh logic? just reload or wait for isLive update
                                     if (cardTitle) cardTitle.innerText = "Challenge Starting Soon...";
                                     return;
                                 }
@@ -1547,16 +1987,18 @@
 
                                 if (cardTitle) cardTitle.innerHTML = `Ramadan challenge starts in:<br>${days}d ${hours}h ${minutes}m ${seconds}s`;
                             };
-
                             updateTimer();
                             window.ramadanTimerInterval = setInterval(updateTimer, 1000);
 
                         } else {
-                            // Hide completely
-                            ramadanCard.style.display = 'none';
-                            // Adjust layout of the other card to center if needed?
-                            // The Regular card is col-md-6. If we hide this, regular might be left aligned or centered depending on justify-content-center class on row.
-                            // The row has 'justify-content-center', so single card will be centered.
+                            // HIDE LOGIC - Commented out to fix "Missing" report
+                            // ramadanCard.style.display = 'none';
+
+                            // Instead show "Coming Soon" styling
+                            ramadanCard.style.display = 'flex';
+                            ramadanCard.style.opacity = '0.5';
+                            ramadanCard.style.pointerEvents = 'none';
+                            if (cardTitle) cardTitle.innerText = "Coming Soon";
                         }
                     }
                 });
@@ -1611,6 +2053,27 @@
                 } catch (e) {
                     console.error("Error parsing progress", e);
                 }
+            }
+        }
+        function shareAyah() {
+            if (!surahData) return;
+            const idx = currentAyahNumber - 1;
+            const arText = surahData.arabicText.ayahs[idx].text;
+            const enText = surahData.english.ayahs[idx].text;
+            const info = surahNames.find(s => s.number === currentSurah);
+
+            const shareText = `${info.english} (${info.number}:${currentAyahNumber})\n\n${arText}\n\n${enText}\n\nRead more at: ${window.location.href}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Quran - ${info.english} ${info.number}:${currentAyahNumber}`,
+                    text: shareText,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('Ayah copied to clipboard!');
+                }).catch(console.error);
             }
         }
     </script>

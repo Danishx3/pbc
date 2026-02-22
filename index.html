@@ -14,83 +14,157 @@
   <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      display: grid;
-      font-family: 'anek latin';
-      justify-content: center;
-      margin-top: 150px;
+      margin: 0;
+      padding: 0;
       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'anek latin', sans-serif;
       background:
         radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
         radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
         radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
       background-color: #00060f;
+      color: white;
+      text-align: center;
+    }
+
+    .intro-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      margin-bottom: 2rem;
     }
 
     .intro-logo {
-      width: 200px;
+      width: 180px;
+      max-width: 60vw;
       border-radius: 40px;
       opacity: 0;
-      transform: scale(0.8);
-      animation: fadeInZoom 1.6s ease forwards;
+      transform: scale(0.8) translateY(20px);
+      animation: logoEntrance 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    @keyframes fadeInZoom {
+    @keyframes logoEntrance {
       to {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .brand-title {
+      font-size: 2.5rem;
+      margin: 1.5rem 0 0.5rem;
+      letter-spacing: 1px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease-out 0.5s forwards;
+    }
+
+    .brand-subtitle {
+      font-size: 1rem;
+      color: #a0aec0;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease-out 0.7s forwards;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
     .loading-container {
-      width: 100%;
-      height: 10px;
-      background-color: rgb(3, 48, 28);
-      border-radius: 5px;
+      width: 200px;
+      height: 6px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
       overflow: hidden;
+      margin-top: 1rem;
+      opacity: 0;
+      animation: fadeIn 0.5s ease-out 1s forwards;
     }
 
     .loading-bar {
       width: 0%;
       height: 100%;
-      background-color: #f3f4f5;
-      /* Green */
-      animation: loadingAnim 4s linear infinite;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 3px;
+      animation: progress 2s ease-in-out 1s forwards;
     }
 
-    @keyframes loadingAnim {
+    @keyframes progress {
       0% {
         width: 0%;
       }
 
-      50% {
+      100% {
         width: 100%;
       }
+    }
 
-      100% {
-        width: 0%;
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
       }
+    }
+
+    .intro-footer {
+      position: absolute;
+      bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.5s forwards;
+    }
+
+    .intro-footer img {
+      width: 70px;
+      margin: 10px 0;
+      opacity: 0.8;
+    }
+
+    .intro-footer p {
+      margin: 0;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      color: #718096;
+      text-transform: uppercase;
     }
   </style>
 </head>
 
 <body>
   <div class="intro-container">
-    <img style="margin-left: 20px;" src="logoo.png" alt="Logo" class="intro-logo" />
-    <center>
-      <h1 style="color: white; margin-top: 0; margin-bottom: 5px;">ilmify.me</h1>
-    </center>
-    <center style="color: white;">Your Knowledge Seeking Companion</center><br>
+    <img src="logoo.png" alt="Ilmify Logo" class="intro-logo" />
+    <h1 class="brand-title">ilmify.me</h1>
+    <div class="brand-subtitle">Your Knowledge Seeking Companion</div>
+
     <div class="loading-container">
       <div class="loading-bar"></div>
     </div>
   </div>
-  <div style="margin-bottom: 100px; color: white;">
-    <center>
-      <p>from</p>
-      <img src="pbc.png" style="width: 90px;" alt="">
-      <p style="font-size: 10px; margin-top: 0; font-family: 'anek latin';">PIOUS BROTHERS COMMUNITY</p><br>
-    </center>
+
+  <div class="intro-footer">
+    <p>from</p>
+    <img src="pbc.png" alt="PBC Logo">
+    <p>PIOUS BROTHERS COMMUNITY</p>
   </div>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -101,39 +175,32 @@
     const db = window.firebaseDb || firebase.database();
     const auth = window.firebaseAuth || firebase.auth();
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        if (user.email == "piousbrotherscommunity@gmail.com") {
-          window.location.href = "/admin/admin.html";
+    // Set redirect to happen after animation completes (approx 3.2s total)
+    // 1s delay + 2s progress + slight buffer
+    setTimeout(function () {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          if (user.email === "piousbrotherscommunity@gmail.com") {
+            window.location.href = "/admin/admin.html";
+          }
+          else {
+            // User is logged in, redirect to main and let main handle logic
+            // Or wait here if we need username (but usually better to redirect quickly)
+            window.location.href = "main.html";
+          }
         }
         else {
-          // User is logged in, now fetch their username
-          db.ref('users/' + user.uid).once('value')
-            .then(snapshot => {
-              const username = snapshot.val().username;
-              document.getElementById("welcomeMessage").innerText = `Welcome ${username}`;
-            })
-            .catch(error => {
-              console.error(error);
-            });
+          window.location.href = "login.html"; // Not logged in, redirect
         }
-      }
-      else {
-        window.location.href = "login.html"; // Not logged in, redirect
-      }
-    });
+      });
+    }, 3200);
 
-
-    // Logout function
+    // Logout function (not needed on intro page usually, but kept for safety)
     function logout() {
       auth.signOut().then(() => {
         window.location.href = "login.html";
       });
     }
-
-    setTimeout(function () {
-      window.location.href = "main.html"
-    }, 1500);
   </script>
 </body>
 
