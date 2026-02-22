@@ -165,6 +165,13 @@
             border-radius: 20px;
             padding: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark background when Tajweed colors are active */
+        .ayah-arabic.tj-active {
+            background-color: #0d1f1d;
+            color: #e0e0e0;
         }
 
         .ayah-translation {
@@ -768,6 +775,103 @@
                 padding: 30px 20px;
             }
         }
+
+        /* ── Tajweed Legend ── */
+        .tj-legend {
+            background: rgba(13, 86, 79, 0.10);
+            border: 2px solid rgba(13, 86, 79, 0.3);
+            border-radius: 15px;
+            padding: 14px 16px;
+            max-width: 500px;
+            margin: 14px auto 0;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        .tj-legend-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #1a7a70;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tj-legend-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tj-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 3px 9px;
+            font-size: 0.7rem;
+            color: #ccc;
+        }
+
+        .tj-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+        }
+
+        /* Tajweed info popup */
+        .tj-info-popup {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 30, 28, 0.97);
+            border: 1px solid #1a7a70;
+            border-radius: 14px;
+            padding: 14px 18px;
+            max-width: 320px;
+            width: 90%;
+            z-index: 500;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.25s ease-in;
+            display: none;
+        }
+
+        .tj-info-popup.show {
+            display: block;
+        }
+
+        .tj-info-rule-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #a8f0e8;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .tj-info-ml {
+            font-family: 'Noto Sans Malayalam', sans-serif;
+            font-size: 0.88rem;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .tj-info-close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #9da0a6;
+            font-size: 1rem;
+            cursor: pointer;
+            line-height: 1;
+        }
     </style>
     <script src="guest-utils.js"></script>
 </head>
@@ -1092,6 +1196,7 @@
         let autoPlay = false;
         let repeatMode = 'none'; // 'none' or 'one'
         let translationMode = localStorage.getItem('translationMode') || 'ml'; // 'en' or 'ml'
+        let tajweedMode = localStorage.getItem('tajweedMode') === 'true';
 
         let savedAyahs = JSON.parse(localStorage.getItem('savedAyahs') || '[]');
         let currentReciter = localStorage.getItem('quranReciter') || 'ar.alafasy';
@@ -1376,7 +1481,7 @@
         }
 
         function applyFont() {
-            const display = document.querySelector('.ayah-arabic');
+            const display = document.getElementById('mainAyahText');
             if (display) {
                 display.style.fontFamily = `'${currentFont}', serif`;
             }
@@ -1392,7 +1497,7 @@
         }
 
         function applyFontSize() {
-            const display = document.querySelector('.ayah-arabic');
+            const display = document.getElementById('mainAyahText');
             if (display) {
                 display.style.fontSize = `${currentFontSize}rem`;
             }
@@ -1487,6 +1592,115 @@
                 const opt = new Option(`${s.number}. ${s.english} (${s.arabic})`, s.number);
                 select.add(opt);
             });
+        }
+
+        /* ─── Tajweed helpers ─── */
+        const TAJWEED_RULES = {
+            ham_wasl: { color: '#AAD2FF', name: 'Hamzat Wasl', ml: 'ഹംസത്തുൽ വസ്ൽ: ഒരു വാക്കിൽ നിന്ന് അടുത്ത വാക്കിലേക്ക് ചേർന്ന് ഓതുമ്പോൾ ഈ ഹംസ ഉച്ചരിക്കില്ല.' },
+            slnt: { color: '#888899', name: 'Silent', ml: 'നിശ്ശബ്ദ അക്ഷരം: ഈ അക്ഷരം ഉച്ചരിക്കില്ല; ഓതുമ്പോൾ ഒഴിവാക്കണം.' },
+            laam_shams: { color: '#F9C4B4', name: 'Lam Shamsiyyah', ml: 'ലാം ശംസിയ്യ: اَلـ എന്ന നിർവ്വചന ഉപസർഗ്ഗത്തിലെ ل ഉച്ചരിക്കാതെ അടുത്ത അക്ഷരത്തിൽ ലയിക്കുന്നു.' },
+            madda_normal: { color: '#84C9FF', name: 'Madd (2)', ml: 'മദ്ദ് ത്വബ്ഈ: 2 ഹരക്കത്ത് (ബീറ്റ്) നീട്ടി ഉച്ചരിക്കണം. ഇത് സ്വാഭാവിക നീളമാണ്.' },
+            madda_permissible: { color: '#4FC3F7', name: 'Madd Permissible', ml: 'മദ്ദ് ജാഇസ്: 2 മുതൽ 6 ഹരക്കത്ത് വരെ നീട്ടാൻ അനുവദനീയമാണ്.' },
+            madda_necessary: { color: '#0288D1', name: 'Madd Necessary', ml: 'മദ്ദ് ലാസിം: 6 ഹരക്കത്ത് നിർബന്ധമായും നീട്ടണം; കൂട്ടുകയോ കുറക്കുകയോ ചെയ്യരുത്.' },
+            madda_obligatory: { color: '#01579B', name: 'Madd Obligatory', ml: 'മദ്ദ് വാജിബ്: 4 അല്ലെങ്കിൽ 5 ഹരക്കത്ത് നിർബന്ധമായും നീട്ടണം.' },
+            qalaqah: { color: '#CE93D8', name: 'Qalqalah', ml: 'ഖൽഖല: ب ج د ط ق എന്നീ അക്ഷരങ്ങൾ സുകൂനോടെ വരുമ്പോൾ ഉച്ചാരണ സ്ഥാനത്ത് ഒരു ചെറിയ കുലുക്കം (ബൗൺസ്) ഉണ്ടാകണം.' },
+            ikhafa_shafawi: { color: '#80CBC4', name: 'Ikhfa Shafawi', ml: 'ഇഖ്ഫാ ശഫവി: م ഒരു ب ന് മുൻപ് വരുമ്പോൾ ഘോഷ (ഘുന്ന) ശബ്ദത്തോടൊപ്പം ഇടത്തരം ഉച്ചാരണം.' },
+            ikhafa: { color: '#A5D6A7', name: 'Ikhfa', ml: 'ഇഖ്ഫാ: ن അല്ലെങ്കിൽ തൻവീൻ 15 അക്ഷരങ്ങൾക്ക് മുൻപ് വരുമ്പോൾ ഘോഷ ശബ്ദത്തോടൊപ്പം ഇടത്തരം ഉച്ചരണം.' },
+            idgham_shafawi: { color: '#FFCC80', name: 'Idgham Shafawi', ml: 'ഇദ്ഗാം ശഫവി: م ഒരു م ൽ ഘോഷ (ഘുന്ന) ശബ്ദത്തോടൊപ്പം പൂർണ്ണമായി ലയിക്കുന്നു.' },
+            idgham_ghunnah: { color: '#FFAB40', name: 'Idgham + Ghunnah', ml: 'ഇദ്ഗാം (ഘുന്ന സഹിതം): ن അല്ലെങ്കിൽ تൻവീൻ ي ن م و എന്നീ അക്ഷരങ്ങളിൽ ഘോഷ ശബ്ദത്തോടൊപ്പം ലയിക്കുന്നു.' },
+            idgham_wo_ghunnah: { color: '#FF7043', name: 'Idgham No Ghunnah', ml: 'ഇദ്ഗാം (ഘുന്ന കൂടാതെ): ن അല്ലെങ്കിൽ تൻവീൻ ل ر എന്നീ അക്ഷരങ്ങളിൽ ഘോഷ ശബ്ദം കൂടാതെ ലയിക്കുന്നു.' },
+            iqlab: { color: '#EF9A9A', name: 'Iqlab', ml: 'ഇഖ്ലാബ്: ن അല്ലെങ്കിൽ تൻവീൻ ب ന് മുൻപ് വരുമ്പോൾ م ആയി ഘോഷ  ശബ്ദത്തോടൊപ്പം ഉച്ചരിക്കും.' },
+            ghunnah: { color: '#F48FB1', name: 'Ghunnah', ml: 'ഘുന്ന: ن അല്ലെങ്കിൽ م ഒരു ശദ്ദ് (تشديد) ഉള്ളപ്പോൾ 2 ഹരക്കത്ത് മൂക്കിലൂടെ ഘോഷ ശബ്ദം ഉണ്ടാകണം.' },
+        };
+
+        function findTajweedRuleKey(tag) {
+            const t = tag.toLowerCase().replace(/\d+$/, '');
+            if (TAJWEED_RULES[t]) return t;
+            for (const k of Object.keys(TAJWEED_RULES)) if (t.includes(k) || k.includes(t)) return k;
+            return null;
+        }
+
+        function parseTajweedNode(raw) {
+            const frag = document.createDocumentFragment();
+            let i = 0; const len = raw.length;
+            const stack = [];
+            while (i < len) {
+                if (raw[i] === '[') {
+                    let j = i + 1, buf = '';
+                    while (j < len && raw[j] !== '[' && raw[j] !== ']') buf += raw[j++];
+                    if (raw[j] === '[') { stack.push(buf.replace(/^h:/, '')); i = j + 1; }
+                    else { frag.appendChild(document.createTextNode(raw[i])); i++; }
+                } else if (raw[i] === ']') {
+                    if (stack.length) stack.pop(); i++;
+                } else {
+                    const ch = raw[i];
+                    if (stack.length) {
+                        const key = findTajweedRuleKey(stack[stack.length - 1]);
+                        const span = document.createElement('span');
+                        span.textContent = ch;
+                        if (key) {
+                            span.style.color = TAJWEED_RULES[key].color;
+                            span.style.cursor = 'pointer';
+                            span.title = TAJWEED_RULES[key].name;
+                            span.onclick = () => showTajweedInfo(key);
+                        }
+                        frag.appendChild(span);
+                    } else {
+                        frag.appendChild(document.createTextNode(ch));
+                    }
+                    i++;
+                }
+            }
+            return frag;
+        }
+
+        function applyTajweedColors() {
+            if (!tajweedMode || !currentSurah || !currentAyahNumber) return;
+            const ref = `${currentSurah}:${currentAyahNumber}`;
+            fetch(`https://api.alquran.cloud/v1/ayah/${ref}/quran-tajweed`)
+                .then(r => r.json())
+                .then(d => {
+                    if (d.code !== 200) return;
+                    const el = document.getElementById('mainAyahText');
+                    if (!el) return;
+                    // Switch to dark background so light colours are visible
+                    el.classList.add('tj-active');
+                    el.innerHTML = '';
+                    el.appendChild(parseTajweedNode(d.data.text));
+                })
+                .catch(console.error);
+        }
+
+        function toggleTajweed() {
+            tajweedMode = !tajweedMode;
+            localStorage.setItem('tajweedMode', tajweedMode);
+            displayAyah(false);
+        }
+
+        function showTajweedInfo(key) {
+            const rule = TAJWEED_RULES[key];
+            if (!rule) return;
+            let popup = document.getElementById('tjInfoPopup');
+            if (!popup) {
+                popup = document.createElement('div');
+                popup.id = 'tjInfoPopup';
+                popup.className = 'tj-info-popup';
+                document.body.appendChild(popup);
+            }
+            popup.innerHTML = `
+                <button class="tj-info-close" onclick="closeTjInfo()">&times;</button>
+                <div class="tj-info-rule-name">
+                    <div style="width:10px;height:10px;border-radius:50%;background:${rule.color};flex-shrink:0;"></div>
+                    ${rule.name}
+                </div>
+                <div class="tj-info-ml">${rule.ml}</div>
+            `;
+            popup.classList.add('show');
+        }
+
+        function closeTjInfo() {
+            const p = document.getElementById('tjInfoPopup');
+            if (p) p.classList.remove('show');
         }
 
         async function loadSurah(startAyah = 1) {
@@ -1638,7 +1852,7 @@
                     <!-- Card Body -->
                     <div class="card-body">
                         ${bismHeader}
-                        <div class="ayah-arabic">${text}</div>
+                        <div class="ayah-arabic" id="mainAyahText">${text}</div>
                         <!-- Highlight for Word by Word? (Future) -->
                         
                         <!-- Translations -->
@@ -1657,7 +1871,10 @@
                         </div>
                         <div class="footer-right">
                              <button class="footer-btn secondary" onclick="toggleTranslation()" style="font-weight: bold; font-family: 'Anek Latin', sans-serif;">
-                                ${translationMode === 'en' ? 'En' : 'Ml'}
+                                ${translationMode === 'en' ? 'en' : 'ml'}
+                            </button>
+                            <button id="tajweedBtn" class="footer-btn secondary" onclick="toggleTajweed()" title="Toggle Tajweed colours" style="font-weight:bold; font-family:'Anek Latin',sans-serif; ${tajweedMode ? 'color:#0cff04; border-color:#0cff04;' : ''}">
+                                Tj
                             </button>
                              <button class="footer-btn secondary" onclick="toggleSettings()">
                                 <i class="far fa-edit"></i>
@@ -1665,6 +1882,17 @@
                         </div>
                     </div>
                 </div>
+                ${tajweedMode ? `
+                <div class="tj-legend">
+                    <div class="tj-legend-title"><i class="fa fa-palette" style="margin-right:5px;"></i>Tajweed Color Legend <small style="color:#9da0a6; font-weight:400; margin-left:4px;">(tap to learn)</small></div>
+                    <div class="tj-legend-grid">
+                        ${Object.entries(TAJWEED_RULES).map(([key, r]) =>
+                `<div class="tj-chip" style="cursor:pointer;" onclick="showTajweedInfo('${key}')">
+                    <div class="tj-swatch" style="background:${r.color};"></div>${r.name}
+                </div>`
+            ).join('')}
+                    </div>
+                </div>` : ''}
             `;
 
             // Check Nav Buttons
@@ -1704,6 +1932,9 @@
             updateBookmarkIcon(); // Update icon state
             updateRepeatIcon(); // Update repeat icon state
             saveProgress();
+
+            // Apply Tajweed colours if mode is active
+            if (tajweedMode) applyTajweedColors();
         }
 
         function handleAudioEnd() {

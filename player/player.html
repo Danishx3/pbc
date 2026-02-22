@@ -122,26 +122,53 @@
             margin-bottom: 10px;
         }
 
+        /* Range-based seek bar */
         .progress-container {
             width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            cursor: pointer;
             position: relative;
-            overflow: hidden;
         }
 
-        .progress-bar {
-            height: 100%;
+        .seek-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.12);
+            /* filled portion painted via JS */
+        }
+
+        .seek-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-hover);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(26, 122, 112, 0.7);
+            transition: transform 0.15s;
+        }
+
+        .seek-range::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+        }
+
+        .seek-range::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-hover);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 8px rgba(26, 122, 112, 0.7);
+        }
+
+        .seek-range::-moz-range-progress {
             background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
             border-radius: 10px;
-            transition: width 0.1s linear;
-            box-shadow: 0 0 10px rgba(26, 122, 112, 0.6);
-        }
-
-        .progress-container:hover .progress-bar {
-            box-shadow: 0 0 15px rgba(26, 122, 112, 0.8);
         }
 
         .controls {
@@ -506,8 +533,9 @@
                     <span id="current-time">0:00</span>
                     <span id="total-time">0:00</span>
                 </div>
-                <div class="progress-container" onclick="seek(event)">
-                    <div class="progress-bar" id="progress"></div>
+                <div class="progress-container">
+                    <input type="range" class="seek-range" id="seekBar" min="0" max="100" value="0" step="0.1"
+                        oninput="seekToPosition(this.value)">
                 </div>
             </div>
 
@@ -667,11 +695,15 @@
             { title: "Surah An-Nas", src: "https://res.cloudinary.com/dobw6i86s/video/upload/v1748134648/vckieuvvefuct1a4lfd2.mp4", lyrics: "" },
         ];
 
-        let currentIndex = 0;
+        // Restore last surah + timestamp from localStorage
+        const _saved = JSON.parse(localStorage.getItem('player_state') || 'null');
+        let currentIndex = (_saved && _saved.index != null) ? _saved.index : 0;
+        let _resumeTime = (_saved && _saved.time) ? _saved.time : 0;
+
         let audio = document.getElementById("audio-player");
         let title = document.getElementById("song-title");
         let lyrics = document.getElementById("song-lyrics");
-        let progressBar = document.getElementById("progress");
+        let seekBar = document.getElementById("seekBar");
         let songSelector = document.getElementById("song-selector");
         let currentTimeEl = document.getElementById("current-time");
         let totalTimeEl = document.getElementById("total-time");
@@ -681,13 +713,29 @@
         let speedValue = document.getElementById("speedValue");
         let repeatBtn = document.getElementById("repeatBtn");
         let isRepeating = false;
+        let isSeeking = false;
+        let _saveThrottle = 0;
 
-        // Format time
+        // Save surah index + current timestamp
+        function saveState() {
+            localStorage.setItem('player_state', JSON.stringify({
+                index: currentIndex,
+                time: audio.currentTime || 0
+            }));
+        }
+
+        // Format time helper
         function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
+            if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Paint the filled portion of the seek bar
+        function paintSeekBar(pct) {
+            seekBar.style.background =
+                `linear-gradient(to right, #1a7a70 0%, #0d564f ${pct}%, rgba(255,255,255,0.12) ${pct}%, rgba(255,255,255,0.12) 100%)`;
         }
 
         // Load song
@@ -695,18 +743,20 @@
             audio.src = songs[currentIndex].src;
             title.textContent = songs[currentIndex].title;
             lyrics.textContent = songs[currentIndex].lyrics || "Lyrics will appear here if available";
-            if (!songs[currentIndex].lyrics) {
-                lyrics.className = "lyrics-placeholder";
-            } else {
-                lyrics.className = "";
-            }
+            lyrics.className = songs[currentIndex].lyrics ? "" : "lyrics-placeholder";
             songSelector.value = currentIndex;
-            progressBar.style.width = "0%";
+            seekBar.value = 0;
+            paintSeekBar(0);
             currentTimeEl.textContent = "0:00";
+            totalTimeEl.textContent = "0:00";
+        }
 
-            audio.addEventListener('loadedmetadata', () => {
-                totalTimeEl.textContent = formatTime(audio.duration);
-            });
+        // Seek from range input
+        function seekToPosition(value) {
+            if (audio.duration) {
+                audio.currentTime = (value / 100) * audio.duration;
+            }
+            paintSeekBar(parseFloat(value));
         }
 
         // Play/Pause
@@ -760,14 +810,31 @@
             speedValue.textContent = value + "x";
         }
 
-        // Seek
-        function seek(event) {
-            const progressContainer = document.getElementById("progress-container");
-            const clickPosition = event.offsetX / progressContainer.offsetWidth;
-            if (audio.duration) {
-                audio.currentTime = clickPosition * audio.duration;
+        // Duration ready + resume seek
+        audio.addEventListener("loadedmetadata", () => {
+            totalTimeEl.textContent = formatTime(audio.duration);
+            if (_resumeTime > 0 && audio.seekable.length > 0) {
+                audio.currentTime = _resumeTime;
+                _resumeTime = 0;
             }
-        }
+        });
+        // Fallback for streams / MP4 where duration arrives late
+        audio.addEventListener("durationchange", () => {
+            if (audio.duration && isFinite(audio.duration)) {
+                totalTimeEl.textContent = formatTime(audio.duration);
+                if (_resumeTime > 0) {
+                    audio.currentTime = _resumeTime;
+                    _resumeTime = 0;
+                }
+            }
+        });
+        // Final fallback: try on canplay if still not done
+        audio.addEventListener("canplay", () => {
+            if (_resumeTime > 0) {
+                audio.currentTime = _resumeTime;
+                _resumeTime = 0;
+            }
+        });
 
         // Select song
         function selectSong() {
@@ -777,19 +844,43 @@
             document.getElementById("icon").className = "fas fa-pause";
         }
 
-        // Update progress bar
+        // Update seek bar while playing
         audio.addEventListener("timeupdate", () => {
-            if (audio.duration) {
-                const progressPercent = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = progressPercent + "%";
+            if (audio.duration && !isSeeking) {
+                const pct = (audio.currentTime / audio.duration) * 100;
+                seekBar.value = pct;
+                paintSeekBar(pct);
                 currentTimeEl.textContent = formatTime(audio.currentTime);
+                // Refresh total in case it wasn't ready initially
+                if (totalTimeEl.textContent === "0:00" && isFinite(audio.duration)) {
+                    totalTimeEl.textContent = formatTime(audio.duration);
+                }
             }
         });
+
+        // Prevent bar jumping while user drags
+        seekBar.addEventListener("mousedown", () => { isSeeking = true; });
+        seekBar.addEventListener("touchstart", () => { isSeeking = true; }, { passive: true });
+        seekBar.addEventListener("mouseup", () => { isSeeking = false; });
+        seekBar.addEventListener("touchend", () => { isSeeking = false; });
 
         // Auto play next song
         audio.addEventListener("ended", () => {
             if (!isRepeating) {
                 nextSong();
+            }
+        });
+
+        // Save on pause and page close
+        audio.addEventListener("pause", saveState);
+        window.addEventListener("beforeunload", saveState);
+
+        // Throttled save during playback (every 5 s)
+        audio.addEventListener("timeupdate", () => {
+            const now = Date.now();
+            if (now - _saveThrottle > 5000) {
+                _saveThrottle = now;
+                saveState();
             }
         });
 

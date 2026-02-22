@@ -24,18 +24,64 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    .title {
-      font-size: 24px;
-      font-family: 'anek latin' sans-serif;
+    /* ── Main-page matching button style ── */
+    .btnn1 {
+      display: inline-flex;
     }
 
-    .subheading {
-      font-size: 16px;
-      font-family: 'anek latin' sans-serif;
+    .btnn1 button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13, 86, 79, 0.15);
+      border: 1px solid rgba(13, 86, 79, 0.4);
+      border-radius: 18px;
+      padding: 18px 20px;
+      width: 90px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #fff;
+      font-size: 0.75rem;
+      font-family: 'Anek Latin', sans-serif;
+      text-align: center;
     }
 
-    .video {
-      margin-top: 10px;
+    .btnn1 button:hover {
+      background: rgba(13, 86, 79, 0.45);
+      border-color: #0d564f;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(13, 86, 79, 0.35);
+    }
+
+    .btnn {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(13, 86, 79, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #a8f0e8;
+    }
+
+    /* Grid layout */
+    .intro>div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 0;
+    }
+
+    .intro {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 0 16px 30px;
+      max-width: 480px;
+      margin: 0 auto;
     }
   </style>
 </head>
