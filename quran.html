@@ -165,13 +165,6 @@
             border-radius: 20px;
             padding: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Dark background when Tajweed colors are active */
-        .ayah-arabic.tj-active {
-            background-color: #0d1f1d;
-            color: #e0e0e0;
         }
 
         .ayah-translation {
@@ -212,6 +205,231 @@
             max-width: 500px;
             /* Constrain width like a mobile card */
             margin: 0 auto;
+            margin-bottom: 20px;
+        }
+
+        .ayah-card.active-ayah-card {
+            border: 2px solid #0cff04 !important;
+            box-shadow: 0 0 20px rgba(12, 255, 4, 0.3) !important;
+            transform: scale(1.01);
+            transition: transform 0.3s ease, border 0.3s ease;
+        }
+
+        /* Heart Animation Overlay */
+        .heart-animation-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 5rem;
+            color: #ff4757;
+            opacity: 0;
+            z-index: 50;
+            pointer-events: none;
+            filter: drop-shadow(0 0 15px rgba(255, 71, 87, 0.6));
+        }
+
+        .heart-animation-container.animate {
+            animation: heartPop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes heartPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            15% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.9;
+            }
+
+            30% {
+                transform: translate(-50%, -50%) scale(1.0);
+                opacity: 1;
+            }
+
+            70% {
+                transform: translate(-50%, -50%) scale(1.0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Full Screen Page View Adjustments */
+        .full-screen-page-view {
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            padding-bottom: 100px !important;
+        }
+
+        .full-screen-page-view .ayah-card {
+            max-width: 100% !important;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            margin: 0;
+        }
+
+        .full-screen-page-view .ayah-display {
+            padding: 0;
+        }
+
+        .full-screen-page-view .mushaf-page {
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            padding: 15px 5px;
+        }
+
+        .full-screen-page-view .mushaf-arabic {
+            border-radius: 0;
+            box-shadow: none;
+            padding: 15px 10px 0 10px;
+        }
+
+        /* Mushaf-like Page View (continuous text, no boxes) */
+        .mushaf-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin: 12px 0 18px;
+            backdrop-filter: blur(10px);
+        }
+
+        .mushaf-toolbar .toolbar-left,
+        .mushaf-toolbar .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mushaf-toolbar .toolbar-center {
+            flex: 1;
+            text-align: center;
+            font-weight: 700;
+            color: #ffffff;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .mushaf-toolbar .control-btn,
+        .mushaf-toolbar .like-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.25);
+            color: #161616;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .mushaf-toolbar .control-btn:hover,
+        .mushaf-toolbar .like-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(0, 0, 0, 0.35);
+            border-color: rgba(26, 122, 112, 0.7);
+        }
+
+        .mushaf-page {
+            background: #070b10;
+            border-radius: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+            padding: 24px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mushaf-page::before {
+            content: "";
+            position: absolute;
+            inset: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            pointer-events: none;
+        }
+
+        .mushaf-bism {
+            font-family: 'Scheherazade New', serif;
+            font-size: 2.2rem;
+            text-align: center;
+            direction: rtl;
+            color: #f6f3f3;
+            margin: 6px 0 18px;
+            opacity: 0.95;
+        }
+
+        .mushaf-arabic {
+            font-family: 'Noto Naskh Arabic', serif;
+            font-size: 2.2rem;
+            line-height: 2.15;
+            direction: rtl;
+            text-align: justify;
+            color: #000000;
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 15px 15px 0 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .mushaf-ayah {
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 10px;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mushaf-ayah:hover {
+            background: rgba(26, 122, 112, 0.12);
+        }
+
+        .mushaf-ayah.active-mushaf-ayah {
+            background: rgba(12, 255, 4, 0.10);
+            box-shadow: 0 0 0 2px rgba(12, 255, 4, 0.25) inset;
+        }
+
+        .mushaf-marker {
+            display: inline-block;
+            margin: 0 8px 0 6px;
+            font-size: 1.3rem;
+            color: #000000;
+            vertical-align: middle;
+        }
+
+        .mushaf-translation-panel {
+            margin-top: 14px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: #cfd3da;
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+
+        .mushaf-translation-panel .translation-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 6px;
         }
 
         /* Card Header */
@@ -542,6 +760,71 @@
             }
         }
 
+        /* ── Recite Mode ── */
+        .word-span {
+            display: inline;
+            border-radius: 4px;
+            padding: 1px 2px;
+            transition: color 0.25s, background 0.25s;
+            cursor: default;
+        }
+
+        .word-pending {
+            color: inherit;
+        }
+
+        .word-active {
+            color: #ffd700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+        }
+
+        .word-matched {
+            color: #0cff04;
+        }
+
+        /* Quranic pause marks — shown but not required to recite */
+        .word-skip {
+            opacity: 0.35;
+            cursor: default;
+        }
+
+        /* Auto-skipped word (timed out) — shown in orange */
+        .word-skipped {
+            color: #ff8c00;
+            opacity: 0.75;
+        }
+
+        .recite-status-bar {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #9da0a6;
+            text-align: center;
+            letter-spacing: 0.04em;
+            min-height: 18px;
+        }
+
+        .recite-mic-live {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0cff04;
+            margin-right: 5px;
+            animation: blinkDot 1s infinite;
+        }
+
+        @keyframes blinkDot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.2;
+            }
+        }
+
         /* Settings Panel */
         #settingsPanel {
             position: fixed;
@@ -733,6 +1016,14 @@
             border-color: rgba(26, 188, 156, 0.3);
         }
 
+        .mode-card.night .mode-icon-wrapper i {
+            color: #a78bfa;
+        }
+
+        .mode-card.night:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+
         .mode-card h3 {
             font-family: 'Anek Latin', sans-serif;
             font-size: 1.5rem;
@@ -775,103 +1066,6 @@
                 padding: 30px 20px;
             }
         }
-
-        /* ── Tajweed Legend ── */
-        .tj-legend {
-            background: rgba(13, 86, 79, 0.10);
-            border: 2px solid rgba(13, 86, 79, 0.3);
-            border-radius: 15px;
-            padding: 14px 16px;
-            max-width: 500px;
-            margin: 14px auto 0;
-            animation: fadeIn 0.4s ease-in;
-        }
-
-        .tj-legend-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #1a7a70;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .tj-legend-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .tj-chip {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 3px 9px;
-            font-size: 0.7rem;
-            color: #ccc;
-        }
-
-        .tj-swatch {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
-        }
-
-        /* Tajweed info popup */
-        .tj-info-popup {
-            position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(10, 30, 28, 0.97);
-            border: 1px solid #1a7a70;
-            border-radius: 14px;
-            padding: 14px 18px;
-            max-width: 320px;
-            width: 90%;
-            z-index: 500;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.25s ease-in;
-            display: none;
-        }
-
-        .tj-info-popup.show {
-            display: block;
-        }
-
-        .tj-info-rule-name {
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: #a8f0e8;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .tj-info-ml {
-            font-family: 'Noto Sans Malayalam', sans-serif;
-            font-size: 0.88rem;
-            color: #ddd;
-            line-height: 1.6;
-        }
-
-        .tj-info-close {
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            background: none;
-            border: none;
-            color: #9da0a6;
-            font-size: 1rem;
-            cursor: pointer;
-            line-height: 1;
-        }
     </style>
     <script src="guest-utils.js"></script>
 </head>
@@ -882,6 +1076,10 @@
             <a style="position: fixed; left: 20px; color: rgb(251, 249, 249);" href="/main.html"><i
                     class="fa fa-home"></i></a>
             Quran
+            <a id="pageViewToggle" style="position: fixed; right: 60px; color: rgb(251, 249, 249); cursor: pointer;"
+                onclick="togglePageView()" title="Toggle Page View">
+                <i class="fas fa-list"></i>
+            </a>
             <a style="position: fixed; right: 20px; color: rgb(251, 249, 249); cursor: pointer;"
                 onclick="toggleSettings()"><i class="fa fa-cog" id="settingsIcon"></i></a>
         </center>
@@ -896,6 +1094,21 @@
             </div>
 
             <div class="mode-cards-container">
+                <!-- Night Surahs Card (7pm–4pm) -->
+                <div class="mode-card night" id="nightCard" onclick="selectMode('night')" style="display: none;">
+                    <div class="mode-icon-wrapper">
+                        <i class="fas fa-moon fa-3x"></i>
+                    </div>
+                    <h3>Night Surahs</h3>
+                    <p class="mb-3">Al-Mulk &amp; As-Sajdah</p>
+                    <!-- Card Progress Bar -->
+                    <div class="progress w-75 mx-auto" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                        <div id="cardNightProgressBar" class="progress-bar" role="progressbar"
+                            style="width: 0%; background-color: #a78bfa;"></div>
+                    </div>
+                    <small id="cardNightProgressText" class="text-white-50 mt-2 d-block" style="font-size: 0.75rem;">0%
+                        Complete</small>
+                </div>
                 <div class="mode-card kahf" id="kahfCard" onclick="selectMode('kahf')" style="display: none;">
                     <div class="mode-icon-wrapper">
                         <i class="fas fa-mosque fa-3x"></i>
@@ -926,8 +1139,6 @@
                     <h3>Regular Reading</h3>
                     <p>Read at your own pace. Resume anytime.</p>
                 </div>
-
-                <!-- Ramadan Challenge Card -->
 
 
             </div>
@@ -967,6 +1178,26 @@
                     </select>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Translation</label>
+                    <select class="form-select" id="translationSelect" onchange="changeTranslation()">
+                        <option value="ml">Malayalam</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-3">
+
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-outline-light flex-grow-1"
+                    onclick="typeof shareAyah === 'function' ? shareAyah() : null">
+                    <i class="fas fa-share me-2"></i> Share Ayah
+                </button>
+                <button id="settingsReciteBtn" class="btn btn-outline-light flex-grow-1"
+                    onclick="toggleRecite(); toggleSettings();">
+                    <i class="fas fa-microphone me-2"></i> Recite Mode
+                </button>
             </div>
 
             <hr class="border-secondary my-3">
@@ -1012,14 +1243,14 @@
             <div class="row text-center g-2">
                 <div class="col-6">
                     <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
-                        <small class="text-white-50 d-block">Completed Juz</small>
-                        <strong class="text-white" id="completedJuzText">0 / 30</strong>
+                        <small class="text-white-50 d-block">Current Juz</small>
+                        <strong class="text-warning" id="completedJuzText">Juz 1 / 30</strong>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
-                        <small class="text-white-50 d-block">Remaining</small>
-                        <strong class="text-white" id="remainingPercentageText">100%</strong>
+                        <small class="text-white-50 d-block">Ayah in Juz</small>
+                        <strong class="text-white" id="remainingPercentageText">1 / ?</strong>
                     </div>
                 </div>
             </div>
@@ -1045,7 +1276,22 @@
                 <small class="text-white-50">Surah Al-Kahf: 110 Ayahs</small>
             </div>
         </div>
-
+        <!-- Night Surahs Dashboard -->
+        <div id="nightDashboard"
+            style="display: none; background: linear-gradient(135deg, #2e1065, #4c1d95); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #a78bfa; box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0" style="color: #a78bfa;"><i class="fas fa-moon"></i> Night Surahs</h5>
+                <span class="badge" style="background: #a78bfa; color: #fff;" id="nightProgressText">0% Complete</span>
+            </div>
+            <div class="progress mb-2" style="height: 20px; background-color: rgba(255,255,255,0.1);">
+                <div id="nightProgressBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" style="width: 0%; background-color: #a78bfa;"></div>
+            </div>
+            <div class="text-center">
+                <small class="text-white-50" id="nightSurahLabel">Al-Mulk (67) · As-Sajdah (32) — 60 Ayahs total</small>
+            </div>
+        </div>
+        <br>
         <div class="surah-selector">
             <label for="surahSelect">Select Surah</label>
             <select id="surahSelect" onchange="loadSurah()">
@@ -1193,10 +1439,12 @@
         let currentAyahNumber = 1;
         let surahData = null;
         let isKahfMode = false;
+        let isRamadanMode = false;
+        let isNightMode = false;
+        let isPageView = false;
         let autoPlay = false;
         let repeatMode = 'none'; // 'none' or 'one'
         let translationMode = localStorage.getItem('translationMode') || 'ml'; // 'en' or 'ml'
-        let tajweedMode = localStorage.getItem('tajweedMode') === 'true';
 
         let savedAyahs = JSON.parse(localStorage.getItem('savedAyahs') || '[]');
         let currentReciter = localStorage.getItem('quranReciter') || 'ar.alafasy';
@@ -1214,9 +1462,11 @@
             document.body.style.overflow = 'hidden';
         };
 
-        // Check Kahf Window on Load
-        window.addEventListener('DOMContentLoaded', checkKahfWindow);
-        // Also check periodically? Maybe just on load is enough as requested.
+        // Check Kahf & Night window on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkKahfWindow();
+            checkNightWindow();
+        });
 
         function checkKahfWindow() {
             const now = new Date();
@@ -1285,16 +1535,16 @@
             const overlay = document.getElementById('entryOverlay');
 
             if (mode === 'ramadan') {
-                isRamadanMode = true;
-                isKahfMode = false;
+                isRamadanMode = true; isKahfMode = false; isNightMode = false;
                 setupRamadanMode();
             } else if (mode === 'kahf') {
-                isRamadanMode = false;
-                isKahfMode = true;
+                isRamadanMode = false; isKahfMode = true; isNightMode = false;
                 setupKahfMode();
+            } else if (mode === 'night') {
+                isRamadanMode = false; isKahfMode = false; isNightMode = true;
+                setupNightMode();
             } else {
-                isRamadanMode = false;
-                isKahfMode = false;
+                isRamadanMode = false; isKahfMode = false; isNightMode = false;
                 setupRegularMode();
             }
 
@@ -1306,10 +1556,9 @@
         }
 
         function setupKahfMode() {
-            // Hide Surah Selector
             document.querySelector('.surah-selector').style.display = 'none';
             document.getElementById('ramadanDashboard').style.display = 'none';
-            // Show Kahf Dashboard
+            document.getElementById('nightDashboard').style.display = 'none';
             document.getElementById('kahfDashboard').style.display = 'block';
 
             // Identify "Current Friday" to handle resets
@@ -1356,11 +1605,9 @@
         }
 
         function setupRamadanMode() {
-            // Hide Surah Selector
             document.querySelector('.surah-selector').style.display = 'none';
-            // Hide Kahf Dashboard
             document.getElementById('kahfDashboard').style.display = 'none';
-            // Show Dashboard
+            document.getElementById('nightDashboard').style.display = 'none';
             document.getElementById('ramadanDashboard').style.display = 'block';
 
             // Load Ramadan Progress
@@ -1385,38 +1632,180 @@
         }
 
         function setupRegularMode() {
-            // Show Surah Selector
             document.querySelector('.surah-selector').style.display = 'block';
-            // Hide Dashboards
             document.getElementById('ramadanDashboard').style.display = 'none';
             document.getElementById('kahfDashboard').style.display = 'none';
-
-            // Check Resume for Regular
+            document.getElementById('nightDashboard').style.display = 'none';
             checkResumeReading();
+        }
+
+        function checkNightWindow() {
+            const hour = new Date().getHours();
+            // Visible from 7pm (19) to 4am (4) 
+            const isOpen = hour >= 19 || hour < 4;
+            const card = document.getElementById('nightCard');
+            if (card) {
+                card.style.display = isOpen ? 'flex' : 'none';
+            }
+            if (isOpen) updateNightCardStats();
+        }
+
+        function getNightDate() {
+            // A "night" starts at 19:00. If before 16:00, it belongs to previous night.
+            const now = new Date();
+            const d = new Date(now);
+            if (now.getHours() < 16) d.setDate(d.getDate() - 1);
+            return d.toISOString().split('T')[0];
+        }
+
+        function setupNightMode() {
+            document.querySelector('.surah-selector').style.display = 'none';
+            document.getElementById('ramadanDashboard').style.display = 'none';
+            document.getElementById('kahfDashboard').style.display = 'none';
+            document.getElementById('nightDashboard').style.display = 'block';
+
+            const nightDate = getNightDate();
+            const lastNightDate = localStorage.getItem('lastNightDate');
+
+            if (lastNightDate !== nightDate) {
+                // New night — reset
+                currentSurah = 67; // Al-Mulk
+                currentAyahNumber = 1;
+                localStorage.setItem('lastNightDate', nightDate);
+                localStorage.removeItem('nightProgress');
+            } else {
+                const saved = localStorage.getItem('nightProgress');
+                if (saved) {
+                    const p = JSON.parse(saved);
+                    currentSurah = p.surah;
+                    currentAyahNumber = p.ayah;
+                } else {
+                    currentSurah = 67;
+                    currentAyahNumber = 1;
+                }
+            }
+
+            const select = document.getElementById('surahSelect');
+            if (select) select.value = currentSurah;
+            loadSurah(currentAyahNumber);
+        }
+
+        function updateNightStats() {
+            if (!isNightMode || !currentSurah) return;
+            // Total: Mulk 30 + Sajdah 30 = 60
+            const MULK = 67, SAJDAH = 32;
+            const TOTAL = 60;
+            let done;
+            if (currentSurah === MULK) {
+                done = currentAyahNumber;
+            } else if (currentSurah === SAJDAH) {
+                done = 30 + currentAyahNumber;
+            } else {
+                done = TOTAL; // completed
+            }
+            const pct = Math.min((done / TOTAL) * 100, 100);
+            const surahLabel = currentSurah === MULK
+                ? `Al-Mulk · Ayah ${currentAyahNumber} / 30`
+                : (currentSurah === SAJDAH ? `As-Sajdah · Ayah ${currentAyahNumber} / 30` : 'Completed ✓');
+
+            const bar = document.getElementById('nightProgressBar');
+            const txt = document.getElementById('nightProgressText');
+            const lbl = document.getElementById('nightSurahLabel');
+            if (bar) bar.style.width = `${pct}%`;
+            if (txt) txt.innerText = `${pct.toFixed(0)}% Complete`;
+            if (lbl) lbl.innerText = surahLabel;
+        }
+
+        function updateNightCardStats() {
+            const saved = localStorage.getItem('nightProgress');
+            const bar = document.getElementById('cardNightProgressBar');
+            const txt = document.getElementById('cardNightProgressText');
+            if (!saved) {
+                if (bar) bar.style.width = '0%';
+                if (txt) txt.innerText = '0% Complete';
+                return;
+            }
+            try {
+                const p = JSON.parse(saved);
+                const TOTAL = 60;
+                let done = (p.surah === 67) ? p.ayah : (p.surah === 32 ? 30 + p.ayah : TOTAL);
+                const pct = Math.min((done / TOTAL) * 100, 100);
+                if (bar) bar.style.width = `${pct}%`;
+                if (txt) txt.innerText = `${pct.toFixed(0)}% Complete`;
+            } catch (e) { }
+        }
+
+        // Standard Quran Juz boundaries: first global ayah index (1-based) for each juz (1..30)
+        // and ayah count per juz.
+        const juzBoundaries = [
+            { juz: 1, startGlobal: 1, ayahs: 148 },
+            { juz: 2, startGlobal: 149, ayahs: 111 },
+            { juz: 3, startGlobal: 260, ayahs: 126 },
+            { juz: 4, startGlobal: 386, ayahs: 131 },
+            { juz: 5, startGlobal: 517, ayahs: 124 },
+            { juz: 6, startGlobal: 641, ayahs: 111 },
+            { juz: 7, startGlobal: 752, ayahs: 148 },
+            { juz: 8, startGlobal: 900, ayahs: 142 },
+            { juz: 9, startGlobal: 1042, ayahs: 159 },
+            { juz: 10, startGlobal: 1201, ayahs: 127 },
+            { juz: 11, startGlobal: 1328, ayahs: 151 },
+            { juz: 12, startGlobal: 1479, ayahs: 170 },
+            { juz: 13, startGlobal: 1649, ayahs: 154 },
+            { juz: 14, startGlobal: 1803, ayahs: 128 },
+            { juz: 15, startGlobal: 1931, ayahs: 135 },
+            { juz: 16, startGlobal: 2066, ayahs: 159 },
+            { juz: 17, startGlobal: 2225, ayahs: 153 },
+            { juz: 18, startGlobal: 2378, ayahs: 166 },
+            { juz: 19, startGlobal: 2544, ayahs: 170 },
+            { juz: 20, startGlobal: 2714, ayahs: 169 },
+            { juz: 21, startGlobal: 2883, ayahs: 155 },
+            { juz: 22, startGlobal: 3038, ayahs: 165 },
+            { juz: 23, startGlobal: 3203, ayahs: 171 },
+            { juz: 24, startGlobal: 3374, ayahs: 170 },
+            { juz: 25, startGlobal: 3544, ayahs: 175 },
+            { juz: 26, startGlobal: 3719, ayahs: 195 },
+            { juz: 27, startGlobal: 3914, ayahs: 202 },
+            { juz: 28, startGlobal: 4116, ayahs: 190 },
+            { juz: 29, startGlobal: 4306, ayahs: 204 },
+            { juz: 30, startGlobal: 4510, ayahs: 565 }
+        ];
+
+        function getJuzInfo(surahNum, ayahNum) {
+            const globalIndex = getGlobalAyahIndex(surahNum, ayahNum);
+            // Find which juz this global index falls in
+            let juzData = juzBoundaries[0];
+            for (let i = 0; i < juzBoundaries.length; i++) {
+                if (globalIndex >= juzBoundaries[i].startGlobal) {
+                    juzData = juzBoundaries[i];
+                } else {
+                    break;
+                }
+            }
+            const ayahInJuz = globalIndex - juzData.startGlobal + 1;
+            return { juz: juzData.juz, ayahInJuz, totalAyahsInJuz: juzData.ayahs, globalIndex };
         }
 
         function updateRamadanStats() {
             if (!isRamadanMode || !currentSurah) return;
 
-            const totalAyahsInQuran = 6236; // Constant for total ayahs
-            const globalIndex = getGlobalAyahIndex(currentSurah, currentAyahNumber);
-            const percentage = (globalIndex / totalAyahsInQuran) * 100;
-            const remaining = 100 - percentage;
+            const info = getJuzInfo(currentSurah, currentAyahNumber);
+            // Calculate percentage based on juz position (not ayah count),
+            // so 3 juz = 10%, 30 juz = 100%, with smooth progression within each juz.
+            const percentage = ((info.juz - 1 + info.ayahInJuz / info.totalAyahsInJuz) / 30) * 100;
 
-            // Estimate Juz (Approximate, simplified logic: 1 juz ~= 20 pages or ~200 ayahs, but length varies. 
-            // Better to use metadata if available, but for now we can use the juz info from the API response if loaded, or estimate.)
-            // Since we have `surahData.arabicAudio.ayahs[idx].juz` when playing, we can use that if available.
-            // If not available immediately (e.g. on load before API), we might show last known.
-
-            // Let's rely on what we have in `surahData` if available, otherwise just percentage.
-            let currentJuz = 1;
+            // Override juz from live API data if available (more accurate for boundary ayahs)
+            let currentJuz = info.juz;
             if (surahData && surahData.arabicAudio && surahData.arabicAudio.ayahs) {
-                // Try to get juz from current ayah data 
-                // Note: surahData might be for the whole surah, so we find the ayah.
-                // The API response structure: data.ayahs[index].juz
                 const idx = currentAyahNumber - 1;
-                if (surahData.arabicAudio.ayahs[idx]) {
+                if (surahData.arabicAudio.ayahs[idx] && surahData.arabicAudio.ayahs[idx].juz) {
                     currentJuz = surahData.arabicAudio.ayahs[idx].juz;
+                    // Recalculate ayahInJuz with confirmed juz
+                    const juzEntry = juzBoundaries.find(j => j.juz === currentJuz);
+                    if (juzEntry) {
+                        info.ayahInJuz = info.globalIndex - juzEntry.startGlobal + 1;
+                        info.totalAyahsInJuz = juzEntry.ayahs;
+                    }
+                    info.juz = currentJuz;
                 }
             }
 
@@ -1424,17 +1813,12 @@
             const progressBar = document.getElementById('ramadanProgressBar');
             const progressText = document.getElementById('ramadanProgressText');
             const juzText = document.getElementById('completedJuzText');
-            const remainingText = document.getElementById('remainingPercentageText');
+            const ayahInJuzText = document.getElementById('remainingPercentageText');
 
             if (progressBar) progressBar.style.width = `${percentage}%`;
-            if (progressText) progressText.innerText = `${percentage.toFixed(1)}%`;
-            // "Completed" Juz is roughly (Current Juz - 1) + partial. 
-            // Let's just show "Current Juz: X" or "Completed: X/30" where X is calculated.
-            // Requirement was "completed juz". 
-            // If we are in Juz 5, we have completed 4.
-            const completedJuz = Math.max(0, currentJuz - 1);
-            if (juzText) juzText.innerText = `${completedJuz} / 30`;
-            if (remainingText) remainingText.innerText = `${remaining.toFixed(1)}%`;
+            if (progressText) progressText.innerText = `${percentage.toFixed(1)}% Complete`;
+            if (juzText) juzText.innerText = `Juz ${info.juz} / 30`;
+            if (ayahInJuzText) ayahInJuzText.innerText = `${info.ayahInJuz} / ${info.totalAyahsInJuz}`;
         }
 
         function toggleSettings() {
@@ -1449,6 +1833,15 @@
                 document.getElementById('fontSelect').value = currentFont;
                 document.getElementById('reciterSelect').value = currentReciter;
 
+                const transSelect = document.getElementById('translationSelect');
+                if (transSelect) transSelect.value = translationMode;
+
+                const recBtn = document.getElementById('settingsReciteBtn');
+                if (recBtn) {
+                    recBtn.style.color = (typeof reciteMode !== 'undefined' && reciteMode) ? '#0cff04' : '';
+                    recBtn.style.borderColor = (typeof reciteMode !== 'undefined' && reciteMode) ? '#0cff04' : '';
+                }
+
                 // Sync slider with current value
                 const slider = document.getElementById('fontSizeRange');
                 if (slider) {
@@ -1459,7 +1852,7 @@
                 const list = document.getElementById('savedAyahsList');
                 const title = document.getElementById('savedAyahsTitle');
 
-                if (isRamadanMode) {
+                if (isRamadanMode || isNightMode) {
                     if (list) list.style.display = 'none';
                     if (title) title.style.display = 'none';
                 } else {
@@ -1474,6 +1867,30 @@
             }
         }
 
+        function togglePageView() {
+            isPageView = !isPageView;
+            const btn = document.getElementById('pageViewToggle');
+            const container = document.querySelector('.quran-container');
+
+            if (btn) {
+                btn.innerHTML = isPageView ? '<i class="fas fa-sticky-note"></i>' : '<i class="fas fa-list"></i>';
+                btn.title = isPageView ? 'Single Ayah View' : 'Page View';
+                btn.style.color = isPageView ? '#0cff04' : '#fff';
+            }
+
+            if (container) {
+                if (isPageView) {
+                    container.classList.add('full-screen-page-view');
+                } else {
+                    container.classList.remove('full-screen-page-view');
+                }
+            }
+
+            if (surahData) {
+                displayAyah();
+            }
+        }
+
         function changeFont() {
             currentFont = document.getElementById('fontSelect').value;
             localStorage.setItem('quranFont', currentFont);
@@ -1485,6 +1902,10 @@
             if (display) {
                 display.style.fontFamily = `'${currentFont}', serif`;
             }
+            const allPageAyahs = document.querySelectorAll('.mushaf-ayah-text, .ayah-arabic');
+            allPageAyahs.forEach(el => {
+                el.style.fontFamily = `'${currentFont}', serif`;
+            });
             const select = document.getElementById('fontSelect');
             if (select) select.value = currentFont;
         }
@@ -1501,6 +1922,10 @@
             if (display) {
                 display.style.fontSize = `${currentFontSize}rem`;
             }
+            const allPageAyahs = document.querySelectorAll('.mushaf-ayah-text, .ayah-arabic');
+            allPageAyahs.forEach(el => {
+                el.style.fontSize = `${currentFontSize}rem`;
+            });
         }
 
         function changeReciter() {
@@ -1538,17 +1963,22 @@
         }
 
         function updateBookmarkIcon() {
-            const btn = document.getElementById('bookmarkBtn');
-            const btnMain = document.getElementById('bookmarkBtnMain');
-
             const id = `${currentSurah}:${currentAyahNumber}`;
             const isSaved = savedAyahs.some(item => item.id === id);
 
-            const iconHtml = isSaved ? '<i class="fas fa-heart text-danger"></i>' : '<i class="far fa-heart"></i>';
+            const btnMain = document.getElementById('bookmarkBtnMain');
+
             const iconMainHtml = isSaved ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
 
-            if (btn) btn.innerHTML = iconHtml;
             if (btnMain) btnMain.innerHTML = iconMainHtml;
+
+            // Sync current card heart in Page View
+            if (isPageView) {
+                const cardBtn = document.getElementById(`cardBookmark-${currentAyahNumber}`);
+                if (cardBtn) {
+                    cardBtn.innerHTML = isSaved ? '<i class="fas fa-heart text-danger"></i>' : '<i class="far fa-heart"></i>';
+                }
+            }
         }
 
         function renderSavedAyahs() {
@@ -1592,115 +2022,6 @@
                 const opt = new Option(`${s.number}. ${s.english} (${s.arabic})`, s.number);
                 select.add(opt);
             });
-        }
-
-        /* ─── Tajweed helpers ─── */
-        const TAJWEED_RULES = {
-            ham_wasl: { color: '#AAD2FF', name: 'Hamzat Wasl', ml: 'ഹംസത്തുൽ വസ്ൽ: ഒരു വാക്കിൽ നിന്ന് അടുത്ത വാക്കിലേക്ക് ചേർന്ന് ഓതുമ്പോൾ ഈ ഹംസ ഉച്ചരിക്കില്ല.' },
-            slnt: { color: '#888899', name: 'Silent', ml: 'നിശ്ശബ്ദ അക്ഷരം: ഈ അക്ഷരം ഉച്ചരിക്കില്ല; ഓതുമ്പോൾ ഒഴിവാക്കണം.' },
-            laam_shams: { color: '#F9C4B4', name: 'Lam Shamsiyyah', ml: 'ലാം ശംസിയ്യ: اَلـ എന്ന നിർവ്വചന ഉപസർഗ്ഗത്തിലെ ل ഉച്ചരിക്കാതെ അടുത്ത അക്ഷരത്തിൽ ലയിക്കുന്നു.' },
-            madda_normal: { color: '#84C9FF', name: 'Madd (2)', ml: 'മദ്ദ് ത്വബ്ഈ: 2 ഹരക്കത്ത് (ബീറ്റ്) നീട്ടി ഉച്ചരിക്കണം. ഇത് സ്വാഭാവിക നീളമാണ്.' },
-            madda_permissible: { color: '#4FC3F7', name: 'Madd Permissible', ml: 'മദ്ദ് ജാഇസ്: 2 മുതൽ 6 ഹരക്കത്ത് വരെ നീട്ടാൻ അനുവദനീയമാണ്.' },
-            madda_necessary: { color: '#0288D1', name: 'Madd Necessary', ml: 'മദ്ദ് ലാസിം: 6 ഹരക്കത്ത് നിർബന്ധമായും നീട്ടണം; കൂട്ടുകയോ കുറക്കുകയോ ചെയ്യരുത്.' },
-            madda_obligatory: { color: '#01579B', name: 'Madd Obligatory', ml: 'മദ്ദ് വാജിബ്: 4 അല്ലെങ്കിൽ 5 ഹരക്കത്ത് നിർബന്ധമായും നീട്ടണം.' },
-            qalaqah: { color: '#CE93D8', name: 'Qalqalah', ml: 'ഖൽഖല: ب ج د ط ق എന്നീ അക്ഷരങ്ങൾ സുകൂനോടെ വരുമ്പോൾ ഉച്ചാരണ സ്ഥാനത്ത് ഒരു ചെറിയ കുലുക്കം (ബൗൺസ്) ഉണ്ടാകണം.' },
-            ikhafa_shafawi: { color: '#80CBC4', name: 'Ikhfa Shafawi', ml: 'ഇഖ്ഫാ ശഫവി: م ഒരു ب ന് മുൻപ് വരുമ്പോൾ ഘോഷ (ഘുന്ന) ശബ്ദത്തോടൊപ്പം ഇടത്തരം ഉച്ചാരണം.' },
-            ikhafa: { color: '#A5D6A7', name: 'Ikhfa', ml: 'ഇഖ്ഫാ: ن അല്ലെങ്കിൽ തൻവീൻ 15 അക്ഷരങ്ങൾക്ക് മുൻപ് വരുമ്പോൾ ഘോഷ ശബ്ദത്തോടൊപ്പം ഇടത്തരം ഉച്ചരണം.' },
-            idgham_shafawi: { color: '#FFCC80', name: 'Idgham Shafawi', ml: 'ഇദ്ഗാം ശഫവി: م ഒരു م ൽ ഘോഷ (ഘുന്ന) ശബ്ദത്തോടൊപ്പം പൂർണ്ണമായി ലയിക്കുന്നു.' },
-            idgham_ghunnah: { color: '#FFAB40', name: 'Idgham + Ghunnah', ml: 'ഇദ്ഗാം (ഘുന്ന സഹിതം): ن അല്ലെങ്കിൽ تൻവീൻ ي ن م و എന്നീ അക്ഷരങ്ങളിൽ ഘോഷ ശബ്ദത്തോടൊപ്പം ലയിക്കുന്നു.' },
-            idgham_wo_ghunnah: { color: '#FF7043', name: 'Idgham No Ghunnah', ml: 'ഇദ്ഗാം (ഘുന്ന കൂടാതെ): ن അല്ലെങ്കിൽ تൻവീൻ ل ر എന്നീ അക്ഷരങ്ങളിൽ ഘോഷ ശബ്ദം കൂടാതെ ലയിക്കുന്നു.' },
-            iqlab: { color: '#EF9A9A', name: 'Iqlab', ml: 'ഇഖ്ലാബ്: ن അല്ലെങ്കിൽ تൻവീൻ ب ന് മുൻപ് വരുമ്പോൾ م ആയി ഘോഷ  ശബ്ദത്തോടൊപ്പം ഉച്ചരിക്കും.' },
-            ghunnah: { color: '#F48FB1', name: 'Ghunnah', ml: 'ഘുന്ന: ن അല്ലെങ്കിൽ م ഒരു ശദ്ദ് (تشديد) ഉള്ളപ്പോൾ 2 ഹരക്കത്ത് മൂക്കിലൂടെ ഘോഷ ശബ്ദം ഉണ്ടാകണം.' },
-        };
-
-        function findTajweedRuleKey(tag) {
-            const t = tag.toLowerCase().replace(/\d+$/, '');
-            if (TAJWEED_RULES[t]) return t;
-            for (const k of Object.keys(TAJWEED_RULES)) if (t.includes(k) || k.includes(t)) return k;
-            return null;
-        }
-
-        function parseTajweedNode(raw) {
-            const frag = document.createDocumentFragment();
-            let i = 0; const len = raw.length;
-            const stack = [];
-            while (i < len) {
-                if (raw[i] === '[') {
-                    let j = i + 1, buf = '';
-                    while (j < len && raw[j] !== '[' && raw[j] !== ']') buf += raw[j++];
-                    if (raw[j] === '[') { stack.push(buf.replace(/^h:/, '')); i = j + 1; }
-                    else { frag.appendChild(document.createTextNode(raw[i])); i++; }
-                } else if (raw[i] === ']') {
-                    if (stack.length) stack.pop(); i++;
-                } else {
-                    const ch = raw[i];
-                    if (stack.length) {
-                        const key = findTajweedRuleKey(stack[stack.length - 1]);
-                        const span = document.createElement('span');
-                        span.textContent = ch;
-                        if (key) {
-                            span.style.color = TAJWEED_RULES[key].color;
-                            span.style.cursor = 'pointer';
-                            span.title = TAJWEED_RULES[key].name;
-                            span.onclick = () => showTajweedInfo(key);
-                        }
-                        frag.appendChild(span);
-                    } else {
-                        frag.appendChild(document.createTextNode(ch));
-                    }
-                    i++;
-                }
-            }
-            return frag;
-        }
-
-        function applyTajweedColors() {
-            if (!tajweedMode || !currentSurah || !currentAyahNumber) return;
-            const ref = `${currentSurah}:${currentAyahNumber}`;
-            fetch(`https://api.alquran.cloud/v1/ayah/${ref}/quran-tajweed`)
-                .then(r => r.json())
-                .then(d => {
-                    if (d.code !== 200) return;
-                    const el = document.getElementById('mainAyahText');
-                    if (!el) return;
-                    // Switch to dark background so light colours are visible
-                    el.classList.add('tj-active');
-                    el.innerHTML = '';
-                    el.appendChild(parseTajweedNode(d.data.text));
-                })
-                .catch(console.error);
-        }
-
-        function toggleTajweed() {
-            tajweedMode = !tajweedMode;
-            localStorage.setItem('tajweedMode', tajweedMode);
-            displayAyah(false);
-        }
-
-        function showTajweedInfo(key) {
-            const rule = TAJWEED_RULES[key];
-            if (!rule) return;
-            let popup = document.getElementById('tjInfoPopup');
-            if (!popup) {
-                popup = document.createElement('div');
-                popup.id = 'tjInfoPopup';
-                popup.className = 'tj-info-popup';
-                document.body.appendChild(popup);
-            }
-            popup.innerHTML = `
-                <button class="tj-info-close" onclick="closeTjInfo()">&times;</button>
-                <div class="tj-info-rule-name">
-                    <div style="width:10px;height:10px;border-radius:50%;background:${rule.color};flex-shrink:0;"></div>
-                    ${rule.name}
-                </div>
-                <div class="tj-info-ml">${rule.ml}</div>
-            `;
-            popup.classList.add('show');
-        }
-
-        function closeTjInfo() {
-            const p = document.getElementById('tjInfoPopup');
-            if (p) p.classList.remove('show');
         }
 
         async function loadSurah(startAyah = 1) {
@@ -1781,42 +2102,120 @@
             if (text) text.innerText = `${cappedProgress.toFixed(1)}% Complete`;
         }
 
-        function displayAyah(autoPlay = false) {
-            const idx = currentAyahNumber - 1;
-            const arText = surahData.arabicText.ayahs[idx];
-            const arAudio = surahData.arabicAudio.ayahs[idx];
-            const en = surahData.english.ayahs[idx];
-            const ml = surahData.malayalam.ayahs[idx];
+        function showTranslationPopup(ayahNum) {
+            // Remove existing
+            const existing = document.getElementById('translationPopup');
+            if (existing) existing.remove();
+
+            const idx = ayahNum - 1;
+            const en = surahData?.english?.ayahs?.[idx];
+            const ml = surahData?.malayalam?.ayahs?.[idx];
+            const txt = (translationMode === 'en' ? en?.text : ml?.text) || '';
+            if (!txt) return;
+
+            const popup = document.createElement('div');
+            popup.id = 'translationPopup';
+            popup.style.cssText = `
+                position: fixed;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 500px;
+                background: rgba(17, 81, 64, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 14px;
+                padding: 20px;
+                color: #fff;
+                z-index: 1050;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                text-align: center;
+                animation: slideUp 0.3s ease;
+            `;
+
+            const closeBtn = document.createElement('span');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = 'position:absolute; top:8px; right:15px; font-size:1.5rem; cursor:pointer; color:#b0c4be;';
+            closeBtn.onclick = () => popup.remove();
+
+            const modeLabel = document.createElement('div');
+            modeLabel.style.cssText = 'font-size: 0.75rem; color: #5effc8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;';
+            modeLabel.textContent = "Translation";
+
+            const content = document.createElement('div');
+            content.style.fontSize = '1.05rem';
+            content.style.lineHeight = '1.6';
+            content.style.fontFamily = translationMode === 'ml' ? "'Noto Sans Malayalam', sans-serif" : "'Anek Latin', sans-serif";
+            content.textContent = txt;
+
+            popup.appendChild(closeBtn);
+            popup.appendChild(modeLabel);
+            popup.appendChild(content);
+            document.body.appendChild(popup);
+
+            // Auto remove after some time or tap outside
+            const outsideClick = (e) => {
+                if (!popup.contains(e.target)) {
+                    popup.remove();
+                    document.removeEventListener('click', outsideClick, true);
+                    document.removeEventListener('touchstart', outsideClick, true);
+                }
+            };
+            setTimeout(() => {
+                document.addEventListener('click', outsideClick, true);
+                document.addEventListener('touchstart', outsideClick, true);
+            }, 100);
+
+            setTimeout(() => {
+                if (popup.parentNode) popup.remove();
+                document.removeEventListener('click', outsideClick, true);
+                document.removeEventListener('touchstart', outsideClick, true);
+            }, 15000); // Remove after 15 seconds
+        }
+
+        function renderSurahPageView() {
+            if (!surahData) return;
+            const display = document.getElementById('ayahDisplay');
+            const total = surahData.arabicText.ayahs.length;
             const info = surahNames.find(s => s.number === currentSurah);
-            const juz = arAudio.juz;
 
-            // Base Arabic text for the ayah
-            let text = arText.text;
+            const toArabicIndic = (n) => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 
-            // Remove Bismillah from the first ayah of all surahs except 1 and 9
-            if (currentAyahNumber === 1 && currentSurah !== 1 && currentSurah !== 9) {
+            const stripBismFromFirstAyah = (ayahNum, text) => {
+                if (ayahNum !== 1) return text;
+                if (currentSurah === 1 || currentSurah === 9) return text;
                 const bismVariants = [
-                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-                    "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                    "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                    "بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ",
+                    "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+                    "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ"
                 ];
-                for (let bism of bismVariants) {
-                    if (text.startsWith(bism)) {
-                        text = text.replace(bism, "").trim();
+                let cleaned = text || "";
+                for (const phrase of bismVariants) {
+                    if (cleaned.startsWith(phrase)) {
+                        cleaned = cleaned.slice(phrase.length).trim();
                         break;
                     }
                 }
-            }
+                if (cleaned.startsWith("بسم") || cleaned.startsWith("بِسْم")) {
+                    const rahimIdx = cleaned.indexOf("الرحيم");
+                    if (rahimIdx !== -1) {
+                        cleaned = cleaned.slice(rahimIdx + "الرحيم".length).trim();
+                    }
+                }
+                return cleaned;
+            };
 
-            // Show Bismillah header for first ayah of every surah except 1 and 9
-            const showBismHeader = (currentAyahNumber === 1 && currentSurah !== 1 && currentSurah !== 9);
-            const bismHeader = showBismHeader
-                ? `<div class="ayah-arabic" style="font-size:2rem; color:#1a7a70; background: transparent; box-shadow: none; padding: 0; margin-bottom: 10px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`
-                : '';
+            const showBismHeader = (currentSurah !== 1 && currentSurah !== 9);
 
-            document.getElementById('ayahDisplay').innerHTML = `
-                <div class="ayah-card">
-                    <!-- Card Header -->
+            const isSaved = savedAyahs.some(item => item.id === `${currentSurah}:${currentAyahNumber}`);
+            const heartIcon = isSaved ? 'fas fa-heart text-danger' : 'far fa-heart';
+
+            display.innerHTML = `
+                <div class="ayah-card" style="max-width: 100%;">
                     <div class="card-header">
                         <div class="header-left">
                             <div class="player-controls">
@@ -1828,113 +2227,318 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="header-center">
+                            <div class="surah-title">${info.number}. ${info.english}</div>
+                            <div class="ayah-counter">Ayah <span id="pageAyahCounter">${currentAyahNumber}</span>/${info.verses}</div>
+                        </div>
+                        <div class="header-right">
+                             <button id="bookmarkBtnMain" class="like-btn" onclick="toggleBookmark()">
+                                <i class="${heartIcon}"></i>
+                             </button>
+                        </div>
+                    </div>
+
+                    <audio id="mainAudio" style="display:none;" onended="handleAudioEnd()">
+                        <source src="" type="audio/mpeg">
+                    </audio>
+
+                    <div class="card-body">
+                        ${showBismHeader ? `<div class="mushaf-bism" style="margin-bottom: 20px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : ''}
                         
+                        <div class="mushaf-page" id="mushafPage" style="background: transparent; border: none; box-shadow: none; padding: 0; overflow: visible;">
+                            <div class="mushaf-arabic" id="mushafArabic" style="padding-bottom: 20px;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const arabicEl = document.getElementById('mushafArabic');
+            let html = '';
+            for (let i = 1; i <= total; i++) {
+                const idx = i - 1;
+                const ar = surahData.arabicText.ayahs[idx];
+                let text = stripBismFromFirstAyah(i, ar.text);
+                const textId = (i === currentAyahNumber) ? 'mainAyahText' : `ayahText-${i}`;
+                html += `<span class="mushaf-ayah ${i === currentAyahNumber ? 'active-mushaf-ayah' : ''}" id="ayah-${i}" data-ayah="${i}"><span class="mushaf-ayah-text" id="${textId}">${text}</span><span class="mushaf-marker">﴿${toArabicIndic(i)}﴾</span></span> `;
+            }
+            arabicEl.innerHTML = html;
+
+            // Clicking an ayah in page view jumps to it
+            // Long press shows a custom popup translation
+            let pressTimer;
+            const clearPress = () => clearTimeout(pressTimer);
+
+            arabicEl.addEventListener('touchstart', handlePress, { passive: true });
+            arabicEl.addEventListener('touchend', clearPress);
+            arabicEl.addEventListener('touchcancel', clearPress);
+            arabicEl.addEventListener('touchmove', clearPress, { passive: true });
+
+            arabicEl.addEventListener('mousedown', handlePress);
+            arabicEl.addEventListener('mouseup', clearPress);
+            arabicEl.addEventListener('mouseleave', clearPress);
+            arabicEl.addEventListener('mousemove', clearPress);
+
+            arabicEl.addEventListener('contextmenu', (e) => {
+                const ayahEl = e.target.closest('.mushaf-ayah');
+                if (ayahEl) {
+                    e.preventDefault();
+                    triggerPopup(ayahEl);
+                }
+            });
+
+            let lastClickTime = 0;
+            let lastClickedAyah = null;
+            arabicEl.addEventListener('click', (e) => {
+                const ayahEl = e.target.closest('.mushaf-ayah');
+                if (!ayahEl) return;
+                const n = parseInt(ayahEl.dataset.ayah, 10);
+                if (!Number.isFinite(n)) return;
+
+                const currentTime = new Date().getTime();
+                if (currentTime - lastClickTime < 300 && lastClickedAyah === n) {
+                    currentAyahNumber = n;
+                    playHeartAnimation(ayahEl);
+                    toggleBookmark();
+                    lastClickTime = 0;
+                } else {
+                    lastClickTime = currentTime;
+                    lastClickedAyah = n;
+                    currentAyahNumber = n;
+                    syncPageViewActiveAyah();
+                }
+            });
+
+            function handlePress(e) {
+                const ayahEl = e.target.closest('.mushaf-ayah');
+                if (!ayahEl) return;
+                pressTimer = setTimeout(() => {
+                    triggerPopup(ayahEl);
+                }, 500); // 500ms long press
+            }
+
+            function triggerPopup(ayahEl) {
+                const n = parseInt(ayahEl.dataset.ayah, 10);
+                if (Number.isFinite(n)) {
+                    showTranslationPopup(n);
+                }
+            }
+        }
+
+        function syncPageViewActiveAyah(autoPlay = false) {
+            const allAyahs = document.querySelectorAll('.mushaf-ayah');
+
+            // 1. Swap 'mainAyahText' ID so recite/audio always targets active ayah text
+            const oldMain = document.getElementById('mainAyahText');
+            if (oldMain) {
+                const oldAyah = oldMain.closest('.mushaf-ayah');
+                if (oldAyah && oldAyah.dataset.ayah) {
+                    oldMain.id = `ayahText-${oldAyah.dataset.ayah}`;
+                }
+            }
+
+            const newAyah = document.getElementById(`ayah-${currentAyahNumber}`);
+            if (newAyah) {
+                const textEl = newAyah.querySelector('.mushaf-ayah-text');
+                if (textEl) textEl.id = 'mainAyahText';
+            }
+
+            // 2. Highlighting & Scroll
+            allAyahs.forEach(a => a.classList.remove('active-mushaf-ayah'));
+            if (newAyah) {
+                newAyah.classList.add('active-mushaf-ayah');
+                // Defer scroll so it runs after the browser has painted the layout
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        newAyah.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    });
+                });
+            }
+
+            // Update counter label
+            const counterEl = document.getElementById('pageAyahCounter');
+            if (counterEl) counterEl.textContent = currentAyahNumber;
+
+            // 3. Sync global audio element
+            const audio = document.getElementById('mainAudio');
+            if (audio && surahData && surahData.arabicAudio) {
+                const arAudio = surahData.arabicAudio.ayahs[currentAyahNumber - 1];
+                const source = audio.querySelector('source');
+                if (source && arAudio && !source.src.includes(arAudio.audio)) {
+                    source.src = arAudio.audio;
+                    audio.load();
+                    if (autoPlay) {
+                        audio.play().catch(e => console.warn("Autoplay blocked", e));
+                    }
+                }
+            }
+
+            updateBookmarkIcon();
+            updateRepeatIcon();
+            saveProgress();
+
+            if (reciteMode) {
+                setTimeout(startReciteOnCurrentAyah, 100);
+            }
+        }
+
+        function getAyahCardInnerHtml(ayahNum) {
+            const idx = ayahNum - 1;
+            const arText = surahData.arabicText.ayahs[idx];
+            const arAudio = surahData.arabicAudio.ayahs[idx];
+            const en = surahData.english.ayahs[idx];
+            const ml = surahData.malayalam.ayahs[idx];
+            const info = surahNames.find(s => s.number === currentSurah);
+
+            let text = arText.text;
+            if (ayahNum === 1 && currentSurah !== 1 && currentSurah !== 9) {
+                const bismVariants = ["بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"];
+                for (let bism of bismVariants) {
+                    if (text.startsWith(bism)) { text = text.replace(bism, "").trim(); break; }
+                }
+            }
+
+            const showBismHeader = (ayahNum === 1 && currentSurah !== 1 && currentSurah !== 9);
+            const bismHeader = showBismHeader ? `<div class="ayah-arabic" style="font-size:2rem; color:#1a7a70; background: transparent; box-shadow: none; padding: 0; margin-bottom: 10px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : '';
+
+            const isSaved = savedAyahs.some(item => item.id === `${currentSurah}:${ayahNum}`);
+            const heartIcon = isSaved ? 'fas fa-heart text-danger' : 'far fa-heart';
+
+            return `
+                ${bismHeader}
+                <div class="ayah-arabic" id="${(ayahNum === currentAyahNumber) ? 'mainAyahText' : `ayahText-${ayahNum}`}">${text}</div>
+                <div class="ayah-translation" style="${translationMode === 'ml' ? "font-family: 'Noto Sans Malayalam', sans-serif;" : ""}">
+                    ${translationMode === 'en' ? en.text : ml.text}
+                </div>
+            `;
+        }
+
+        function displayAyah(autoPlay = false) {
+            if (!surahData) return;
+
+            if (isPageView) {
+                if (!document.getElementById('mushafPage')) {
+                    renderSurahPageView();
+                }
+                syncPageViewActiveAyah(autoPlay);
+                applyFont();
+                applyFontSize();
+                return;
+            }
+
+            const idx = currentAyahNumber - 1;
+            const arText = surahData.arabicText.ayahs[idx];
+            const arAudio = surahData.arabicAudio.ayahs[idx];
+            const en = surahData.english.ayahs[idx];
+            const ml = surahData.malayalam.ayahs[idx];
+            const info = surahNames.find(s => s.number === currentSurah);
+
+            document.getElementById('ayahDisplay').innerHTML = `
+                <div class="ayah-card">
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="player-controls">
+                                <button id="customPlayBtn" class="control-btn play-btn" onclick="toggleAudio()">
+                        <i class="fas fa-play" id="playIcon"></i>
+                    </button>
+                                <button id="repeatBtn" class="control-btn repeat-btn" onclick="toggleRepeat()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
                         <div class="header-center">
                             <div class="surah-title">${info.number}. ${info.english}</div>
                             <div class="ayah-counter">${currentAyahNumber}/${info.verses}</div>
                         </div>
-                        
                         <div class="header-right">
-                             <div class="text-center">
-                                <button id="bookmarkBtnMain" class="like-btn" onclick="toggleBookmark()">
-                                    <i class="far fa-heart"></i>
-                                </button>
-                                <!-- <span class="like-count">62.2K</span> -->
-                             </div>
+                             <button id="bookmarkBtnMain" class="like-btn" onclick="toggleBookmark()">
+                                <i class="far fa-heart"></i>
+                             </button>
                         </div>
                     </div>
 
-                    <!-- Audio Element (Hidden) -->
                     <audio id="mainAudio" style="display:none;" onended="handleAudioEnd()">
                         <source src="${arAudio.audio}" type="audio/mpeg">
                     </audio>
 
-                    <!-- Card Body -->
                     <div class="card-body">
-                        ${bismHeader}
-                        <div class="ayah-arabic" id="mainAyahText">${text}</div>
-                        <!-- Highlight for Word by Word? (Future) -->
-                        
-                        <!-- Translations -->
-                         <!-- Only show if not empty/null -->
-                         <div class="ayah-translation" style="${translationMode === 'ml' ? "font-family: 'Noto Sans Malayalam', sans-serif;" : ""}">
-                            ${translationMode === 'en' ? en.text : ml.text}
-                         </div>
-                    </div>
-
-                    <!-- Card Footer -->
-                    <div class="card-footer">
-                        <div class="footer-left">
-                            <button class="footer-btn" onclick="shareAyah()">
-                                <i class="fas fa-share"></i>
-                            </button>
-                        </div>
-                        <div class="footer-right">
-                             <button class="footer-btn secondary" onclick="toggleTranslation()" style="font-weight: bold; font-family: 'Anek Latin', sans-serif;">
-                                ${translationMode === 'en' ? 'en' : 'ml'}
-                            </button>
-                            <button id="tajweedBtn" class="footer-btn secondary" onclick="toggleTajweed()" title="Toggle Tajweed colours" style="font-weight:bold; font-family:'Anek Latin',sans-serif; ${tajweedMode ? 'color:#0cff04; border-color:#0cff04;' : ''}">
-                                Tj
-                            </button>
-                             <button class="footer-btn secondary" onclick="toggleSettings()">
-                                <i class="far fa-edit"></i>
-                            </button>
-                        </div>
+                        ${getAyahCardInnerHtml(currentAyahNumber)}
                     </div>
                 </div>
-                ${tajweedMode ? `
-                <div class="tj-legend">
-                    <div class="tj-legend-title"><i class="fa fa-palette" style="margin-right:5px;"></i>Tajweed Color Legend <small style="color:#9da0a6; font-weight:400; margin-left:4px;">(tap to learn)</small></div>
-                    <div class="tj-legend-grid">
-                        ${Object.entries(TAJWEED_RULES).map(([key, r]) =>
-                `<div class="tj-chip" style="cursor:pointer;" onclick="showTajweedInfo('${key}')">
-                    <div class="tj-swatch" style="background:${r.color};"></div>${r.name}
-                </div>`
-            ).join('')}
-                    </div>
-                </div>` : ''}
             `;
 
             // Check Nav Buttons
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const surahInfo = surahNames.find(s => s.number === currentSurah);
-
             // Previous Logic
             if (isRamadanMode) {
-                // Always allow prev unless at very start
                 prevBtn.disabled = (currentSurah === 1 && currentAyahNumber === 1);
             } else if (isKahfMode) {
-                // Restrict to Surah 18
                 prevBtn.disabled = (currentAyahNumber === 1);
+            } else if (isNightMode) {
+                prevBtn.disabled = (currentSurah === 67 && currentAyahNumber === 1);
             } else {
-                // Regular
                 prevBtn.disabled = (currentSurah === 1 && currentAyahNumber === 1);
             }
 
             // Next Logic
             if (isRamadanMode) {
-                // Allow next always? (Will wrap to next surah)
                 nextBtn.disabled = false;
-                // Technically disabled if at very end of Quran
                 if (currentSurah === 114 && currentAyahNumber === 6) nextBtn.disabled = true;
             } else if (isKahfMode) {
-                // Restrict to Surah 18 (110 ayahs)
                 nextBtn.disabled = (currentAyahNumber >= 110);
+            } else if (isNightMode) {
+                nextBtn.disabled = (currentSurah === 32 && currentAyahNumber >= 30);
             } else {
                 nextBtn.disabled = (currentSurah === 114 && currentAyahNumber === 6);
             }
 
             if (autoPlay) toggleAudio();
 
-            applyFont(); // Apply selected font
-            applyFontSize(); // Apply selected font size
-            updateBookmarkIcon(); // Update icon state
-            updateRepeatIcon(); // Update repeat icon state
+            const _audioEl = document.getElementById('mainAudio');
+            if (_audioEl) {
+                _audioEl.onplay = () => { if (reciteMode) _pauseRecognitionForAudio(); };
+                _audioEl.onpause = () => { if (reciteMode) _resumeRecognitionAfterAudio(); };
+            }
+
+            applyFont();
+            applyFontSize();
+            updateBookmarkIcon();
+            updateRepeatIcon();
             saveProgress();
 
-            // Apply Tajweed colours if mode is active
-            if (tajweedMode) applyTajweedColors();
+            const cardBody = document.querySelector('.ayah-card .card-body');
+            if (cardBody) {
+                let lastClickTime = 0;
+                cardBody.addEventListener('click', (e) => {
+                    const currentTime = new Date().getTime();
+                    if (currentTime - lastClickTime < 300) {
+                        playHeartAnimation(cardBody);
+                        toggleBookmark();
+                        lastClickTime = 0;
+                    } else {
+                        lastClickTime = currentTime;
+                    }
+                });
+            }
+
+            if (reciteMode) {
+                setTimeout(startReciteOnCurrentAyah, 80);
+            }
+        }
+
+        function playHeartAnimation(containerEl) {
+            // Ensure container is relative for absolute positioning of heart
+            if (getComputedStyle(containerEl).position === 'static') {
+                containerEl.style.position = 'relative';
+            }
+
+            const heart = document.createElement('i');
+            heart.className = 'fas fa-heart heart-animation-container animate';
+            containerEl.appendChild(heart);
+
+            setTimeout(() => {
+                if (heart.parentNode) heart.remove();
+            }, 1000);
         }
 
         function handleAudioEnd() {
@@ -1942,7 +2546,8 @@
                 const audio = document.getElementById('mainAudio');
                 audio.currentTime = 0;
                 audio.play();
-            } else {
+            } else if (!reciteMode) {
+                // In recite mode, speech recognition controls advancement — skip auto-next
                 nextAyah(true);
             }
         }
@@ -1952,12 +2557,27 @@
             const icon = document.getElementById('playIcon');
 
             if (audio.paused) {
+                if (reciteMode) _pauseRecognitionForAudio(); // mic off while audio plays
                 audio.play();
                 icon.className = 'fas fa-pause';
             } else {
                 audio.pause();
                 icon.className = 'fas fa-play';
+                if (reciteMode) _resumeRecognitionAfterAudio(); // mic back on
             }
+        }
+
+        // Stop mic while audio is playing (to avoid picking up the reciter's voice)
+        function _pauseRecognitionForAudio() {
+            _recogIntentionalStop = true;
+            if (recognition) { try { recognition.stop(); } catch (e) { } }
+        }
+        // Restart mic 300ms after audio pauses/ends (brief gap prevents initial noise)
+        function _resumeRecognitionAfterAudio() {
+            if (!reciteMode || reciteAdvancing) return;
+            setTimeout(() => {
+                if (reciteMode && !reciteAdvancing) _startRecognition();
+            }, 300);
         }
 
         function toggleRepeat() {
@@ -1973,6 +2593,15 @@
             translationMode = translationMode === 'en' ? 'ml' : 'en';
             localStorage.setItem('translationMode', translationMode);
             displayAyah(false); // Refresh display without auto-playing
+        }
+
+        function changeTranslation() {
+            const transSelect = document.getElementById('translationSelect');
+            if (transSelect) {
+                translationMode = transSelect.value;
+                localStorage.setItem('translationMode', translationMode);
+                displayAyah(false);
+            }
         }
 
         function updateRepeatIcon() {
@@ -1993,6 +2622,20 @@
                 displayAyah(autoPlay);
             } else {
                 if (isKahfMode) return; // Prevent next surah in Kahf
+
+                // Night mode: Mulk (67) → Sajdah (32) → stop
+                if (isNightMode) {
+                    if (currentSurah === 67) {
+                        // Finished Mulk → load As-Sajdah
+                        currentSurah = 32;
+                        currentAyahNumber = 1;
+                        const select = document.getElementById('surahSelect');
+                        if (select) select.value = currentSurah;
+                        loadSurah(1);
+                    }
+                    // If already on Sajdah → nothing (disabled by nextBtn logic)
+                    return;
+                }
 
                 // Check if there is a next surah
                 if (currentSurah < 114) {
@@ -2024,22 +2667,35 @@
             if (currentAyahNumber > 1) {
                 currentAyahNumber--;
                 displayAyah();
-            } else if (currentSurah > 1) {
-                // Go to previous Surah
-                currentSurah--;
-                const prevInfo = surahNames.find(s => s.number === currentSurah);
-                // We want to start at the LAST ayah of the previous surah?? 
-                // Usually "Previous" just goes back one ayah.
-                // So if we are at Surah 2, Ayah 1 -> Surah 1, Ayah 7.
-                currentAyahNumber = prevInfo.verses;
-
-                // Update dropdown
-                const select = document.getElementById('surahSelect');
-                if (select) {
-                    select.value = currentSurah;
+            } else {
+                // Night mode: block going before start (Mulk ayah 1), or jump Sajdah→Mulk last ayah
+                if (isNightMode) {
+                    if (currentSurah === 32) {
+                        // As-Sajdah ayah 1 → jump back to Al-Mulk last ayah
+                        currentSurah = 67;
+                        currentAyahNumber = 30;
+                        const select = document.getElementById('surahSelect');
+                        if (select) select.value = currentSurah;
+                        loadSurah(currentAyahNumber);
+                    }
+                    // If already at Mulk ayah 1 → do nothing (boundary)
+                    return;
                 }
 
-                loadSurah(currentAyahNumber);
+                // Kahf mode: block going before Kahf ayah 1
+                if (isKahfMode) return;
+
+                if (currentSurah > 1) {
+                    // Go to previous Surah (last ayah)
+                    currentSurah--;
+                    const prevInfo = surahNames.find(s => s.number === currentSurah);
+                    currentAyahNumber = prevInfo.verses;
+
+                    const select = document.getElementById('surahSelect');
+                    if (select) select.value = currentSurah;
+
+                    loadSurah(currentAyahNumber);
+                }
             }
         }
 
@@ -2057,6 +2713,13 @@
                 }));
                 if (typeof updateKahfStats === 'function') updateKahfStats();
                 if (typeof updateKahfCardStats === 'function') updateKahfCardStats();
+            } else if (isNightMode) {
+                localStorage.setItem('nightProgress', JSON.stringify({
+                    surah: currentSurah,
+                    ayah: currentAyahNumber
+                }));
+                if (typeof updateNightStats === 'function') updateNightStats();
+                if (typeof updateNightCardStats === 'function') updateNightCardStats();
             } else {
                 localStorage.setItem('quranProgress', JSON.stringify({
                     surah: currentSurah,
@@ -2109,7 +2772,7 @@
         // Swipe Gestures
         let touchStartX = 0;
         let touchEndX = 0;
-        const minSwipeDistance = 50;
+        const minSwipeDistance = 90;
 
         document.getElementById('ayahDisplay').addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
@@ -2242,24 +2905,11 @@
             if (saved) {
                 try {
                     const p = JSON.parse(saved);
-                    // Calculate percentage
-                    // Total Ayahs approx 6236.
-                    // We need a helper to calc total ayah number from surah/ayah.
-                    // For now, let's use the 'percentage' stored if we have it, or estimate?
-                    // Wait, 'updateRamadanStats' calculates percentage. Let's see if we store it.
-                    // We store: {surah, ayah, date}
-                    // We don't store percentage directly in 'ramadanProgress' object usually, but let's check.
-                    // If not, we can't easily calculate accurate global % without the surahNames array which logic we have.
-                    // Let's use the `surahNames` to calculate cumulative ayahs.
 
-                    let totalAyahsPassed = 0;
-                    for (let i = 0; i < p.surah - 1; i++) {
-                        if (surahNames[i]) totalAyahsPassed += surahNames[i].verses;
-                    }
-                    totalAyahsPassed += p.ayah;
-
-                    const totalAyahsInQuran = 6236;
-                    const percent = (totalAyahsPassed / totalAyahsInQuran) * 100;
+                    // Use juz-based percentage (same as the dashboard):
+                    // 3 juz = 10%, 30 juz = 100%, smooth within each juz.
+                    const info = getJuzInfo(parseInt(p.surah), parseInt(p.ayah));
+                    const percent = ((info.juz - 1 + info.ayahInJuz / info.totalAyahsInJuz) / 30) * 100;
 
                     // Add Progress Bar to Card
                     const progressDiv = document.createElement('div');
@@ -2273,12 +2923,11 @@
                         <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: ${percent}%;" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <p class="text-white-50 small mt-1 mb-0">Surah ${p.surah}, Ayah ${p.ayah}</p>
+                        <p class="text-white-50 small mt-1 mb-0">Juz ${info.juz} / 30 &nbsp;·&nbsp; Ayah ${info.ayahInJuz} of ${info.totalAyahsInJuz}</p>
                     </div>
                 `;
 
-                    // Insert before the description or append?
-                    // Let's append
+                    // Append to card
                     cardBody.appendChild(progressDiv);
 
                 } catch (e) {
@@ -2286,6 +2935,7 @@
                 }
             }
         }
+
         function shareAyah() {
             if (!surahData) return;
             const idx = currentAyahNumber - 1;
@@ -2306,6 +2956,280 @@
                     alert('Ayah copied to clipboard!');
                 }).catch(console.error);
             }
+        }
+
+        /* ══════════════════════════════════════════
+           RECITE MODE  —  Web Speech API (free, no key needed)
+           Works on: Chrome desktop, Android Chrome
+           Language: ar-SA (Gulf Arabic, closest to Quranic)
+        ══════════════════════════════════════════ */
+        let reciteMode = false;
+        let recognition = null;
+        let reciteAdvancing = false; // prevent double-advance
+        let wakeLock = null;        // Screen Wake Lock
+
+        // Keep screen on while reciting
+        async function _requestWakeLock() {
+            if (!('wakeLock' in navigator)) return;
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+            } catch (e) {
+                console.warn('Wake lock failed:', e);
+            }
+        }
+        function _releaseWakeLock() {
+            if (wakeLock) { wakeLock.release(); wakeLock = null; }
+        }
+        // Re-acquire wake lock when tab becomes visible again (OS releases it on tab hide)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && reciteMode) _requestWakeLock();
+        });
+
+        // ── RECITE MODE: word-span progress tracking (count-based, no accuracy check) ─
+        // Renders ayah as word spans. Each spoken word advances pointer one step forward —
+        // active word pulses gold, passed words turn green. No matching accuracy needed.
+
+        let _reciteWordPointer = 0;  // current word index in _reciteSpans
+        let _reciteSpans = [];       // word span elements (excludes Quranic mark spans)
+        let _reciteFailsafeTimer = null;
+
+        function startReciteOnCurrentAyah() {
+            reciteAdvancing = false;
+            _reciteWordPointer = 0;
+            _reciteSpans = [];
+            clearTimeout(_reciteFailsafeTimer);
+
+            const el = document.getElementById('mainAyahText');
+            if (!el) return;
+
+            // Render word spans (Quranic marks dimmed, actual words tracked)
+            const rawText = el.textContent.trim();
+            const tokens = rawText.split(/\s+/).filter(Boolean);
+            el.innerHTML = '';
+            tokens.forEach((w, i) => {
+                const isSymbol = /^[\u0600-\u0605\u06D6-\u06ED\u06DD]+$/.test(w.replace(/[\u064B-\u065F\u0670]/g, ''));
+                const span = document.createElement('span');
+                span.textContent = w;
+                if (isSymbol) {
+                    span.className = 'word-span word-skip';
+                } else {
+                    span.className = 'word-span ' + (_reciteSpans.length === 0 ? 'word-active' : 'word-pending');
+                    _reciteSpans.push(span);
+                }
+                el.appendChild(span);
+                if (i < tokens.length - 1) el.appendChild(document.createTextNode(' '));
+            });
+
+            // Re-apply font
+            el.style.fontFamily = `'${currentFont}', serif`;
+            el.style.fontSize = `${currentFontSize}rem`;
+
+            // Status bar
+            let bar = document.getElementById('reciteStatusBar');
+            if (!bar) {
+                bar = document.createElement('div');
+                bar.id = 'reciteStatusBar';
+                bar.className = 'recite-status-bar';
+                bar.style.display = 'none'; // Hide as requested by user
+                el.parentElement.appendChild(bar);
+            }
+            bar.innerHTML = `<span class="recite-mic-live"></span>0 / ${_reciteSpans.length} words`;
+
+            // 90s failsafe
+            _reciteFailsafeTimer = setTimeout(() => {
+                if (reciteMode && !reciteAdvancing) {
+                    reciteAdvancing = true;
+                    const b = document.getElementById('reciteStatusBar');
+                    if (b) b.innerHTML = '✅ Moving to next ayah…';
+                    setTimeout(() => nextAyah(false), 700);
+                }
+            }, 90000);
+
+            _startRecognition();
+        }
+
+        // Advance word pointer by N steps, update highlights
+        function _advanceWordPointer(n) {
+            if (reciteAdvancing) return;
+            for (let i = 0; i < n && _reciteWordPointer < _reciteSpans.length; i++) {
+                _reciteSpans[_reciteWordPointer].className = 'word-span word-matched';
+                _reciteWordPointer++;
+            }
+            // Light up next word
+            if (_reciteWordPointer < _reciteSpans.length) {
+                _reciteSpans[_reciteWordPointer].className = 'word-span word-active';
+            }
+            // Update bar (Hidden per user request, but logic maintained)
+            const bar = document.getElementById('reciteStatusBar');
+            if (bar) {
+                bar.innerHTML = `<span class="recite-mic-live"></span>${_reciteWordPointer} / ${_reciteSpans.length} words recited`;
+            }
+
+            // All done?
+            if (_reciteWordPointer >= _reciteSpans.length && !reciteAdvancing) {
+                clearTimeout(_reciteFailsafeTimer);
+                reciteAdvancing = true;
+                if (bar) bar.innerHTML = '✅ Ayah complete! Moving to next…';
+                if (recognition) { try { recognition.stop(); } catch (e) { } }
+                setTimeout(() => nextAyah(false), 700);
+            }
+        }
+
+        let _recogIntentionalStop = false; // true when WE call stop(), false on unexpected ends
+        // iOS ignores continuous:true (stops after each phrase) — detected once at startup
+        const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        function _startRecognition() {
+            _recogIntentionalStop = true;
+            if (recognition) { try { recognition.stop(); } catch (e) { } recognition = null; }
+            _recogIntentionalStop = false;
+
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SR) return;
+
+            recognition = new SR();
+            recognition.lang = 'ar';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onspeechstart = () => {
+                const bar = document.getElementById('reciteStatusBar');
+                if (bar && _reciteWordPointer < _reciteSpans.length) {
+                    bar.innerHTML = `🎤 Reciting… ${_reciteWordPointer} / ${_reciteSpans.length}`;
+                }
+            };
+
+            // Count spoken words and advance the word pointer (no accuracy check)
+            recognition.onresult = (event) => {
+                let count = 0;
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    count += event.results[i][0].transcript.trim().split(/\s+/).filter(Boolean).length;
+                }
+                _advanceWordPointer(count);
+            };
+
+            recognition.onerror = (e) => {
+                if (e.error === 'no-speech') return;
+                console.warn('Speech recognition error:', e.error);
+            };
+
+            // Restart listening until all words are done
+            recognition.onend = () => {
+                if (_recogIntentionalStop || !reciteMode || reciteAdvancing) return;
+                const delay = _isIOS ? 150 : 400;
+                setTimeout(() => {
+                    if (reciteMode && !reciteAdvancing && !_recogIntentionalStop) {
+                        _startRecognition();
+                    }
+                }, delay);
+            };
+
+            try { recognition.start(); } catch (e) { console.warn(e); }
+        }
+
+        function toggleRecite() {
+            alert('Coming soon');
+        }
+
+        function showReciteDisclaimer() {
+            // Remove existing if any
+            const old = document.getElementById('reciteDisclaimerBox');
+            if (old) old.remove();
+
+            const box = document.createElement('div');
+            box.id = 'reciteDisclaimerBox';
+            box.innerHTML = `
+                <div style="
+                    position:fixed; inset:0; z-index:9999;
+                    background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
+                    display:flex; align-items:center; justify-content:center; padding:20px;">
+                    <div style="
+                        background:linear-gradient(135deg,#0d2b26,#0d4a40);
+                        border:1px solid rgba(26,122,112,0.5);
+                        border-radius:20px; padding:28px 24px; max-width:380px; width:100%;
+                        box-shadow:0 12px 40px rgba(0,0,0,0.5); text-align:center; color:#fff;">
+                        <div style="font-size:2.2rem; margin-bottom:10px;">🎙️</div>
+                        <h3 style="margin:0 0 8px; font-size:1.15rem; color:#5effc8;">Recite Mode — Beta</h3>
+                        <p style="font-size:0.88rem; color:#b0c4be; line-height:1.6; margin:0 0 14px;">
+                            This feature is currently in early development.<br>
+                            Speech recognition uses your device's built-in Arabic model
+                            which is <strong style="color:#ffd700;">not trained on Quranic Tajweed</strong>,
+                            so accuracy may vary.<br><br>
+                            Recite slowly and clearly for best results.
+                        </p>
+                        <div style="
+                            background:rgba(255,200,0,0.1); border:1px solid rgba(255,200,0,0.3);
+                            border-radius:10px; padding:10px 14px; margin-bottom:18px;
+                            font-size:0.82rem; color:#ffd97d; text-align:left; line-height:1.5;">
+                            📵 <strong>Tip:</strong> Put your phone on <strong>silent mode</strong> to avoid
+                            the mic on/off sound made by the browser each time it listens.
+                        </div>
+                        <button onclick="document.getElementById('reciteDisclaimerBox').remove(); _startReciteAfterDisclaimer();"
+                            style="
+                                background:linear-gradient(135deg,#0d564f,#1a7a70);
+                                color:#fff; border:none; border-radius:12px;
+                                padding:12px 30px; font-size:1rem; font-weight:700;
+                                cursor:pointer; width:100%; margin-bottom:10px;">
+                            Got it, Start Reciting
+                        </button>
+                        <button onclick="document.getElementById('reciteDisclaimerBox').remove();"
+                            style="
+                                background:transparent; border:1px solid rgba(255,255,255,0.2);
+                                color:#9da0a6; border-radius:10px; padding:9px 20px;
+                                font-size:0.85rem; cursor:pointer; width:100%;">
+                            Cancel
+                        </button>
+                    </div>
+                </div>`;
+            document.body.appendChild(box);
+        }
+
+        function _startReciteAfterDisclaimer() {
+            const disc = document.getElementById('reciteDisclaimerBox');
+            if (disc) disc.remove();
+            reciteMode = true;
+            _requestWakeLock();
+            startReciteOnCurrentAyah();
+            syncReciteButtons();
+        }
+
+        function syncReciteButtons() {
+            const btnHeader = document.getElementById('reciteBtnHeader');
+            const btnCard = document.getElementById('reciteBtn');
+            const btnSettings = document.getElementById('settingsReciteBtn');
+
+            if (btnHeader) btnHeader.style.color = reciteMode ? '#0cff04' : '';
+            if (btnCard) {
+                btnCard.style.color = reciteMode ? '#0cff04' : '';
+                btnCard.style.borderColor = reciteMode ? '#0cff04' : '';
+            }
+            if (btnSettings) {
+                btnSettings.style.color = reciteMode ? '#0cff04' : '';
+                btnSettings.style.borderColor = reciteMode ? '#0cff04' : '';
+            }
+        }
+
+
+        function stopRecite() {
+            reciteMode = false;
+            reciteAdvancing = false;
+            _reciteWordPointer = 0;
+            clearTimeout(_reciteFailsafeTimer);
+            _recogIntentionalStop = true;    // prevent onend from restarting
+            _releaseWakeLock();
+            if (recognition) {
+                try { recognition.stop(); } catch (e) { }
+                recognition = null;
+            }
+            // Remove status bar
+            const bar = document.getElementById('reciteStatusBar');
+            if (bar) bar.remove();
+
+            syncReciteButtons();
+
+            // Restore plain text (re-render)
+            displayAyah(false);
         }
     </script>
 </body>

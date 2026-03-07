@@ -301,3 +301,89 @@ if (document.readyState === 'loading') {
 } else {
     initGuestMode();
 }
+
+/* ══════════════════════════════════════════
+   GLOBAL PAGE LOADING ANIMATION
+   Auto-injects a loader on every page that
+   imports guest-utils.js. Fades out on load.
+══════════════════════════════════════════ */
+(function () {
+    // Inject styles
+    const style = document.createElement('style');
+    style.textContent = `
+        #pageLoader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: linear-gradient(135deg, #0a1f1c 0%, #0d2b27 50%, #071a17 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #pageLoader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .loader-icon {
+            font-size: 3.2rem;
+            color: #1a9e8f;
+            animation: loaderPulse 1.4s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px rgba(26,158,143,0.55));
+        }
+        .loader-ring {
+            width: 64px;
+            height: 64px;
+            border: 4px solid rgba(26,158,143,0.15);
+            border-top-color: #1a9e8f;
+            border-radius: 50%;
+            animation: loaderSpin 0.85s linear infinite;
+        }
+        .loader-text {
+            font-family: 'Anek Latin', 'Inter', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.16em;
+            color: rgba(174,233,218,0.55);
+            text-transform: uppercase;
+            animation: loaderFade 1.4s ease-in-out infinite;
+        }
+        @keyframes loaderSpin  { to { transform: rotate(360deg); } }
+        @keyframes loaderPulse { 0%,100% { transform: scale(1);    opacity:.9; }
+                                  50%    { transform: scale(1.12); opacity:1;  } }
+        @keyframes loaderFade  { 0%,100% { opacity:.4; } 50% { opacity:.9; } }
+    `;
+    document.head.appendChild(style);
+
+    // Inject loader HTML as first child of body (works even before DOMContentLoaded)
+    function injectLoader() {
+        if (document.getElementById('pageLoader')) return;
+        const loader = document.createElement('div');
+        loader.id = 'pageLoader';
+        loader.innerHTML = `
+            <img src="/logoo.png" alt="Ilmify" class="loader-icon" style="width:80px;height:80px;object-fit:contain;border-radius:16px;">
+            <div class="loader-ring"></div>
+            <span class="loader-text">Loading…</span>
+        `;
+        if (document.body) {
+            document.body.insertBefore(loader, document.body.firstChild);
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
+                document.body.insertBefore(loader, document.body.firstChild);
+            });
+        }
+    }
+
+    injectLoader();
+
+    // Remove loader once everything (images, scripts) is fully loaded
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('pageLoader');
+        if (loader) {
+            loader.classList.add('hidden');
+            setTimeout(() => loader.remove(), 550);
+        }
+    });
+})();

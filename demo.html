@@ -1,409 +1,2082 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Ilmify – Daily Routine and Adhkar</title>
-  <meta name="description" content="ilmify-adhkars, Join ilmify to explore Islamic knowledge through online quizzes, lessons, videos, and a growing Muslim learning community. 100% free and easy to access.">
-<meta name="keywords" content="ilmify,adhkar, Islamic quiz, learn Islam, online Quran learning, Islamic education, Muslim community, Islamic website India, Pious Brothers, Islamic lessons, free Islamic resources">
-<meta name="author" content="ilmify || Pious Brothers Team">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="logoo.png" type="image/icon type">
 
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-/>
+<head>
+  <title>Quran Reader - ILMIFY</title>
+  <meta name="description" content="Read the Holy Quran with translation and audio. Track your reading progress.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="pbc.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&family=Amiri:wght@400;700&family=Noto+Sans+Malayalam:wght@400;700&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Firebase Rules -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
 
   <style>
-    body { background: #e8f5f2; font-family: 'Anek', sans-serif; }
-    .adhkar-card {
-      background: #afe9da;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border: 2px solid #2b5c52;
+    body {
+      font-family: 'Anek Latin', sans-serif;
+      background:
+        radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+        radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+        radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+      background-color: #00060f;
+      background-attachment: fixed;
+      color: #fff;
+      min-height: 100vh;
     }
-    .adhkar-text { 
-      font-family: 'Amiri', sans-serif;
-      font-size: 1.4rem; white-space: pre-wrap; color: #090909; line-height: 2.2;
-      background-color: rgba(6, 114, 93, 0.6);
+
+    .quran-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 15px;
+    }
+
+    /* Nav & Banner Styles */
+    .resume-banner {
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
       color: white;
-      border-radius: 12px;
-      min-height: 150px; /* Ensures a consistent height */
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 20px rgba(13, 86, 79, 0.3);
+      animation: slideDown 0.5s ease-out;
     }
-    #autoScrollBtn { width: 200px; }
-    .li1{
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .surah-selector {
+      background: rgba(13, 86, 79, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border: 2px solid rgba(13, 86, 79, 0.3);
+    }
+
+    .surah-selector label {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #1a7a70;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .surah-selector select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 2px solid #0d564f;
+      background: white;
+      color: #000;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .surah-selector select:focus {
+      outline: none;
+      border-color: #1a7a70;
+      box-shadow: 0 0 0 3px rgba(13, 86, 79, 0.1);
+    }
+
+    /* Ayah Display Styles */
+    .ayah-display {
+      background: linear-gradient(135deg, rgba(13, 86, 79, 0.05), rgba(26, 122, 112, 0.05));
+      padding: 30px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      min-height: 350px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid rgba(13, 86, 79, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ayah-display::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(13, 86, 79, 0.03) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .ayah-number {
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(13, 86, 79, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .ayah-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 2.2rem;
+      line-height: 2.0;
+      text-align: center;
+      color: #000000;
+      margin: 15px 0;
+      direction: rtl;
+      position: relative;
+      z-index: 1;
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .ayah-translation {
+      font-size: 1rem;
+      line-height: 1.6;
+      text-align: center;
+      color: #b3b2b2;
+      color: #9da0a6;
+      font-style: italic;
+      max-width: 650px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Ayah Display Container - Card Style */
+    .ayah-display {
+      background: transparent;
+      padding: 0;
+      border: none;
+      min-height: auto;
+      display: block;
+      box-shadow: none;
+    }
+
+    .ayah-display::before {
+      display: none;
+      /* Remove the pulsing background for now to match the clean dark card look */
+    }
+
+    .ayah-card {
+      background-color: #11514048;
+      /* Deep black/dark background */
+      border-radius: 30px;
+      padding: 25px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-width: 500px;
+      /* Constrain width like a mobile card */
+      margin: 0 auto;
+    }
+
+    /* Card Header */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .header-left {
+      flex: 1;
+    }
+
+    .header-center {
+      flex: 2;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header-right {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .surah-title {
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .ayah-counter {
+      color: #9da0a6;
+      font-size: 0.85rem;
+    }
+
+    /* Audio Player Styling in Header */
+    .player-controls {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 8px 16px;
+      border-radius: 50px;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .control-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .play-btn {
+      color: #0cff04;
+      /* Light purple */
+      font-size: 1.2rem;
+    }
+
+    .repeat-btn {
+      color: white;
+      opacity: 0.7;
+      font-size: 1rem;
+    }
+
+    .repeat-btn:hover {
+      opacity: 1;
+    }
+
+    .repeat-btn.active {
+      color: white;
+      opacity: 1;
+      position: relative;
+    }
+
+    .repeat-btn.active::after {
+      content: '1';
+      position: absolute;
+      font-size: 0.8rem;
+      /* Slightly larger logic implies badge, but text for now */
+      top: -2px;
+      right: -6px;
+      font-weight: bold;
+      background: none;
+      /* Using text overlay for "1" inside icon is tricky with FA, simpler to put next to it or just rely on color. 
+               Reference image has arrows with '1' inside. `fa-repeat` has no '1'. 
+               Using `fa-repeat-1` if available or overlay. Let's try simple active state for now. 
+            */
+    }
+
+    /* Like Button in Header */
+    .like-btn {
+      background: none;
+      border: none;
+      color: #ff4757;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s;
+    }
+
+    .like-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .like-count {
+      display: block;
+      font-size: 0.7rem;
+      color: #9da0a6;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    /* Card Body */
+    .card-body {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .ayah-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 2.2rem;
+      line-height: 2.2;
+      color: #000000;
+      margin-bottom: 20px;
+      text-align: center;
+      direction: rtl;
+    }
+
+    .ayah-translation {
+      color: #ffffff;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    /* Card Footer */
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+    }
+
+    .footer-btn {
+      background: #e8e6ff;
+      /* Light lavender bg typical for share buttons in some dark UIs or just white/light grey */
+      color: #000;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .footer-btn.secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .footer-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 15px;
+    }
+
+    audio {
+      width: 100%;
+      height: 35px;
+      outline: none;
+    }
+
+    .nav {
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      color: rgb(252, 251, 251);
+      padding: 20px;
+      font-family: "anek latin", sans-serif;
+      background: linear-gradient(to bottom, transparent, #0d564f20);
+    }
+
+    .navigation-controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(to top, #05050500, rgba(5, 5, 5, 0.36));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 15px 30px;
+      z-index: 100;
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .quran-container {
+      padding-bottom: 100px;
+      /* Ensure content isn't hidden behind nav */
+      min-height: 100vh;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      color: white;
+      border: none;
+      padding: 15px 30px;
       border-radius: 12px;
-      background-color: rgba(6, 114, 93, 0.6);
-      color: rgb(254, 253, 253);
-      padding: 10px;
-      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(13, 86, 79, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(13, 86, 79, 0.4);
+    }
+
+    .nav-btn:active {
+      transform: translateY(0);
+    }
+
+    .nav-btn:disabled {
+      background: linear-gradient(135deg, #6c757d, #5a6268);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: #ffffff;
+      font-size: 1.2rem;
+    }
+
+    .loading i {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .surah-info {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(13, 86, 79, 0.05);
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .surah-info h3 {
+      color: #fbffff;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .surah-info p {
+      color: #98beba;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .ayah-arabic {
+        font-size: 1.8rem;
+        line-height: 2;
+      }
+
+      .ayah-translation {
+        font-size: 1rem;
+      }
+
+      .ayah-display {
+        padding: 25px;
+        min-height: 350px;
+      }
+
+      .nav-btn {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Settings Panel */
+    #settingsPanel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(13, 86, 79, 0.249);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 999;
+      padding: 80px 20px 20px 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(-100%);
+      transition: transform 0.3s ease-in-out;
+      border-bottom: 2px solid #1a7a70;
+    }
+
+    #settingsPanel.active {
+      transform: translateY(0);
+    }
+
+    @keyframes pulse-green {
+      0% {
+        box-shadow: 0 0 0 0 rgba(26, 188, 156, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(26, 188, 156, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(26, 188, 156, 0);
+      }
+    }
+
+    .pulse-card {
+      animation: pulse-green 2s infinite;
+    }
+
+    /* Mode Selection Overlay Styles */
+    .mode-selection-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+        radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+        radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+      background-color: #00060f;
+      z-index: 2000;
+      overflow-y: auto;
+      /* Flex layout to allow centered child with margin: auto */
+      display: flex;
+      padding: 20px;
+    }
+
+    /* Safe centering wrapper */
+    .mode-content-wrapper {
+      margin: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      /* Ensure it can grow */
+      min-height: min-content;
+    }
+
+    .mode-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .mode-title {
+      font-family: 'Anek Latin', sans-serif;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+      font-size: 2.5rem;
+    }
+
+    .mode-subtitle {
+      font-family: 'Anek Latin', sans-serif;
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .mode-cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 1000px;
+      justify-content: center;
+    }
+
+    /* Force centering if fewer items than grid columns */
+    .mode-cards-container:has(.mode-card:nth-last-child(1):nth-child(1)) {
+      grid-template-columns: minmax(280px, 400px);
+    }
+
+    .mode-cards-container:has(.mode-card:nth-last-child(2):nth-child(1)) {
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+    }
+
+    .mode-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .mode-card:hover::before {
+      opacity: 1;
+    }
+
+    .mode-icon-wrapper {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      transition: transform 0.4s ease, background 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .mode-card:hover .mode-icon-wrapper {
+      transform: scale(1.1) rotate(5deg);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Specific Card Accents */
+    .mode-card.regular .mode-icon-wrapper i {
+      color: #4db6ac;
+    }
+
+    .mode-card.regular:hover {
+      border-color: rgba(77, 182, 172, 0.3);
+    }
+
+    .mode-card.ramadan .mode-icon-wrapper i {
+      color: #ffd700;
+    }
+
+    .mode-card.ramadan:hover {
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .mode-card.kahf .mode-icon-wrapper i {
+      color: #1abc9c;
+    }
+
+    .mode-card.kahf:hover {
+      border-color: rgba(26, 188, 156, 0.3);
+    }
+
+    .mode-card h3 {
+      font-family: 'Anek Latin', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .mode-card p {
+      font-family: 'Anek Latin', sans-serif;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mode-title {
+        font-size: 2rem;
+      }
+
+      .mode-cards-container {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-card {
+        min-height: auto;
+        padding: 30px 20px;
+      }
     }
   </style>
-  <link rel="stylesheet" href="pbc.css">
+  <script src="guest-utils.js"></script>
 </head>
-<body class="black">
-<header class=" fix" style="width: 100%;">
-        <center>
-            <a style="position: fixed; left: 20px; color: rgb(247, 245, 245);" href="/main.html"><i class="fa fa-home"></i></a>
-            <h4 id="pageTitle" style="color: #fcfbfb;">Adhkar</h4>
-        </center> 
-    </header>
-  <div class="container py-4">
 
-  
-    <div class="text-center mb-5">
-    </div><br><br><br> 
-    <div class="card p-4 adhkar-card mb-3">
-      <h5 class="" id="adhkarIndex">Adhkar 1/…</h5><br>
-      <div class="adhkar-text li1" id="adhkarText"></div>
+<body>
+  <header class="fix intro" style="z-index: 1000;">
+    <center>
+      <a style="position: fixed; left: 20px; color: rgb(251, 249, 249);" href="/main.html"><i
+          class="fa fa-home"></i></a>
+      Quran
+      <a style="position: fixed; right: 20px; color: rgb(251, 249, 249); cursor: pointer;" onclick="toggleSettings()"><i
+          class="fa fa-cog" id="settingsIcon"></i></a>
+    </center>
+  </header><br><br><br>
+
+  <!-- Mode Selection Overlay -->
+  <div id="entryOverlay" class="mode-selection-overlay">
+    <div class="mode-content-wrapper">
+      <div class="mode-header">
+        <h1 class="mode-title">Welcome to Quran Reader</h1>
+        <p class="mode-subtitle">Choose your reading mode</p>
+      </div>
+
+      <div class="mode-cards-container">
+        <div class="mode-card kahf" id="kahfCard" onclick="selectMode('kahf')" style="display: none;">
+          <div class="mode-icon-wrapper">
+            <i class="fas fa-mosque fa-3x"></i>
+          </div>
+          <h3>Friday Kahf</h3>
+          <p class="mb-3">Read Surah Al-Kahf</p>
+
+          <!-- Card Progress Bar -->
+          <div class="progress w-75 mx-auto" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+            <div id="cardKahfProgressBar" class="progress-bar" role="progressbar"
+              style="width: 0%; background-color: #1abc9c;"></div>
+          </div>
+          <small id="cardKahfProgressText" class="text-white-50 mt-2 d-block" style="font-size: 0.75rem;">0%
+            Complete</small>
+        </div>
+        <div class="mode-card ramadan" onclick="selectMode('ramadan')">
+          <div class="mode-icon-wrapper">
+            <i class="fas fa-kaaba fa-3x"></i>
+          </div>
+          <h3>Ramadan Challenge</h3>
+          <p>Complete whole Quran. Track stats.</p>
+        </div>
+        <!-- Regular Reading Card -->
+        <div class="mode-card regular" onclick="selectMode('regular')">
+          <div class="mode-icon-wrapper">
+            <i class="fas fa-book-open fa-3x"></i>
+          </div>
+          <h3>Regular Reading</h3>
+          <p>Read at your own pace. Resume anytime.</p>
+        </div>
+
+        <!-- Ramadan Challenge Card -->
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Settings Panel -->
+  <div id="settingsPanel">
+    <div class="container" style="max-width: 600px;">
+
+      <div class="row g-3">
+        <div class="mb-3">
+          <label class="form-label">Arabic Font</label>
+          <select class="form-select" id="fontSelect" onchange="changeFont()">
+            <option value="Amiri">Amiri</option>
+            <option value="Scheherazade New">Scheherazade New</option>
+            <option value="Noto Naskh Arabic">Noto Naskh Arabic (Default)</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Font Size</label>
+          <input type="range" class="form-range" id="fontSizeRange" min="1.5" max="4.0" step="0.1"
+            oninput="changeFontSize()">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Reciter</label>
+          <select class="form-select" id="reciterSelect" onchange="changeReciter()">
+            <option value="ar.alafasy">Mishary Rashid Alafasy</option>
+            <option value="ar.abdulbasitmurattal">Abdul Basit (Murattal)</option>
+            <option value="ar.abdurrahmaansudais">Abdurrahmaan As-Sudais</option>
+            <option value="ar.ahmedajamy">Ahmed Al-Ajamy</option>
+            <option value="ar.mahermuaiqly">Maher Al Muaiqly</option>
+            <option value="ar.saoodshuraym">Saood Ash-Shuraym</option>
+            <option value="ar.hudhaify">Ali Al-Hudhaify</option>
+          </select>
+        </div>
+
+      </div>
+
+      <hr class="border-secondary my-3">
+
+      <h6 id="savedAyahsTitle" class="mb-2 small text-white-50 text-uppercase"><i class="fas fa-heart text-danger"></i>
+        Saved Ayahs
+      </h6>
+      <div id="savedAyahsList"
+        style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px;">
+        <!-- Saved items will appear here -->
+        <p class="text-white-50 small text-center m-0">No saved ayahs yet.</p>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="quran-container">
+    <div class="resume-banner" id="resumeBanner">
+      <div>
+        <h5 class="mb-1"><i class="fas fa-bookmark"></i> Continue Reading</h5>
+        <p class="mb-0 small" id="resumeText"></p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-light btn-sm" onclick="resumeReading()">Resume</button>
+        <button class="btn btn-outline-light btn-sm" onclick="closeResumeBanner()">Dismiss</button>
+      </div>
     </div>
 
-    
-    <div class="d-flex justify-content-between mb-3">
-      <button id="prevBtn" class="btn btn-outline-dark rounded-pill px-4 text-white">
+    <!-- Ramadan Challenge Dashboard -->
+    <div id="ramadanDashboard"
+      style="display: none; background: linear-gradient(135deg, #155e55, #0d3838); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0 text-warning"><i class="fas fa-moon"></i> Ramadan Challenge</h5>
+        <span class="badge bg-warning text-dark" id="ramadanProgressText">0% Complete</span>
+      </div>
+
+      <div class="progress mb-3" style="height: 20px; background-color: rgba(255,255,255,0.1);">
+        <div id="ramadanProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated"
+          role="progressbar" style="width: 0%"></div>
+      </div>
+
+      <div class="row text-center g-2">
+        <div class="col-6">
+          <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
+            <small class="text-white-50 d-block">Completed Juz</small>
+            <strong class="text-white" id="completedJuzText">0 / 30</strong>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
+            <small class="text-white-50 d-block">Remaining</small>
+            <strong class="text-white" id="remainingPercentageText">100%</strong>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 text-center">
+        <small class="text-light fst-italic" style="font-size: 0.8rem;">Changes are saved separately from
+          regular reading.</small>
+      </div>
+    </div>
+
+    <!-- Kahf Dashboard -->
+    <div id="kahfDashboard"
+      style="display: none; background: linear-gradient(135deg, #0e6b56, #084a3b); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #1abc9c; box-shadow: 0 0 15px rgba(26, 188, 156, 0.3);">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0" style="color: #1abc9c;"><i class="fas fa-mosque"></i> Friday Kahf</h5>
+        <span class="badge bg-white text-dark" id="kahfProgressText">0% Complete</span>
+      </div>
+
+      <div class="progress mb-2" style="height: 20px; background-color: rgba(255,255,255,0.1);">
+        <div id="kahfProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+          style="width: 0%; background-color: #1abc9c;"></div>
+      </div>
+      <div class="text-center">
+        <small class="text-white-50">Surah Al-Kahf: 110 Ayahs</small>
+      </div>
+    </div>
+
+    <div class="surah-selector">
+      <label for="surahSelect">Select Surah</label>
+      <select id="surahSelect" onchange="loadSurah()">
+        <option value="">-- Choose --</option>
+      </select>
+    </div>
+
+    <div class="ayah-display" id="ayahDisplay">
+      <div class="text-center py-5">
+        <i class="fas fa-book-open fa-3x mb-3" style="color: #1a7a70;"></i>
+        <p>Select a Surah to begin reading</p>
+      </div>
+    </div>
+
+    <div class="navigation-controls">
+      <button class="nav-btn" id="prevBtn" onclick="previousAyah()" disabled>
         <i class="fas fa-arrow-left"></i> Previous
       </button>
-      <button id="translateBtn" class="btn btn-outline-success rounded-pill px-4 text-white">
-        <i class="fas fa-language"></i> Translate
-      </button>
-      <button id="nextBtn" class="btn btn-outline-dark rounded-pill px-4 text-white">
+      <button class="nav-btn" id="nextBtn" onclick="nextAyah()" disabled>
         Next <i class="fas fa-arrow-right"></i>
       </button>
     </div>
-    <div style="display: none;" class="text-center mb-5 ">
-      <button id="autoScrollBtn" class="btn btn-success rounded-pill px-4">
-        <i class="fas fa-play"></i> Auto Scroll
-      </button>
-    </div>
-        
-        
-
   </div>
 
   <script>
-    
-    const adhkars = {
-      morning: [
-        { 
-            arabic: "Begin your day with remembrance\nالْحَمْدُ لِلهِ وَحْدَهُ، وَالصَّلاَةُ وَالسَّلاَمُ عَلَى مَنْ لاَ نَبِيَّ بَعْدَهُ", 
-            translation: "Begin your day with remembrance\nAll praise is for Allah alone, and peace and blessings be upon him after whom there is no other Prophet." 
-        },
-        { 
-            arabic: "(1 time)\nاللهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ", 
-            translation: "(1 time)\nAllah! There is no god but He - the Living, The Self-subsisting, Eternal..." 
-        },
-        { 
-            arabic: "(3 times)\nAl-Ikhlas, Al-Falaq, An-Nas", 
-            translation: "(3 times)\nRecite Surah Al-Ikhlas, Surah Al-Falaq, and Surah An-Nas." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلهِ ، وَالْحَمْدُ لِلهِ، لاَ إِلٰهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيكَ لَهُ ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذاَ الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ، وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وعَذَابٍ فِي الْقَبْرِ ", 
-            translation: "(1 time)\nWe have reached the morning and at this very time all sovereignty belongs to Allah..." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا ، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", 
-            translation: "(1 time)\nO Allah, by You we enter the morning and by You we enter the evening..." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إلَّا أَنْتَ ، خَلَقْتَنِي وَأَنَا عَبْدُكَ ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَااسْتَطَعْتُ، أَعُوذُبِكَ مِنْ شَرِّ مَا صَنَعْتُ ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ ", 
-            translation: "(1 time)\nO Allah, You are my Lord, none has the right to be worshipped except You..." 
-        },
-        { 
-            arabic: "(3 times)\n\
-      اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلٰهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّـي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالْفَقْرِ، اللَّهُمَّ إِنِّـي أَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلٰهَ إِلاَّ أَنْتَ", 
-            translation: "(3 times)\nO Allah, make me healthy in my body. O Allah, preserve for me my hearing..." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      اللَّهُمَّ إِنِّـي أسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ في الدُّنْيَا وَالْآخِرَة، اللَّهُمَّ إِنِّـي أسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَينِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي ", 
-            translation: "(1 time)\nO Allah, I ask You for forgiveness and well-being in this life and in the Hereafter..." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      اللَّهُمَّ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ ، عَالِمَ الْغَيْبِ وَالشَّهَادَةِ ، لَا إِلٰهَ إِلَّا أَنْتَ رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ ", 
-            translation: "(1 time)\nO Allah, Creator of the heavens and the earth, Knower of the unseen and the seen..." 
-        },
-        { 
-            arabic: "(3 times)\n\
-      بِسْمِ اللهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ ", 
-            translation: "(3 times)\nIn the Name of Allah, with Whose Name nothing on the earth or in the heaven can cause harm..." 
-        },
-        { 
-            arabic: "(3 times)\n\
-      رَضِيتُ بِاللهِ رَبًّا وَبِالْإسْلَامِ دِينًا وَبِمُحَمَّدٍﷺ نَبِيًّا ", 
-            translation: "(3 times)\nI am pleased with Allah as my Lord, with Islam as my religion and with Muhammad (ﷺ) as my Prophet." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ ، أَصْلِحْ لِي شَأْنِي كُلَّهُ ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ ", 
-            translation: "(1 time)\nO Ever Living, O Self-Subsisting and Supporter of all, by Your mercy I seek assistance..." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      أَصْبَحْنَا عَلَى فِطْرَةِ الإِسْلامِ ، وَكَلِمَةِ الإِخْلَاصِ، وَدِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ ، وَمِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا ، وَمَا كَانَ مِنَ الْمُشْرِكِينَ", 
-            translation: "(1 time)\nWe wake up upon the fitrah of Islam..." 
-        },
-        { 
-            arabic: "(100 times)\nسُبْحَانَ اللهِ وَبِحَمْدِهِ", 
-            translation: "(100 times)\nGlory is to Allah and praise is to Him." 
-        },
-        { 
-            arabic: "(100 times)\n\
-      لَا إِلٰهَ إِلاَّ اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيءٍ قَدِيرٌ ", 
-            translation: "(100 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
-        },
-        { 
-            arabic: "(10 times)\n\
-      لَا إِلٰهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، يُحْيِي وَيُمِيتُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِير", 
-            translation: "(10 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
-        },
-        { 
-            arabic: "(3 times)\n\
-      سُبْحَانَ اللهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ ", 
-            translation: "(3 times)\nGlory is to Allah and praise is to Him, by the multitude of His creation..." 
-        },
-        { 
-            arabic: "(After fajr 1 time)\n\
-      اللَّهُمَّ إِنِّـي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلاً مُتَقَبَّلاً ", 
-            translation: "(After fajr 1 time)\nO Allah, I ask You for beneficial knowledge, goodly provision and acceptable deeds." 
-        },
-        { 
-            arabic: "(Complete it before the day ends,100 times)\n\
-      أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ",
-            translation: "(100 times)\nI seek the forgiveness of Allah and repent to Him." 
-        }
-      ],
-      general: [
-        { 
-            arabic: "Fulfill these adhkars before the day ends.", 
-            translation: "Complete these remembrances before the end of the day." 
-        },
-        { 
-            arabic: "(100 times)\n\
-      لَا إِلٰهَ إِلاَّ اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيءٍ قَدِيرٌ ", 
-            translation: "(100 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
-        },
-        { 
-            arabic: "(100 times)\n\
-      أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ", 
-            translation: "(100 times)\nI seek the forgiveness of Allah and repent to Him." 
-        }
-      ], 
-      evening: [
-        { 
-            arabic: "Settle your heart with remembrance", 
-            translation: "Find peace in your heart through remembrance." 
-        },
-        { 
-            arabic: "(1 time)\n\
-      ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ ۚ لَّهُۥ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى ٱلْأَرْضِ ۗ مَن ذَا ٱلَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَىْءٍۢ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ ", 
-            translation: "(1 time)\nAllah! There is no god but He - the Living, The Self-subsisting, Eternal..." 
-        },
-        { 
-            arabic: "(3 times)\nAl-Ikhlas, Al-Falaq, An-Nas", 
-            translation: "(3 times)\nRecite Surah Al-Ikhlas, Surah Al-Falaq, and Surah An-Nas." 
-        },
-        { 
-            arabic: "(1 time)\nأَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلهِ...", 
-            translation: "(1 time)\nWe have reached the evening and at this very time all sovereignty belongs to Allah..." 
-        },
-        { 
-            arabic: "(1 time)\nاللَّهُمَّ بِكَ أَمْسَيْنَا...", 
-            translation: "(1 time)\nO Allah, by You we enter the evening and by You we enter the morning..." 
-        },
-        { 
-            arabic: "(1 time)\nاللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إلَّا أَنْتَ...", 
-            translation: "(1 time)\nO Allah, You are my Lord, none has the right to be worshipped except You..." 
-        },
-        { 
-            arabic: "(3 times)\nاللَّهُمَّ عَافِنِي فِي بَدَنِي...", 
-            translation: "(3 times)\nO Allah, make me healthy in my body. O Allah, preserve for me my hearing..." 
-        },
-        { 
-            arabic: "(1 time)\nاللَّهُمَّ إِنِّـي أسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ...", 
-            translation: "(1 time)\nO Allah, I ask You for forgiveness and well-being in this life and in the Hereafter..." 
-        },
-        { 
-            arabic: "(1 time)\nاللَّهُمَّ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ...", 
-            translation: "(1 time)\nO Allah, Creator of the heavens and the earth, Knower of the unseen and the seen..." 
-        },
-        { 
-            arabic: "(3 times)\nبِسْمِ اللهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ...", 
-            translation: "(3 times)\nIn the Name of Allah, with Whose Name nothing on the earth or in the heaven can cause harm..." 
-        },
-        { 
-            arabic: "(1 time)\nيَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ...", 
-            translation: "(1 time)\nO Ever Living, O Self-Subsisting and Supporter of all, by Your mercy I seek assistance..." 
-        },
-        { 
-            arabic: "(100 times)\nسُبْحَانَ اللهِ وَبِحَمْدِهِ", 
-            translation: "(100 times)\nGlory is to Allah and praise is to Him." 
-        },
-        { 
-            arabic: "(10 times)\nلَا إِلٰهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ...", 
-            translation: "(10 times)\nNone has the right to be worshipped except Allah, alone, without partner..." 
-        },
-        { 
-            arabic: "(3 times)\nأَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ", 
-            translation: "(3 times)\nI seek refuge in the perfect words of Allah from the evil of that which He has created." 
-        }
-      ],
-      night: [
-        { 
-            arabic: "Close the day with peace", 
-            translation: "End your day with a sense of peace." 
-        },
-        { 
-            arabic: "(1 time)\nAl-Ikhlas, Al-Falaq, An-Nas", 
-            translation: "(1 time)\nRecite Surah Al-Ikhlas, Surah Al-Falaq, and Surah An-Nas." 
-        },
-        { 
-            arabic: "(1 time)\nٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ...", 
-            translation: "(1 time)\nAllah! There is no god but He - the Living, The Self-subsisting, Eternal..." 
-        },
-        { 
-            arabic: "(1 time)\nءامن الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ...", 
-            translation: "(1 time)\nThe Messenger has believed in what was revealed to him from his Lord, and [so have] the believers..." 
-        },
-        { 
-            arabic: "(1 time)\nبِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي...", 
-            translation: "(1 time)\nIn Your name my Lord, I lie down and in Your name I rise..." 
-        },
-        { 
-            arabic: "(3 times)\nاللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ", 
-            translation: "(3 times)\nO Allah, save me from Your punishment on the day You resurrect Your servants." 
-        },
-        { 
-            arabic: "(1 time)\nبِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", 
-            translation: "(1 time)\nIn Your name O Allah, I die and I live." 
-        },
-        { 
-            arabic: "(33 times)\nسُبْحَانَ الله", 
-            translation: "(33 times)\nGlory is to Allah." 
-        },
-        { 
-            arabic: "(33 times)\nالْحَمْدُ لِله", 
-            translation: "(33 times)\nPraise is to Allah." 
-        },
-        { 
-            arabic: "(34 times)\nاللهُ أَكْبَرُ", 
-            translation: "(34 times)\nAllah is the Most Great." 
-        },
-        { 
-            arabic: "(1 time)\nاللَّهُمَّ رَبَّ السَّمَاوَاتِ وَرَبَّ الْأَرْضِ...", 
-            translation: "(1 time)\nO Allah, Lord of the seven heavens and Lord of the Mighty Throne..." 
-        },
-        { 
-            arabic: "(1 time)\nالْحَمْدُ لِلهِ الَّذِي أَطْعَمَنَا وَسَقَانَا...", 
-            translation: "(1 time)\nPraise is to Allah Who has provided us with food and drink..." 
-        },
-        { 
-            arabic: "(1 time)\nاللَّهُمَّ فَاطِرَ السَّمَوَاتِ وَالْأَرْضِ...", 
-            translation: "(1 time)\nO Allah, Creator of the heavens and the earth, Knower of the unseen and the seen..." 
-        },
-        { 
-            arabic: "(1 time)\nSurah Sajdah", 
-            translation: "(1 time)\nRecite Surah As-Sajdah." 
-        },
-        { 
-            arabic: "(1 time)\nSurah Mulk", 
-            translation: "(1 time)\nRecite Surah Al-Mulk." 
-        },
-        { 
-            arabic: "(1 time)\nاللَّهُمَّ أَسْلَمْتُ نَفْسِي إِلَيْكَ...", 
-            translation: "(1 time)\nO Allah, I submit myself to You, entrust my affairs to You..." 
-        },
-        { 
-            arabic: "(1 time)\nSurah Al-Kafirun", 
-            translation: "(1 time)\nRecite Surah Al-Kafirun." 
-        }
-      ]
+    // Full Surah List
+    const surahNames = [
+      { number: 1, arabic: "الفاتحة", english: "Al-Fatihah", translation: "The Opening", verses: 7 },
+      { number: 2, arabic: "البقرة", english: "Al-Baqarah", translation: "The Cow", verses: 286 },
+      { number: 3, arabic: "آل عمران", english: "Ali 'Imran", translation: "Family of Imran", verses: 200 },
+      { number: 4, arabic: "النساء", english: "An-Nisa", translation: "The Women", verses: 176 },
+      { number: 5, arabic: "المائدة", english: "Al-Ma'idah", translation: "The Table Spread", verses: 120 },
+      { number: 6, arabic: "الأنعام", english: "Al-An'am", translation: "The Cattle", verses: 165 },
+      { number: 7, arabic: "الأعراف", english: "Al-A'raf", translation: "The Heights", verses: 206 },
+      { number: 8, arabic: "الأنفال", english: "Al-Anfal", translation: "The Spoils of War", verses: 75 },
+      { number: 9, arabic: "التوبة", english: "At-Tawbah", translation: "The Repentance", verses: 129 },
+      { number: 10, arabic: "يونس", english: "Yunus", translation: "Jonah", verses: 109 },
+      { number: 11, arabic: "هود", english: "Hud", translation: "Hud", verses: 123 },
+      { number: 12, arabic: "يوسف", english: "Yusuf", translation: "Joseph", verses: 111 },
+      { number: 13, arabic: "الرعد", english: "Ar-Ra'd", translation: "The Thunder", verses: 43 },
+      { number: 14, arabic: "ابراهيم", english: "Ibrahim", translation: "Abraham", verses: 52 },
+      { number: 15, arabic: "الحجر", english: "Al-Hijr", translation: "The Rocky Tract", verses: 99 },
+      { number: 16, arabic: "النحل", english: "An-Nahl", translation: "The Bee", verses: 128 },
+      { number: 17, arabic: "الإسراء", english: "Al-Isra", translation: "The Night Journey", verses: 111 },
+      { number: 18, arabic: "الكهف", english: "Al-Kahf", translation: "The Cave", verses: 110 },
+      { number: 19, arabic: "مريم", english: "Maryam", translation: "Mary", verses: 98 },
+      { number: 20, arabic: "طه", english: "Taha", translation: "Ta-Ha", verses: 135 },
+      { number: 21, arabic: "الأنبياء", english: "Al-Anbya", translation: "The Prophets", verses: 112 },
+      { number: 22, arabic: "الحج", english: "Al-Hajj", translation: "The Pilgrimage", verses: 78 },
+      { number: 23, arabic: "المؤمنون", english: "Al-Mu'minun", translation: "The Believers", verses: 118 },
+      { number: 24, arabic: "النور", english: "An-Nur", translation: "The Light", verses: 64 },
+      { number: 25, arabic: "الفرقان", english: "Al-Furqan", translation: "The Criterion", verses: 77 },
+      { number: 26, arabic: "الشعراء", english: "Ash-Shu'ara", translation: "The Poets", verses: 227 },
+      { number: 27, arabic: "النمل", english: "An-Naml", translation: "The Ant", verses: 93 },
+      { number: 28, arabic: "القصص", english: "Al-Qasas", translation: "The Stories", verses: 88 },
+      { number: 29, arabic: "العنكبوت", english: "Al-'Ankabut", translation: "The Spider", verses: 69 },
+      { number: 30, arabic: "الروم", english: "Ar-Rum", translation: "The Romans", verses: 60 },
+      { number: 31, arabic: "لقمان", english: "Luqman", translation: "Luqman", verses: 34 },
+      { number: 32, arabic: "السجدة", english: "As-Sajdah", translation: "The Prostration", verses: 30 },
+      { number: 33, arabic: "الأحزاب", english: "Al-Ahzab", translation: "The Combined Forces", verses: 73 },
+      { number: 34, arabic: "سبإ", english: "Saba", translation: "Sheba", verses: 54 },
+      { number: 35, arabic: "فاطر", english: "Fatir", translation: "Originator", verses: 45 },
+      { number: 36, arabic: "يس", english: "Ya-Sin", translation: "Ya Sin", verses: 83 },
+      { number: 37, arabic: "الصافات", english: "As-Saffat", translation: "Those who set the Ranks", verses: 182 },
+      { number: 38, arabic: "ص", english: "Sad", translation: "The Letter 'Saad'", verses: 88 },
+      { number: 39, arabic: "الزمر", english: "Az-Zumar", translation: "The Troops", verses: 75 },
+      { number: 40, arabic: "غافر", english: "Ghafir", translation: "The Forgiver", verses: 85 },
+      { number: 41, arabic: "فصلت", english: "Fussilat", translation: "Explained in Detail", verses: 54 },
+      { number: 42, arabic: "الشورى", english: "Ash-Shuraa", translation: "The Consultation", verses: 53 },
+      { number: 43, arabic: "الزخرف", english: "Az-Zukhruf", translation: "The Ornaments of Gold", verses: 89 },
+      { number: 44, arabic: "الدخان", english: "Ad-Dukhan", translation: "The Smoke", verses: 59 },
+      { number: 45, arabic: "الجاثية", english: "Al-Jathiyah", translation: "The Crouching", verses: 37 },
+      { number: 46, arabic: "الأحقاف", english: "Al-Ahqaf", translation: "The Wind-Curved Sandhills", verses: 35 },
+      { number: 47, arabic: "محمد", english: "Muhammad", translation: "Muhammad", verses: 38 },
+      { number: 48, arabic: "الفتح", english: "Al-Fath", translation: "The Victory", verses: 29 },
+      { number: 49, arabic: "الحجرات", english: "Al-Hujurat", translation: "The Rooms", verses: 18 },
+      { number: 50, arabic: "ق", english: "Qaf", translation: "The Letter 'Qaf'", verses: 45 },
+      { number: 51, arabic: "الذاريات", english: "Adh-Dhariyat", translation: "The Winnowing Winds", verses: 60 },
+      { number: 52, arabic: "الطور", english: "At-Tur", translation: "The Mount", verses: 49 },
+      { number: 53, arabic: "النجم", english: "An-Najm", translation: "The Star", verses: 62 },
+      { number: 54, arabic: "القمر", english: "Al-Qamar", translation: "The Moon", verses: 55 },
+      { number: 55, arabic: "الرحمن", english: "Ar-Rahman", translation: "The Beneficent", verses: 78 },
+      { number: 56, arabic: "الواقعة", english: "Al-Waqi'ah", translation: "The Inevitable", verses: 96 },
+      { number: 57, arabic: "الحديد", english: "Al-Hadid", translation: "The Iron", verses: 29 },
+      { number: 58, arabic: "المجادلة", english: "Al-Mujadila", translation: "The Pleading Woman", verses: 22 },
+      { number: 59, arabic: "الحشر", english: "Al-Hashr", translation: "The Exile", verses: 24 },
+      { number: 60, arabic: "الممتحنة", english: "Al-Mumtahanah", translation: "She that is to be examined", verses: 13 },
+      { number: 61, arabic: "الصف", english: "As-Saf", translation: "The Ranks", verses: 14 },
+      { number: 62, arabic: "الجمعة", english: "Al-Jumu'ah", translation: "The Congregation", verses: 11 },
+      { number: 63, arabic: "المنافقون", english: "Al-Munafiqun", translation: "The Hypocrites", verses: 11 },
+      { number: 64, arabic: "التغابن", english: "At-Taghabun", translation: "The Mutual Disillusion", verses: 18 },
+      { number: 65, arabic: "الطلاق", english: "At-Talaq", translation: "The Divorce", verses: 12 },
+      { number: 66, arabic: "التحريم", english: "At-Tahrim", translation: "The Prohibition", verses: 12 },
+      { number: 67, arabic: "الملك", english: "Al-Mulk", translation: "The Sovereignty", verses: 30 },
+      { number: 68, arabic: "القلم", english: "Al-Qalam", translation: "The Pen", verses: 52 },
+      { number: 69, arabic: "الحاقة", english: "Al-Haqqah", translation: "The Reality", verses: 52 },
+      { number: 70, arabic: "المعارج", english: "Al-Ma'arij", translation: "The Ascending Stairways", verses: 44 },
+      { number: 71, arabic: "نوح", english: "Nuh", translation: "Noah", verses: 28 },
+      { number: 72, arabic: "الجن", english: "Al-Jinn", translation: "The Jinn", verses: 28 },
+      { number: 73, arabic: "المزمل", english: "Al-Muzzammil", translation: "The Enshrouded One", verses: 20 },
+      { number: 74, arabic: "المدثر", english: "Al-Muddaththir", translation: "The Cloaked One", verses: 56 },
+      { number: 75, arabic: "القيامة", english: "Al-Qiyamah", translation: "The Resurrection", verses: 40 },
+      { number: 76, arabic: "الانسان", english: "Al-Insan", translation: "The Man", verses: 31 },
+      { number: 77, arabic: "المرسلات", english: "Al-Mursalat", translation: "The Emissaries", verses: 50 },
+      { number: 78, arabic: "النبإ", english: "An-Naba", translation: "The Tidings", verses: 40 },
+      { number: 79, arabic: "النازعات", english: "An-Nazi'at", translation: "Those who drag forth", verses: 46 },
+      { number: 80, arabic: "عبس", english: "'Abasa", translation: "He Frowned", verses: 42 },
+      { number: 81, arabic: "التكوير", english: "At-Takwir", translation: "The Overthrowing", verses: 29 },
+      { number: 82, arabic: "الإنفطار", english: "Al-Infitar", translation: "The Cleaving", verses: 19 },
+      { number: 83, arabic: "المطففين", english: "Al-Mutaffifin", translation: "The Defrauding", verses: 36 },
+      { number: 84, arabic: "الإنشقاق", english: "Al-Inshiqaq", translation: "The Sundering", verses: 25 },
+      { number: 85, arabic: "البروج", english: "Al-Buruj", translation: "The Mansions of the Stars", verses: 22 },
+      { number: 86, arabic: "الطارق", english: "At-Tariq", translation: "The Nightcommer", verses: 17 },
+      { number: 87, arabic: "الأعلى", english: "Al-A'la", translation: "The Most High", verses: 19 },
+      { number: 88, arabic: "الغاشية", english: "Al-Ghashiyah", translation: "The Overwhelming", verses: 26 },
+      { number: 89, arabic: "الفجر", english: "Al-Fajr", translation: "The Dawn", verses: 30 },
+      { number: 90, arabic: "البلد", english: "Al-Balad", translation: "The City", verses: 20 },
+      { number: 91, arabic: "الشمس", english: "Ash-Shams", translation: "The Sun", verses: 15 },
+      { number: 92, arabic: "الليل", english: "Al-Layl", translation: "The Night", verses: 21 },
+      { number: 93, arabic: "الضحى", english: "Ad-Duhaa", translation: "The Morning Hours", verses: 11 },
+      { number: 94, arabic: "الشرح", english: "Ash-Sharh", translation: "The Relief", verses: 8 },
+      { number: 95, arabic: "التين", english: "At-Tin", translation: "The Fig", verses: 8 },
+      { number: 96, arabic: "العلق", english: "Al-'Alaq", translation: "The Clot", verses: 19 },
+      { number: 97, arabic: "القدر", english: "Al-Qadr", translation: "The Power", verses: 5 },
+      { number: 98, arabic: "البينة", english: "Al-Bayyinah", translation: "The Clear Proof", verses: 8 },
+      { number: 99, arabic: "الزلزلة", english: "Az-Zalzalah", translation: "The Earthquake", verses: 8 },
+      { number: 100, arabic: "العاديات", english: "Al-'Adiyat", translation: "The Courser", verses: 11 },
+      { number: 101, arabic: "القارعة", english: "Al-Qari'ah", translation: "The Calamity", verses: 11 },
+      { number: 102, arabic: "التكاثر", english: "At-Takathur", translation: "The Rivalry in world increase", verses: 8 },
+      { number: 103, arabic: "العصر", english: "Al-'Asr", translation: "The Declining Day", verses: 3 },
+      { number: 104, arabic: "الهمزة", english: "Al-Humazah", translation: "The Traducer", verses: 9 },
+      { number: 105, arabic: "الفيل", english: "Al-Fil", translation: "The Elephant", verses: 5 },
+      { number: 106, arabic: "قريش", english: "Quraysh", translation: "Quraysh", verses: 4 },
+      { number: 107, arabic: "الماعون", english: "Al-Ma'un", translation: "The Small kindnesses", verses: 7 },
+      { number: 108, arabic: "الكوثر", english: "Al-Kawthar", translation: "The Abundance", verses: 3 },
+      { number: 109, arabic: "الكافرون", english: "Al-Kafirun", translation: "The Disbelievers", verses: 6 },
+      { number: 110, arabic: "النصر", english: "An-Nasr", translation: "The Divine Support", verses: 3 },
+      { number: 111, arabic: "المسد", english: "Al-Masad", translation: "The Palm Fiber", verses: 5 },
+      { number: 112, arabic: "الإخلاص", english: "Al-Ikhlas", translation: "Sincerity", verses: 4 },
+      { number: 113, arabic: "الفلق", english: "Al-Falaq", translation: "Daybreak", verses: 5 },
+      { number: 114, arabic: "الناس", english: "An-Nas", translation: "Mankind", verses: 6 }
+    ];
+
+    let currentSurah = null;
+    let currentAyahNumber = 1;
+    let surahData = null;
+    let isKahfMode = false;
+    let autoPlay = false;
+    let repeatMode = 'none'; // 'none' or 'one'
+    let translationMode = localStorage.getItem('translationMode') || 'ml'; // 'en' or 'ml'
+
+    let savedAyahs = JSON.parse(localStorage.getItem('savedAyahs') || '[]');
+    let currentReciter = localStorage.getItem('quranReciter') || 'ar.alafasy';
+    let currentFont = localStorage.getItem('quranFont') || 'Noto Naskh Arabic';
+    let currentFontSize = localStorage.getItem('quranFontSize') || '2.2'; // Default size
+
+    window.onload = () => {
+      populateSurahDropdown();
+      loadSettings();
+      updateBookmarkIcon();
+      // Check if we need to show entry screen
+      // We show it every time on page load as requested, unless we want to persist session?
+      // User said "when entering to page show boxes", implying on load.
+      document.getElementById('entryOverlay').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
     };
 
-    const now = new Date().getHours();
-    const slot = now >= 5 && now < 9 ? 'morning'
-                 : now >=9 && now < 16 ? 'general'
-                 : now >=16 && now < 19 ? 'evening'
-                 : 'night';
-    let selectedAdhkar = adhkars[slot];
-    let index = 0;
-    let isTranslated = false; // To track translation state
-    let isAutoScrolling = false, autoScrollInterval;
+    // Check Kahf Window on Load
+    window.addEventListener('DOMContentLoaded', checkKahfWindow);
+    // Also check periodically? Maybe just on load is enough as requested.
 
-    const adhkarText = document.getElementById('adhkarText');
-    const adhkarIndex = document.getElementById('adhkarIndex');
-    const autoScrollBtn = document.getElementById('autoScrollBtn');
-    const translateBtn = document.getElementById('translateBtn');
-    document.getElementById('pageTitle').textContent = `Time For ${slot.charAt(0).toUpperCase() + slot.slice(1)} Adhkars`;
+    function checkKahfWindow() {
+      const now = new Date();
+      const day = now.getDay(); // 0=Sun, 4=Thu, 5=Fri
+      const hour = now.getHours();
+      const min = now.getMinutes();
 
-    function showAdhkar() {
-      const currentAdhkar = selectedAdhkar[index];
-      if (isTranslated) {
-        adhkarText.textContent = currentAdhkar.translation;
-        translateBtn.innerHTML = '<i class="fas fa-book-open"></i> Show Arabic';
-        adhkarText.style.fontFamily = "'Anek', sans-serif";
-      } else {
-        adhkarText.textContent = currentAdhkar.arabic;
-        translateBtn.innerHTML = '<i class="fas fa-language"></i> Translate';
-        adhkarText.style.fontFamily = "'Amiri', sans-serif"; 
+      // Window: Thursday 18:40 to Friday 18:40
+      let isOpen = false;
+
+      // TEMPORARY TESTING: Sunday (0) to Monday (1)
+      // Original: Thursday (4) to Friday (5)
+
+      if (day === 4) { // Sunday (Testing as "Thursday")
+        // After 18:40
+        if (hour > 18 || (hour === 18 && min >= 40)) {
+          isOpen = true;
+        }
+      } else if (day === 5) { // Monday (Testing as "Friday")
+        // Before 18:40
+        if (hour < 18 || (hour === 18 && min < 40)) {
+          isOpen = true;
+        }
       }
-      adhkarIndex.textContent = `Adhkar ${index + 1} of ${selectedAdhkar.length}`;
+
+
+      const card = document.getElementById('kahfCard');
+      if (card) {
+        card.style.display = isOpen ? 'block' : 'none';
+        // Adjust layout if needed (if 3 cards, col-md-4? currently col-md-6, so it wraps. Fine for now.)
+      }
+
+      // Load Card Stats immediately if visible
+      if (isOpen) {
+        updateKahfCardStats();
+      }
     }
 
-    document.getElementById('nextBtn').onclick = () => {
-      if (index < selectedAdhkar.length - 1) {
-        index++;
-        isTranslated = false; 
-        showAdhkar();
+    function updateKahfCardStats() {
+      const saved = localStorage.getItem('kahfProgress');
+      let percentage = 0;
+      if (saved) {
+        const p = JSON.parse(saved);
+        // Surah 18 has 110 ayahs. Only calc if saved surah is 18.
+        if (parseInt(p.surah) === 18) {
+          percentage = (p.ayah / 110) * 100;
+        }
       }
-    };
-    document.getElementById('prevBtn').onclick = () => {
-      if (index > 0) {
-        index--;
-        isTranslated = false; 
-        showAdhkar();
-      }
-    };
-    
-    translateBtn.onclick = () => {
-        isTranslated = !isTranslated; 
-        showAdhkar();
-    };
+      const bar = document.getElementById('cardKahfProgressBar');
+      const text = document.getElementById('cardKahfProgressText');
 
-    autoScrollBtn.onclick = () => {
-      if (isAutoScrolling) {
-        clearInterval(autoScrollInterval);
-        isAutoScrolling = false;
-        autoScrollBtn.innerHTML = '<i class="fas fa-play"></i> Auto Scroll';
-        autoScrollBtn.classList.replace('btn-danger','btn-success');
+      if (bar) bar.style.width = `${Math.min(percentage, 100)}%`;
+      if (text) text.innerText = `${Math.min(percentage, 100).toFixed(1)}% Complete`;
+    }
+
+    // Helper to get global ayah index (1-based)
+    function getGlobalAyahIndex(surahNum, ayahNum) {
+      let count = 0;
+      for (let i = 0; i < surahNum - 1; i++) {
+        count += surahNames[i].verses;
+      }
+      return count + ayahNum;
+    }
+
+    function selectMode(mode) {
+      const overlay = document.getElementById('entryOverlay');
+
+      if (mode === 'ramadan') {
+        isRamadanMode = true;
+        isKahfMode = false;
+        setupRamadanMode();
+      } else if (mode === 'kahf') {
+        isRamadanMode = false;
+        isKahfMode = true;
+        setupKahfMode();
       } else {
-        isAutoScrolling = true;
-        autoScrollBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-        autoScrollBtn.classList.replace('btn-success','btn-danger');
-        autoScrollInterval = setInterval(() => {
-          if (index < selectedAdhkar.length - 1) {
-            index++; 
-            isTranslated = false; 
-            showAdhkar();
-          } else {
-            clearInterval(autoScrollInterval);
-            isAutoScrolling = false;
-            autoScrollBtn.innerHTML = '<i class="fas fa-play"></i> Auto Scroll';
-            autoScrollBtn.classList.replace('btn-danger','btn-success');
-          }
-        }, 5000);
+        isRamadanMode = false;
+        isKahfMode = false;
+        setupRegularMode();
       }
-    };
 
-    showAdhkar();
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }, 500);
+    }
+
+    function setupKahfMode() {
+      // Hide Surah Selector
+      document.querySelector('.surah-selector').style.display = 'none';
+      document.getElementById('ramadanDashboard').style.display = 'none';
+      // Show Kahf Dashboard
+      document.getElementById('kahfDashboard').style.display = 'block';
+
+      // Identify "Current Friday" to handle resets
+      // We can calculate the Friday date string.
+      const now = new Date();
+      // Adjust to get the *upcoming* or *current* Friday based on the window
+      // If Thu > 18:40, Friday is tomorrow. If Fri < 18:40, Friday is today.
+      let fridayDate = new Date();
+      if (now.getDay() === 4) {
+        fridayDate.setDate(now.getDate() + 1);
+      }
+      const fridayStr = fridayDate.toISOString().split('T')[0];
+
+      const lastKahfDate = localStorage.getItem('lastKahfDate');
+
+      if (lastKahfDate !== fridayStr) {
+        // New Week / Reset
+        currentSurah = 18; // Kahf
+        currentAyahNumber = 1;
+        localStorage.setItem('lastKahfDate', fridayStr);
+        // Clear old progress?
+        localStorage.removeItem('kahfProgress');
+      } else {
+        // Same Week, Load Progress
+        const saved = localStorage.getItem('kahfProgress');
+        if (saved) {
+          const p = JSON.parse(saved);
+          currentSurah = p.surah;
+          currentAyahNumber = p.ayah;
+        } else {
+          currentSurah = 18;
+          currentAyahNumber = 1;
+        }
+      }
+
+      // Sync UI - IMPORTANT: Update dropdown so loadSurah works
+      const select = document.getElementById('surahSelect');
+      if (select) {
+        select.value = currentSurah;
+      }
+
+      // Load content
+      loadSurah(currentAyahNumber);
+    }
+
+    function setupRamadanMode() {
+      // Hide Surah Selector
+      document.querySelector('.surah-selector').style.display = 'none';
+      // Hide Kahf Dashboard
+      document.getElementById('kahfDashboard').style.display = 'none';
+      // Show Dashboard
+      document.getElementById('ramadanDashboard').style.display = 'block';
+
+      // Load Ramadan Progress
+      const ramadanSaved = localStorage.getItem('ramadanProgress');
+      if (ramadanSaved) {
+        const p = JSON.parse(ramadanSaved);
+        currentSurah = p.surah;
+        currentAyahNumber = p.ayah;
+      } else {
+        currentSurah = 1;
+        currentAyahNumber = 1;
+      }
+
+      // Sync dropdown so loadSurah works (it reads from dom)
+      const select = document.getElementById('surahSelect');
+      if (select) {
+        select.value = currentSurah;
+      }
+
+      // Load content
+      loadSurah(currentAyahNumber);
+    }
+
+    function setupRegularMode() {
+      // Show Surah Selector
+      document.querySelector('.surah-selector').style.display = 'block';
+      // Hide Dashboards
+      document.getElementById('ramadanDashboard').style.display = 'none';
+      document.getElementById('kahfDashboard').style.display = 'none';
+
+      // Check Resume for Regular
+      checkResumeReading();
+    }
+
+    function updateRamadanStats() {
+      if (!isRamadanMode || !currentSurah) return;
+
+      const totalAyahsInQuran = 6236; // Constant for total ayahs
+      const globalIndex = getGlobalAyahIndex(currentSurah, currentAyahNumber);
+      const percentage = (globalIndex / totalAyahsInQuran) * 100;
+      const remaining = 100 - percentage;
+
+      // Estimate Juz (Approximate, simplified logic: 1 juz ~= 20 pages or ~200 ayahs, but length varies. 
+      // Better to use metadata if available, but for now we can use the juz info from the API response if loaded, or estimate.)
+      // Since we have `surahData.arabicAudio.ayahs[idx].juz` when playing, we can use that if available.
+      // If not available immediately (e.g. on load before API), we might show last known.
+
+      // Let's rely on what we have in `surahData` if available, otherwise just percentage.
+      let currentJuz = 1;
+      if (surahData && surahData.arabicAudio && surahData.arabicAudio.ayahs) {
+        // Try to get juz from current ayah data 
+        // Note: surahData might be for the whole surah, so we find the ayah.
+        // The API response structure: data.ayahs[index].juz
+        const idx = currentAyahNumber - 1;
+        if (surahData.arabicAudio.ayahs[idx]) {
+          currentJuz = surahData.arabicAudio.ayahs[idx].juz;
+        }
+      }
+
+      // Update UI elements
+      const progressBar = document.getElementById('ramadanProgressBar');
+      const progressText = document.getElementById('ramadanProgressText');
+      const juzText = document.getElementById('completedJuzText');
+      const remainingText = document.getElementById('remainingPercentageText');
+
+      if (progressBar) progressBar.style.width = `${percentage}%`;
+      if (progressText) progressText.innerText = `${percentage.toFixed(1)}%`;
+      // "Completed" Juz is roughly (Current Juz - 1) + partial. 
+      // Let's just show "Current Juz: X" or "Completed: X/30" where X is calculated.
+      // Requirement was "completed juz". 
+      // If we are in Juz 5, we have completed 4.
+      const completedJuz = Math.max(0, currentJuz - 1);
+      if (juzText) juzText.innerText = `${completedJuz} / 30`;
+      if (remainingText) remainingText.innerText = `${remaining.toFixed(1)}%`;
+    }
+
+    function toggleSettings() {
+      const panel = document.getElementById('settingsPanel');
+      const icon = document.getElementById('settingsIcon');
+
+      panel.classList.toggle('active');
+
+      if (panel.classList.contains('active')) {
+        icon.classList.remove('fa-cog');
+        icon.classList.add('fa-times');
+        document.getElementById('fontSelect').value = currentFont;
+        document.getElementById('reciterSelect').value = currentReciter;
+
+        // Sync slider with current value
+        const slider = document.getElementById('fontSizeRange');
+        if (slider) {
+          slider.value = currentFontSize;
+        }
+
+        // Hide Saved Ayahs in Ramadan Mode, Show in Regular
+        const list = document.getElementById('savedAyahsList');
+        const title = document.getElementById('savedAyahsTitle');
+
+        if (isRamadanMode) {
+          if (list) list.style.display = 'none';
+          if (title) title.style.display = 'none';
+        } else {
+          if (list) list.style.display = 'block';
+          if (title) title.style.display = 'block';
+          renderSavedAyahs();
+        }
+
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-cog');
+      }
+    }
+
+    function changeFont() {
+      currentFont = document.getElementById('fontSelect').value;
+      localStorage.setItem('quranFont', currentFont);
+      applyFont();
+    }
+
+    function applyFont() {
+      const display = document.getElementById('mainAyahText');
+      if (display) {
+        display.style.fontFamily = `'${currentFont}', serif`;
+      }
+      const select = document.getElementById('fontSelect');
+      if (select) select.value = currentFont;
+    }
+
+    function changeFontSize() {
+      const slider = document.getElementById('fontSizeRange');
+      currentFontSize = slider.value;
+      localStorage.setItem('quranFontSize', currentFontSize);
+      applyFontSize();
+    }
+
+    function applyFontSize() {
+      const display = document.getElementById('mainAyahText');
+      if (display) {
+        display.style.fontSize = `${currentFontSize}rem`;
+      }
+    }
+
+    function changeReciter() {
+      currentReciter = document.getElementById('reciterSelect').value;
+      localStorage.setItem('quranReciter', currentReciter);
+      // Reload if currently playing or just update for next
+      if (surahData) {
+        loadSurah(currentAyahNumber); // Reload to fetch new audio
+      }
+    }
+
+    function loadSettings() {
+      // Apply font if ayah is displayed, otherwise it will be applied on displayAyah
+    }
+
+    function toggleBookmark() {
+      const id = `${currentSurah}:${currentAyahNumber}`;
+      const index = savedAyahs.findIndex(item => item.id === id);
+
+      if (index === -1) {
+        const info = surahNames.find(s => s.number === currentSurah);
+        savedAyahs.push({
+          id: id,
+          surah: currentSurah,
+          ayah: currentAyahNumber,
+          name: info.english
+        });
+      } else {
+        savedAyahs.splice(index, 1);
+      }
+
+      localStorage.setItem('savedAyahs', JSON.stringify(savedAyahs));
+      updateBookmarkIcon();
+      renderSavedAyahs();
+    }
+
+    function updateBookmarkIcon() {
+      const btn = document.getElementById('bookmarkBtn');
+      const btnMain = document.getElementById('bookmarkBtnMain');
+
+      const id = `${currentSurah}:${currentAyahNumber}`;
+      const isSaved = savedAyahs.some(item => item.id === id);
+
+      const iconHtml = isSaved ? '<i class="fas fa-heart text-danger"></i>' : '<i class="far fa-heart"></i>';
+      const iconMainHtml = isSaved ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
+
+      if (btn) btn.innerHTML = iconHtml;
+      if (btnMain) btnMain.innerHTML = iconMainHtml;
+    }
+
+    function renderSavedAyahs() {
+      const list = document.getElementById('savedAyahsList');
+      if (savedAyahs.length === 0) {
+        list.innerHTML = '<p class="text-white-50 small text-center">No saved ayahs yet.</p>';
+        return;
+      }
+
+      let html = '<ul class="list-group list-group-flush bg-transparent">';
+      savedAyahs.forEach(item => {
+        html += `
+                    <li class="list-group-item bg-transparent text-white border-bottom border-secondary d-flex justify-content-between align-items-center px-0">
+                        <span style="cursor: pointer;" onclick="loadSavedAyah(${item.surah}, ${item.ayah})" data-bs-dismiss="modal">
+                            ${item.name} - Ayah ${item.ayah}
+                        </span>
+                        <button class="btn btn-sm btn-link text-danger" onclick="deleteSaved('${item.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </li>
+                `;
+      });
+      html += '</ul>';
+      list.innerHTML = html;
+    }
+
+    function deleteSaved(id) {
+      savedAyahs = savedAyahs.filter(item => item.id !== id);
+      localStorage.setItem('savedAyahs', JSON.stringify(savedAyahs));
+      renderSavedAyahs();
+      updateBookmarkIcon();
+    }
+
+    function loadSavedAyah(surah, ayah) {
+      document.getElementById('surahSelect').value = surah;
+      loadSurah(ayah);
+    }
+    function populateSurahDropdown() {
+      const select = document.getElementById('surahSelect');
+      surahNames.forEach(s => {
+        const opt = new Option(`${s.number}. ${s.english} (${s.arabic})`, s.number);
+        select.add(opt);
+      });
+    }
+
+    async function loadSurah(startAyah = 1) {
+      const num = document.getElementById('surahSelect').value;
+      if (!num) return;
+
+      currentSurah = parseInt(num);
+      currentAyahNumber = startAyah;
+      const display = document.getElementById('ayahDisplay');
+      display.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+
+      try {
+        // Fetch Data with Error Handling
+        const [resArabic, resEn, resAudio, resMl] = await Promise.all([
+          fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-simple`),
+          fetch(`https://api.alquran.cloud/v1/surah/${num}/en.hilali`),
+          fetch(`https://api.alquran.cloud/v1/surah/${num}/${currentReciter}`),
+          fetch(`https://api.alquran.cloud/v1/surah/${num}/ml.abdulhameed`)
+        ]);
+
+        if (!resArabic.ok || !resEn.ok || !resAudio.ok || !resMl.ok) {
+          throw new Error(`API Error: One or more requests failed. Statuses: ${resArabic.status}, ${resEn.status}, ${resAudio.status}, ${resMl.status}`);
+        }
+
+        const dataArabic = await resArabic.json();
+        const dataEn = await resEn.json();
+        const dataAudio = await resAudio.json();
+        const dataMl = await resMl.json();
+
+        if (dataArabic.code !== 200 || dataEn.code !== 200 || dataAudio.code !== 200 || dataMl.code !== 200) {
+          throw new Error('API returned non-200 code in JSON body');
+        }
+
+        surahData = {
+          arabicText: dataArabic.data,
+          arabicAudio: dataAudio.data,
+          english: dataEn.data,
+          malayalam: dataMl.data
+        };
+
+        // Validate Ayah Range
+        const totalVerses = surahData.arabicText.ayahs.length;
+        if (currentAyahNumber > totalVerses || currentAyahNumber < 1) {
+          console.warn(`Ayah ${currentAyahNumber} out of range for Surah ${currentSurah} (Max: ${totalVerses}). Resetting to 1.`);
+          currentAyahNumber = 1;
+          // Optionally update progress to fix corruption
+          saveProgress();
+        }
+
+        displayAyah();
+
+        // Update stats if mode active
+        if (isRamadanMode) updateRamadanStats();
+        if (isKahfMode) updateKahfStats();
+      } catch (e) {
+        console.error('API Error Details:', e);
+        display.innerHTML = `
+                    <div class="text-center p-4">
+                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                        <p class="text-danger mb-2">Failed to load content.</p>
+                        <p class="text-muted small mb-3">Please check your internet connection.</p>
+                        <button class="btn btn-outline-light btn-sm" onclick="loadSurah(${currentAyahNumber})">Try Again</button>
+                    </div>
+                `;
+      }
+    }
+
+    function updateKahfStats() {
+      if (!isKahfMode || currentSurah !== 18) return;
+      const totalKahf = 110;
+      const progress = (currentAyahNumber / totalKahf) * 100;
+      const cappedProgress = Math.min(progress, 100);
+
+      const bar = document.getElementById('kahfProgressBar');
+      const text = document.getElementById('kahfProgressText');
+
+      if (bar) bar.style.width = `${cappedProgress}%`;
+      if (text) text.innerText = `${cappedProgress.toFixed(1)}% Complete`;
+    }
+
+    function displayAyah(autoPlay = false) {
+      const idx = currentAyahNumber - 1;
+      const arText = surahData.arabicText.ayahs[idx];
+      const arAudio = surahData.arabicAudio.ayahs[idx];
+      const en = surahData.english.ayahs[idx];
+      const ml = surahData.malayalam.ayahs[idx];
+      const info = surahNames.find(s => s.number === currentSurah);
+      const juz = arAudio.juz;
+
+      // Base Arabic text for the ayah
+      let text = arText.text;
+
+      // Remove Bismillah from the first ayah of all surahs except 1 and 9
+      if (currentAyahNumber === 1 && currentSurah !== 1 && currentSurah !== 9) {
+        const bismVariants = [
+          "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+          "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+          "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+        ];
+        for (let bism of bismVariants) {
+          if (text.startsWith(bism)) {
+            text = text.replace(bism, "").trim();
+            break;
+          }
+        }
+      }
+
+      // Show Bismillah header for first ayah of every surah except 1 and 9
+      const showBismHeader = (currentAyahNumber === 1 && currentSurah !== 1 && currentSurah !== 9);
+      const bismHeader = showBismHeader
+        ? `<div class="ayah-arabic" style="font-size:2rem; color:#1a7a70; background: transparent; box-shadow: none; padding: 0; margin-bottom: 10px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`
+        : '';
+
+      document.getElementById('ayahDisplay').innerHTML = `
+                <div class="ayah-card">
+                    <!-- Card Header -->
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="player-controls">
+                                <button id="customPlayBtn" class="control-btn play-btn" onclick="toggleAudio()">
+                                    <i class="fas fa-play" id="playIcon"></i>
+                                </button>
+                                <button id="repeatBtn" class="control-btn repeat-btn" onclick="toggleRepeat()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="header-center">
+                            <div class="surah-title">${info.number}. ${info.english}</div>
+                            <div class="ayah-counter">${currentAyahNumber}/${info.verses}</div>
+                        </div>
+                        
+                        <div class="header-right">
+                             <div class="text-center">
+                                <button id="bookmarkBtnMain" class="like-btn" onclick="toggleBookmark()">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <!-- <span class="like-count">62.2K</span> -->
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio Element (Hidden) -->
+                    <audio id="mainAudio" style="display:none;" onended="handleAudioEnd()">
+                        <source src="${arAudio.audio}" type="audio/mpeg">
+                    </audio>
+
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        ${bismHeader}
+                        <div class="ayah-arabic" id="mainAyahText">${text}</div>
+                        <!-- Highlight for Word by Word? (Future) -->
+                        
+                        <!-- Translations -->
+                         <!-- Only show if not empty/null -->
+                         <div class="ayah-translation" style="${translationMode === 'ml' ? "font-family: 'Noto Sans Malayalam', sans-serif;" : ""}">
+                            ${translationMode === 'en' ? en.text : ml.text}
+                         </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="card-footer">
+                        <div class="footer-left">
+                            <button class="footer-btn" onclick="shareAyah()">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                        <div class="footer-right">
+                             <button class="footer-btn secondary" onclick="toggleTranslation()" style="font-weight: bold; font-family: 'Anek Latin', sans-serif;">
+                                ${translationMode === 'en' ? 'en' : 'ml'}
+                            </button>
+                             <button class="footer-btn secondary" onclick="toggleSettings()">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+      // Check Nav Buttons
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const surahInfo = surahNames.find(s => s.number === currentSurah);
+
+      // Previous Logic
+      if (isRamadanMode) {
+        // Always allow prev unless at very start
+        prevBtn.disabled = (currentSurah === 1 && currentAyahNumber === 1);
+      } else if (isKahfMode) {
+        // Restrict to Surah 18
+        prevBtn.disabled = (currentAyahNumber === 1);
+      } else {
+        // Regular
+        prevBtn.disabled = (currentSurah === 1 && currentAyahNumber === 1);
+      }
+
+      // Next Logic
+      if (isRamadanMode) {
+        // Allow next always? (Will wrap to next surah)
+        nextBtn.disabled = false;
+        // Technically disabled if at very end of Quran
+        if (currentSurah === 114 && currentAyahNumber === 6) nextBtn.disabled = true;
+      } else if (isKahfMode) {
+        // Restrict to Surah 18 (110 ayahs)
+        nextBtn.disabled = (currentAyahNumber >= 110);
+      } else {
+        nextBtn.disabled = (currentSurah === 114 && currentAyahNumber === 6);
+      }
+
+      if (autoPlay) toggleAudio();
+
+      applyFont(); // Apply selected font
+      applyFontSize(); // Apply selected font size
+      updateBookmarkIcon(); // Update icon state
+      updateRepeatIcon(); // Update repeat icon state
+      saveProgress();
+    }
+
+    function handleAudioEnd() {
+      if (repeatMode === 'one') {
+        const audio = document.getElementById('mainAudio');
+        audio.currentTime = 0;
+        audio.play();
+      } else {
+        nextAyah(true);
+      }
+    }
+
+    function toggleAudio() {
+      const audio = document.getElementById('mainAudio');
+      const icon = document.getElementById('playIcon');
+
+      if (audio.paused) {
+        audio.play();
+        icon.className = 'fas fa-pause';
+      } else {
+        audio.pause();
+        icon.className = 'fas fa-play';
+      }
+    }
+
+    function toggleRepeat() {
+      if (repeatMode === 'none') {
+        repeatMode = 'one';
+      } else {
+        repeatMode = 'none';
+      }
+      updateRepeatIcon();
+    }
+
+    function toggleTranslation() {
+      translationMode = translationMode === 'en' ? 'ml' : 'en';
+      localStorage.setItem('translationMode', translationMode);
+      displayAyah(false); // Refresh display without auto-playing
+    }
+
+    function updateRepeatIcon() {
+      const btn = document.getElementById('repeatBtn');
+      if (btn) {
+        if (repeatMode === 'one') {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+    }
+
+    function nextAyah(autoPlay = false) {
+      const surahInfo = surahNames.find(s => s.number === currentSurah);
+      if (currentAyahNumber < surahInfo.verses) {
+        currentAyahNumber++;
+        displayAyah(autoPlay);
+      } else {
+        if (isKahfMode) return; // Prevent next surah in Kahf
+
+        // Check if there is a next surah
+        if (currentSurah < 114) {
+          currentSurah++;
+          currentAyahNumber = 1;
+
+          // Update dropdown for Regular mode or just internal state
+          const select = document.getElementById('surahSelect');
+          if (select) {
+            select.value = currentSurah;
+          }
+
+          // Load the new Surah
+          loadSurah(1).then(() => {
+            if (autoPlay) {
+              setTimeout(() => {
+                toggleAudio();
+              }, 1000);
+            }
+          });
+        } else {
+          // End of Quran
+          document.getElementById('playIcon').className = 'fas fa-play';
+        }
+      }
+    }
+
+    function previousAyah() {
+      if (currentAyahNumber > 1) {
+        currentAyahNumber--;
+        displayAyah();
+      } else if (currentSurah > 1) {
+        // Go to previous Surah
+        currentSurah--;
+        const prevInfo = surahNames.find(s => s.number === currentSurah);
+        // We want to start at the LAST ayah of the previous surah?? 
+        // Usually "Previous" just goes back one ayah.
+        // So if we are at Surah 2, Ayah 1 -> Surah 1, Ayah 7.
+        currentAyahNumber = prevInfo.verses;
+
+        // Update dropdown
+        const select = document.getElementById('surahSelect');
+        if (select) {
+          select.value = currentSurah;
+        }
+
+        loadSurah(currentAyahNumber);
+      }
+    }
+
+    function saveProgress() {
+      if (isRamadanMode) {
+        localStorage.setItem('ramadanProgress', JSON.stringify({
+          surah: currentSurah,
+          ayah: currentAyahNumber
+        }));
+        if (typeof updateRamadanStats === 'function') updateRamadanStats();
+      } else if (isKahfMode) {
+        localStorage.setItem('kahfProgress', JSON.stringify({
+          surah: currentSurah,
+          ayah: currentAyahNumber
+        }));
+        if (typeof updateKahfStats === 'function') updateKahfStats();
+        if (typeof updateKahfCardStats === 'function') updateKahfCardStats();
+      } else {
+        localStorage.setItem('quranProgress', JSON.stringify({
+          surah: currentSurah,
+          ayah: currentAyahNumber
+        }));
+      }
+    }
+
+    function checkResumeReading() {
+      // Only for regular mode now, handled in setupRegularMode/selectMode
+      if (!isRamadanMode) {
+        const saved = localStorage.getItem('quranProgress');
+        if (saved) {
+          const p = JSON.parse(saved);
+          // Automatically load the saved progress without showing banner
+          currentSurah = p.surah;
+          currentAyahNumber = p.ayah;
+
+          // Update dropdown
+          const select = document.getElementById('surahSelect');
+          if (select) {
+            select.value = currentSurah;
+          }
+
+          // Load it
+          loadSurah(currentAyahNumber);
+        }
+      }
+    }
+
+    function resumeReading() {
+      let p;
+      if (isRamadanMode) {
+        p = JSON.parse(localStorage.getItem('ramadanProgress'));
+      } else {
+        p = JSON.parse(localStorage.getItem('quranProgress'));
+      }
+
+      if (p) {
+        document.getElementById('surahSelect').value = p.surah;
+        loadSurah(p.ayah);
+      }
+      closeResumeBanner();
+    }
+
+    function closeResumeBanner() {
+      document.getElementById('resumeBanner').style.display = 'none';
+    }
+
+    // Swipe Gestures
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 90;
+
+    document.getElementById('ayahDisplay').addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.getElementById('ayahDisplay').addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const distance = touchEndX - touchStartX;
+      if (Math.abs(distance) > minSwipeDistance) {
+        if (distance < 0) {
+          // Swipe Left -> Next
+          nextAyah();
+        } else {
+          // Swipe Right -> Previous
+          previousAyah();
+        }
+      }
+    }
+
+    // --- Firebase & Analytics Integration ---
+
+    // Initialize Firebase if accessible (script loaded in head)
+    const db = (window.firebaseDb || (typeof firebase !== 'undefined' ? firebase.database() : null));
+    const STATS_REF = "quran_stats";
+    const CONFIG_REF = "ramadan_config";
+
+    if (db) {
+      // 1. Analytics: Increment Total Views (Once per session/day)
+      const today = new Date().toISOString().split('T')[0];
+      const lastVisit = localStorage.getItem('last_visit_date');
+
+      if (lastVisit !== today) {
+        // Increment Daily View
+        const dailyRef = db.ref(`${STATS_REF}/daily/${today}`);
+        dailyRef.transaction(current => (current || 0) + 1);
+
+        // Increment Total View
+        const totalRef = db.ref(`${STATS_REF}/total`);
+        totalRef.transaction(current => (current || 0) + 1);
+
+        localStorage.setItem('last_visit_date', today);
+      }
+
+      // 2. Ramadan Config Listener
+      const ramadanCard = document.querySelector('.mode-card.ramadan');
+      if (ramadanCard) {
+        // The card itself is the container for content now
+        const cardBody = ramadanCard;
+        const cardTitle = ramadanCard.querySelector('h3');
+        const originalTitle = cardTitle ? cardTitle.innerText : "Ramadan Challenge";
+
+        // Progress Bar Logic
+        updateRamadanCardProgress(cardBody);
+
+        db.ref(CONFIG_REF).on('value', snapshot => {
+          const config = snapshot.val() || {};
+          // Temporary: Force show if user reported missing, or just handle gracefully
+          // const isLive = config.isLive === true; 
+          // Let's default to SHOWING it but maybe as "Coming Soon" if not live, 
+          // or just respect the config but ensure it's flex.
+          // Given user feedback "missing", I will force it visible for now or just log it.
+          // Better: standard logic but ensuring display:flex.
+          // If user says "missing", likely config.isLive is false.
+          // I will override to SHOW it (comment out hiding).
+
+          const isLive = config.isLive === true;
+          const targetDate = config.targetDate ? new Date(config.targetDate) : null;
+          const now = new Date();
+
+          if (isLive) {
+            ramadanCard.style.display = 'flex'; // Use Flex!
+            // ramadanCard.parentElement.classList.add('col-md-6'); // Grid handles layout now, no col class needed
+            ramadanCard.classList.remove('disabled');
+            ramadanCard.style.opacity = '1';
+            ramadanCard.style.pointerEvents = 'auto';
+            if (cardTitle) cardTitle.innerText = originalTitle;
+            ramadanCard.onclick = () => selectMode('ramadan');
+          } else {
+            if (targetDate && targetDate > now) {
+              // Show Timer
+              ramadanCard.style.display = 'flex';
+              ramadanCard.style.opacity = '0.7';
+              ramadanCard.style.pointerEvents = 'none';
+              ramadanCard.onclick = null;
+
+              // Update Timer logic...
+              if (window.ramadanTimerInterval) clearInterval(window.ramadanTimerInterval);
+              const updateTimer = () => {
+                const currentTime = new Date();
+                const diff = targetDate - currentTime;
+
+                if (diff <= 0) {
+                  clearInterval(window.ramadanTimerInterval);
+                  if (cardTitle) cardTitle.innerText = "Challenge Starting Soon...";
+                  return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (cardTitle) cardTitle.innerHTML = `Ramadan challenge starts in:<br>${days}d ${hours}h ${minutes}m ${seconds}s`;
+              };
+              updateTimer();
+              window.ramadanTimerInterval = setInterval(updateTimer, 1000);
+
+            } else {
+              // HIDE LOGIC - Commented out to fix "Missing" report
+              // ramadanCard.style.display = 'none';
+
+              // Instead show "Coming Soon" styling
+              ramadanCard.style.display = 'flex';
+              ramadanCard.style.opacity = '0.5';
+              ramadanCard.style.pointerEvents = 'none';
+              if (cardTitle) cardTitle.innerText = "Coming Soon";
+            }
+          }
+        });
+      }
+    }
+
+    function updateRamadanCardProgress(cardBody) {
+      // Check for saved progress
+      const saved = localStorage.getItem('ramadanProgress');
+      if (saved) {
+        try {
+          const p = JSON.parse(saved);
+          // Calculate percentage
+          // Total Ayahs approx 6236.
+          // We need a helper to calc total ayah number from surah/ayah.
+          // For now, let's use the 'percentage' stored if we have it, or estimate?
+          // Wait, 'updateRamadanStats' calculates percentage. Let's see if we store it.
+          // We store: {surah, ayah, date}
+          // We don't store percentage directly in 'ramadanProgress' object usually, but let's check.
+          // If not, we can't easily calculate accurate global % without the surahNames array which logic we have.
+          // Let's use the `surahNames` to calculate cumulative ayahs.
+
+          let totalAyahsPassed = 0;
+          for (let i = 0; i < p.surah - 1; i++) {
+            if (surahNames[i]) totalAyahsPassed += surahNames[i].verses;
+          }
+          totalAyahsPassed += p.ayah;
+
+          const totalAyahsInQuran = 6236;
+          const percent = (totalAyahsPassed / totalAyahsInQuran) * 100;
+
+          // Add Progress Bar to Card
+          const progressDiv = document.createElement('div');
+          progressDiv.className = 'mt-3';
+          progressDiv.innerHTML = `
+                    <div>
+                        <div class="d-flex justify-content-between text-white small mb-1">
+                            <span>Current Progress</span>
+                            <span>${percent.toFixed(1)}%</span>
+                        </div>
+                        <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: ${percent}%;" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="text-white-50 small mt-1 mb-0">Surah ${p.surah}, Ayah ${p.ayah}</p>
+                    </div>
+                `;
+
+          // Insert before the description or append?
+          // Let's append
+          cardBody.appendChild(progressDiv);
+
+        } catch (e) {
+          console.error("Error parsing progress", e);
+        }
+      }
+    }
+    function shareAyah() {
+      if (!surahData) return;
+      const idx = currentAyahNumber - 1;
+      const arText = surahData.arabicText.ayahs[idx].text;
+      const enText = surahData.english.ayahs[idx].text;
+      const info = surahNames.find(s => s.number === currentSurah);
+
+      const shareText = `${info.english} (${info.number}:${currentAyahNumber})\n\n${arText}\n\n${enText}\n\nRead more at: ${window.location.href}`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: `Quran - ${info.english} ${info.number}:${currentAyahNumber}`,
+          text: shareText,
+          url: window.location.href
+        }).catch(console.error);
+      } else {
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert('Ayah copied to clipboard!');
+        }).catch(console.error);
+      }
+    }
   </script>
-
 </body>
+
 </html>
