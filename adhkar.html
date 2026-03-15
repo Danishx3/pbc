@@ -466,6 +466,11 @@
     }
   </style>
   <script src="guest-utils.js"></script>
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 
 <body>
@@ -1132,6 +1137,27 @@
         prevAdhkar(); // Swipe Right → Previous
       }
     }
+
+    // Track usage to Firebase
+    window.addEventListener('load', () => {
+      if (!sessionStorage.getItem('adhkar_tracked')) {
+        try {
+          const db = window.firebaseDb || firebase.database();
+          const date = new Date();
+          const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+          
+          // Total Usage
+          db.ref('analytics/adhkar/usageCount').transaction(count => (count || 0) + 1).catch(e => console.error("Analytics error", e));
+          
+          // Daily Usage
+          db.ref('analytics/adhkar/dailyViews/' + today).transaction(count => (count || 0) + 1).catch(e => console.error("Daily tracking error", e));
+          
+          sessionStorage.setItem('adhkar_tracked', 'true');
+        } catch(e) {
+          console.error('Firebase DB not ready', e);
+        }
+      }
+    });
   </script>
 </body>
 

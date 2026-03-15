@@ -20,57 +20,204 @@
     <script src="auth.js"></script>
     <script src="guest-utils.js"></script>
     <style>
+        :root {
+            --bg-deep: #00060f;
+            --card-bg: rgba(13, 86, 79, 0.2);
+            --highlight: #afe9da;
+            --text-muted: #a0aec0;
+            --text-main: #ffffff;
+            --border-glow: rgba(175, 233, 218, 0.4);
+        }
+
+        body.black {
+            background:
+                radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+                radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+                radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+            background-color: var(--bg-deep);
+            background-attachment: fixed;
+            font-family: 'Anek Latin', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
         .prayer-card {
-            background: linear-gradient(145deg, #0057491e, #063e3910);
-            border-radius: 15px;
+            background: transparent;
             padding: 20px;
-            margin: 10px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            max-width: 500px !important;
+        }
+
+        /* Countdown Area */
+        .countdown-section {
+            padding: 40px 0;
             text-align: center;
         }
 
-        .prayer-time-row {
+        .countdown-label-top {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .next-prayer-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--highlight);
+            margin: 0;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(175, 233, 218, 0.3);
+        }
+
+        .countdown-timer-large {
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 10px 0;
+            font-family: 'Anek Latin', sans-serif;
+            color: white;
+        }
+
+        /* Circular Progress Mockup */
+        .header-visual {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .visual-circle {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--highlight);
+            background: rgba(13, 86, 79, 0.2);
+            box-shadow: 0 0 20px rgba(13, 86, 79, 0.4);
+        }
+
+        /* Separator */
+        .date-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 30px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .date-divider::before,
+        .date-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(175, 233, 218, 0.1);
+        }
+
+        .date-divider:not(:empty)::before {
+            margin-right: 20px;
+        }
+
+        .date-divider:not(:empty)::after {
+            margin-left: 20px;
+        }
+
+        /* Prayer Rows */
+        .prayer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .prayer-row {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 18px 25px;
             display: flex;
             justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
         }
 
-        .prayer-time-row:last-child {
-            border-bottom: none;
+        .prayer-row.active {
+            background: linear-gradient(135deg, #0d564f, #063e39);
+            border-color: var(--highlight);
+            box-shadow: 0 8px 25px rgba(13, 86, 79, 0.5);
+            transform: scale(1.03);
+            z-index: 2;
         }
 
-        .prayer-name {
-            font-weight: bold;
-            font-size: 1.2rem;
+        .prayer-row.next {
+            border-color: rgba(175, 233, 218, 0.3);
+            background: rgba(13, 86, 79, 0.3);
         }
 
-        .time-value {
-            font-size: 1.2rem;
-            font-family: 'Anek Latin', monospace;
+        .prayer-row.past {
+            opacity: 0.4;
+            transform: scale(0.98);
         }
 
-        .location-info {
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #ccc;
+        .p-name {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: inherit;
         }
 
-        #loader {
-            display: none;
-        }
-
-        /* Pulse animation for the loader icon if needed */
-        .fa-spin-pulse {
-            animation: fa-spin 1s infinite steps(8);
+        .p-time {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: inherit;
+            opacity: 0.9;
         }
 
         .settings-panel {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white;
+            padding: 20px;
+            border-radius: 18px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .form-control-custom {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(175, 233, 218, 0.2);
+            color: #ffffff !important;
+            border-radius: 12px;
+            padding: 12px 15px;
+        }
+
+        .form-control-custom::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-control-custom:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: var(--highlight);
+            box-shadow: 0 0 10px rgba(175, 233, 218, 0.2);
+            color: #ffffff !important;
+        }
+
+        .location-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            background: rgba(13, 86, 79, 0.3);
+            border: 1px solid rgba(175, 233, 218, 0.1);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--highlight);
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -87,83 +234,116 @@
 
     <div class="content intro">
         <center>
-            <div class="prayer-card" style="max-width: 500px;">
-                <h3 class="title p-2" style="background: transparent;">Prayer Times</h3>
+            <div class="prayer-card">
 
+                <!-- Countdown Header -->
+                <div id="countdownArea" class="countdown-section" style="display: none;">
+                    <div class="header-visual">
+                        <div class="visual-circle">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                    </div>
+                    <div class="countdown-label-top">Time until</div>
+                    <h1 id="nextPrayerNameLarge" class="next-prayer-title">Asr</h1>
+                    <div id="countdownTimerLarge" class="countdown-timer-large">00:00:00</div>
+
+                    <div id="locationDisplay" class="location-badge">
+                        <i class="fa fa-map-marker-alt"></i> <span id="locText">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Initial Prompt -->
+                <div id="initialPrompt" style="padding: 80px 0;">
+                    <i class="fas fa-map-marked-alt fa-4x mb-4" style="color: var(--highlight); opacity: 0.5;"></i>
+                    <h3 style="font-weight: 700;">Prayer Times</h3>
+                    <p class="text-white-50">Enter your city below to get accurate<br>salah times for your location.</p>
+                </div>
+
+                <!-- Loader -->
+                <div id="loader" style="padding: 100px 0; display: none;">
+                    <i class="fa-solid fa-spinner fa-spin fa-3x text-white-50"></i>
+                    <p class="mt-3 text-white-50">Calculating times...</p>
+                </div>
+
+                <!-- Error -->
+                <div id="errorMsg"
+                    style="display: none; padding: 40px; border-radius: 12px; background: rgba(230, 57, 70, 0.1); border: 1px solid var(--highlight);">
+                    <i class="fa fa-exclamation-circle fa-2x mb-2" style="color: var(--highlight);"></i>
+                    <h5 id="errorText">Failed to load data</h5>
+                    <button class="btn btn-sm btn-outline-light mt-2" onclick="init()">Retry</button>
+                </div>
+
+                <!-- Date Divider -->
+                <div id="dateDivider" class="date-divider" style="display: none;">
+                    <span id="dateText">Today</span>
+                </div>
+
+                <!-- Prayer List UI -->
+                <div id="prayerData" class="prayer-list" style="display: none;">
+                    <div class="prayer-row" id="row-Fajr">
+                        <span class="p-name">Fajr</span>
+                        <span class="p-time" id="fajrTime">--:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-Sunrise">
+                        <span class="p-name">Sunrise</span>
+                        <span class="p-time" id="sunriseTime">--:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-Dhuha">
+                        <span class="p-name">Dhuha</span>
+                        <span class="p-time" id="dhuhaTime">≈ --:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-Dhuhr">
+                        <span class="p-name">Dhuhr</span>
+                        <span class="p-time" id="dhuhrTime">--:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-Asr">
+                        <span class="p-name">Asr</span>
+                        <span class="p-time" id="asrTime">--:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-Maghrib">
+                        <span class="p-name">Maghrib</span>
+                        <span class="p-time" id="maghribTime">--:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-Isha">
+                        <span class="p-name">Isha</span>
+                        <span class="p-time" id="ishaTime">--:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-FirstThird">
+                        <span class="p-name">First Third</span>
+                        <span class="p-time" id="firstThirdTime">≈ --:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-Midnight">
+                        <span class="p-name">Midnight</span>
+                        <span class="p-time" id="midnightTime">≈ --:--</span>
+                    </div>
+                    <div class="prayer-row" id="row-LastThird">
+                        <span class="p-name">Last Third</span>
+                        <span class="p-time" id="lastThirdTime">≈ --:--</span>
+                    </div>
+                </div>
+
+                <!-- Settings -->
                 <div class="settings-panel">
-                    <div style="text-align: left; margin-bottom: 5px; font-size: 0.8rem; color: #aaa;">Search Location
+                    <div
+                        style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
+                        Change Location</div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <input type="text" id="cityInput" class="form-control form-control-custom white-text"
+                                placeholder="City">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" id="countryInput" class="form-control form-control-custom white-text"
+                                placeholder="Country">
+                        </div>
                     </div>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="cityInput" class="form-control" style="background-color: #afe9da;"
-                            placeholder="City (e.g. checked)">
-                        <input type="text" id="countryInput" class="form-control" style="background-color: #afe9da;"
-                            placeholder="Country (e.g. INDIA)">
-                    </div>
-
-                    <button class="btn btn-success w-100 mt-2" onclick="saveAndFetch()">Get Prayer Times</button>
+                    <button class="btn btn-outline-light w-100 mt-3"
+                        style="border-radius: 10px; border-color: rgba(255,255,255,0.2);"
+                        onclick="saveAndFetch()">Update Times</button>
+                    <p class="mt-3 mb-0" style="font-size: 0.75rem; opacity: 0.5;">Method: Karachi Islamic Sciences</p>
                 </div>
 
-                <div id="locationDisplay" class="location-info">
-                    <i class="fa fa-map-marker-alt"></i> <span id="locText">Enter location above</span>
-                </div>
-
-                <div id="prayerData" style="display: none;">
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Fajr</span>
-                        <span class="time-value" id="fajrTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Sunrise</span>
-                        <span class="time-value" id="sunriseTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Dhuha</span>
-                        <span class="time-value" id="dhuhaTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Dhuhr</span>
-                        <span class="time-value" id="dhuhrTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Asr</span>
-                        <span class="time-value" id="asrTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Maghrib</span>
-                        <span class="time-value" id="maghribTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Isha</span>
-                        <span class="time-value" id="ishaTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">First Third</span>
-                        <span class="time-value" id="firstThirdTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Midnight</span>
-                        <span class="time-value" id="midnightTime">--:--</span>
-                    </div>
-                    <div class="prayer-time-row">
-                        <span class="prayer-name">Last Third</span>
-                        <span class="time-value" id="lastThirdTime">--:--</span>
-                    </div>
-                </div>
-
-                <div id="loader" style="margin: 20px;">
-                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
-                    <p style="margin-top: 10px;">Fetching prayer times...</p>
-                </div>
-
-                <div id="errorMsg" style="display: none; color: #ff6b6b; margin: 10px;">
-                    <i class="fa fa-exclamation-circle"></i> <span id="errorText"></span>
-                </div>
             </div>
-
-            <p class="text-white mt-3" style="font-size: 0.8rem; opacity: 0.7;">
-                Calculation Method: University of Islamic Sciences, Karachi
-
-            </p>
         </center>
     </div>
 
@@ -174,6 +354,8 @@
             city: '',
             country: ''
         };
+        let currentTimings = null;
+        let countdownInterval = null;
 
         // Hardcoded Method: 1 = University of Islamic Sciences, Karachi
         const CALCULATION_METHOD = 1;
@@ -226,13 +408,17 @@
             const loader = document.getElementById('loader');
             const prayerData = document.getElementById('prayerData');
             const errorMsg = document.getElementById('errorMsg');
+            const initialPrompt = document.getElementById('initialPrompt');
 
             if (!city) return;
 
             prayerData.style.display = 'none';
             errorMsg.style.display = 'none';
+            initialPrompt.style.display = 'none';
             loader.style.display = 'block';
-            document.getElementById('locText').innerText = `Searching for ${city}...`;
+
+            const countdownArea = document.getElementById('countdownArea');
+            if (countdownArea) countdownArea.style.display = 'none';
 
             const apiUrl = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${CALCULATION_METHOD}`;
 
@@ -262,8 +448,8 @@
 
         function displayTimes(data) {
             const timings = data.timings;
-            // const meta = data.meta;
 
+            // Format for display
             document.getElementById('fajrTime').innerText = convertTo12Hour(timings.Fajr);
             document.getElementById('sunriseTime').innerText = convertTo12Hour(timings.Sunrise);
             document.getElementById('dhuhrTime').innerText = convertTo12Hour(timings.Dhuhr);
@@ -271,22 +457,117 @@
             document.getElementById('maghribTime').innerText = convertTo12Hour(timings.Maghrib);
             document.getElementById('ishaTime').innerText = convertTo12Hour(timings.Isha);
 
-            // Extra times
-            // Custom Salaf Calculation for Night Times (Maghrib to Fajr)
             calculateAndDisplaySalafTimes(timings.Maghrib, timings.Fajr);
-
-            // Calculate Dhuha (Sunrise + 20 mins)
             if (timings.Sunrise) {
-                document.getElementById('dhuhaTime').innerText = calculateDhuha(timings.Sunrise);
+                document.getElementById('dhuhaTime').innerText = '≈ ' + calculateDhuha(timings.Sunrise);
             }
 
-            // Update location text
+            // Update UI components
             const city = document.getElementById('cityInput').value;
             const country = document.getElementById('countryInput').value;
             document.getElementById('locText').innerText = `${city}${country ? ', ' + country : ''}`;
 
+            // Today's Date
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('dateText').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+
             document.getElementById('loader').style.display = 'none';
-            document.getElementById('prayerData').style.display = 'block';
+            document.getElementById('initialPrompt').style.display = 'none';
+            document.getElementById('prayerData').style.display = 'flex';
+            document.getElementById('countdownArea').style.display = 'block';
+            document.getElementById('dateDivider').style.display = 'flex';
+
+            currentTimings = timings;
+            startCountdown();
+        }
+
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            if (!currentTimings) return;
+
+            const now = new Date();
+            const prayerSequence = [
+                { name: 'Fajr', time: currentTimings.Fajr },
+                { name: 'Sunrise', time: currentTimings.Sunrise },
+                { name: 'Dhuhr', time: currentTimings.Dhuhr },
+                { name: 'Asr', time: currentTimings.Asr },
+                { name: 'Maghrib', time: currentTimings.Maghrib },
+                { name: 'Isha', time: currentTimings.Isha }
+            ];
+
+            let activeId = null;
+            let nextId = null;
+            let nextTime = null;
+            let nextName = '';
+
+            // 1. Identify states (past, active, future)
+            prayerSequence.forEach((prayer, idx) => {
+                const [h, m] = prayer.time.split(':').map(Number);
+                const pDate = new Date(now);
+                pDate.setHours(h, m, 0, 0);
+
+                const row = document.getElementById(`row-${prayer.name}`);
+                if (!row) return;
+
+                row.classList.remove('past', 'active', 'next');
+
+                if (pDate < now) {
+                    row.classList.add('past');
+                } else {
+                    if (!nextId) {
+                        nextId = prayer.name;
+                        nextTime = pDate;
+                        nextName = prayer.name;
+                        row.classList.add('next');
+                    }
+                }
+            });
+
+            // If no prayer is left today, Fajr is next (tomorrow)
+            if (!nextId) {
+                nextName = 'Fajr';
+                const [h, m] = currentTimings.Fajr.split(':').map(Number);
+                nextTime = new Date(now);
+                nextTime.setDate(now.getDate() + 1);
+                nextTime.setHours(h, m, 0, 0);
+            }
+
+            // 2. Identify "Active" (last one that passed)
+            for (let i = prayerSequence.length - 1; i >= 0; i--) {
+                const [h, m] = prayerSequence[i].time.split(':').map(Number);
+                const pDate = new Date(now);
+                pDate.setHours(h, m, 0, 0);
+                if (pDate <= now) {
+                    document.getElementById(`row-${prayerSequence[i].name}`).classList.remove('past');
+                    document.getElementById(`row-${prayerSequence[i].name}`).classList.add('active');
+                    break;
+                }
+            }
+
+            // 3. Update Large Countdown
+            const diff = nextTime - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('nextPrayerNameLarge').innerText = nextName;
+            document.getElementById('countdownTimerLarge').innerText =
+                `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+            // Update Visual Circle Icon
+            const circleIcon = document.querySelector('.visual-circle i');
+            if (nextName === 'Fajr' || nextName === 'Maghrib' || nextName === 'Isha') {
+                circleIcon.className = 'fas fa-moon';
+            } else {
+                circleIcon.className = 'fas fa-sun';
+            }
         }
 
         function calculateAndDisplaySalafTimes(maghribTime, fajrTime) {

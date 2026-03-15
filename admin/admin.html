@@ -15,6 +15,7 @@
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -51,7 +52,19 @@
   <div class="content intro">
     <center>
       <h5 class="pa" style="margin-top: 20px; margin-bottom: 20px;">Dashboard Access Granted.</h5>
-      <h2 style="color: #fff; margin-bottom: 40px;">Welcome, Pious.</h2>
+      <h2 style="color: #fff; margin-bottom: 20px;">Welcome, Pious.</h2>
+      
+      <!-- Visitor Stats Row -->
+      <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap;">
+        <div style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
+          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Today's Visitors</div>
+          <div id="todayVisitors" style="font-size: 1.8rem; color: #afe9da; font-weight: bold;">0</div>
+        </div>
+        <div style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
+          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Avg Daily Visitors</div>
+          <div id="avgVisitors" style="font-size: 1.8rem; color: #afe9da; font-weight: bold;">0</div>
+        </div>
+      </div>
     </center>
   </div>
 
@@ -113,6 +126,15 @@
           </a>
         </div>
 
+        <!-- Adhkar -->
+        <div class="btnn1">
+          <a href="adhkar.html" style="text-decoration:none;">
+            <button class="text-white">
+              <div class="btnn"><i class="fa-solid fa-moon"></i></div>Adhkar
+            </button>
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
@@ -128,8 +150,33 @@
         window.location.href = "../login.html";
       } else if (user.email != "piousbrotherscommunity@gmail.com") {
         window.location.href = "../login.html"
+      } else {
+        loadVisitorStats();
       }
     });
+
+    // Load site-wide visitor stats
+    function loadVisitorStats() {
+      const db = window.firebaseDb || firebase.database();
+      const date = new Date();
+      const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      
+      // Today's Visitors
+      db.ref('analytics/site/dailyVisitors/' + today).on('value', snapshot => {
+        document.getElementById('todayVisitors').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Average Daily Visitors
+      db.ref('analytics/site/dailyVisitors').on('value', snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const days = Object.keys(data).length;
+          const total = Object.values(data).reduce((a, b) => a + b, 0);
+          const avg = days > 0 ? Math.round(total / days) : 0;
+          document.getElementById('avgVisitors').innerText = avg.toLocaleString();
+        }
+      });
+    }
 
     // Logout function
     function logout() {

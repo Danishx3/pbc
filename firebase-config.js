@@ -31,6 +31,28 @@ if (typeof firebase !== 'undefined') {
   if (typeof window !== 'undefined') {
     window.firebaseDb = firebase.database();
     window.firebaseAuth = firebase.auth();
+
+    // Global Tracking Logic
+    (function() {
+      try {
+        const db = window.firebaseDb;
+        const date = new Date();
+        const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        
+        // 1. Always increment Page Views (every load)
+        db.ref('analytics/site/totalPageViews').transaction(count => (count || 0) + 1);
+        db.ref('analytics/site/dailyPageViews/' + today).transaction(count => (count || 0) + 1);
+        
+        // 2. Increment Visitors only once per session
+        if (!sessionStorage.getItem('ilmify_global_visited')) {
+          db.ref('analytics/site/totalVisitors').transaction(count => (count || 0) + 1);
+          db.ref('analytics/site/dailyVisitors/' + today).transaction(count => (count || 0) + 1);
+          sessionStorage.setItem('ilmify_global_visited', 'true');
+        }
+      } catch (e) {
+        console.warn('Tracking initialization failed', e);
+      }
+    })();
   }
 } else {
   console.warn('Firebase SDK not loaded. Make sure to include Firebase scripts before this config file.');
