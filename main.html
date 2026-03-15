@@ -420,6 +420,68 @@
       font-weight: 600;
     }
 
+    .prayer-mini-card {
+      background: rgba(13, 86, 79, 0.15);
+      border: 1px solid rgba(13, 86, 79, 0.2);
+      border-radius: 20px;
+      margin: 10px auto;
+      padding: 18px 24px;
+      display: none;
+      justify-content: space-between;
+      align-items: flex-end; /* Align main info on baseline */
+      transition: all 0.3s ease;
+      max-width: 480px;
+      width: calc(100% - 32px);
+    }
+
+    .prayer-mini-card:hover {
+      background: rgba(13, 86, 79, 0.25);
+      border-color: #0d564f;
+      transform: translateY(-2px);
+    }
+
+    .pmc-left {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .pmc-label {
+      font-size: 0.7rem;
+      color: #7aa8a2;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+
+    .pmc-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #a8f0e8;
+      line-height: 1.2;
+    }
+
+    .pmc-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .pmc-time {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .pmc-countdown {
+      font-size: 0.75rem;
+      color: #7aa8a2;
+      margin-top: 2px;
+    }
+
     @media (max-width: 480px) {
       .chat-window {
         width: 90%;
@@ -517,6 +579,18 @@
     <h5 id="welcomeMessage"><i class="fa-solid fa-spinner fa-spin-pulse"></i></h5>
   </div>
 
+  <!-- Prayer Mini Card -->
+  <div id="prayerMiniCard" class="prayer-mini-card intro" style="animation-delay:0.02s;" onclick="window.location.href='times.html'">
+    <div class="pmc-left">
+      <span class="pmc-label">Next Prayer</span>
+      <span id="pmcName" class="pmc-name">--</span>
+    </div>
+    <div class="pmc-right">
+      <span id="pmcTime" class="pmc-time">--:-- --</span>
+      <span id="pmcCountdown" class="pmc-countdown">--h --m --s left</span>
+    </div>
+  </div>
+
   <!-- Notification -->
   <div id="notification" class="notification">
     <div id="contentArea1"></div>
@@ -544,6 +618,10 @@
       <button class="qa-btn" onclick="window.location.href='times.html'">
         <div class="qa-icon"><i class="fa-solid fa-clock"></i></div>
         Times
+      </button>
+      <button class="qa-btn" onclick="window.location.href='https://qiblafinder.withgoogle.com/'">
+        <div class="qa-icon"><i class="fa-solid fa-compass"></i></div>
+        Qibla
       </button>
     </div>
     <div style="text-align:center; padding-bottom:10px;">
@@ -586,6 +664,7 @@
         <ul>
           <li><a href="about.html">About Us</a></li>
           <li><a href="times.html">Prayer Times</a></li>
+          <li><a href="https://qiblafinder.withgoogle.com/">Qibla Finder</a></li>
           <li><a href="quran.html">Quran</a></li>
           <li><a href="/level1/madeena.html">Madeena Book</a></li>
           <li><a href="/playlist/history.html">Stories</a></li>
@@ -689,7 +768,84 @@
         messageBox.style.display = 'none';
         localStorage.setItem('dismissedVersion', currentVersion);
       });
+      initPrayerMiniCard();
     });
+
+    // Prayer Times Mini Card Logic
+    let miniCountdownInterval = null;
+    let cachedTimings = null;
+
+    function initPrayerMiniCard() {
+      const saved = localStorage.getItem('prayerSettings_v4');
+      if (!saved) return;
+      const settings = JSON.parse(saved);
+      if (!settings.city) return;
+
+      const apiUrl = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(settings.city)}&country=${encodeURIComponent(settings.country || '')}&method=1`;
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (data.code === 200 && data.data) {
+            cachedTimings = data.data.timings;
+            document.getElementById('prayerMiniCard').style.display = 'flex';
+            startMiniCountdown();
+          }
+        })
+        .catch(console.error);
+    }
+
+    function startMiniCountdown() {
+      if (miniCountdownInterval) clearInterval(miniCountdownInterval);
+      updateMiniCountdown();
+      miniCountdownInterval = setInterval(updateMiniCountdown, 1000);
+    }
+
+    function updateMiniCountdown() {
+      if (!cachedTimings) return;
+      const now = new Date();
+      const prayerSequence = [
+        { name: 'Fajr', time: cachedTimings.Fajr },
+        { name: 'Dhuhr', time: cachedTimings.Dhuhr },
+        { name: 'Asr', time: cachedTimings.Asr },
+        { name: 'Maghrib', time: cachedTimings.Maghrib },
+        { name: 'Isha', time: cachedTimings.Isha }
+      ];
+
+      let nextPrayer = null;
+      let nextTime = null;
+
+      for (let p of prayerSequence) {
+        const [h, m] = p.time.split(':').map(Number);
+        const pDate = new Date(now);
+        pDate.setHours(h, m, 0, 0);
+        if (pDate > now) {
+          nextPrayer = p.name;
+          nextTime = pDate;
+          break;
+        }
+      }
+
+      if (!nextPrayer) {
+        nextPrayer = 'Fajr';
+        const [h, m] = cachedTimings.Fajr.split(':').map(Number);
+        nextTime = new Date(now);
+        nextTime.setDate(now.getDate() + 1);
+        nextTime.setHours(h, m, 0, 0);
+      }
+
+      const diff = nextTime - now;
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('pmcName').innerText = nextPrayer;
+      document.getElementById('pmcCountdown').innerText = `${hours}h ${mins}m ${secs}s left`;
+      
+      const [ph, pm] = cachedTimings[nextPrayer].split(':').map(Number);
+      const ampm = ph >= 12 ? 'PM' : 'AM';
+      const displayH = ph % 12 || 12;
+      document.getElementById('pmcTime').innerText = `${displayH}:${pm < 10 ? '0'+pm : pm} ${ampm}`;
+    }
 
     // Chat
     function toggleChat() {
