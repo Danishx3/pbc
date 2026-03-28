@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ILMIFY Admin - Madeena Lessons Upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Styles -->
+  <link rel="stylesheet" href="../pbc.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase Rules -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  
+  <!-- Cloudinary Widget -->
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+
+  <style>
+    :root {
+      --primary-color: #0d564f;
+      --primary-hover: #1a7a70;
+      --bg-dark: #00060f;
+      --card-bg: rgba(13, 86, 79, 0.4);
+      --text-main: #ffffff;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Anek Latin', sans-serif;
+    }
+
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-control, .form-select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .form-control:focus, .form-select:focus {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: var(--primary-hover);
+      box-shadow: none;
+    }
+
+    .form-control::placeholder {
+      color: #aaa;
+    }
+    
+    .btn-green {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        border: none;
+        transition: 0.3s;
+    }
+    .btn-green:hover {
+        background-color: var(--primary-hover);
+    }
+    
+    .lesson-item {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+  </style>
+</head>
+<body class="black">
+  <div class="">
+    <nav class="nav navbar navbar-expand-lg text-white ">
+      <div class="container-fluid">
+        <center><a style="font-weight: bold;" href="#" class="navbar-brand text-white"> ILMIFY ADMIN</a></center>
+        <button style="border-radius: 20px; border-color: transparent; color: #fff; background-color: rgb(43, 44, 43);" onclick="logout()">logout</button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="content intro container">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+      <h2 style="color: #fff;">Madeena Lessons Upload</h2>
+      <a href="class.html" class="btn btn-outline-light btn-sm">Back to Classes</a>
+    </div>
+
+    <!-- Add Form -->
+    <div class="form-card">
+      <h4 class="mb-3"><i class="fa fa-cloud-upload"></i> Add New Lesson Part</h4>
+      <div class="row">
+        <div class="col-md-4">
+          <input class="form-control" id="volumeNum" type="number" placeholder="Volume Number (e.g. 1)" value="1">
+        </div>
+        <div class="col-md-4">
+          <input class="form-control" id="partNum" type="number" placeholder="Part Number (e.g. 20)">
+        </div>
+        <div class="col-md-4">
+          <input class="form-control" id="title" placeholder="Title (e.g. Lesson 7)">
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-8">
+          <div class="input-group mb-3">
+              <input type="text" class="form-control" id="audioUrl" placeholder="Audio URL">
+              <button class="btn btn-secondary" type="button" id="upload_widget">Upload to Cloudinary (Preset: ml_default)</button>
+          </div>
+          <small class="text-warning">If the widget fails, ensure 'ml_default' upload preset is active in your Cloudinary console, or paste the URL manually.</small>
+        </div>
+        <div class="col-md-4">
+          <input class="form-control" id="durationText" placeholder="Duration (e.g. 15:30)">
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-12">
+          <div class="d-flex justify-content-between mb-2">
+            <label class="text-white">Lesson Notes</label>
+            <button type="button" class="btn btn-outline-light btn-sm" onclick="addNoteField()"><i class="fa fa-plus"></i> Add Note</button>
+          </div>
+          <div id="notesContainer">
+            <div class="input-group mb-2 note-row">
+              <textarea class="form-control note-input" rows="2" placeholder="Enter note... (Supports Arabic text)"></textarea>
+              <button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()"><i class="fa fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-green w-100 mt-3" onclick="saveLesson()">Save Lesson to Database</button>
+    </div>
+
+    <hr style="border-color: #333; margin-bottom: 30px;">
+    
+    <h4 class="text-white">Uploaded Extra Lessons</h4>
+    <div id="lessonsList">
+      <div class="text-center text-muted">Loading added lessons...</div>
+    </div>
+  </div>
+
+  <script>
+    const auth = window.firebaseAuth || firebase.auth();
+    const db = window.firebaseDb || firebase.database();
+    const DB_REF = "madeena_lessons";
+
+    // Start Cloudinary Widget
+    var myWidget = cloudinary.createUploadWidget({
+      cloudName: 'dobw6i86s', 
+      uploadPreset: 'ml_default',
+      resourceType: 'video', // Audio is often treated as video in Cloudinary uploads automatically
+      multiple: false,
+      folder: 'ilmify_admin_audios'
+    }, (error, result) => { 
+      if (!error && result && result.event === "success") { 
+        document.getElementById("audioUrl").value = result.info.secure_url;
+      }
+    });
+
+    document.getElementById("upload_widget").addEventListener("click", function(){
+        myWidget.open();
+    }, false);
+
+    // Auth Check
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "../login.html";
+      } else if (user.email != "piousbrotherscommunity@gmail.com") {
+        window.location.href = "../login.html"
+      } else {
+        loadLessons();
+      }
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "../login.html";
+      });
+    }
+
+    function addNoteField() {
+      const container = document.getElementById("notesContainer");
+      const div = document.createElement("div");
+      div.className = "input-group mb-2 note-row";
+      div.innerHTML = `
+        <textarea class="form-control note-input" rows="2" placeholder="Enter note... (Supports Arabic text)"></textarea>
+        <button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()"><i class="fa fa-trash"></i></button>
+      `;
+      container.appendChild(div);
+    }
+
+    function saveLesson() {
+      const volume = document.getElementById("volumeNum").value || 1;
+      const part = document.getElementById("partNum").value;
+      const title = document.getElementById("title").value;
+      const audioUrl = document.getElementById("audioUrl").value;
+      const durationText = document.getElementById("durationText").value;
+      
+      const noteInputs = document.querySelectorAll(".note-input");
+      const notesLines = Array.from(noteInputs).map(input => input.value.trim()).filter(line => line !== "");
+
+      if (!part || !title || !audioUrl) {
+        alert("Please fill in Part number, Title, and Audio URL.");
+        return;
+      }
+
+      const lessonData = {
+        volume: Number(volume),
+        partObj: {
+            part: Number(part),
+            title: title,
+            audio: audioUrl,
+            durationText: durationText,
+            notes: notesLines
+        }
+      };
+
+      db.ref(DB_REF).push().set(lessonData).then(() => {
+        alert("Lesson added successfully!");
+        document.getElementById("title").value = "";
+        document.getElementById("audioUrl").value = "";
+        document.getElementById("durationText").value = "";
+        document.getElementById("notesContainer").innerHTML = `
+            <div class="input-group mb-2 note-row">
+              <textarea class="form-control note-input" rows="2" placeholder="Enter note... (Supports Arabic text)"></textarea>
+              <button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()"><i class="fa fa-trash"></i></button>
+            </div>
+        `;
+        loadLessons();
+      }).catch((e) => alert("Error: " + e.message));
+    }
+
+    function loadLessons() {
+      const list = document.getElementById("lessonsList");
+      list.innerHTML = "";
+      
+      db.ref(DB_REF).once("value", snapshot => {
+        if(!snapshot.exists()) {
+             list.innerHTML = `<div class="text-center text-muted">No external uploaded lessons found in DB.</div>`;
+             document.getElementById("partNum").value = 1;
+             return;
+        }
+
+        let html = "";
+        let maxPart = 0;
+        
+        snapshot.forEach(child => {
+          const data = child.val();
+          const pKey = child.key;
+          
+          if (data.partObj && !isNaN(data.partObj.part)) {
+             let curPart = Number(data.partObj.part);
+             if (curPart > maxPart) maxPart = curPart;
+          }
+          
+          html += `
+            <div class="lesson-item">
+                <div>
+                    <h5 class="text-white mb-1">Volume ${data.volume} - Part ${data.partObj.part}: ${data.partObj.title}</h5>
+                    <small class="text-muted">Audio URL: ${data.partObj.audio.substring(0,60)}... | Duration: ${data.partObj.durationText}</small><br>
+                    <small class="text-secondary">Notes count: ${(data.partObj.notes || []).length}</small>
+                </div>
+                <button class="btn btn-sm btn-danger" onclick="deleteLesson('${pKey}')">Delete</button>
+            </div>
+          `;
+        });
+        
+        list.innerHTML = html;
+        document.getElementById("partNum").value = maxPart + 1;
+      });
+    }
+
+    function deleteLesson(id) {
+       if (confirm("Are you sure you want to delete this custom uploaded lesson?")) {
+          db.ref(DB_REF + "/" + id).remove().then(loadLessons);
+       }
+    }
+  </script>
+</body>
+</html>

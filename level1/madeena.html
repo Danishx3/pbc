@@ -1,352 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Ilmify - Madeena book</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@300;400;600;700&family=Amiri&display=swap"
+    rel="stylesheet">
   <style>
     :root {
-      --radius: 14px;
-      --bg: #0f1f2d;
-      --card-bg: #e3f9f1;
-      --accent: rgba(4, 141, 114, 0.6);
-      --muted: #a0aebf;
-      --shadow: 0 24px 48px -12px rgba(0,0,0,0.35);
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      --radius: 20px;
+      --bg-dark: #040914;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --accent: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      --accent-solid: #10b981;
+      --border: rgba(255, 255, 255, 0.15);
+      --text-main: #ffffff;
+      --muted: #cbd5e1;
+      --shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
-    * { box-sizing:border-box; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Anek Latin', sans-serif;
+    }
+
     body {
-      margin:0;
-      min-height:100vh;
-      background: 
-        radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
-        radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
-        radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
-      background-color: #00060f;
-      color:#1f2f3f;
-      font-size:16px;
-      line-height:1.4;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #051614 0%, #072a24 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-size: 16px;
+      line-height: 1.6;
     }
+
     .app-wrapper {
-      padding-top:80px;
       width: 100%;
       display: flex;
       justify-content: center;
-      padding: 5%;
+      padding: 100px 15px 40px 15px;
     }
+
     .app {
-      width:100%;
-      max-width:540px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .card {
-      background: #d0f0ea;
-      border-radius:16px;
-      overflow:hidden;
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .cover {
-      background: var(--accent);
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      color:#111;
-    }
-    .title-row {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content: space-between;
-      gap:8px;
-      align-items:center;
-    }
-    .main-title {
-      font-weight:700;
-      font-size:1.2rem;
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-    }
-    .volume-badge {
-      background:#fff;
-      padding:4px 12px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:.9rem;
-      display:inline-block;
-      margin-left:4px;
-    }
-    .sub {
-      font-size:.9rem;
-      margin-top:2px;
-    }
-    .controls {
-      padding:12px 16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .audio-player {
-      background:#fff;
-      border-radius:12px;
-      padding:12px 16px;
-      display:flex;
-      align-items:center;
-      gap:12px;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      flex-wrap:wrap;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
+
+    .cover {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .main-title {
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .volume-badge {
+      background: var(--accent);
+      color: #0a0f16;
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(79, 172, 254, 0.3);
+    }
+
+    .sub {
+      color: var(--accent-solid);
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+
+    .controls {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .audio-player {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 16px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
     .play-btn {
-      width:44px;
-      height:44px;
-      border:none;
-      background: #111;
-      color:#fff;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      flex-shrink:0;
-      font-size:16px;
-      transition:filter .2s;
+      width: 56px;
+      height: 56px;
+      border: none;
+      background: var(--accent);
+      color: #0a0f16;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 22px;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
     }
-    .play-btn:focus-visible {
-      outline: 2px solid #afe9da;
-      outline-offset:2px;
+
+    .play-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6);
     }
+
     .progress-container {
-      flex:1;
-      min-width:140px;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      margin-right:8px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
+
     .progress {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      cursor: pointer;
       position: relative;
-      height:6px;
-      background: #e3e3e3;
-      border-radius:3px;
-      cursor:pointer;
-      overflow:hidden;
+      overflow: hidden;
     }
+
     .progress-filled {
-      height:100%;
-      width:0;
-      background:#111;
-      border-radius:3px;
-      transition: width .1s linear;
+      height: 100%;
+      width: 0;
+      background: var(--accent);
+      border-radius: 4px;
+      box-shadow: 0 0 10px var(--accent-solid);
+      transition: width 0.1s linear;
     }
+
     .time-row {
-      display:flex;
-      justify-content:space-between;
-      font-size:12px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
       color: var(--muted);
-      margin-top:2px;
+      font-weight: 500;
     }
-    .volume-control {
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:12px;
-      min-width:100px;
-    }
+
+    .volume-control,
     .speed-control {
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:12px;
-      margin-left:8px;
-      flex-shrink:0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
     }
+
+    .speed-control select {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .speed-control select:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .speed-control select option {
+      background: #0a0f16;
+    }
+
     .nav-bar {
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:6px;
-      padding:0 4px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
     }
+
     .btn {
-      padding:10px 16px;
-      border:none;
-      border-radius:999px;
-      font-weight:600;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      transition:filter .2s;
-      background:#fff;
-      color:#111;
-      box-shadow:0 12px 30px -6px rgba(0,0,0,0.2);
+      padding: 12px 28px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-main);
+      cursor: pointer;
+      backdrop-filter: blur(10px);
     }
-    .btn:focus-visible {
-      outline: 2px solid #afe9da;
-      outline-offset:2px;
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
-    .btn-primary {
-      background:#111;
-      color:#fff;
-    }
+
     .pill {
-      background:rgba(255,255,255,0.9);
-      padding:6px 14px;
-      border-radius:999px;
-      font-size:.75rem;
-      display:inline-block;
-      margin-right:4px;
-      font-weight:600;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      border: 1px solid var(--border);
     }
+
     .notes-panel {
-      background:#3f9f8f;
-      padding:16px;
-      border-radius:14px;
-      color:#0f1f2d;
-      position:relative;
-      overflow:hidden;
-      display:none;
-      flex-direction:column;
-      gap:10px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 24px;
+      border-radius: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeIn 0.4s ease;
     }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .notes-header {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 12px;
     }
+
     .notes-title {
-      background:#fff;
-      padding:6px 14px;
-      border-radius:999px;
-      font-weight:600;
-      display:inline-block;
+      font-weight: 700;
+      color: var(--accent-solid);
+      letter-spacing: 1px;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 12px;
+      border-radius: 20px;
     }
+
     .note-item {
-      background: rgba(255,255,255,0.9);
-      border-radius:8px;
-      padding:10px 12px;
-      font-size:.9rem;
-      line-height:1.8;
-      position:relative;
-      margin-top: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      border-right: 5px solid var(--accent-solid);
+      border-radius: 12px;
+      padding: 24px;
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 2.2;
       text-align: right;
-      font-family: 'amiri', sans-serif;
-      font-size: large;
+      font-family: 'Amiri', serif;
+      color: #ffffff;
+      transition: background 0.3s;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
+
+    .note-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
     .pdf-embed {
       width: 100%;
-      height: 240px;
+      height: 75vh;
+      min-height: 500px;
       border: none;
-      border-radius: 10px;
-      box-shadow: 0 14px 36px -4px rgba(0,0,0,0.35);
-      margin-bottom: 10px;
-    }
-    .lesson-meta {
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:8px;
-      align-items:center;
-    }
-    .volume-selector {
-      display:flex;
-      gap:6px;
-      flex-wrap:nowrap;
-      align-items:center;
-      overflow-x:auto;
-      padding-bottom:4px;
-      scrollbar-width: thin;
-    }
-    .volume-selector::-webkit-scrollbar {
-      height:8px;
-    }
-    .volume-selector::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.2);
-      border-radius:4px;
-    }
-    select.part-select {
-      padding:6px 14px;
-      border-radius:999px;
-      border:none;
-      font-size:.9rem;
-      font-weight:600;
-      appearance:none;
-      background:rgba(255,255,255,0.9);
-      cursor:pointer;
-    }
-    .notes-toggle {
-      margin-left:auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      background: #fff;
     }
 
     .selector-btn {
-      position: relative;
-      padding: 8px 18px;
-      border: none;
-      border-radius: 999px;
+      padding: 10px 22px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
       cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #ffffff, #f0f8fc);
-      color: #1f2f3f;
-      letter-spacing: 0.5px;
-      transition: transform .2s ease, box-shadow .25s ease, background .3s ease;
-      box-shadow: 0 10px 30px -4px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(255,255,255,0.6);
-      margin: 0 4px 4px 0;
-      backdrop-filter: blur(6px);
-      overflow: hidden;
-    }
-    .selector-btn::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: 4px;
-      width: 0;
-      height: 3px;
-      background: #afe9da;
-      border-radius: 2px;
-      transition: width .3s ease, left .3s ease;
-    }
-    .selector-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 40px -6px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.8);
-      background: linear-gradient(135deg, #ffffff, #e0f0fa);
-    }
-    .selector-btn.active {
-      background: linear-gradient(135deg, #111827, #1f2f3f);
-      color: #fff;
-      box-shadow: 0 18px 50px -4px rgba(0,0,0,0.4), inset 0 0 8px rgba(255,255,255,0.1);
-    }
-    .selector-btn.active::after {
-      width: 60%;
-      left: 20%;
-    }
-    .selector-btn:focus-visible {
-      outline: 2px solid #ffd237;
-      outline-offset: 2px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      transition: all 0.3s ease;
+      margin-right: 8px;
+      margin-bottom: 8px;
     }
 
-    @media (max-width: 720px) {
+    .selector-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .selector-btn.active {
+      background: var(--accent);
+      color: #0a0f16;
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+    }
+
+    .volume-selector {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      gap: 4px;
+    }
+
+    .volume-selector::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .volume-selector::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    select.part-select {
+      padding: 10px 24px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 768px) {
+      .app-wrapper {
+        padding: 85px 12px 20px 12px;
+      }
+
+      .cover, .controls {
+        padding: 20px 16px;
+      }
+
+      .main-title {
+        font-size: 1.35rem;
+        gap: 8px;
+      }
+
       .audio-player {
-        flex-direction:column;
-        align-items:stretch;
+        flex-direction: column;
+        padding: 20px 16px;
+        gap: 16px;
+      }
+
+      .progress-container {
+        width: 100%;
+        margin: 0;
+      }
+
+      .play-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+      }
+
+      .volume-control, .speed-control {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .nav-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .nav-bar > div {
+        display: flex;
+        width: 100%;
+        gap: 8px !important;
+      }
+
+      .nav-bar .btn, .pill {
+        flex: 1;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .note-item {
+        padding: 16px;
+        font-size: 1.3rem;
+        line-height: 1.8;
+      }
+
+      .notes-panel {
+        padding: 16px;
+      }
+
+      .pdf-embed {
+        height: 60vh;
+        min-height: 350px;
+      }
+
+      header {
+        font-size: 1.05rem !important;
+        padding: 15px !important;
+      }
+      
+      header a {
+        font-size: 1.2rem !important;
+        top: 15px !important;
+        left: 15px !important;
       }
     }
   </style>
 </head>
+
 <body>
-  <header style="position: fixed; z-index: 9999; background:linear-gradient(to bottom,transparent,#0d564f8c); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; width: 100%; font-size: larger; font-weight: bold; color: rgb(247, 246, 246);  padding: 20px;">
-    <a style="position: absolute; left:16px; top:20px; color: white;" href="arabic.html"><i class="fas fa-arrow-left"></i></a>
-    <div style="text-align:center;">DURŪS AL-LUGHAH</div>
-  </header><br><br><br>
+  <div id="initial-loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#051614; z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#10b981;">
+    <i class="fas fa-spinner fa-spin fa-3x" style="margin-bottom:15px;"></i>
+    <p style="font-weight:bold; font-size:1.2rem; letter-spacing:1px;">Loading Lessons...</p>
+  </div>
+
+  <header
+    style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: rgba(0, 6, 15, 0.7); border-bottom: 1px solid rgba(255,255,255,0.05); width: 100%; font-size: 1.2rem; font-family: 'Anek Latin', sans-serif; font-weight: 700; color: #fff; padding: 18px 20px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+    <a style="position: absolute; left:20px; top:18px; color: var(--accent-solid); text-decoration: none; font-size: 1.4rem; transition: transform 0.2s;"
+      onmouseover="this.style.transform='translateX(-3px)'" onmouseout="this.style.transform='translateX(0)'"
+      href="arabic.html"><i class="fas fa-arrow-left"></i></a>
+    <div style="text-align:center; letter-spacing: 1px;">DURŪS AL-LUGHAH</div>
+  </header>
 
   <div class="app-wrapper">
     <div class="app" aria-label="Lessons application">
@@ -389,7 +517,8 @@
             </div>
             <div class="speed-control">
               <label for="speedSelect" style="margin:0;">Speed:</label>
-              <select id="speedSelect" aria-label="Playback speed" style="padding:6px 10px; border-radius:8px; border:none; font-weight:600;">
+              <select id="speedSelect" aria-label="Playback speed"
+                style="padding:6px 10px; border-radius:8px; border:none; font-weight:600;">
                 <option value="0.5">0.5x</option>
                 <option value="0.75">0.75x</option>
                 <option value="1" selected>1x</option>
@@ -416,7 +545,8 @@
               <div class="notes-title">Note</div>
               <div class="small" id="lesson-duration">مدة الدرس: --:-- دقيقة</div>
             </div>
-            <iframe class="pdf-embed" id="pdfFrame" src="" title="Lesson PDF Notes" aria-label="PDF notes viewer"></iframe>
+            <iframe class="pdf-embed" id="pdfFrame" src="" title="Lesson PDF Notes"
+              aria-label="PDF notes viewer"></iframe>
             <div id="notes-container"></div>
           </div>
         </div>
@@ -425,6 +555,10 @@
   </div>
 
   <audio id="audio" preload="metadata"></audio>
+  <!-- Firebase integration -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="../firebase-config.js"></script>
   <script>
     const LESSONS = [
       {
@@ -444,22 +578,22 @@
 ➖هَا للتَّنْبِيهِ \n\
 ➖ذا =اسم الإِشَارة \
 ",
-"⬅️(هذا وَلَدٌ )\n\
+              "⬅️(هذا وَلَدٌ )\n\
 ➖هذا -اسمُ الإِشَارَة \n\
 ➖وَلدٌ -مُشَارٌ إليهِ \
 ",
-"⬅️مُذَكَّرٌ × مُؤَنَّثٌ \n\
+              "⬅️مُذَكَّرٌ × مُؤَنَّثٌ \n\
 \
 ✒️مُذَكَّرٌ : പുല്ലിംഗം\n\
 ✒️مُؤَنَّثٌ : സ്ത്രീലിംഗം\n\
 ",
-"1️⃣مُفْرَدٌ - ഏകവചനം\n\
+              "1️⃣مُفْرَدٌ - ഏകവചനം\n\
 \
 2️⃣مُثَنًّى- ദ്വിവചനം\n\
 \
 3️⃣جَمْعٌ - ബഹു വചനം\n\
 ",
-"▪️وَلَدٌ :(مُفْرَدٌ): \n\
+              "▪️وَلَدٌ :(مُفْرَدٌ): \n\
 ഒരു ആൺകുട്ടി\n\
 ▪️وَلَدَانِ : (مُثَنًّى)\n\
 രണ്ട് ആൺകുട്ടികൾ\n\
@@ -473,13 +607,13 @@
             title: "Lesson 1.1",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754320743/gyy1zpunaidei7iicbtk.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "الدرس الأول - 1 📢",
               "الجزء - 2 → Lesson -1 → part -2",
               "⬅️'ما' الاسْتِفْهَامِيَّة\n\
 ⬅️هَمْزَةُ الاستِفْهَام ",
-"⬅️مُتَرَادِفٌ - പര്യായപദം",
-"⬅️نَجْمٌ = كَوْكَبٌ : നക്ഷത്രം"
+              "⬅️مُتَرَادِفٌ - പര്യായപദം",
+              "⬅️نَجْمٌ = كَوْكَبٌ : നക്ഷത്രം"
             ],
             durationText: "17:54"
           },
@@ -488,7 +622,7 @@
             title: "Lesson 1.2",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754323311/cwdlmw3ccanexska9jja.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "الدرس الأول - 1 📢",
               "الجزء - 3 → Lesson -1 → part -3",
               "⬅️'مَنْ' الاستِفْهَامِيَّة \n\
@@ -506,7 +640,7 @@
             title: "Lesson 2",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754509071/mssiarup34lkwlobhx1c.m4a",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الثاني -2",
               "Lesson -2 ",
               "⬅️ذا+لِ+كَ= ذلِكَ\n\
@@ -525,7 +659,7 @@
             title: "Lesson 3",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754509891/dsb2afuwwyfeeg8nf53l.m4a",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الثالث -٣",
               "Lesson -3 ,part -1 ",
               "⬅️أل + بيت = البيت\n\
@@ -538,7 +672,7 @@
 ➖البيت -مُبْتَدَأٌ \n\
 ➖جميل - خَبَرٌ \
 ",
-             "⬅️لَبَنٌ مُتَرَادِفُهُ حَلِيبٌ"
+              "⬅️لَبَنٌ مُتَرَادِفُهُ حَلِيبٌ"
             ],
             durationText: "25:26"
           },
@@ -547,13 +681,13 @@
             title: "Lesson 3.1",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754510930/j8ux98nlsbcjjni8xvkb.m4a",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الثالث -٣",
               "Lesson -3 ,part -2 ",
-             "⬅️مُبْتَدَأٌ +خَبَرٌ =جُمْلَةٌ اسْمِيَّةٌ",
-             "⬅️فِعْلٌ+فَاعِلٌ= جُمْلَةٌ فِعْلِيَّةٌ",
-             "📌البَيتُ جَمِيلٌ : جُمْلَةٌ اسْمِيَّةٌ",
-             "📌جَاءَ زَيْدٌ :  جُمْلَةٌ فِعْلِيَّةٌ"
+              "⬅️مُبْتَدَأٌ +خَبَرٌ =جُمْلَةٌ اسْمِيَّةٌ",
+              "⬅️فِعْلٌ+فَاعِلٌ= جُمْلَةٌ فِعْلِيَّةٌ",
+              "📌البَيتُ جَمِيلٌ : جُمْلَةٌ اسْمِيَّةٌ",
+              "📌جَاءَ زَيْدٌ :  جُمْلَةٌ فِعْلِيَّةٌ"
             ],
             durationText: "20:12"
           },
@@ -562,15 +696,15 @@
             title: "Lesson 3.2",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1754511309/jfm7xiptpk2lh8pyogpj.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الثالث -٣",
               "Lesson -3 ,part -3 ",
-             "⬅️ دَفْتَرٌ=كُرَّاسَةٌ\n\
+              "⬅️ دَفْتَرٌ=كُرَّاسَةٌ\n\
 ⬅️ صَدِيقٌ=رَفِيقٌ",
-             "⬅️ الحُرُوفُ الشَّمْسِيَّةُ\n\
+              "⬅️ الحُرُوفُ الشَّمْسِيَّةُ\n\
 ⬅️ الحُرُوفُ القَمَرِيَّةُ\
 ",
-             "⬅️ أَلْ + شَ = اَلشَّ\n\
+              "⬅️ أَلْ + شَ = اَلشَّ\n\
 ⬅️ أَلْ +بَ = اَلْبَ",
             ],
             durationText: "20:12"
@@ -580,20 +714,20 @@
             title: "Lesson 4",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755237043/ohtpk5xxwrn6kxd85zpp.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الرابع -٤",
               "Lesson -4 ,part -1 ",
-             "➖فِي -حَرْفُ جَرٍّ\n\
+              "➖فِي -حَرْفُ جَرٍّ\n\
 ➖عَلَى -حَرْفُ جَرٍّ\
 ",
-             "⬅️ آمِنَةُ ✅ بلا التنوين\n\
+              "⬅️ آمِنَةُ ✅ بلا التنوين\n\
 ⬅️ آمِنَةٌ ❎ مع التنوين\
 ",
-             "⬅️ فَاطِمَةُ ✅ بلا التنوين\n\
+              "⬅️ فَاطِمَةُ ✅ بلا التنوين\n\
 ⬅️ فَاطِمَةٌ  ❎ مع التنوين",
-             "⬅️أَيْنَ الاسْتِفْهَامِيَّةُ\n\
+              "⬅️أَيْنَ الاسْتِفْهَامِيَّةُ\n\
 ⬅️ أَيْنَ- എവിടെ",
-             "⬅️مَاذَا \n\
+              "⬅️مَاذَا \n\
 എന്താകുന്നു..?\n\n\
 ⬅️ضَمِيرٌ \n\
 സർവ്വനാമം\n\n\
@@ -610,18 +744,18 @@
             title: "Lesson 4.1",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755237837/wo8fkb81ftu5okjnajhw.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الرابع -٤",
               "Lesson -4 ,part -2 ",
-             "⬅️مِنْ -حَرْفُ جَرٍّ\n\
+              "⬅️مِنْ -حَرْفُ جَرٍّ\n\
 ➖مِنَ البَيْتِ",
-             "⬅️إلىَ -حَرْفُ جَرِّ\n\
+              "⬅️إلىَ -حَرْفُ جَرِّ\n\
 ➖إلىَ البَيْتِ",
-             "⬅️عَنْ -حَرْفُ جَرٍّ \n\
+              "⬅️عَنْ -حَرْفُ جَرٍّ \n\
 ➖عَنِ البَيْتِ",
-           "⬅️الْتِقَاءُ السَّاكِنَيْنِ",
-           "⬅️مِنْ+ الْبَيْت =مِنَ البَيْتِ",
-           "⬅️ هَمْزَةُ الوَصْلِ \n\
+              "⬅️الْتِقَاءُ السَّاكِنَيْنِ",
+              "⬅️مِنْ+ الْبَيْت =مِنَ البَيْتِ",
+              "⬅️ هَمْزَةُ الوَصْلِ \n\
 ⬅️ هَمْزَةُ القَطْعِ"
             ],
             durationText: "21:30"
@@ -631,17 +765,17 @@
             title: "Lesson 4.2",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755238612/i9jnxgvqlqbym8n0guw2.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الرابع -٤",
               "Lesson -4 ,part -3 ",
-             "⬅️ الفَصْلُ = الصَّفُّ\n\
+              "⬅️ الفَصْلُ = الصَّفُّ\n\
 ⬅️ الغُرْفَةُ= الحُجْرَةُ\n\
 ⬅️ ذَهَبَ =رَاحَ",
-             "⬅️عَنْ + الحَدِيثِ= عَنِ الحَدِيثِ\n\
+              "⬅️عَنْ + الحَدِيثِ= عَنِ الحَدِيثِ\n\
 ⬅️لَمْ يَكُنْ +الّذِينَ =لَمْ يَكُنِ الّذينَ",
-             "⬅️مِنْ +المَسْجِدِ=مِنَ المَسْجِد\n\
+              "⬅️مِنْ +المَسْجِدِ=مِنَ المَسْجِد\n\
 ⬅️مِنْ+الخَاسِرِينَ= مِنَ الخَاسِرِينَ",
-             "⬅️هُمْ +الكَافِرُونَ =هُمُ الكَافِرُونَ \n\
+              "⬅️هُمْ +الكَافِرُونَ =هُمُ الكَافِرُونَ \n\
 ⬅️عَلَيكُمْ + السَّلاَمُ = عَلَيكُمُ السَّلاَمُ"
             ],
             durationText: "17:02"
@@ -651,7 +785,7 @@
             title: "Lesson 5",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755239834/akpvqf0b0wihr5ial6kw.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الخامس -٥",
               "Lesson -5 ,part -1 ",
               "⬅️ مُضافٌ \n\
@@ -677,7 +811,7 @@
             title: "Lesson 5.1",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755240384/b4jqgzs4uvs9ohfapruy.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الخامس -٥",
               "Lesson -5 ,part -2 ",
               "📝بعض الكلمات من الدرس 📝",
@@ -693,7 +827,7 @@
             title: "Lesson 5.2",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755240666/ea0edl0bmliwcu6usslf.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الخامس -٥",
               "Lesson -5 ,part -3 ",
               "▪️بَيْتُ المُدَرِّسِ ✅\n\
@@ -709,7 +843,7 @@
             title: "Lesson 5.3",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755240971/bkkrvycusyzfdzjlwgdb.mp3",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الخامس -٥",
               "Lesson -5 ,part -4 ",
               "⬅️عَمٌّ - أَخُو الأَبِ\n\
@@ -723,7 +857,7 @@
             title: "Lesson 5.4",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755241077/takp1f62zoxlf9p1ykf0.m4a",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الخامس -٥",
               "Lesson -5 ,part -5 "
             ],
@@ -734,7 +868,7 @@
             title: "Lesson 5.5",
             audio: "https://res.cloudinary.com/dobw6i86s/video/upload/v1755241355/ad8maueifvqorwzpxytn.m4a",
             notes: [
-               "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
+              "📘 دروس اللغة العربية لغير الناطقين بها (الجزء الأول)",
               "📢الدرس الخامس -٥",
               "Lesson -5 ,part -6 ",
               "⬅️ عَمٌّ - أَخُو الأَبِ\n\
@@ -822,11 +956,11 @@
 ➖هذَا -مُبْتَدَأ\n\
 ➖الرَّجُلُ- بَدَلٌ\n\
 ➖ تَاجِرٌ- خَبَرٌ",
-             "⬅️هذا رَجُلٌ\n\
+              "⬅️هذا رَجُلٌ\n\
 ഇത് പുരുഷനാകുന്നു\n\
 ➖هذا-مُبْتَدَأ\n\
 ➖ رَجُلٌ-خَبَرٌ",
-             "⬅️ أَمَامَ -ظَرْفُ المَكَانِ\n\
+              "⬅️ أَمَامَ -ظَرْفُ المَكَانِ\n\
 ⬅️ خَلْفَ-ظَرْفُ المَكَانِ"
             ],
             durationText: "14:51"
@@ -874,7 +1008,7 @@
               "⬅️ أنَا طَالِبٌ جَدِيدٌ \n\
 ➖طَالِبٌ -مَنْعُوتٌ\n\
 ➖جَدِيدٌ- نَعْتٌ"
-             
+
             ],
             durationText: "14:02"
           },
@@ -891,7 +1025,7 @@
               "➖رَجُلٌ -\n\
 ➖الرَّجُلُ- مَعْرِفَةٌ\n\
 ➖مُحمَّد -زيدٌ -يوسُف -أَحمد ... (كلها معرفة )"
-             
+
             ],
             durationText: "22:50"
           },
@@ -926,16 +1060,16 @@
               "✏️مُبْتَدَأٌ+خَبَرٌ =جُمْلَةٌ اسْمِيَّةٌ\n\
 ➖مثال :البَيْتُ جَمِيلٌ\n\
 ",
-"\
+              "\
 ✏️فِعلٌ+فاعِلٌ =جُمْلَةٌ فِعْلِيَّةٌ\n\
 ➖مِثَالٌ :ذهَبَ مُحَمَّدٌ\n\
-","\
+", "\
 ✏️شِبْهُ الجُمْلَةِ \n\
 ➖مِثَالٌ :علَى المَكتَبِ\n\
              :في الغُرفَةِ",
             ],
             durationText: "15:21"
-          }, 
+          },
           {
             part: 27,
             title: "Lesson 9.4",
@@ -958,7 +1092,7 @@
           {
             part: 1,
             title: "Part 1",
-            audio: "audio3.mp3",
+            audio: "audio4.mp3",
             notes: [
               "We upload soon"
             ],
@@ -990,8 +1124,10 @@
       }
     ];
 
-    let currentVolumeIdx = 0;
-    let currentPartIdx = 0;
+    let savedProgress = JSON.parse(localStorage.getItem('madeena_locProgress') || '{}');
+    let currentVolumeIdx = savedProgress.v || 0;
+    let currentPartIdx = savedProgress.p || 0;
+    let savedTime = savedProgress.t || 0;
 
     const volumeLabel = document.getElementById("volume-label");
     const partLabel = document.getElementById("part-label");
@@ -1021,6 +1157,9 @@
     }
 
     function loadUI() {
+      const loader = document.getElementById("initial-loader");
+      if(loader) loader.style.display = "none";
+
       renderVolumeButtons();
       populatePartSelect();
       loadCurrentLesson();
@@ -1060,6 +1199,9 @@
     }
 
     function loadCurrentLesson() {
+      if (currentVolumeIdx >= LESSONS.length) currentVolumeIdx = 0;
+      if (currentPartIdx >= LESSONS[currentVolumeIdx].parts.length) currentPartIdx = 0;
+
       const volumeObj = LESSONS[currentVolumeIdx];
       const partObj = volumeObj.parts[currentPartIdx];
 
@@ -1097,8 +1239,15 @@
 
       // Audio: clear previous error and set new source
       clearAudioError();
+      playPause.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       audioEl.src = partObj.audio;
       audioEl.load();
+
+      // Ensure that if we switch lessons manually, we don't jump to old savedTime 
+      if (savedProgress.v !== currentVolumeIdx || savedProgress.p !== currentPartIdx) {
+        savedTime = 0;
+      }
+      localStorage.setItem('madeena_locProgress', JSON.stringify({ v: currentVolumeIdx, p: currentPartIdx, t: savedTime }));
 
       // Prev/next state
       prevBtn.disabled = !hasPrev();
@@ -1144,28 +1293,45 @@
     volumeSlider.value = audioEl.volume;
 
     playPause.addEventListener("click", () => {
+      if (playPause.innerHTML.includes('fa-spinner')) return; // ignore clicks while loading
       if (audioEl.paused) audioEl.play();
       else audioEl.pause();
     });
 
     audioEl.addEventListener("play", () => {
-      playPause.textContent = "❚❚";
+      playPause.innerHTML = "❚❚";
       playPause.setAttribute("aria-label", "Pause");
     });
     audioEl.addEventListener("pause", () => {
-      playPause.textContent = "▶";
+      playPause.innerHTML = "▶";
       playPause.setAttribute("aria-label", "Play");
+    });
+    audioEl.addEventListener('loadstart', () => {
+      playPause.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    });
+    audioEl.addEventListener('waiting', () => {
+      playPause.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     });
     audioEl.addEventListener("loadedmetadata", () => {
       durationEl.textContent = formatTime(audioEl.duration);
+      if (savedTime > 0) {
+          audioEl.currentTime = savedTime;
+      }
     });
     audioEl.addEventListener("timeupdate", () => {
       currentTimeEl.textContent = formatTime(audioEl.currentTime);
       const percent = (audioEl.currentTime / audioEl.duration) * 100;
       progressFilled.style.width = percent + "%";
+      
+      localStorage.setItem('madeena_locProgress', JSON.stringify({ 
+          v: currentVolumeIdx, 
+          p: currentPartIdx, 
+          t: audioEl.currentTime 
+      }));
     });
     audioEl.addEventListener('canplay', () => {
       clearAudioError();
+      playPause.innerHTML = audioEl.paused ? "▶" : "❚❚";
     });
     audioEl.addEventListener('error', () => {
       if (!document.getElementById('audio-error')) {
@@ -1222,8 +1388,42 @@
       }
     });
 
-    // Init
-    loadUI();
+    // Init and merge Firebase data seamlessly
+    const db = window.firebaseDb || (typeof firebase !== 'undefined' ? firebase.database() : null);
+    if (db) {
+      db.ref("madeena_lessons").once("value", snapshot => {
+        if (snapshot.exists()) {
+          snapshot.forEach(child => {
+            const data = child.val();
+            if (!data || !data.volume || !data.partObj) return;
+
+            const volIdx = LESSONS.findIndex(v => v.volume == data.volume);
+            if (volIdx > -1) {
+              const existingPart = LESSONS[volIdx].parts.find(p => p.part == data.partObj.part);
+              if (!existingPart) LESSONS[volIdx].parts.push(data.partObj);
+            } else {
+              LESSONS.push({
+                volume: data.volume,
+                pdf: "",
+                parts: [data.partObj]
+              });
+            }
+          });
+
+          LESSONS.sort((a, b) => a.volume - b.volume);
+          LESSONS.forEach(v => {
+            if (v.parts) v.parts.sort((a, b) => a.part - b.part);
+          });
+        }
+        loadUI();
+      }).catch(err => {
+        console.error("Firebase error loading extra lessons:", err);
+        loadUI();
+      });
+    } else {
+      loadUI();
+    }
   </script>
 </body>
+
 </html>

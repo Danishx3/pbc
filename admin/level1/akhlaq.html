@@ -126,6 +126,26 @@
     .delete-btn:hover {
       background: #bb2d3b;
     }
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-hover);
+    }
+    .category-container {
+        background: rgba(13, 86, 79, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
   </style>
 </head>
 
@@ -294,51 +314,120 @@
     function loadSections() {
       const list = document.getElementById("sectionsList");
       list.innerHTML = "";
-
+      
       db.ref(DB_REF).orderByChild("order").once("value", snapshot => {
-        if (!snapshot.exists()) {
-          list.innerHTML = `<div class="col-12 text-center text-muted">No content found.</div>`;
-          return;
+        if(!snapshot.exists()) {
+             list.innerHTML = `<div class="col-12 text-center text-muted">No content found.</div>`;
+             return;
         }
 
+        const categories = {};
+
+        // Group explicitly by category
         snapshot.forEach(child => {
           const data = child.val();
-
-          let videoFrame = "";
-          if (data.videoUrl) {
-            videoFrame = `
-                <div class="video-wrapper">
-                    <iframe src="${data.videoUrl}" allowfullscreen></iframe>
-                </div>
-              `;
+          const pKey = child.key;
+          const cat = data.category && data.category.trim() !== "" ? data.category.trim() : "Uncategorized";
+          
+          if (!categories[cat]) {
+             categories[cat] = [];
           }
+          categories[cat].push({ key: pKey, ...data });
+        });
 
-          const html = `
-            <div class="col-md-6 col-lg-4">
-                <div class="video-card">
-                    ${videoFrame}
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                             <div class="card-title text-truncate">${data.title}</div>
-                             <span class="badge-cat">${data.category || 'N/A'}</span>
-                        </div>
-                        <p class="small text-muted mb-3 text-truncate">${data.subheading || ''}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="small text-muted">Order: ${data.order}</span>
-                            <button class="delete-btn" onclick="deleteSection('${child.key}')"><i class="fa fa-trash"></i> Delete</button>
+        let allHtml = "";
+
+        // Iterate categories
+        for (const [catName, items] of Object.entries(categories)) {
+            
+            let itemsHtml = "";
+            items.forEach(data => {
+              let videoFrame = "";
+              if(data.videoUrl) {
+                  videoFrame = `
+                    <div class="video-wrapper">
+                        <iframe src="${data.videoUrl}" allowfullscreen></iframe>
+                    </div>
+                  `;
+              }
+
+              itemsHtml += `
+                <div class="flex-shrink-0" style="width: 320px; max-width: 85vw;">
+                    <div class="video-card h-100 mb-0 d-flex flex-column">
+                        ${videoFrame}
+                        <div class="card-body d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                 <div class="card-title text-truncate" title="${data.title}">${data.title}</div>
+                                 <span class="badge-cat">${data.category || 'N/A'}</span>
+                            </div>
+                            <p class="small text-muted mb-3 text-truncate" title="${data.subheading || ''}">${data.subheading || ''}</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <span class="small text-muted">Order: ${data.order || 0}</span>
+                                <button class="delete-btn" onclick="deleteSection('${data.key}')"><i class="fa fa-trash"></i> Delete</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-          `;
-          list.innerHTML += html;
-        });
+              `;
+            });
+
+            const safeCatName = catName.replace(/'/g, "\\\'").replace(/"/g, '&quot;');
+
+            // Render category container horizontally slidable
+            allHtml += `
+              <div class="col-12 mb-4">
+                 <div class="category-container">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 pb-2 border-bottom border-secondary">
+                        <h4 class="text-white m-0 mb-2 mb-md-0 d-flex align-items-center" style="color: var(--primary-hover) !important;">
+                            <i class="fa fa-folder-open me-2"></i> ${catName}
+                            <span class="badge bg-secondary ms-3" style="font-size: 0.8rem; font-weight: normal;">${items.length} videos</span>
+                        </h4>
+                        <button class="delete-btn" onclick="deleteCategory('${safeCatName}')"><i class="fa fa-trash"></i> Delete Category</button>
+                    </div>
+                    <!-- Horizontal Scroll Container -->
+                    <div class="d-flex flex-nowrap overflow-auto gap-3 pb-3 custom-scrollbar">
+                        ${itemsHtml}
+                    </div>
+                 </div>
+              </div>
+            `;
+        }
+
+        list.innerHTML = allHtml;
       });
     }
 
     function deleteSection(id) {
       if (confirm("Delete this section?")) {
         db.ref(DB_REF + "/" + id).remove().then(loadSections);
+      }
+    }
+
+    function deleteCategory(catName) {
+      if (confirm(`Are you sure you want to delete ALL videos in the "${catName}" category? This cannot be undone.`)) {
+         db.ref(DB_REF).once('value', snapshot => {
+            if (snapshot.exists()) {
+               const updates = {};
+               snapshot.forEach(child => {
+                  const val = child.val();
+                  const c = val.category && val.category.trim() !== "" ? val.category.trim() : "Uncategorized";
+                  if (c === catName) {
+                     updates[child.key] = null;
+                  }
+               });
+               
+               if (Object.keys(updates).length > 0) {
+                   db.ref(DB_REF).update(updates).then(() => {
+                      alert(`Category "${catName}" deleted.`);
+                      loadSections();
+                   }).catch(err => {
+                      alert("Error: " + err.message);
+                   });
+               } else {
+                   alert("No items found for this category.");
+               }
+            }
+         });
       }
     }
   </script>
