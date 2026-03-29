@@ -1016,6 +1016,14 @@
             border-color: rgba(26, 188, 156, 0.3);
         }
 
+        .mode-card.khatm .mode-icon-wrapper i {
+            color: #4facfe;
+        }
+
+        .mode-card.khatm:hover {
+            border-color: rgba(79, 172, 254, 0.3);
+        }
+
         .mode-card.night .mode-icon-wrapper i {
             color: #a78bfa;
         }
@@ -1136,6 +1144,16 @@
                     <small id="cardKahfProgressText" class="text-white-50 mt-2 d-block" style="font-size: 0.75rem;">0%
                         Complete</small>
                 </div>
+
+                <!-- Khatm Challenge Card -->
+                <div class="mode-card khatm" onclick="selectMode('khatm')">
+                    <div class="mode-icon-wrapper">
+                        <i class="fas fa-medal fa-3x"></i>
+                    </div>
+                    <h3>Quran Completing Challenge</h3>
+                    <p>Complete the whole Quran. Track your stats.</p>
+                </div>
+
                 <div class="mode-card ramadan" onclick="selectMode('ramadan')">
                     <div class="mode-icon-wrapper">
                         <i class="fas fa-kaaba fa-3x"></i>
@@ -1244,7 +1262,13 @@
             style="display: none; background: linear-gradient(135deg, #155e55, #0d3838); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="m-0 text-warning"><i class="fas fa-moon"></i> Ramadan Challenge</h5>
-                <span class="badge bg-warning text-dark" id="ramadanProgressText">0% Complete</span>
+                <div>
+                    <button class="btn btn-sm text-warning me-1" onclick="resetChallenge('ramadan')"
+                        title="Reset Progress" style="padding: 0 5px;">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <span class="badge bg-warning text-dark" id="ramadanProgressText">0% Complete</span>
+                </div>
             </div>
 
             <div class="progress mb-3" style="height: 20px; background-color: rgba(255,255,255,0.1);">
@@ -1269,6 +1293,44 @@
             <div class="mt-2 text-center">
                 <small class="text-light fst-italic" style="font-size: 0.8rem;">Changes are saved separately from
                     regular reading.</small>
+            </div>
+        </div>
+
+        <!-- Khatm Challenge Dashboard -->
+        <div id="khatmDashboard"
+            style="display: none; background: linear-gradient(135deg, #103b66, #072a4a); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #4facfe; box-shadow: 0 0 15px rgba(79, 172, 254, 0.3);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0 text-info"><i class="fas fa-medal"></i> Quran Completing Challenge</h5>
+                <div>
+                    <button class="btn btn-sm text-info me-1" onclick="resetChallenge('khatm')" title="Reset Progress"
+                        style="padding: 0 5px;">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <span class="badge bg-info text-dark" id="khatmProgressText">0% Complete</span>
+                </div>
+            </div>
+
+            <div class="progress mb-3" style="height: 20px; background-color: rgba(255,255,255,0.1);">
+                <div id="khatmProgressBar" class="progress-bar bg-info progress-bar-striped progress-bar-animated"
+                    role="progressbar" style="width: 0%"></div>
+            </div>
+
+            <div class="row text-center g-2">
+                <div class="col-6">
+                    <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
+                        <small class="text-white-50 d-block">Current Juz</small>
+                        <strong class="text-info" id="khatmCompletedJuzText">Juz 1 / 30</strong>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-2 rounded" style="background: rgba(0,0,0,0.2);">
+                        <small class="text-white-50 d-block">Ayah in Juz</small>
+                        <strong class="text-white" id="khatmRemainingPercentageText">1 / ?</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2 text-center">
+                <small class="text-light fst-italic" style="font-size: 0.8rem;">Your progress is saved securely.</small>
             </div>
         </div>
 
@@ -1455,6 +1517,7 @@
         let isKahfMode = false;
         let isRamadanMode = false;
         let isNightMode = false;
+        let isKhatmMode = false;
 
         // Night mode ordered segments: {surah, startAyah, endAyah}
         // Ayatul Kursi = 2:255, Last 2 Baqarah = 2:285-286
@@ -1584,16 +1647,19 @@
             const overlay = document.getElementById('entryOverlay');
 
             if (mode === 'ramadan') {
-                isRamadanMode = true; isKahfMode = false; isNightMode = false;
+                isRamadanMode = true; isKahfMode = false; isNightMode = false; isKhatmMode = false;
                 setupRamadanMode();
             } else if (mode === 'kahf') {
-                isRamadanMode = false; isKahfMode = true; isNightMode = false;
+                isRamadanMode = false; isKahfMode = true; isNightMode = false; isKhatmMode = false;
                 setupKahfMode();
             } else if (mode === 'night') {
-                isRamadanMode = false; isKahfMode = false; isNightMode = true;
+                isRamadanMode = false; isKahfMode = false; isNightMode = true; isKhatmMode = false;
                 setupNightMode();
+            } else if (mode === 'khatm') {
+                isRamadanMode = false; isKahfMode = false; isNightMode = false; isKhatmMode = true;
+                setupKhatmMode();
             } else {
-                isRamadanMode = false; isKahfMode = false; isNightMode = false;
+                isRamadanMode = false; isKahfMode = false; isNightMode = false; isKhatmMode = false;
                 setupRegularMode();
             }
 
@@ -1604,10 +1670,34 @@
             }, 500);
         }
 
+        function setupKhatmMode() {
+            document.querySelector('.surah-selector').style.display = 'none';
+            document.getElementById('kahfDashboard').style.display = 'none';
+            document.getElementById('nightDashboard').style.display = 'none';
+            document.getElementById('ramadanDashboard').style.display = 'none';
+            const kDash = document.getElementById('khatmDashboard');
+            if (kDash) kDash.style.display = 'block';
+
+            const khatmSaved = localStorage.getItem('khatmProgress');
+            if (khatmSaved) {
+                const p = JSON.parse(khatmSaved);
+                currentSurah = p.surah;
+                currentAyahNumber = p.ayah;
+            } else {
+                currentSurah = 1;
+                currentAyahNumber = 1;
+            }
+            const select = document.getElementById('surahSelect');
+            if (select) select.value = currentSurah;
+            loadSurah(currentAyahNumber);
+        }
+
         function setupKahfMode() {
             document.querySelector('.surah-selector').style.display = 'none';
             document.getElementById('ramadanDashboard').style.display = 'none';
             document.getElementById('nightDashboard').style.display = 'none';
+            const kDash = document.getElementById('khatmDashboard');
+            if (kDash) kDash.style.display = 'none';
             document.getElementById('kahfDashboard').style.display = 'block';
 
             // Identify "Current Friday" to handle resets
@@ -1657,6 +1747,8 @@
             document.querySelector('.surah-selector').style.display = 'none';
             document.getElementById('kahfDashboard').style.display = 'none';
             document.getElementById('nightDashboard').style.display = 'none';
+            const kDash = document.getElementById('khatmDashboard');
+            if (kDash) kDash.style.display = 'none';
             document.getElementById('ramadanDashboard').style.display = 'block';
 
             // Load Ramadan Progress
@@ -1685,6 +1777,8 @@
             document.getElementById('ramadanDashboard').style.display = 'none';
             document.getElementById('kahfDashboard').style.display = 'none';
             document.getElementById('nightDashboard').style.display = 'none';
+            const kDash = document.getElementById('khatmDashboard');
+            if (kDash) kDash.style.display = 'none';
             checkResumeReading();
         }
 
@@ -1711,6 +1805,8 @@
             document.querySelector('.surah-selector').style.display = 'none';
             document.getElementById('ramadanDashboard').style.display = 'none';
             document.getElementById('kahfDashboard').style.display = 'none';
+            const kDash = document.getElementById('khatmDashboard');
+            if (kDash) kDash.style.display = 'none';
             document.getElementById('nightDashboard').style.display = 'block';
 
             const nightDate = getNightDate();
@@ -1881,6 +1977,37 @@
             if (ayahInJuzText) ayahInJuzText.innerText = `${info.ayahInJuz} / ${info.totalAyahsInJuz}`;
         }
 
+        function updateKhatmStats() {
+            if (!isKhatmMode || !currentSurah) return;
+
+            const info = getJuzInfo(currentSurah, currentAyahNumber);
+            const percentage = ((info.juz - 1 + info.ayahInJuz / info.totalAyahsInJuz) / 30) * 100;
+
+            let currentJuz = info.juz;
+            if (surahData && surahData.arabicAudio && surahData.arabicAudio.ayahs) {
+                const idx = currentAyahNumber - 1;
+                if (surahData.arabicAudio.ayahs[idx] && surahData.arabicAudio.ayahs[idx].juz) {
+                    currentJuz = surahData.arabicAudio.ayahs[idx].juz;
+                    const juzEntry = juzBoundaries.find(j => j.juz === currentJuz);
+                    if (juzEntry) {
+                        info.ayahInJuz = info.globalIndex - juzEntry.startGlobal + 1;
+                        info.totalAyahsInJuz = juzEntry.ayahs;
+                    }
+                    info.juz = currentJuz;
+                }
+            }
+
+            const progressBar = document.getElementById('khatmProgressBar');
+            const progressText = document.getElementById('khatmProgressText');
+            const juzText = document.getElementById('khatmCompletedJuzText');
+            const ayahInJuzText = document.getElementById('khatmRemainingPercentageText');
+
+            if (progressBar) progressBar.style.width = `${percentage}%`;
+            if (progressText) progressText.innerText = `${percentage.toFixed(1)}% Complete`;
+            if (juzText) juzText.innerText = `Juz ${info.juz} / 30`;
+            if (ayahInJuzText) ayahInJuzText.innerText = `${info.ayahInJuz} / ${info.totalAyahsInJuz}`;
+        }
+
         function toggleSettings() {
             const panel = document.getElementById('settingsPanel');
             const icon = document.getElementById('settingsIcon');
@@ -1912,7 +2039,7 @@
                 const list = document.getElementById('savedAyahsList');
                 const title = document.getElementById('savedAyahsTitle');
 
-                if (isRamadanMode || isNightMode) {
+                if (isRamadanMode || isNightMode || isKhatmMode) {
                     if (list) list.style.display = 'none';
                     if (title) title.style.display = 'none';
                 } else {
@@ -2161,6 +2288,7 @@
                 // Update stats if mode active
                 if (isRamadanMode) updateRamadanStats();
                 if (isKahfMode) updateKahfStats();
+                if (isKhatmMode) updateKhatmStats();
             } catch (e) {
                 console.error('API Error Details:', e);
                 display.innerHTML = `
@@ -2555,7 +2683,7 @@
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             // Previous Logic
-            if (isRamadanMode) {
+            if (isRamadanMode || isKhatmMode) {
                 prevBtn.disabled = (currentSurah === 1 && currentAyahNumber === 1);
             } else if (isKahfMode) {
                 prevBtn.disabled = (currentAyahNumber === 1);
@@ -2567,7 +2695,7 @@
             }
 
             // Next Logic
-            if (isRamadanMode) {
+            if (isRamadanMode || isKhatmMode) {
                 nextBtn.disabled = false;
                 if (currentSurah === 114 && currentAyahNumber === 6) nextBtn.disabled = true;
             } else if (isKahfMode) {
@@ -2808,6 +2936,12 @@
                     ayah: currentAyahNumber
                 }));
                 if (typeof updateRamadanStats === 'function') updateRamadanStats();
+            } else if (isKhatmMode) {
+                localStorage.setItem('khatmProgress', JSON.stringify({
+                    surah: currentSurah,
+                    ayah: currentAyahNumber
+                }));
+                if (typeof updateKhatmStats === 'function') updateKhatmStats();
             } else if (isKahfMode) {
                 localStorage.setItem('kahfProgress', JSON.stringify({
                     surah: currentSurah,
@@ -2856,6 +2990,8 @@
             let p;
             if (isRamadanMode) {
                 p = JSON.parse(localStorage.getItem('ramadanProgress'));
+            } else if (isKhatmMode) {
+                p = JSON.parse(localStorage.getItem('khatmProgress'));
             } else {
                 p = JSON.parse(localStorage.getItem('quranProgress'));
             }
@@ -2869,6 +3005,26 @@
 
         function closeResumeBanner() {
             document.getElementById('resumeBanner').style.display = 'none';
+        }
+
+        function resetChallenge(mode) {
+            if (confirm("Are you sure you want to completely restart this challenge from the beginning?")) {
+                if (mode === 'ramadan') {
+                    localStorage.removeItem('ramadanProgress');
+                    currentSurah = 1;
+                    currentAyahNumber = 1;
+                    const select = document.getElementById('surahSelect');
+                    if (select) select.value = 1;
+                    loadSurah(1);
+                } else if (mode === 'khatm') {
+                    localStorage.removeItem('khatmProgress');
+                    currentSurah = 1;
+                    currentAyahNumber = 1;
+                    const select = document.getElementById('surahSelect');
+                    if (select) select.value = 1;
+                    loadSurah(1);
+                }
+            }
         }
 
         // Swipe Gestures

@@ -438,7 +438,7 @@
         userId = user.uid;
         db.ref('users/' + userId).once('value').then(snap => {
           username = snap.val().username || "User";
-          document.getElementById("welcomeMessage").innerText = "Salam, " + username;
+          document.getElementById("welcomeMessage").innerText = "Welcome, " + username;
           loadQuizzes();
         });
       } else {

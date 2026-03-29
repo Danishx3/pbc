@@ -657,9 +657,36 @@
       }
     });
 
-    // Also listen for new messages to show badges (basic implementation)
-    // In a real app we'd have a 'conversations' node sorted by last message.
-    // Here we have to iterate or listen. For now keeping it simple as per original logic.
+    function handleGlobalMessageUpdate(snapshot) {
+      const userId = snapshot.key;
+      const msgs = snapshot.val();
+      if (!msgs) return;
+      const keys = Object.keys(msgs);
+      const lastMsg = msgs[keys[keys.length - 1]];
+      
+      if (lastMsg && lastMsg.sender === 'user') {
+        const btn = userButtons[userId];
+        if (btn) {
+          // Move to top
+          usersDiv.prepend(btn);
+          
+          // Add unread indicator if not currently selected
+          if (currentUserId !== userId) {
+            if (!btn.querySelector('.badge')) {
+              const badge = document.createElement('span');
+              badge.className = 'badge';
+              badge.innerText = 'New';
+              btn.appendChild(badge);
+            }
+            // Optional: play a subtle notification sound for the admin
+            document.getElementById('notifSound').play().catch(() => {});
+          }
+        }
+      }
+    }
+
+    db.ref('messages').on('child_changed', handleGlobalMessageUpdate);
+    db.ref('messages').on('child_added', handleGlobalMessageUpdate);
 
   </script>
 </body>

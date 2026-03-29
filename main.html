@@ -21,6 +21,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    @keyframes pulseNotice {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(231, 76, 60, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+      }
+    }
+
     /* ── Page-specific overrides ── */
 
     /* Navbar */
@@ -43,10 +60,11 @@
     }
 
     .welcome-banner h5 {
-      font-size: 1.1rem;
-      color: #a8f0e8;
-      letter-spacing: 0.04em;
-      font-weight: 400;
+      font-size: 1.3rem;
+      color: #ffffff;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     /* Quick-action grid */
@@ -54,9 +72,9 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 14px;
+      gap: 16px;
       padding: 20px 16px 30px;
-      max-width: 480px;
+      max-width: 520px;
       margin: 0 auto;
     }
 
@@ -65,16 +83,18 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      background: rgba(13, 86, 79, 0.15);
-      border: 1px solid rgba(13, 86, 79, 0.4);
+      background: rgba(13, 86, 79, 0.25);
+      border: 1px solid rgba(13, 86, 79, 0.6);
       border-radius: 18px;
-      padding: 18px 20px;
-      width: 90px;
+      padding: 20px;
+      width: 100px;
       cursor: pointer;
       transition: all 0.25s ease;
-      color: #fff;
-      font-size: 0.75rem;
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 600;
       font-family: 'Anek Latin', sans-serif;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .qa-btn:hover {
@@ -85,15 +105,16 @@
     }
 
     .qa-icon {
-      width: 46px;
-      height: 46px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      background: rgba(13, 86, 79, 0.6);
+      background: linear-gradient(135deg, rgba(13, 86, 79, 0.8), rgba(26, 122, 112, 0.8));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      color: #a8f0e8;
+      font-size: 1.5rem;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     /* Install button */
@@ -137,13 +158,13 @@
       color: #fff;
       border: none;
       border-radius: 30px;
-      padding: 12px 36px;
-      font-size: 0.95rem;
+      padding: 14px 40px;
+      font-size: 1.05rem;
       font-family: 'Anek Latin', sans-serif;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.25s ease;
-      box-shadow: 0 4px 15px rgba(13, 86, 79, 0.4);
+      box-shadow: 0 4px 15px rgba(13, 86, 79, 0.6);
     }
 
     .cta-btn:hover {
@@ -428,10 +449,12 @@
       padding: 18px 24px;
       display: none;
       justify-content: space-between;
-      align-items: flex-end; /* Align main info on baseline */
+      align-items: flex-end;
+      /* Align main info on baseline */
       transition: all 0.3s ease;
-      max-width: 480px;
+      max-width: 520px;
       width: calc(100% - 32px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .prayer-mini-card:hover {
@@ -455,10 +478,11 @@
     }
 
     .pmc-name {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #a8f0e8;
+      color: #ffffff;
       line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .pmc-right {
@@ -469,11 +493,12 @@
     }
 
     .pmc-time {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      color: #fff;
+      color: #a8f0e8;
       display: block;
       line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .pmc-countdown {
@@ -491,8 +516,9 @@
       }
 
       .qa-btn {
-        width: 80px;
-        padding: 14px 12px;
+        width: 85px;
+        padding: 16px 12px;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -579,8 +605,25 @@
     <h5 id="welcomeMessage"><i class="fa-solid fa-spinner fa-spin-pulse"></i></h5>
   </div>
 
+  <!-- Live Notification Banner -->
+  <a href="/level1/madeena.html" style="text-decoration: none;">
+    <div class="intro" style="animation-delay:0.01s; display: flex; justify-content: center; margin: 0 16px 20px;">
+      <div
+        style="background: rgba(231, 76, 60, 0.15); border: 1px solid rgba(231, 76, 60, 0.4); border-radius: 12px; padding: 12px 18px; display: flex; align-items: center; gap: 12px; max-width: 520px; width: 100%;">
+        <div
+          style="width: 12px; height: 12px; background: #e74c3c; border-radius: 50%; animation: pulseNotice 2s infinite; flex-shrink: 0;">
+        </div>
+        <div style="text-align: left; line-height: 1.3;">
+          <strong style="color: #ff8a80; font-size: 0.95rem;">Live Now:</strong>
+          <span style="color: #fff; font-size: 0.85rem;">Madinah Book Session – In Progress</span>
+        </div>
+      </div>
+    </div>
+  </a>
+
   <!-- Prayer Mini Card -->
-  <div id="prayerMiniCard" class="prayer-mini-card intro" style="animation-delay:0.02s;" onclick="window.location.href='times.html'">
+  <div id="prayerMiniCard" class="prayer-mini-card intro" style="animation-delay:0.02s;"
+    onclick="window.location.href='times.html'">
     <div class="pmc-left">
       <span class="pmc-label">Next Prayer</span>
       <span id="pmcName" class="pmc-name">--</span>
@@ -599,6 +642,13 @@
   <!-- Quick Actions -->
   <div class="intro" style="animation-delay:0.05s;">
     <div class="quick-actions">
+      <button class="qa-btn" onclick="window.location.href='/level1/madeena.html'" style="position: relative;">
+        <span
+          style="position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; background: #e74c3c; border-radius: 50%; animation: pulseNotice 2s infinite; border: 2px solid #000;"></span>
+        <div class="qa-icon" style="background: linear-gradient(135deg, rgba(231,76,60,0.8), rgba(192,57,43,0.8));"><i
+            class="fa-solid fa-language"></i></div>
+        Arabic
+      </button>
       <button class="qa-btn" onclick="goToNextPage3()">
         <div class="qa-icon"><i class="fa-solid fa-calendar-days"></i></div>
         Adhkar
@@ -742,10 +792,23 @@
             const el = document.getElementById('typingIndicator');
             if (el) el.innerText = snap.val() ? 'Admin is typing...' : '';
           });
+
+          // Unread Message Animation
+          db.ref('messages/' + chatUserId).limitToLast(1).on('value', snapshot => {
+            const win = document.getElementById('chatWindow');
+            if (snapshot.exists()) {
+              const msgs = snapshot.val();
+              const key = Object.keys(msgs)[0];
+              const lastMsg = msgs[key];
+              if (lastMsg && lastMsg.sender === 'admin' && win.style.display !== 'flex') {
+                document.querySelector('.chat-fab').style.animation = 'pulseNotice 2s infinite';
+              }
+            }
+          });
         }
       } else {
         if (isGuestMode()) {
-          document.getElementById("welcomeMessage").innerText = `Welcome, Guest`;
+          document.getElementById("welcomeMessage").innerText = `Welcome, Pious`;
           updateNavigationForGuest();
         } else {
           window.location.href = "login.html";
@@ -840,11 +903,11 @@
 
       document.getElementById('pmcName').innerText = nextPrayer;
       document.getElementById('pmcCountdown').innerText = `${hours}h ${mins}m ${secs}s left`;
-      
+
       const [ph, pm] = cachedTimings[nextPrayer].split(':').map(Number);
       const ampm = ph >= 12 ? 'PM' : 'AM';
       const displayH = ph % 12 || 12;
-      document.getElementById('pmcTime').innerText = `${displayH}:${pm < 10 ? '0'+pm : pm} ${ampm}`;
+      document.getElementById('pmcTime').innerText = `${displayH}:${pm < 10 ? '0' + pm : pm} ${ampm}`;
     }
 
     // Chat
@@ -854,6 +917,7 @@
         win.style.display = 'none';
       } else {
         win.style.display = 'flex';
+        document.querySelector('.chat-fab').style.animation = 'none';
         initChat();
       }
     }

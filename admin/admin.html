@@ -53,16 +53,41 @@
     <center>
       <h5 class="pa" style="margin-top: 20px; margin-bottom: 20px;">Dashboard Access Granted.</h5>
       <h2 style="color: #fff; margin-bottom: 20px;">Welcome, Pious.</h2>
-      
+
+      <h3 style="color: #afe9da; margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem;">Global Analytics</h3>
       <!-- Visitor Stats Row -->
-      <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap;">
-        <div style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
-          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Today's Visitors</div>
+      <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;">
+        <div
+          style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
+          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Today's
+            Visitors</div>
           <div id="todayVisitors" style="font-size: 1.8rem; color: #afe9da; font-weight: bold;">0</div>
         </div>
-        <div style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
-          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Avg Daily Visitors</div>
+        <div
+          style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
+          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Avg Daily
+            Visitors</div>
           <div id="avgVisitors" style="font-size: 1.8rem; color: #afe9da; font-weight: bold;">0</div>
+        </div>
+      </div>
+
+      <h3 style="color: #afe9da; margin-bottom: 15px; font-size: 1.2rem;">Madeena Analytics</h3>
+      <!-- Madeena Visitor Stats Row -->
+      <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap;">
+        <div
+          style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
+          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Today's Views</div>
+          <div id="madeenaTodayViews" style="font-size: 1.8rem; color: #afe9da; font-weight: bold;">0</div>
+        </div>
+        <div
+          style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
+          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Total Views</div>
+          <div id="madeenaTotalViews" style="font-size: 1.8rem; color: #afe9da; font-weight: bold;">0</div>
+        </div>
+        <div
+          style="background: rgba(13, 86, 79, 0.2); border: 1px solid rgba(13, 86, 79, 0.4); border-radius: 12px; padding: 15px 25px; min-width: 150px;">
+          <div style="font-size: 0.8rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px;">Avg Daily Views</div>
+          <div id="madeenaAvgViews" style="font-size: 1.8rem; color: #afe9da; font-weight: bold;">0</div>
         </div>
       </div>
     </center>
@@ -135,6 +160,15 @@
           </a>
         </div>
 
+        <!-- Analytics -->
+        <div class="btnn1">
+          <a href="madeena.html" style="text-decoration:none;">
+            <button class="text-white">
+              <div class="btnn"><i class="fa-solid fa-chart-line"></i></div>Madeena
+            </button>
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
@@ -160,7 +194,7 @@
       const db = window.firebaseDb || firebase.database();
       const date = new Date();
       const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-      
+
       // Today's Visitors
       db.ref('analytics/site/dailyVisitors/' + today).on('value', snapshot => {
         document.getElementById('todayVisitors').innerText = (snapshot.val() || 0).toLocaleString();
@@ -174,6 +208,27 @@
           const total = Object.values(data).reduce((a, b) => a + b, 0);
           const avg = days > 0 ? Math.round(total / days) : 0;
           document.getElementById('avgVisitors').innerText = avg.toLocaleString();
+        }
+      });
+
+      // Madeena Total Views
+      db.ref('analytics/madeena/totalViews').on('value', snapshot => {
+        document.getElementById('madeenaTotalViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Madeena Today's Views
+      db.ref('analytics/madeena/dailyViews/' + today).on('value', snapshot => {
+        document.getElementById('madeenaTodayViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Madeena Average Daily Views
+      db.ref('analytics/madeena/dailyViews').on('value', snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const days = Object.keys(data).length;
+          const total = Object.values(data).reduce((a, b) => a + b, 0);
+          const avg = days > 0 ? Math.round(total / days) : 0;
+          document.getElementById('madeenaAvgViews').innerText = avg.toLocaleString();
         }
       });
     }

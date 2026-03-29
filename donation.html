@@ -472,16 +472,6 @@
         <!-- Statistics -->
         <div class="stats-container intro">
             <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-coins"></i></div>
-                <div class="stat-value">₹<span id="totalCollected">0</span></div>
-                <div class="stat-label">Total Collected</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-users"></i></div>
-                <div class="stat-value"><span id="totalDonors">0</span></div>
-                <div class="stat-label">Total Donors</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-hand-holding-usd"></i></div>
                 <div class="stat-value">₹<span id="yourDonations">0</span></div>
                 <div class="stat-label">Your Donations</div>
@@ -527,7 +517,6 @@
                 } else {
                     currentUser = user;
                     loadUserData();
-                    loadStatistics();
                     loadRecentDonations();
                 }
             } else {
@@ -578,15 +567,7 @@
                 });
         }
 
-        // Load Statistics
-        function loadStatistics() {
-            // Listen for real-time updates
-            db.ref('donations/stats').on('value', snapshot => {
-                const stats = snapshot.val() || { totalAmount: 0, totalDonors: 0 };
-                document.getElementById('totalCollected').textContent = stats.totalAmount.toLocaleString('en-IN');
-                document.getElementById('totalDonors').textContent = stats.totalDonors;
-            });
-        }
+        // Statistics removed
 
         // Load Recent Donations
         function loadRecentDonations() {
