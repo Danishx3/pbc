@@ -340,7 +340,15 @@
                     <button class="btn btn-outline-light w-100 mt-3"
                         style="border-radius: 10px; border-color: rgba(255,255,255,0.2);"
                         onclick="saveAndFetch()">Update Times</button>
-                    <p class="mt-3 mb-0" style="font-size: 0.75rem; opacity: 0.5;">Method: Karachi Islamic Sciences</p>
+                    
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+                    
+                    <div style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
+                        Notifications</div>
+                    <p class="mt-2 mb-0" style="font-size: 0.75rem; opacity: 0.7;">
+                        Allow push notifications in your browser to receive prayer time reminders.
+                    </p>
+                    <p class="mt-2 mb-0" style="font-size: 0.75rem; opacity: 0.5;">Method: Karachi Islamic Sciences</p>
                 </div>
 
             </div>
@@ -363,6 +371,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadSettings();
             init();
+            initPrayerPushNotifications();
         });
 
         function loadSettings() {
@@ -568,6 +577,49 @@
             } else {
                 circleIcon.className = 'fas fa-sun';
             }
+            
+            // Notification Check
+            if ('Notification' in window && Notification.permission === 'granted' && (!window.isGuestMode || !isGuestMode())) {
+                const nowTotalMin = now.getHours() * 60 + now.getMinutes();
+                
+                prayerSequence.forEach(prayer => {
+                    const pTimeStr = prayer.time.split(' ')[0];
+                    const [pH, pM] = pTimeStr.split(':').map(Number);
+                    const prayerTotalMin = pH * 60 + pM;
+
+                    // Trigger if we are exactly at prayer time, or up to 15 mins after
+                    // (helps if the tab was frozen/throttled during the exact minute)
+                    if (nowTotalMin >= prayerTotalMin && nowTotalMin <= prayerTotalMin + 15) {
+                        const logicalDate = getCommonDateString();
+                        const lastNotifiedKey = `prayer_last_notified_${prayer.name}_${logicalDate}`;
+                        if (!localStorage.getItem(lastNotifiedKey)) {
+                            sendNotification(`Time for ${prayer.name}`, `It is currently time for ${prayer.name} prayer. Tap to open.`);
+                            localStorage.setItem(lastNotifiedKey, 'true');
+                        }
+                    }
+                });
+            }
+        }
+
+        function sendNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                        registration.showNotification(title, {
+                            body: body,
+                            icon: '/logoo.png',
+                            badge: '/logoo.png',
+                            vibrate: [200, 100, 200, 100, 200],
+                            tag: 'prayer-reminder',
+                            data: { url: '/times.html' }
+                        });
+                    }).catch(function() {
+                        new Notification(title, { body: body, icon: '/logoo.png' });
+                    });
+                } else {
+                    new Notification(title, { body: body, icon: '/logoo.png' });
+                }
+            }
         }
 
         function calculateAndDisplaySalafTimes(maghribTime, fajrTime) {
@@ -640,6 +692,21 @@
             hours = hours ? hours : 12; // the hour '0' should be '12'
 
             return `${hours}:${minutes} ${ampm}`;
+        }
+        
+        async function initPrayerPushNotifications() {
+            if (!('Notification' in window)) return;
+
+            if (Notification.permission === 'default') {
+                try {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        // Permission granted; reminders will trigger on their scheduled times.
+                    }
+                } catch (e) {
+                    // Ignore: browser may block prompt or user may dismiss it.
+                }
+            }
         }
     </script>
 </body>

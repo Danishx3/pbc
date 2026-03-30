@@ -794,16 +794,33 @@
           });
 
           // Unread Message Animation
+          let isInitialLoad = true;
+          let lastAdminMsgId = null;
+
           db.ref('messages/' + chatUserId).limitToLast(1).on('value', snapshot => {
             const win = document.getElementById('chatWindow');
             if (snapshot.exists()) {
               const msgs = snapshot.val();
               const key = Object.keys(msgs)[0];
               const lastMsg = msgs[key];
-              if (lastMsg && lastMsg.sender === 'admin' && win.style.display !== 'flex') {
-                document.querySelector('.chat-fab').style.animation = 'pulseNotice 2s infinite';
+              
+              if (lastMsg && lastMsg.sender === 'admin') {
+                if (win.style.display !== 'flex') {
+                  document.querySelector('.chat-fab').style.animation = 'pulseNotice 2s infinite';
+                }
+                
+                // Trigger notification for new messages
+                if (!isInitialLoad && lastAdminMsgId !== key) {
+                  lastAdminMsgId = key;
+                  if (win.style.display !== 'flex' || document.hidden) {
+                    sendNotification('New message from Admin', lastMsg.text);
+                  }
+                } else if (isInitialLoad) {
+                  lastAdminMsgId = key;
+                }
               }
             }
+            isInitialLoad = false;
           });
         }
       } else {
@@ -818,6 +835,27 @@
 
     function logout() {
       auth.signOut().then(() => { window.location.href = "login.html"; });
+    }
+
+    function sendNotification(title, body) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            registration.showNotification(title, {
+              body: body,
+              icon: '/logoo.png',
+              badge: '/logoo.png',
+              vibrate: [200, 100, 200],
+              tag: 'chat-message',
+              data: { url: '/main.html' }
+            });
+          }).catch(function() {
+            new Notification(title, { body: body, icon: '/logoo.png' });
+          });
+        } else {
+          new Notification(title, { body: body, icon: '/logoo.png' });
+        }
+      }
     }
 
     const currentVersion = 'v11';
@@ -913,6 +951,11 @@
     // Chat
     function toggleChat() {
       const win = document.getElementById('chatWindow');
+      
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+      
       if (win.style.display === 'flex') {
         win.style.display = 'none';
       } else {

@@ -566,6 +566,12 @@
         <input type="range" id="sizeRange" class="form-range" min="1.2" max="3.5" step="0.1" value="1.8">
       </div>
 
+      <div class="setting-group">
+        <div class="text-white-50" style="font-size: 0.85rem; margin-top: 6px;">
+          Allow push notifications in your browser to receive Adhkar reminders.
+        </div>
+      </div>
+
       <div class="font-preview" id="fontPreview">
         بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
       </div>
@@ -900,9 +906,78 @@
       });
     }
 
-    // Initialize settings
-    loadSettings();
-    // --- End Settings Logic ---
+    let reminderInterval;
+    async function initPushNotificationReminders() {
+      if (!('Notification' in window)) return;
+
+      if (Notification.permission === 'granted') {
+        startReminderCheck();
+        return;
+      }
+
+      if (Notification.permission === 'default') {
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission === 'granted') {
+            startReminderCheck();
+          }
+        } catch (e) {
+          // Ignore: browser may block prompt or user may dismiss it.
+        }
+      }
+    }
+
+    function startReminderCheck() {
+      if (reminderInterval) clearInterval(reminderInterval);
+      reminderInterval = setInterval(checkReminders, 60000); // Check every minute
+      checkReminders(); // Check immediately
+    }
+
+    function checkReminders() {
+      if (typeof isGuestMode === 'function' && isGuestMode()) return;
+      
+      const currentHour = new Date().getHours();
+      let currentSlot = '';
+      
+      if (currentHour >= 5 && currentHour < 9) currentSlot = 'morning';
+      else if (currentHour >= 16 && currentHour < 19) currentSlot = 'evening';
+      else if (currentHour >= 19 || currentHour < 5) currentSlot = 'night';
+
+      if (!currentSlot) return; // No specific reminders for general time
+
+      const logicalDate = getLogicalDateStr();
+      const lastNotifiedKey = `adhkar_last_notified_${currentSlot}`;
+      const lastNotifiedDate = localStorage.getItem(lastNotifiedKey);
+
+      if (lastNotifiedDate !== logicalDate) {
+        const title = `Time for ${slotNames[currentSlot]} Adhkar`;
+        const body = 'Take a moment to remember Allah. Tap to view your Adhkar.';
+        sendNotification(title, body);
+        localStorage.setItem(lastNotifiedKey, logicalDate);
+      }
+    }
+
+    function sendNotification(title, body) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            registration.showNotification(title, {
+              body: body,
+              icon: '/logoo.png',
+              badge: '/logoo.png',
+              vibrate: [200, 100, 200],
+              tag: 'adhkar-reminder',
+              data: { url: '/adhkar.html' }
+            });
+          }).catch(function() {
+            // Fallback
+            new Notification(title, { body: body, icon: '/logoo.png' });
+          });
+        } else {
+          new Notification(title, { body: body, icon: '/logoo.png' });
+        }
+      }
+    }
 
     const slotNames = {
       morning: 'Morning',
@@ -913,6 +988,11 @@
 
     document.getElementById('pageTitle').textContent = `${slotNames[slot]} Adhkar`;
     timeBadge.textContent = `${slotNames[slot]} Adhkar`;
+
+    // Initialize settings
+    loadSettings();
+    initPushNotificationReminders();
+    // --- End Settings Logic ---
 
     // Helper to get logical date string
     // For night slot (19:00 - 05:00), hours 00:00-04:59 count as part of "yesterday"

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Analytics Dashboard - ILMIFY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Styles -->
+  <link rel="stylesheet" href="../pbc.css">
+  <link rel="icon" href="../logoo.png" type="image/icon type">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+  <style>
+    .analytics-card {
+      background: rgba(13, 86, 79, 0.2);
+      border: 1px solid rgba(13, 86, 79, 0.4);
+      border-radius: 12px;
+      padding: 20px;
+      min-width: 180px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .analytics-label {
+      font-size: 0.85rem;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+    .analytics-value {
+      font-size: 2rem;
+      color: #afe9da;
+      font-weight: bold;
+    }
+    .section-title {
+      color: #afe9da;
+      margin-top: 30px;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+      border-bottom: 1px solid rgba(175, 233, 218, 0.3);
+      padding-bottom: 5px;
+      display: inline-block;
+    }
+    .date-picker-container {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      display: inline-block;
+      border: 1px solid rgba(175, 233, 218, 0.2);
+    }
+    .date-picker-container input[type="date"] {
+      background: rgba(13, 86, 79, 0.3);
+      border: 1px solid #afe9da;
+      color: #afe9da;
+      padding: 8px 15px;
+      border-radius: 8px;
+      outline: none;
+      font-family: inherit;
+    }
+    .date-picker-container input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body class="black">
+  <div class="">
+    <nav class="nav navbar navbar-expand-lg text-white ">
+      <div class="container-fluid">
+        <img src="../logoo.png" style="margin-right: 10px; border-radius: 70px; width: 40px; height: 40px;" class=""
+          alt="">
+        <center><a style="font-weight: bold;" href="#" class="navbar-brand text-white"> &#8193;ILMIFY ADMIN</a>
+        </center>
+        <button style="border: transparent;" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span><i class="fa fa-bars text-white"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link text-white" aria-current="page" href="admin.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </li>
+          </ul>
+          <button
+            style="border-radius: 20px; border-color: transparent; color: #fff; background-color: rgb(43, 44, 43);"
+            onclick="logout()">logout</button>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <div class="content intro">
+    <center>
+      <h2 style="color: #fff; margin-top: 20px; margin-bottom: 20px;"><i class="fas fa-chart-line text-info"></i> Detailed Analytics</h2>
+
+      <div class="date-picker-container">
+        <label for="dateSelector" style="color: #fff; margin-right: 10px; font-weight: bold;">Select Date For Daily Data:</label>
+        <input type="date" id="dateSelector">
+      </div>
+
+      <div class="container pb-5">
+        <!-- SITE ANALYTICS -->
+        <h3 class="section-title"><i class="fas fa-globe"></i> Global Site Analytics</h3>
+        <div class="row justify-content-center gap-3 mb-4">
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Selected Date Visitors</div>
+              <div id="siteDailyVisitors" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Avg Daily Visitors</div>
+              <div id="siteAvgVisitors" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Total Visitors</div>
+              <div id="siteTotalVisitors" class="analytics-value">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QURAN ANALYTICS -->
+        <h3 class="section-title"><i class="fas fa-book-open"></i> Quran Analytics</h3>
+        <div class="row justify-content-center gap-3 mb-4">
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Selected Date Views</div>
+              <div id="quranDailyViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Avg Daily Views</div>
+              <div id="quranAvgViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Total Views</div>
+              <div id="quranTotalViews" class="analytics-value">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADHKAR ANALYTICS -->
+        <h3 class="section-title"><i class="fas fa-moon"></i> Adhkar Analytics</h3>
+        <div class="row justify-content-center gap-3 mb-4">
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Selected Date Views</div>
+              <div id="adhkarDailyViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Avg Daily Views</div>
+              <div id="adhkarAvgViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Total Views</div>
+              <div id="adhkarTotalViews" class="analytics-value">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MADEENA ANALYTICS -->
+        <h3 class="section-title"><i class="fas fa-book"></i> Madeena Book Analytics</h3>
+        <div class="row justify-content-center gap-3 mb-4">
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Selected Date Views</div>
+              <div id="madeenaDailyViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Avg Daily Views</div>
+              <div id="madeenaAvgViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Total Views</div>
+              <div id="madeenaTotalViews" class="analytics-value">0</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </center>
+  </div>
+
+  <script>
+    // Firebase is initialized in firebase-config.js
+    const auth = window.firebaseAuth || firebase.auth();
+
+    // Check if user is logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "../login.html";
+      } else if (user.email != "piousbrotherscommunity@gmail.com") {
+        window.location.href = "../login.html"
+      } else {
+        initDashboard();
+      }
+    });
+
+    const dateSelector = document.getElementById('dateSelector');
+    let db;
+    
+    // Unsubscribe functions for date-dependent data
+    let unsubSiteDaily = null, unsubQuranDaily = null, unsubAdhkarDaily = null, unsubMadeenaDaily = null;
+    let refSiteDaily = null, refQuranDaily = null, refAdhkarDaily = null, refMadeenaDaily = null;
+
+    function initDashboard() {
+      db = window.firebaseDb || firebase.database();
+      
+      const today = new Date();
+      // YYYY-MM-DD local format
+      const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      dateSelector.value = localDateStr;
+
+      dateSelector.addEventListener('change', () => {
+        loadDailyData(dateSelector.value);
+      });
+
+      loadGlobalData();
+      loadDailyData(localDateStr);
+    }
+
+    function loadGlobalData() {
+      // Average Visitors
+      db.ref('analytics/site/dailyVisitors').on('value', snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const days = Object.keys(data).length;
+          const total = Object.values(data).reduce((a, b) => a + b, 0);
+          const avg = days > 0 ? Math.round(total / days) : 0;
+          document.getElementById('siteAvgVisitors').innerText = avg.toLocaleString();
+        }
+      });
+
+      // Total Site Visitors
+      db.ref('analytics/site/totalVisitors').on('value', snapshot => {
+        document.getElementById('siteTotalVisitors').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Total Quran Views
+      db.ref('analytics/quran/usageCount').on('value', snapshot => {
+        document.getElementById('quranTotalViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Total Adhkar Views
+      db.ref('analytics/adhkar/usageCount').on('value', snapshot => {
+        document.getElementById('adhkarTotalViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Total Madeena Views
+      db.ref('analytics/madeena/totalViews').on('value', snapshot => {
+        document.getElementById('madeenaTotalViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Avg Quran Views
+      db.ref('analytics/quran/dailyViews').on('value', snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const days = Object.keys(data).length;
+          const total = Object.values(data).reduce((a, b) => a + b, 0);
+          const avg = days > 0 ? Math.round(total / days) : 0;
+          document.getElementById('quranAvgViews').innerText = avg.toLocaleString();
+        }
+      });
+
+      // Avg Adhkar Views
+      db.ref('analytics/adhkar/dailyViews').on('value', snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const days = Object.keys(data).length;
+          const total = Object.values(data).reduce((a, b) => a + b, 0);
+          const avg = days > 0 ? Math.round(total / days) : 0;
+          document.getElementById('adhkarAvgViews').innerText = avg.toLocaleString();
+        }
+      });
+
+      // Avg Madeena Views
+      db.ref('analytics/madeena/dailyViews').on('value', snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const days = Object.keys(data).length;
+          const total = Object.values(data).reduce((a, b) => a + b, 0);
+          const avg = days > 0 ? Math.round(total / days) : 0;
+          document.getElementById('madeenaAvgViews').innerText = avg.toLocaleString();
+        }
+      });
+    }
+
+    function loadDailyData(dateStr) {
+      // Clear previous listeners if any
+      if (refSiteDaily && unsubSiteDaily) refSiteDaily.off('value', unsubSiteDaily);
+      if (refQuranDaily && unsubQuranDaily) refQuranDaily.off('value', unsubQuranDaily);
+      if (refAdhkarDaily && unsubAdhkarDaily) refAdhkarDaily.off('value', unsubAdhkarDaily);
+      if (refMadeenaDaily && unsubMadeenaDaily) refMadeenaDaily.off('value', unsubMadeenaDaily);
+
+      // Load specific date data
+      // Site visitors
+      refSiteDaily = db.ref('analytics/site/dailyVisitors/' + dateStr);
+      unsubSiteDaily = refSiteDaily.on('value', snapshot => {
+        document.getElementById('siteDailyVisitors').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Quran daily
+      refQuranDaily = db.ref('analytics/quran/dailyViews/' + dateStr);
+      unsubQuranDaily = refQuranDaily.on('value', snapshot => {
+        document.getElementById('quranDailyViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Adhkar daily
+      refAdhkarDaily = db.ref('analytics/adhkar/dailyViews/' + dateStr);
+      unsubAdhkarDaily = refAdhkarDaily.on('value', snapshot => {
+        document.getElementById('adhkarDailyViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Madeena daily
+      refMadeenaDaily = db.ref('analytics/madeena/dailyViews/' + dateStr);
+      unsubMadeenaDaily = refMadeenaDaily.on('value', snapshot => {
+        document.getElementById('madeenaDailyViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "../login.html";
+      });
+    }
+  </script>
+</body>
+
+</html>

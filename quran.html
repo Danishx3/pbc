@@ -1232,6 +1232,12 @@
 
             <hr class="border-secondary my-3">
 
+            <div class="text-white-50 small" style="margin-bottom: 12px;">
+                Allow push notifications in your browser to receive Kahf & Night Surah reminders.
+            </div>
+
+            <hr class="border-secondary my-3">
+
             <h6 id="savedAyahsTitle" class="mb-2 small text-white-50 text-uppercase"><i
                     class="fas fa-heart text-danger"></i> Saved Ayahs
             </h6>
@@ -1565,6 +1571,7 @@
         window.onload = () => {
             populateSurahDropdown();
             loadSettings();
+            initPushNotificationReminders();
             updateBookmarkIcon();
             // Check if we need to show entry screen
             // We show it every time on page load as requested, unless we want to persist session?
@@ -1573,6 +1580,92 @@
             document.body.style.overflow = 'hidden';
             renderSavedAyahs();
         };
+
+        // --- Notification Logic ---
+        function sendNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                        registration.showNotification(title, {
+                            body: body,
+                            icon: '/logoo.png',
+                            badge: '/logoo.png',
+                            vibrate: [200, 100, 200],
+                            tag: 'quran-reminder',
+                            data: { url: '/quran.html' }
+                        });
+                    }).catch(function() {
+                        new Notification(title, { body: body, icon: '/logoo.png' });
+                    });
+                } else {
+                    new Notification(title, { body: body, icon: '/logoo.png' });
+                }
+            }
+        }
+
+        let quranReminderInterval;
+        async function initPushNotificationReminders() {
+            if (!('Notification' in window)) return;
+
+            if (Notification.permission === 'granted') {
+                startQuranReminderCheck();
+                return;
+            }
+
+            // Request permission once (only when permission is in "default" state).
+            if (Notification.permission === 'default') {
+                try {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        startQuranReminderCheck();
+                    }
+                } catch (e) {
+                    // Ignore: browser may block prompt or user may dismiss it.
+                }
+            }
+        }
+
+        function startQuranReminderCheck() {
+            if (quranReminderInterval) clearInterval(quranReminderInterval);
+            quranReminderInterval = setInterval(checkQuranReminders, 60000);
+            checkQuranReminders();
+        }
+
+        function checkQuranReminders() {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            if (typeof isGuestMode === 'function' && isGuestMode()) return;
+            
+            const now = new Date();
+
+            const day = now.getDay();
+            const hour = now.getHours();
+            const min = now.getMinutes();
+
+            let isKahfTime = false;
+            if (day === 4 && (hour > 18 || (hour === 18 && min >= 40))) isKahfTime = true;
+            else if (day === 5 && (hour < 18 || (hour === 18 && min < 40))) isKahfTime = true;
+
+            if (isKahfTime) {
+                const d = new Date(now);
+                if (d.getDay() === 4) d.setDate(d.getDate() + 1);
+                const kahfKey = `kahf_notified_${d.toDateString()}`;
+                if (!localStorage.getItem(kahfKey)) {
+                    sendNotification('Friday Kahf Reminder', 'It is time to read Surah Al-Kahf.');
+                    localStorage.setItem(kahfKey, 'true');
+                }
+            }
+
+            if (hour >= 19 || hour < 4) {
+                let d = new Date();
+                if (hour < 4) d.setDate(d.getDate() - 1);
+                const nightKey = `night_notified_${d.toDateString()}`;
+                if (!localStorage.getItem(nightKey)) {
+                    sendNotification('Night Surahs Reminder', 'It is time for your night recitations (Al-Mulk, etc).');
+                    localStorage.setItem(nightKey, 'true');
+                }
+            }
+        }
+        // --- End Notification Logic ---
 
         // Check Kahf & Night window on Load
         window.addEventListener('DOMContentLoaded', () => {
@@ -3489,6 +3582,27 @@
             // Restore plain text (re-render)
             displayAyah(false);
         }
+
+        // Track usage to Firebase
+        window.addEventListener('load', () => {
+            if (!sessionStorage.getItem('quran_tracked')) {
+                try {
+                    const db = window.firebaseDb || firebase.database();
+                    const date = new Date();
+                    const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                    
+                    // Total Usage
+                    db.ref('analytics/quran/usageCount').transaction(count => (count || 0) + 1).catch(e => console.error("Analytics error", e));
+                    
+                    // Daily Usage
+                    db.ref('analytics/quran/dailyViews/' + today).transaction(count => (count || 0) + 1).catch(e => console.error("Daily tracking error", e));
+                    
+                    sessionStorage.setItem('quran_tracked', 'true');
+                } catch(e) {
+                    console.error('Firebase DB not ready', e);
+                }
+            }
+        });
     </script>
 </body>
 
