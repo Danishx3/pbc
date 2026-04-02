@@ -12,13 +12,14 @@
   <style>
     :root {
       --radius: 20px;
-      --bg-dark: #040914;
-      --card-bg: rgba(15, 23, 42, 0.85);
-      --accent: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-      --accent-solid: #10b981;
-      --border: rgba(255, 255, 255, 0.15);
+      --bg-dark: #000915;
+      --card-bg: rgba(13, 86, 79, 0.12);
+      --accent: linear-gradient(135deg, #0d564f 0%, #1a7a70 100%);
+      --accent-solid: #1a7a70;
+      --accent-light: #a8f0e8;
+      --border: rgba(13, 86, 79, 0.4);
       --text-main: #ffffff;
-      --muted: #cbd5e1;
+      --muted: #a0b8b5;
       --shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
@@ -31,9 +32,13 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #051614 0%, #072a24 100%);
+      background:
+        radial-gradient(circle at 30% 30%, #0d564f, transparent 40%),
+        radial-gradient(circle at 70% 40%, #0d564f, transparent 40%),
+        radial-gradient(circle at 50% 70%, #0d564f, transparent 40%);
+      background-color: #00060f;
       background-attachment: fixed;
-      color: var(--text-main);
+      color: #fff;
       font-size: 16px;
       line-height: 1.6;
     }
@@ -79,7 +84,7 @@
     }
 
     .cover {
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(13, 86, 79, 0.08);
       border-bottom: 1px solid var(--border);
       padding: 28px;
       display: flex;
@@ -99,14 +104,14 @@
 
     .volume-badge {
       background: var(--accent);
-      color: #0a0f16;
+      color: #ffffff;
       padding: 4px 14px;
       border-radius: 30px;
       font-size: 0.85rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      box-shadow: 0 4px 10px rgba(79, 172, 254, 0.3);
+      box-shadow: 0 4px 10px rgba(13, 86, 79, 0.5);
     }
 
     .sub {
@@ -124,13 +129,13 @@
     }
 
     .audio-player {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(13, 86, 79, 0.15);
       border-radius: 16px;
       padding: 24px 28px;
       display: flex;
       align-items: center;
       gap: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(13, 86, 79, 0.4);
     }
 
     .play-btn {
@@ -138,7 +143,7 @@
       height: 56px;
       border: none;
       background: var(--accent);
-      color: #0a0f16;
+      color: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -147,12 +152,12 @@
       flex-shrink: 0;
       font-size: 22px;
       transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
-      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+      box-shadow: 0 6px 20px rgba(13, 86, 79, 0.5);
     }
 
     .play-btn:hover {
       transform: scale(1.08);
-      box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6);
+      box-shadow: 0 8px 25px rgba(13, 86, 79, 0.7);
     }
 
     .progress-container {
@@ -213,7 +218,7 @@
     }
 
     .speed-control select option {
-      background: #0a0f16;
+      background: #000915;
     }
 
     .nav-bar {
@@ -232,20 +237,20 @@
       align-items: center;
       gap: 10px;
       transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(13, 86, 79, 0.15);
       color: var(--text-main);
       cursor: pointer;
       backdrop-filter: blur(10px);
     }
 
     .btn:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(13, 86, 79, 0.35);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 20px rgba(13, 86, 79, 0.3);
     }
 
     .pill {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(13, 86, 79, 0.1);
       padding: 10px 20px;
       border-radius: 30px;
       font-size: 0.85rem;
@@ -255,8 +260,8 @@
     }
 
     .notes-panel {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(13, 86, 79, 0.08);
+      border: 1px solid rgba(13, 86, 79, 0.3);
       padding: 24px;
       border-radius: 16px;
       display: none;
@@ -281,22 +286,22 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(13, 86, 79, 0.3);
       padding-bottom: 12px;
     }
 
     .notes-title {
       font-weight: 700;
-      color: var(--accent-solid);
+      color: var(--accent-light);
       letter-spacing: 1px;
       font-size: 1.1rem;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(13, 86, 79, 0.2);
       padding: 4px 12px;
       border-radius: 20px;
     }
 
     .note-item {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(13, 86, 79, 0.1);
       border-right: 5px solid var(--accent-solid);
       border-radius: 12px;
       padding: 24px;
@@ -311,7 +316,7 @@
     }
 
     .note-item:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(13, 86, 79, 0.2);
     }
 
     .pdf-embed {
@@ -330,7 +335,7 @@
       border-radius: 30px;
       cursor: pointer;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(13, 86, 79, 0.12);
       color: var(--muted);
       transition: all 0.3s ease;
       margin-right: 8px;
@@ -338,15 +343,15 @@
     }
 
     .selector-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(13, 86, 79, 0.3);
       color: #fff;
     }
 
     .selector-btn.active {
       background: var(--accent);
-      color: #0a0f16;
+      color: #ffffff;
       border-color: transparent;
-      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+      box-shadow: 0 4px 15px rgba(13, 86, 79, 0.5);
     }
 
     .volume-selector {
@@ -452,8 +457,15 @@
       }
 
       header {
-        font-size: 1.05rem !important;
-        padding: 15px !important;
+        font-size: larger;
+        font-weight: bold;
+        color: rgb(247, 246, 246);
+        padding: 20px;
+        width: 100%;
+        font-family: "anek latin", sans-serif;
+        background: linear-gradient(to bottom, transparent, #0d564f8c);
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
       }
 
       header a {
@@ -467,14 +479,14 @@
 
 <body>
   <div id="initial-loader"
-    style="position:fixed; top:0; left:0; width:100%; height:100%; background:#051614; z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#10b981;">
+    style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000915; z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#a8f0e8;">
     <i class="fas fa-spinner fa-spin fa-3x" style="margin-bottom:15px;"></i>
     <p style="font-weight:bold; font-size:1.2rem; letter-spacing:1px;">Loading Lessons...</p>
   </div>
 
   <header
-    style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: rgba(0, 6, 15, 0.7); border-bottom: 1px solid rgba(255,255,255,0.05); width: 100%; font-size: 1.2rem; font-family: 'Anek Latin', sans-serif; font-weight: 700; color: #fff; padding: 18px 20px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-    <a style="position: absolute; left:20px; top:18px; color: var(--accent-solid); text-decoration: none; font-size: 1.4rem; transition: transform 0.2s;"
+    style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; border-bottom: 1px solid rgba(13,86,79,0.4); width: 100%; font-size: 1.2rem; font-family: 'Anek Latin', sans-serif; font-weight: 700; color: #fff; padding: 18px 20px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+    <a style="position: absolute; left:20px; top:18px; color: #a8f0e8; text-decoration: none; font-size: 1.4rem; transition: transform 0.2s;"
       onmouseover="this.style.transform='translateX(-3px)'" onmouseout="this.style.transform='translateX(0)'"
       href="../main.html"><i class="fas fa-arrow-left"></i></a>
     <div style="text-align:center; letter-spacing: 1px;">DURŪS AL-LUGHAH</div>
@@ -1347,7 +1359,7 @@
       if (!document.getElementById('audio-error')) {
         const err = document.createElement('div');
         err.id = 'audio-error';
-        err.style.background = '#ffdce0';
+        err.style.background = 'red';
         err.style.padding = '8px';
         err.style.borderRadius = '6px';
         err.style.marginTop = '6px';
@@ -1405,7 +1417,7 @@
       try {
         const date = new Date();
         const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        
+
         // Track unique page views per session to avoid refresh counting
         if (!sessionStorage.getItem('ilmify_madeena_visited')) {
           db.ref('analytics/madeena/totalViews').transaction(count => (count || 0) + 1);
@@ -1415,7 +1427,7 @@
       } catch (e) {
         console.warn('Madeena tracking failed', e);
       }
-      
+
       db.ref("madeena_lessons").once("value", snapshot => {
         if (snapshot.exists()) {
           snapshot.forEach(child => {

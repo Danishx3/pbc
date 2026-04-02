@@ -10,7 +10,7 @@
   <meta name="author" content="ilmify Pious Brothers Team">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="pbc.css">
-  <link rel="icon" href="logoo.png" type="image/icon type">
+  <link rel="icon" href="app1.jpg" type="image/icon type">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -521,6 +521,171 @@
         font-size: 0.8rem;
       }
     }
+
+    /* ── Sliding Banner ── */
+    .banner-section {
+      margin: 0 16px 20px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .banner-wrapper {
+      position: relative;
+      width: 100%;
+      /* 12:5 aspect ratio */
+      padding-top: calc(5 / 12 * 100%);
+      border-radius: 0px;
+      overflow: hidden;
+      background: rgba(13, 86, 79, 0.15);
+      border: 1px solid rgba(13, 86, 79, 0.3);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .banner-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .banner-slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    .banner-slide-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 18px 22px;
+      gap: 8px;
+    }
+
+    .banner-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #a8f0e8;
+    }
+
+    .banner-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .banner-desc {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.4;
+    }
+
+    .banner-cta {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 7px 18px;
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(13, 86, 79, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      align-self: flex-start;
+    }
+
+    .banner-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(13, 86, 79, 0.7);
+    }
+
+    /* Arrows */
+    .banner-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background: rgba(13, 86, 79, 0.5);
+      border: 1px solid rgba(168, 240, 232, 0.25);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    .banner-arrow:hover {
+      background: rgba(13, 86, 79, 0.85);
+    }
+
+    .banner-arrow.left {
+      left: 8px;
+    }
+
+    .banner-arrow.right {
+      right: 8px;
+    }
+
+    /* Dots */
+    .banner-dots {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .banner-dot {
+      width: 18px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.3s, width 0.3s;
+    }
+
+    .banner-dot.active {
+      background: #a8f0e8;
+      width: 28px;
+    }
+
+    /* Empty banner placeholder */
+    .banner-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #5a7a76;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 
@@ -603,6 +768,22 @@
   <!-- Welcome -->
   <div class="welcome-banner intro">
     <h5 id="welcomeMessage"><i class="fa-solid fa-spinner fa-spin-pulse"></i></h5>
+  </div>
+
+  <!-- Sliding Banner -->
+  <div class="banner-section intro" style="animation-delay:0.005s;" id="bannerSection">
+    <div class="banner-wrapper" id="bannerWrapper">
+      <div class="banner-placeholder" id="bannerPlaceholder">
+        <i class="fa fa-images" style="font-size:2rem; opacity:0.3;"></i>
+        <span style="opacity:0.4; font-size:0.8rem;">Loading banner...</span>
+      </div>
+      <div class="banner-track" id="bannerTrack"></div>
+      <button class="banner-arrow left" id="bannerPrev" onclick="bannerSlide(-1)" style="display:none;"><i
+          class="fa fa-chevron-left"></i></button>
+      <button class="banner-arrow right" id="bannerNext" onclick="bannerSlide(1)" style="display:none;"><i
+          class="fa fa-chevron-right"></i></button>
+      <div class="banner-dots" id="bannerDots"></div>
+    </div>
   </div>
 
   <!-- Live Notification Banner -->
@@ -803,12 +984,12 @@
               const msgs = snapshot.val();
               const key = Object.keys(msgs)[0];
               const lastMsg = msgs[key];
-              
+
               if (lastMsg && lastMsg.sender === 'admin') {
                 if (win.style.display !== 'flex') {
                   document.querySelector('.chat-fab').style.animation = 'pulseNotice 2s infinite';
                 }
-                
+
                 // Trigger notification for new messages
                 if (!isInitialLoad && lastAdminMsgId !== key) {
                   lastAdminMsgId = key;
@@ -840,7 +1021,7 @@
     function sendNotification(title, body) {
       if ('Notification' in window && Notification.permission === 'granted') {
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          navigator.serviceWorker.register('/sw.js').then(function (registration) {
             registration.showNotification(title, {
               body: body,
               icon: '/logoo.png',
@@ -849,7 +1030,7 @@
               tag: 'chat-message',
               data: { url: '/main.html' }
             });
-          }).catch(function() {
+          }).catch(function () {
             new Notification(title, { body: body, icon: '/logoo.png' });
           });
         } else {
@@ -870,6 +1051,7 @@
         localStorage.setItem('dismissedVersion', currentVersion);
       });
       initPrayerMiniCard();
+      initBanner();
     });
 
     // Prayer Times Mini Card Logic
@@ -951,11 +1133,11 @@
     // Chat
     function toggleChat() {
       const win = document.getElementById('chatWindow');
-      
+
       if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
       }
-      
+
       if (win.style.display === 'flex') {
         win.style.display = 'none';
       } else {
@@ -1038,6 +1220,147 @@
         db.ref(`messages/${chatUserId}/${messageId}`).remove();
       }
     };
+
+    // ── Sliding Banner ──────────────────────────────────────
+    let bannerSlides = [];
+    let bannerIndex = 0;
+    let bannerTimer = null;
+
+    function initBanner() {
+      db.ref('banners').orderByChild('order').on('value', snap => {
+        bannerSlides = [];
+        snap.forEach(child => {
+          const d = child.val();
+          if (d.active !== false) bannerSlides.push(d);
+        });
+        renderBanner();
+      });
+    }
+
+    function renderBanner() {
+      const track = document.getElementById('bannerTrack');
+      const dots = document.getElementById('bannerDots');
+      const ph = document.getElementById('bannerPlaceholder');
+      const prev = document.getElementById('bannerPrev');
+      const next = document.getElementById('bannerNext');
+
+      track.innerHTML = '';
+      dots.innerHTML = '';
+
+      if (!bannerSlides.length) {
+        ph.style.display = 'flex';
+        ph.innerHTML = '<i class="fa fa-image" style="font-size:2rem;opacity:0.25;"></i><span style="opacity:0.35;font-size:0.8rem;">No banners yet</span>';
+        prev.style.display = 'none';
+        next.style.display = 'none';
+        return;
+      }
+
+      ph.style.display = 'none';
+      if (bannerSlides.length > 1) {
+        prev.style.display = 'flex';
+        next.style.display = 'flex';
+      }
+
+      bannerSlides.forEach((slide, i) => {
+        const el = document.createElement('div');
+        el.className = 'banner-slide';
+        if (slide.image) el.style.backgroundImage = `url('${slide.image}')`;
+        else el.style.background = 'linear-gradient(135deg, #0d564f 0%, #1a7a70 100%)';
+
+        const overlay = document.createElement('div');
+        overlay.className = 'banner-slide-overlay';
+
+        if (slide.tag) {
+          const tag = document.createElement('span');
+          tag.className = 'banner-tag';
+          tag.textContent = slide.tag;
+          overlay.appendChild(tag);
+        }
+        if (slide.title) {
+          const title = document.createElement('div');
+          title.className = 'banner-title';
+          title.textContent = slide.title;
+          overlay.appendChild(title);
+        }
+        if (slide.desc) {
+          const desc = document.createElement('div');
+          desc.className = 'banner-desc';
+          desc.textContent = slide.desc;
+          overlay.appendChild(desc);
+        }
+        if (slide.btnText) {
+          const btn = document.createElement('button');
+          btn.className = 'banner-cta';
+          btn.textContent = slide.btnText;
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            if (slide.link) window.location.href = slide.link;
+          };
+          overlay.appendChild(btn);
+        }
+
+        el.appendChild(overlay);
+        if (slide.link && !slide.btnText) {
+          el.onclick = () => { window.location.href = slide.link; };
+        }
+        track.appendChild(el);
+
+        const dot = document.createElement('div');
+        dot.className = 'banner-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => goToBannerSlide(i);
+        dots.appendChild(dot);
+      });
+
+      bannerIndex = 0;
+      updateBannerPosition();
+      startBannerAuto();
+      addBannerSwipe();
+    }
+
+    function updateBannerPosition() {
+      const track = document.getElementById('bannerTrack');
+      track.style.transform = `translateX(-${bannerIndex * 100}%)`;
+      document.querySelectorAll('.banner-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === bannerIndex);
+      });
+    }
+
+    function bannerSlide(dir) {
+      bannerIndex = (bannerIndex + dir + bannerSlides.length) % bannerSlides.length;
+      updateBannerPosition();
+      restartBannerAuto();
+    }
+
+    function goToBannerSlide(i) {
+      bannerIndex = i;
+      updateBannerPosition();
+      restartBannerAuto();
+    }
+
+    function startBannerAuto() {
+      if (bannerSlides.length <= 1) return;
+      bannerTimer = setInterval(() => {
+        bannerIndex = (bannerIndex + 1) % bannerSlides.length;
+        updateBannerPosition();
+      }, 5000);
+    }
+
+    function restartBannerAuto() {
+      clearInterval(bannerTimer);
+      startBannerAuto();
+    }
+
+    function addBannerSwipe() {
+      const wrapper = document.getElementById('bannerWrapper');
+      let startX = 0;
+      wrapper.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      wrapper.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) bannerSlide(diff > 0 ? 1 : -1);
+      });
+    }
+    // ─────────────────────────────────────────────────────────
+
   </script>
 </body>
 
