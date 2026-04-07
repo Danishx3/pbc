@@ -230,33 +230,36 @@
 
     .btn {
       padding: 12px 28px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(13, 86, 79, 0.7);
       border-radius: 30px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 10px;
       transition: all 0.3s ease;
-      background: rgba(13, 86, 79, 0.15);
-      color: var(--text-main);
+      background: rgba(13, 86, 79, 0.3);
+      color: #ffffff;
       cursor: pointer;
       backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .btn:hover {
-      background: rgba(13, 86, 79, 0.35);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(13, 86, 79, 0.3);
+      background: rgba(13, 86, 79, 0.55);
+      border-color: #1a7a70;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(13, 86, 79, 0.45);
     }
 
     .pill {
-      background: rgba(13, 86, 79, 0.1);
+      background: rgba(13, 86, 79, 0.25);
       padding: 10px 20px;
       border-radius: 30px;
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--muted);
-      border: 1px solid var(--border);
+      color: #a8f0e8;
+      border: 1px solid rgba(13, 86, 79, 0.6);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     .notes-panel {
@@ -331,27 +334,31 @@
 
     .selector-btn {
       padding: 10px 22px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(13, 86, 79, 0.65);
       border-radius: 30px;
       cursor: pointer;
       font-weight: 600;
-      background: rgba(13, 86, 79, 0.12);
-      color: var(--muted);
+      background: rgba(13, 86, 79, 0.25);
+      color: #c8eae6;
       transition: all 0.3s ease;
       margin-right: 8px;
       margin-bottom: 8px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     }
 
     .selector-btn:hover {
-      background: rgba(13, 86, 79, 0.3);
+      background: rgba(13, 86, 79, 0.5);
+      border-color: #1a7a70;
       color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(13, 86, 79, 0.4);
     }
 
     .selector-btn.active {
       background: var(--accent);
       color: #ffffff;
       border-color: transparent;
-      box-shadow: 0 4px 15px rgba(13, 86, 79, 0.5);
+      box-shadow: 0 4px 15px rgba(13, 86, 79, 0.6);
     }
 
     .volume-selector {

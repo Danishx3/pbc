@@ -165,6 +165,10 @@
             border-radius: 20px;
             padding: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .ayah-translation {
@@ -282,15 +286,12 @@
 
         .full-screen-page-view .mushaf-page {
             border-radius: 0;
-            border: none;
-            box-shadow: none;
-            padding: 15px 5px;
+            padding: 18px 10px;
         }
 
         .full-screen-page-view .mushaf-arabic {
             border-radius: 0;
-            box-shadow: none;
-            padding: 15px 10px 0 10px;
+            padding: 16px 18px 6px 18px;
         }
 
         /* Mushaf-like Page View (continuous text, no boxes) */
@@ -346,22 +347,47 @@
         }
 
         .mushaf-page {
-            background: #070b10;
+            /* Printed-page feel */
+            background:
+                radial-gradient(1200px 700px at 20% 15%, rgba(0, 0, 0, 0.035), transparent 60%),
+                radial-gradient(900px 600px at 85% 30%, rgba(0, 0, 0, 0.03), transparent 55%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0)),
+                #f6f0df;
             border-radius: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
-            padding: 24px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            box-shadow:
+                0 22px 60px rgba(0, 0, 0, 0.55),
+                0 2px 0 rgba(255, 255, 255, 0.35) inset;
+            padding: 26px 22px;
             position: relative;
             overflow: hidden;
+            max-width: 860px;
+            margin: 0 auto;
         }
 
         .mushaf-page::before {
             content: "";
             position: absolute;
-            inset: 12px;
+            inset: 14px;
             border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(0, 0, 0, 0.12);
             pointer-events: none;
+        }
+
+        .mushaf-page::after {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            border-radius: 12px;
+            pointer-events: none;
+            background:
+                linear-gradient(90deg,
+                    rgba(0, 0, 0, 0.06) 0%,
+                    rgba(0, 0, 0, 0.0) 12%,
+                    rgba(0, 0, 0, 0.0) 88%,
+                    rgba(0, 0, 0, 0.06) 100%);
+            opacity: 0.35;
+            mix-blend-mode: multiply;
         }
 
         .mushaf-bism {
@@ -369,24 +395,32 @@
             font-size: 2.2rem;
             text-align: center;
             direction: rtl;
-            color: #f6f3f3;
-            margin: 6px 0 18px;
-            opacity: 0.95;
+            color: #1b1b1b;
+            margin: 8px 0 18px;
+            opacity: 0.98;
         }
 
         .mushaf-arabic {
-            font-family: 'Noto Naskh Arabic', serif;
-            font-size: 2.2rem;
-            line-height: 2.15;
+            font-family: 'Scheherazade New', 'Noto Naskh Arabic', serif;
+            font-size: 2.25rem;
+            line-height: 2.25;
             direction: rtl;
             text-align: justify;
-            color: #000000;
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 15px 15px 0 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-justify: inter-word;
+            color: #111111;
+            background: transparent;
+            border-radius: 14px;
+            /* page margins (outer/inner gutter feel) */
+            padding: 22px 46px 6px 46px;
+            box-shadow: none;
             position: relative;
             z-index: 1;
+            letter-spacing: 0.01em;
+            word-spacing: 0.03em;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .mushaf-ayah {
@@ -394,6 +428,10 @@
             padding: 2px 4px;
             border-radius: 10px;
             transition: background 0.2s ease, box-shadow 0.2s ease;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .mushaf-ayah:hover {
@@ -408,9 +446,35 @@
         .mushaf-marker {
             display: inline-block;
             margin: 0 8px 0 6px;
-            font-size: 1.3rem;
-            color: #000000;
+            font-size: 1.35rem;
+            color: rgba(17, 17, 17, 0.9);
             vertical-align: middle;
+        }
+
+        /* Make the page margins feel correct on phones */
+        @media (max-width: 520px) {
+            .mushaf-page {
+                padding: 18px 14px;
+                border-radius: 16px;
+            }
+
+            .mushaf-page::before {
+                inset: 10px;
+            }
+
+            .mushaf-page::after {
+                inset: 14px;
+            }
+
+            .mushaf-arabic {
+                font-size: 1.85rem;
+                line-height: 2.1;
+                padding: 16px 18px 6px 18px;
+            }
+
+            .mushaf-bism {
+                font-size: 1.9rem;
+            }
         }
 
         .mushaf-translation-panel {
@@ -570,6 +634,10 @@
             margin-bottom: 20px;
             text-align: center;
             direction: rtl;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .ayah-translation {
@@ -1375,10 +1443,20 @@
 
         <br>
         <div class="surah-selector">
-            <label for="surahSelect">Select Surah</label>
-            <select id="surahSelect" onchange="loadSurah()">
-                <option value="">-- Choose --</option>
-            </select>
+            <div class="row g-2">
+                <div class="col-8">
+                    <label for="surahSelect">Select Surah</label>
+                    <select id="surahSelect" onchange="updateAyahDropdown(); loadSurah();">
+                        <option value="">-- Choose --</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label for="ayahSelect">Ayah</label>
+                    <select id="ayahSelect" onchange="loadSurahFromDropdown()">
+                        <option value="1">1</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <div class="ayah-display" id="ayahDisplay">
@@ -2327,14 +2405,62 @@
                 const opt = new Option(`${s.number}. ${s.english} (${s.arabic})`, s.number);
                 select.add(opt);
             });
+            // Also initialize ayah dropdown if a surah is already selected (e.g. from resume)
+            if (select.value) updateAyahDropdown();
         }
 
-        async function loadSurah(startAyah = 1) {
+        function updateAyahDropdown() {
+            const surahNum = parseInt(document.getElementById('surahSelect').value);
+            const ayahSelect = document.getElementById('ayahSelect');
+            if (!surahNum || !ayahSelect) return;
+
+            const surah = surahNames.find(s => s.number === surahNum);
+            if (!surah) return;
+
+            const currentVal = ayahSelect.value;
+            ayahSelect.innerHTML = '';
+            for (let i = 1; i <= surah.verses; i++) {
+                const opt = new Option(i, i);
+                ayahSelect.add(opt);
+            }
+            
+            // Try to keep previous value if valid for new surah, else 1
+            if (parseInt(currentVal) <= surah.verses) {
+                ayahSelect.value = currentVal;
+            } else {
+                ayahSelect.value = 1;
+            }
+        }
+
+        function loadSurahFromDropdown() {
+            const ayahNum = parseInt(document.getElementById('ayahSelect').value) || 1;
+            loadSurah(ayahNum);
+        }
+
+        async function loadSurah(startAyah = null) {
             const num = document.getElementById('surahSelect').value;
             if (!num) return;
 
             currentSurah = parseInt(num);
-            currentAyahNumber = startAyah;
+            
+            // If startAyah is provided, use it. Otherwise, look at ayahSelect. 
+            // If neither, default to 1.
+            if (startAyah !== null) {
+                currentAyahNumber = startAyah;
+            } else {
+                const ayahDropdown = document.getElementById('ayahSelect');
+                currentAyahNumber = ayahDropdown ? (parseInt(ayahDropdown.value) || 1) : 1;
+            }
+
+            // Sync the dropdown menu value
+            const ayahSelect = document.getElementById('ayahSelect');
+            if (ayahSelect && ayahSelect.value != currentAyahNumber) {
+                // Ensure the dropdown has enough options before setting value
+                if (ayahSelect.options.length < currentAyahNumber) {
+                    updateAyahDropdown();
+                }
+                ayahSelect.value = currentAyahNumber;
+            }
             const display = document.getElementById('ayahDisplay');
             display.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
 
@@ -2549,10 +2675,9 @@
                     </audio>
 
                     <div class="card-body">
-                        ${showBismHeader ? `<div class="mushaf-bism" style="margin-bottom: 20px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : ''}
-                        
-                        <div class="mushaf-page" id="mushafPage" style="background: transparent; border: none; box-shadow: none; padding: 0; overflow: visible;">
-                            <div class="mushaf-arabic" id="mushafArabic" style="padding-bottom: 20px;"></div>
+                        <div class="mushaf-page" id="mushafPage">
+                            ${showBismHeader ? `<div class="mushaf-bism">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : ''}
+                            <div class="mushaf-arabic" id="mushafArabic"></div>
                         </div>
                     </div>
                 </div>
@@ -2659,6 +2784,10 @@
                     });
                 });
             }
+
+            // Sync Ayah Dropdown
+            const ayahSelect = document.getElementById('ayahSelect');
+            if (ayahSelect) ayahSelect.value = currentAyahNumber;
 
             // Update counter label
             const counterEl = document.getElementById('pageAyahCounter');
@@ -2832,6 +2961,10 @@
             if (reciteMode) {
                 setTimeout(startReciteOnCurrentAyah, 80);
             }
+
+            // Sync Ayah Dropdown
+            const ayahSelect = document.getElementById('ayahSelect');
+            if (ayahSelect) ayahSelect.value = currentAyahNumber;
         }
 
         function playHeartAnimation(containerEl) {
