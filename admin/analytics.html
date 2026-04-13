@@ -205,6 +205,29 @@
           </div>
         </div>
 
+        <!-- ARABIC QUEST ANALYTICS -->
+        <h3 class="section-title"><i class="fas fa-gamepad text-warning"></i> Arabic Quest Analytics</h3>
+        <div class="row justify-content-center gap-3 mb-4">
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Selected Date Views</div>
+              <div id="arabicDailyViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Avg Daily Views</div>
+              <div id="arabicAvgViews" class="analytics-value">0</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="analytics-card">
+              <div class="analytics-label">Total Views</div>
+              <div id="arabicTotalViews" class="analytics-value">0</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </center>
   </div>
@@ -228,8 +251,8 @@
     let db;
     
     // Unsubscribe functions for date-dependent data
-    let unsubSiteDaily = null, unsubQuranDaily = null, unsubAdhkarDaily = null, unsubMadeenaDaily = null;
-    let refSiteDaily = null, refQuranDaily = null, refAdhkarDaily = null, refMadeenaDaily = null;
+    let unsubSiteDaily = null, unsubQuranDaily = null, unsubAdhkarDaily = null, unsubMadeenaDaily = null, unsubArabicDaily = null;
+    let refSiteDaily = null, refQuranDaily = null, refAdhkarDaily = null, refMadeenaDaily = null, refArabicDaily = null;
 
     function initDashboard() {
       db = window.firebaseDb || firebase.database();
@@ -311,6 +334,22 @@
           document.getElementById('madeenaAvgViews').innerText = avg.toLocaleString();
         }
       });
+
+      // Total Arabic Quest Views
+      db.ref('analytics/arabic/totalViews').on('value', snapshot => {
+        document.getElementById('arabicTotalViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Avg Arabic Quest Views
+      db.ref('analytics/arabic/dailyViews').on('value', snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const days = Object.keys(data).length;
+          const total = Object.values(data).reduce((a, b) => a + b, 0);
+          const avg = days > 0 ? Math.round(total / days) : 0;
+          document.getElementById('arabicAvgViews').innerText = avg.toLocaleString();
+        }
+      });
     }
 
     function loadDailyData(dateStr) {
@@ -319,6 +358,7 @@
       if (refQuranDaily && unsubQuranDaily) refQuranDaily.off('value', unsubQuranDaily);
       if (refAdhkarDaily && unsubAdhkarDaily) refAdhkarDaily.off('value', unsubAdhkarDaily);
       if (refMadeenaDaily && unsubMadeenaDaily) refMadeenaDaily.off('value', unsubMadeenaDaily);
+      if (refArabicDaily && unsubArabicDaily) refArabicDaily.off('value', unsubArabicDaily);
 
       // Load specific date data
       // Site visitors
@@ -343,6 +383,12 @@
       refMadeenaDaily = db.ref('analytics/madeena/dailyViews/' + dateStr);
       unsubMadeenaDaily = refMadeenaDaily.on('value', snapshot => {
         document.getElementById('madeenaDailyViews').innerText = (snapshot.val() || 0).toLocaleString();
+      });
+
+      // Arabic Quest daily
+      refArabicDaily = db.ref('analytics/arabic/dailyViews/' + dateStr);
+      unsubArabicDaily = refArabicDaily.on('value', snapshot => {
+        document.getElementById('arabicDailyViews').innerText = (snapshot.val() || 0).toLocaleString();
       });
     }
 

@@ -344,6 +344,60 @@
     .share-btn:hover {
       background: rgba(255, 255, 255, 0.2);
     }
+
+    /* Guest Name Card */
+    .guest-card {
+      text-align: center;
+      padding: 10px 0;
+    }
+    .guest-card .guest-icon {
+      font-size: 2.8rem;
+      margin-bottom: 14px;
+    }
+    .guest-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .guest-card p {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+    .guest-name-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      font-family: inherit;
+      margin-bottom: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .guest-name-input:focus {
+      border-color: var(--accent-color);
+      background: rgba(255,255,255,0.1);
+    }
+    .guest-name-input::placeholder { color: #666; }
+    .guest-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+      color: #555;
+      font-size: 0.85rem;
+    }
+    .guest-divider::before,
+    .guest-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
   </style>
 </head>
 
@@ -357,8 +411,24 @@
 
   <div class="container">
 
+    <!-- Guest Name Entry Card (shown when not signed in) -->
+    <div id="guestNameCard" class="glass-card" style="display:none;">
+      <div class="guest-card">
+        <div class="guest-icon">✏️</div>
+        <h2>Welcome to Ilmify Quiz</h2>
+        <p>Enter your name to participate in quizzes and appear on the leaderboard.</p>
+        <input type="text" id="guestNameInput" class="guest-name-input" placeholder="Your name..." maxlength="30"
+          onkeydown="if(event.key==='Enter') submitGuestName()">
+        <button class="btn-action" onclick="submitGuestName()"><i class="fas fa-arrow-right" style="margin-right:8px;"></i>Continue</button>
+        <div class="guest-divider">or</div>
+        <a href="login.html" style="color:var(--accent-color); font-size:0.9rem; text-decoration:none;">
+          <i class="fas fa-sign-in-alt" style="margin-right:6px;"></i>Sign in with your account
+        </a>
+      </div>
+    </div>
+
     <!-- Welcome & Selection -->
-    <div id="introCard" class="glass-card welcome-section">
+    <div id="introCard" class="glass-card welcome-section" style="display:none;">
       <h2 id="welcomeMessage">Welcome</h2>
       <div class="score-badge">Your Score: <span id="score">0</span></div>
 
@@ -431,42 +501,87 @@
 
     const shareBtn = document.getElementById('shareBtn');
 
-    // Init
+    // Init — support both signed-in users and guests
     auth.onAuthStateChanged(user => {
       if (user) {
-        if (user.email === "piousbrotherscommunity@gmail.com") window.location.href = "/admin/admin.html";
+        // Admin redirect
+        if (user.email === "piousbrotherscommunity@gmail.com") {
+          window.location.href = "/admin/admin.html";
+          return;
+        }
         userId = user.uid;
         db.ref('users/' + userId).once('value').then(snap => {
-          username = snap.val().username || "User";
+          const data = snap.val() || {};
+          username = data.username || user.displayName || "User";
           document.getElementById("welcomeMessage").innerText = "Welcome, " + username;
+          document.getElementById('guestNameCard').style.display = 'none';
+          introCard.style.display = 'block';
           loadQuizzes();
         });
       } else {
-        window.location.href = "login.html";
+        // Not logged in — check for saved guest name
+        const savedName = localStorage.getItem('ilmify_guest_name');
+        if (savedName) {
+          _applyGuestName(savedName);
+        } else {
+          document.getElementById('guestNameCard').style.display = 'block';
+        }
       }
     });
 
+    function submitGuestName() {
+      const nameInput = document.getElementById('guestNameInput');
+      const name = nameInput.value.trim();
+      if (!name) {
+        nameInput.focus();
+        nameInput.style.borderColor = 'var(--incorrect-color)';
+        return;
+      }
+      localStorage.setItem('ilmify_guest_name', name);
+      _applyGuestName(name);
+    }
+
+    function _applyGuestName(name) {
+      username = name;
+      // Stable guest ID derived from name so scores persist across sessions
+      userId = 'guest_' + name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+      document.getElementById("welcomeMessage").innerText = "Welcome, " + name;
+      document.getElementById('guestNameCard').style.display = 'none';
+      introCard.style.display = 'block';
+      loadQuizzes();
+    }
+
     function loadQuizzes() {
-      db.ref('quizzes').once('value', snapshot => {
-        const quizzes = snapshot.val() || {};
-        quizSelector.innerHTML = `<option disabled selected value="">Select a Quiz to Start</option>`;
-        for (let key in quizzes) {
-          const opt = document.createElement('option');
-          opt.value = key;
-          opt.textContent = key;
-          quizSelector.appendChild(opt);
+      // First load Madeena exam IDs so we can hide them from the public list
+      db.ref('madeena_exams').once('value', meSnap => {
+        const madeenaIds = new Set();
+        const meData = meSnap.val() || {};
+        for (let k in meData) {
+          if (meData[k].quizId) madeenaIds.add(meData[k].quizId);
         }
 
-        // Check for URL Param
-        const urlParams = new URLSearchParams(window.location.search);
-        const refQuiz = urlParams.get('quiz');
-        if (refQuiz && quizzes[refQuiz]) {
-          quizSelector.value = refQuiz;
-          selectedQuiz = refQuiz;
-          loadLeaderboard(selectedQuiz);
-          checkStatus();
-          shareBtn.style.display = 'flex';
-        }
+        db.ref('quizzes').once('value', snapshot => {
+          const quizzes = snapshot.val() || {};
+          quizSelector.innerHTML = `<option disabled selected value="">Select a Quiz to Start</option>`;
+          for (let key in quizzes) {
+            if (madeenaIds.has(key)) continue; // skip Madeena exam quizzes
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = key;
+            quizSelector.appendChild(opt);
+          }
+
+          // Check for URL Param
+          const urlParams = new URLSearchParams(window.location.search);
+          const refQuiz = urlParams.get('quiz');
+          if (refQuiz && quizzes[refQuiz] && !madeenaIds.has(refQuiz)) {
+            quizSelector.value = refQuiz;
+            selectedQuiz = refQuiz;
+            loadLeaderboard(selectedQuiz);
+            checkStatus();
+            shareBtn.style.display = 'flex';
+          }
+        });
       });
     }
 

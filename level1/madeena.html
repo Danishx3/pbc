@@ -481,6 +481,388 @@
         left: 15px !important;
       }
     }
+
+    /* ========== EXAM MODAL ========== */
+    #examGateOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 99999;
+      display: none;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-y: auto;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    #examGateOverlay.active {
+      display: flex;
+    }
+
+    .exam-modal {
+      background: #000e1a;
+      border: 1px solid rgba(13, 86, 79, 0.5);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(79, 209, 197, 0.08);
+      width: 100%;
+      max-width: 680px;
+      margin: auto;
+      padding: 30px;
+      animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .exam-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(13, 86, 79, 0.4);
+      padding-bottom: 16px;
+    }
+
+    .exam-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #a8f0e8;
+      margin: 0;
+    }
+
+    .exam-timer-badge {
+      background: rgba(79, 209, 197, 0.15);
+      color: #4fd1c5;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .exam-progress-track {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .exam-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0d564f, #4fd1c5);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .exam-question {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .exam-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .exam-opt-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #d0d0d0;
+      font-size: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: inherit;
+    }
+
+    .exam-opt-btn:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: #4fd1c5;
+      color: #fff;
+    }
+
+    .exam-opt-btn.correct {
+      background: rgba(76, 175, 80, 0.2);
+      border-color: #4caf50;
+      color: #fff;
+    }
+
+    .exam-opt-btn.wrong {
+      background: rgba(244, 67, 54, 0.2);
+      border-color: #f44336;
+      color: #fff;
+    }
+
+    /* Gate Prompt (pre-quiz) */
+    .exam-gate-prompt {
+      text-align: center;
+      padding: 10px 0 20px;
+    }
+
+    .exam-gate-prompt .exam-gate-icon {
+      font-size: 3rem;
+      margin-bottom: 14px;
+    }
+
+    .exam-gate-prompt h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #a8f0e8;
+    }
+
+    .exam-gate-prompt p {
+      color: #aaa;
+      font-size: 0.95rem;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    /* Result screen */
+    .exam-result {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .exam-result .result-icon {
+      font-size: 3.5rem;
+      margin-bottom: 14px;
+    }
+
+    .exam-result h3 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .exam-result .score-big {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #4fd1c5;
+      margin: 12px 0;
+    }
+
+    .exam-result p {
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    .exam-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 14px;
+      font-family: inherit;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .exam-btn:active {
+      transform: scale(0.98);
+    }
+
+    .exam-btn-primary {
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      color: #fff;
+    }
+
+    .exam-btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #aaa;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .exam-btn-success {
+      background: linear-gradient(135deg, #1a7a70, #4fd1c5);
+      color: #000;
+    }
+
+    /* Exam answer review */
+    .exam-review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-top: 4px;
+    }
+
+    .exam-review-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .exam-review-list::-webkit-scrollbar-thumb {
+      background: rgba(79, 209, 197, 0.3);
+      border-radius: 4px;
+    }
+
+    .exam-review-item {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border-left: 4px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+    }
+
+    .exam-review-item.r-correct {
+      border-left-color: #4caf50;
+    }
+
+    .exam-review-item.r-wrong {
+      border-left-color: #f44336;
+    }
+
+    .exam-review-item.r-timeout {
+      border-left-color: #ff9800;
+    }
+
+    .exam-review-item .r-q {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #ddd;
+      margin-bottom: 7px;
+    }
+
+    .exam-review-item .r-row {
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .r-label {
+      color: #777;
+      min-width: 88px;
+      flex-shrink: 0;
+    }
+
+    .r-val-correct {
+      color: #4caf50;
+      font-weight: 600;
+    }
+
+    .r-val-wrong {
+      color: #f44336;
+      font-weight: 600;
+    }
+
+    .r-val-timeout {
+      color: #ff9800;
+      font-weight: 600;
+    }
+
+    /* Exams List Modal */
+    #examsListModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 99999;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    #examsListModal.active {
+      display: flex;
+    }
+
+    .exams-list-card {
+      background: #000e1a;
+      border: 1px solid rgba(13, 86, 79, 0.5);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.35s forwards;
+    }
+
+    .exams-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(13, 86, 79, 0.4);
+    }
+
+    .exams-tab {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      color: #888;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .exams-tab.active {
+      color: #4fd1c5;
+      border-bottom-color: #4fd1c5;
+      background: rgba(79, 209, 197, 0.05);
+    }
+
+    .exams-list-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .exam-list-item {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .exam-list-item h4 {
+      color: #ddd;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .exam-list-item p {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    .exam-list-item.p-pending {
+      border-left-color: #ff9800;
+    }
+
+    .exam-list-item.p-attempted {
+      border-left-color: #4caf50;
+    }
   </style>
 </head>
 
@@ -513,6 +895,9 @@
             <div class="notes-toggle">
               <button class="btn" id="toggleNotesBtn" aria-expanded="false" aria-label="Toggle notes"><i
                   class="fas fa-file-lines"></i> Notes</button>
+
+              <button onclick="openExamsList()" class="btn"><i class="fas fa-list-ul"
+                  style="margin-right:6px;"></i>Exams</button>
             </div>
           </div>
           <div class="sub" id="part-label"><i class="fas fa-bookmark" style="margin-right: 8px; opacity: 0.8;"></i>PART
@@ -584,9 +969,106 @@
   </div>
 
   <audio id="audio" preload="metadata"></audio>
+
+  <!-- ===== EXAM GATE MODAL ===== -->
+  <div id="examGateOverlay">
+    <div class="exam-modal">
+
+      <!-- Gate Prompt (step 0) -->
+      <div id="examStepPrompt">
+        <div class="exam-gate-prompt">
+          <div class="exam-gate-icon">🎓</div>
+          <h3 id="examGateTitle">Exam Time!</h3>
+          <p id="examGateDesc">You have completed this part. Please attempt the exam before proceeding to the next part.
+          </p>
+        </div>
+        <button class="exam-btn exam-btn-primary" id="examStartBtn" onclick="startInlineExam()"><i class="fas fa-play"
+            style="margin-right:8px;"></i>Start Exam</button>
+        <button class="exam-btn exam-btn-secondary" id="examAlreadyDoneBtn" onclick="closeExamAndGoNext()"
+          style="display:none;">Skip — Already Completed ✓</button>
+        <button class="exam-btn exam-btn-secondary" id="examCancelBtn" onclick="closeExamModal()"
+          style="margin-top:6px;">Cancel</button>
+      </div>
+
+      <!-- Name Entry for guests (step -1) -->
+      <div id="examStepName" style="display:none;">
+        <div class="exam-gate-prompt">
+          <div class="exam-gate-icon">✏️</div>
+          <h3>Enter Your Name</h3>
+          <p>To save your exam results, please enter your name below.</p>
+        </div>
+        <input type="text" id="examNameInput"
+          style="width:100%; padding:14px 18px; font-size:1rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:#fff; font-family:inherit; margin-bottom:12px; outline:none;"
+          placeholder="Your name..." maxlength="30" onkeydown="if(event.key==='Enter') submitExamGuestName()">
+        <button class="exam-btn exam-btn-primary" onclick="submitExamGuestName()"><i class="fas fa-arrow-right"
+            style="margin-right:8px;"></i>Continue</button>
+        <button class="exam-btn exam-btn-secondary" onclick="closeExamModal()" style="margin-top:6px;">Cancel</button>
+      </div>
+
+      <!-- Active Quiz (step 1) -->
+      <div id="examStepQuiz" style="display:none;">
+        <div class="exam-header">
+          <h2><i class="fas fa-pen-to-square" style="margin-right:8px;"></i><span id="examQuizTitle">Exam</span></h2>
+          <div class="exam-timer-badge"><i class="far fa-clock"></i><span id="examTimer">15</span>s</div>
+        </div>
+        <div class="exam-progress-track">
+          <div class="exam-progress-fill" id="examProgressFill"></div>
+        </div>
+        <div style="font-size:0.82rem; color:#888; margin-bottom:14px;">Question <span id="examQIndex">1</span> / <span
+            id="examQTotal">?</span></div>
+        <div class="exam-question" id="examQuestionText"></div>
+        <div class="exam-options" id="examOptionsGrid"></div>
+      </div>
+
+      <!-- Result (step 2) -->
+      <div id="examStepResult" style="display:none;">
+        <div class="exam-result">
+          <div class="result-icon" id="examResultIcon">🏆</div>
+          <h3 id="examResultTitle">Exam Completed!</h3>
+          <div class="score-big" id="examScoreBig">0</div>
+          <p id="examResultMsg">You may now continue to the next part.</p>
+        </div>
+        <!-- Answer Review -->
+        <div style="border-top:1px solid rgba(255,255,255,0.08); margin-top:16px; padding-top:14px;">
+          <div style="font-size:0.85rem; color:#888; margin-bottom:8px; text-align:left;"><i class="fas fa-list-check"
+              style="margin-right:6px; color:#4fd1c5;"></i>Answer Review</div>
+          <div class="exam-review-list" id="examReviewList"></div>
+        </div>
+        <button class="exam-btn exam-btn-success" style="margin-top:18px;" onclick="closeExamAndGoNext()"><i
+            class="fas fa-arrow-right" style="margin-right:8px;"></i>Continue to Next Part</button>
+      </div>
+
+    </div>
+  </div>
+  <!-- ===== END EXAM MODAL ===== -->
+
+  <!-- ===== EXAMS LIST MODAL ===== -->
+  <div id="examsListModal">
+    <div class="exams-list-card">
+      <div
+        style="padding:20px; border-bottom: 1px solid rgba(13,86,79,0.4); display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-size:1.2rem; color:#a8f0e8; margin:0;"><i class="fas fa-list-ul"
+            style="margin-right:8px;"></i>Exams</h2>
+        <button onclick="closeExamsList()"
+          style="background:none; border:none; color:#888; font-size:1.4rem; cursor:pointer;"><i
+            class="fas fa-times"></i></button>
+      </div>
+      <div class="exams-tabs">
+        <div class="exams-tab active" id="tabPending" onclick="switchExamsTab('pending')">Pending (Up to current part)
+        </div>
+        <div class="exams-tab" id="tabAttempted" onclick="switchExamsTab('attempted')">Attempted</div>
+      </div>
+      <div class="exams-list-content" id="examsListContent">
+        <div style="text-align:center; padding:30px; color:#aaa;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+      </div>
+    </div>
+  </div>
+  <!-- ===== END EXAMS LIST MODAL ===== -->
+
   <!-- Firebase integration -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="../firebase-config.js"></script>
   <script>
     const LESSONS = [
@@ -1222,8 +1704,21 @@
         partSelect.appendChild(opt);
       });
       partSelect.onchange = () => {
-        currentPartIdx = parseInt(partSelect.value, 10);
-        loadCurrentLesson();
+        const newIdx = parseInt(partSelect.value, 10);
+        if (newIdx > currentPartIdx) {
+          // Going forward — check exam gate for current part
+          // Reset dropdown immediately to current position
+          partSelect.value = currentPartIdx;
+          checkExamGate(() => {
+            currentPartIdx = newIdx;
+            partSelect.value = currentPartIdx;
+            loadCurrentLesson();
+          });
+        } else {
+          // Going backward — always allowed
+          currentPartIdx = newIdx;
+          loadCurrentLesson();
+        }
       };
     }
 
@@ -1306,15 +1801,18 @@
     }
     function goNext() {
       if (!hasNext()) return;
-      if (currentPartIdx + 1 < LESSONS[currentVolumeIdx].parts.length) {
-        currentPartIdx++;
-      } else {
-        currentVolumeIdx++;
-        currentPartIdx = 0;
-        renderVolumeButtons();
-        populatePartSelect();
-      }
-      loadCurrentLesson();
+      // Check for exam gate before advancing
+      checkExamGate(() => {
+        if (currentPartIdx + 1 < LESSONS[currentVolumeIdx].parts.length) {
+          currentPartIdx++;
+        } else {
+          currentVolumeIdx++;
+          currentPartIdx = 0;
+          renderVolumeButtons();
+          populatePartSelect();
+        }
+        loadCurrentLesson();
+      });
     }
 
     // Audio logic
@@ -1467,6 +1965,460 @@
     } else {
       loadUI();
     }
+    // ===== EXAM GATE SYSTEM =====
+    const auth = window.firebaseAuth || firebase.auth();
+    let _examUserId = null;
+    let _examGuestName = null;          // for guests without Firebase login
+    let _pendingNextFn = null;          // callback to execute after exam
+    let _activeExamData = null;         // current exam gate object
+    let _examQuestions = [];
+    let _examCurrent = 0;
+    let _examScore = 0;
+    let _examTimerInterval = null;
+    let _examTimeLeft = 15;
+    let _examTimerLimit = 15;
+    let _examUserAnswers = [];
+
+    // Silently grab the logged-in userId (optional — works without login too)
+    auth.onAuthStateChanged(user => {
+      _examUserId = user ? user.uid : null;
+      // Also pre-load guest name from localStorage if not logged in
+      if (!user) {
+        _examGuestName = localStorage.getItem('madeena_guest_name') || null;
+      }
+    });
+
+    /**
+     * checkExamGate(nextFn)
+     * Look up Firebase madeena_exams for a gate matching the current Vol+Part.
+     * If found → show exam modal, call nextFn only after exam is done.
+     * If not found → call nextFn immediately.
+     */
+    function checkExamGate(nextFn) {
+      const curVol = LESSONS[currentVolumeIdx].volume;
+      const curPart = LESSONS[currentVolumeIdx].parts[currentPartIdx].part;
+      const key = `v${curVol}_p${curPart}`;
+
+      db.ref('madeena_exams/' + key).once('value', snap => {
+        if (!snap.exists()) {
+          // No exam gate here — proceed normally
+          nextFn();
+          return;
+        }
+
+        _activeExamData = snap.val();
+        _pendingNextFn = nextFn;
+
+        // If no Firebase user AND no guest name yet, ask for name first
+        if (!_examUserId && !_examGuestName) {
+          _examStep('name');
+          document.getElementById('examGateOverlay').classList.add('active');
+          document.body.style.overflow = 'hidden';
+          setTimeout(() => document.getElementById('examNameInput').focus(), 200);
+          return;
+        }
+
+        // Determine the lookup key for attempt checks
+        const lookupId = _examUserId || ('guest_' + (_examGuestName || 'anon').toLowerCase().replace(/\s+/g, '_'));
+
+        // Check if already attempted
+        db.ref(`attempts/${lookupId}/${_activeExamData.quizId}`).once('value', aSnap => {
+          if (aSnap.exists()) {
+            // Already attempted, bypass exam gate automatically
+            _pendingNextFn = null;
+            _activeExamData = null;
+            nextFn();
+          } else {
+            showExamGatePrompt();
+          }
+        });
+      }).catch(() => nextFn()); // On error, don't block
+    }
+
+    function submitExamGuestName() {
+      const input = document.getElementById('examNameInput');
+      const name = input.value.trim();
+      if (!name) {
+        input.style.borderColor = '#f44336';
+        input.focus();
+        return;
+      }
+      _examGuestName = name;
+      localStorage.setItem('madeena_guest_name', name);
+      input.style.borderColor = '';
+
+      // Now proceed to check attempt status
+      const lookupId = 'guest_' + name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+      db.ref(`attempts/${lookupId}/${_activeExamData.quizId}`).once('value', aSnap => {
+        if (aSnap.exists()) {
+          // Already answered previously, close modal and auto-proceed
+          closeExamAndGoNext();
+        } else {
+          showExamGatePrompt();
+        }
+      });
+    }
+
+    function showExamGatePrompt() {
+      _examStep('prompt');
+
+      document.getElementById('examGateTitle').textContent = _activeExamData.title || 'Exam Time!';
+      document.getElementById('examGateDesc').textContent = "You've completed this part! Please attempt the exam before continuing to the next part.";
+
+      document.getElementById('examAlreadyDoneBtn').style.display = 'none';
+      document.getElementById('examCancelBtn').style.display = 'block';
+
+      document.getElementById('examGateOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function _examStep(step) {
+      document.getElementById('examStepName').style.display = step === 'name' ? 'block' : 'none';
+      document.getElementById('examStepPrompt').style.display = step === 'prompt' ? 'block' : 'none';
+      document.getElementById('examStepQuiz').style.display = step === 'quiz' ? 'block' : 'none';
+      document.getElementById('examStepResult').style.display = step === 'result' ? 'block' : 'none';
+    }
+
+    function startInlineExam() {
+      const quizId = _activeExamData.quizId;
+      db.ref('quizzes/' + quizId).once('value', snap => {
+        const data = snap.val();
+        if (!data || !data.questions || data.questions.length === 0) {
+          alert('Exam questions not found. Proceeding to next part.');
+          closeExamAndGoNext();
+          return;
+        }
+        _examQuestions = data.questions;
+        _examTimerLimit = data.timerLimit || 15;
+        _examCurrent = 0;
+        _examScore = 0;
+        _examUserAnswers = new Array(_examQuestions.length).fill(-1);
+
+        document.getElementById('examQuizTitle').textContent = _activeExamData.title || quizId;
+        document.getElementById('examQTotal').textContent = _examQuestions.length;
+        _examStep('quiz');
+        _examShowQuestion();
+      }).catch(() => {
+        alert('Could not load exam. Proceeding.');
+        closeExamAndGoNext();
+      });
+    }
+
+    function _examShowQuestion() {
+      if (_examCurrent >= _examQuestions.length) {
+        _examFinish();
+        return;
+      }
+      const q = _examQuestions[_examCurrent];
+      document.getElementById('examQIndex').textContent = _examCurrent + 1;
+      document.getElementById('examQuestionText').textContent = q.q;
+
+      // Progress bar
+      document.getElementById('examProgressFill').style.width =
+        ((_examCurrent) / _examQuestions.length * 100) + '%';
+
+      // Options
+      const grid = document.getElementById('examOptionsGrid');
+      grid.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'exam-opt-btn';
+        btn.textContent = opt;
+        btn.onclick = () => _examCheckAnswer(i);
+        grid.appendChild(btn);
+      });
+
+      _examResetTimer();
+    }
+
+    function _examCheckAnswer(idx) {
+      clearInterval(_examTimerInterval);
+      _examUserAnswers[_examCurrent] = idx;
+      const correct = _examQuestions[_examCurrent].correct;
+      const btns = document.getElementById('examOptionsGrid').children;
+
+      if (idx === correct) {
+        btns[idx].classList.add('correct');
+        _examScore += 10;
+      } else {
+        btns[idx].classList.add('wrong');
+        btns[correct].classList.add('correct');
+        _examScore = Math.max(0, _examScore - 5);
+      }
+
+      setTimeout(() => { _examCurrent++; _examShowQuestion(); }, 900);
+    }
+
+    function _examResetTimer() {
+      clearInterval(_examTimerInterval);
+      _examTimeLeft = _examTimerLimit;
+      document.getElementById('examTimer').textContent = _examTimeLeft;
+      _examTimerInterval = setInterval(() => {
+        _examTimeLeft--;
+        document.getElementById('examTimer').textContent = _examTimeLeft;
+        if (_examTimeLeft <= 0) {
+          clearInterval(_examTimerInterval);
+          _examUserAnswers[_examCurrent] = -1;
+          _examScore = Math.max(0, _examScore - 5);
+          _examCurrent++;
+          _examShowQuestion();
+        }
+      }, 1000);
+    }
+
+    function _examFinish(isReviewOnly = false) {
+      clearInterval(_examTimerInterval);
+      _examStep('result');
+
+      const total = _examQuestions.length * 10;
+      const pct = Math.round((_examScore / total) * 100);
+      const pass = pct >= 50;
+
+      document.getElementById('examResultIcon').textContent = pass ? '🏆' : '📚';
+      document.getElementById('examResultTitle').textContent = pass ? 'Well Done!' : 'Keep Learning!';
+      document.getElementById('examScoreBig').textContent = `${_examScore} / ${total}`;
+
+      let msg = isReviewOnly ? 'Here is your previous attempt review.' : (pass ? `You scored ${pct}%! You may now continue to the next part.` : `You scored ${pct}%. Don't worry — you can still continue.`);
+      document.getElementById('examResultMsg').textContent = msg;
+
+      // === Build answer review ===
+      const reviewList = document.getElementById('examReviewList');
+      reviewList.innerHTML = '';
+      _examQuestions.forEach((q, idx) => {
+        const userAns = _examUserAnswers[idx];
+        const isTimeout = userAns === -1;
+        const isCorrect = !isTimeout && userAns === q.correct;
+        const statusClass = isTimeout ? 'r-timeout' : (isCorrect ? 'r-correct' : 'r-wrong');
+        const userText = isTimeout
+          ? 'Time Out'
+          : (userAns >= 0 ? q.options[userAns] : '—');
+        const userClass = isTimeout ? 'r-val-timeout' : (isCorrect ? 'r-val-correct' : 'r-val-wrong');
+
+        const item = document.createElement('div');
+        item.className = `exam-review-item ${statusClass}`;
+        item.innerHTML = `
+          <div class="r-q">Q${idx + 1}: ${q.q}</div>
+          <div class="r-row">
+            <span class="r-label">✅ Correct:</span>
+            <span class="r-val-correct">${q.options[q.correct]}</span>
+          </div>
+          <div class="r-row">
+            <span class="r-label">Your answer:</span>
+            <span class="${userClass}">${userText}</span>
+          </div>
+        `;
+        reviewList.appendChild(item);
+      });
+
+      // Save attempt to Firebase
+      if (!isReviewOnly && _activeExamData) {
+        // Use Firebase UID if logged in, otherwise a stable guest key
+        const saveId = _examUserId
+          ? _examUserId
+          : 'guest_' + (_examGuestName || 'anon').toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+        const displayName = _examUserId ? saveId : (_examGuestName || 'Guest');
+        const quizId = _activeExamData.quizId;
+        db.ref(`attempts/${saveId}/${quizId}`).set({
+          score: _examScore,
+          answers: _examUserAnswers,
+          timestamp: Date.now()
+        });
+        db.ref(`scores/${saveId}_${quizId}`).set({
+          username: displayName,
+          score: _examScore,
+          quiz: quizId,
+          timestamp: Date.now()
+        });
+      }
+    }
+
+    function retakeExam() {
+      _examStep('prompt');
+      document.getElementById('examAlreadyDoneBtn').style.display = 'block';
+    }
+
+    function closeExamModal() {
+      clearInterval(_examTimerInterval);
+      document.getElementById('examGateOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      _pendingNextFn = null;
+      _activeExamData = null;
+    }
+
+    function closeExamAndGoNext() {
+      clearInterval(_examTimerInterval);
+      document.getElementById('examGateOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      const fn = _pendingNextFn;
+      _pendingNextFn = null;
+      _activeExamData = null;
+      if (fn) fn();
+    }
+
+    // ===== EXAMS LIST LOGIC =====
+    let _allExamsList = [];
+    let _userAttemptsList = {};
+    let _currentExamsTab = 'pending';
+
+    function openExamsList() {
+      document.getElementById('examsListModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      _currentExamsTab = 'pending';
+      document.getElementById('tabPending').classList.add('active');
+      document.getElementById('tabAttempted').classList.remove('active');
+
+      const content = document.getElementById('examsListContent');
+      content.innerHTML = '<div style="text-align:center; padding:30px; color:#aaa;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+
+      // 1. Fetch madeena exams
+      db.ref('madeena_exams').once('value').then(snap => {
+        _allExamsList = [];
+        const data = snap.val() || {};
+        for (let key in data) {
+          const m = key.match(/v(\d+)_p(\d+)/);
+          if (m) {
+            _allExamsList.push({
+              key: key,
+              vol: parseInt(m[1]),
+              part: parseInt(m[2]),
+              quizId: data[key].quizId,
+              title: data[key].title
+            });
+          }
+        }
+
+        // Determine lookup ID
+        const lookupId = _examUserId || ('guest_' + (_examGuestName || 'anon').toLowerCase().replace(/\s+/g, '_'));
+
+        // 2. Fetch attempts
+        return db.ref(`attempts/${lookupId}`).once('value');
+      }).then(snap => {
+        _userAttemptsList = snap.val() || {};
+        renderExamsList();
+      }).catch(err => {
+        content.innerHTML = `<div style="text-align:center; padding:30px; color:#f44336;">Error loading exams.</div>`;
+      });
+    }
+
+    function closeExamsList() {
+      document.getElementById('examsListModal').classList.remove('active');
+      document.body.style.overflow = '';
+      if (_activeExamData && document.getElementById('examGateOverlay').classList.contains('active')) {
+        document.body.style.overflow = 'hidden'; // restore overlay lock if needed
+      }
+    }
+
+    function switchExamsTab(tab) {
+      _currentExamsTab = tab;
+      document.getElementById('tabPending').classList.toggle('active', tab === 'pending');
+      document.getElementById('tabAttempted').classList.toggle('active', tab === 'attempted');
+      renderExamsList();
+    }
+
+    function renderExamsList() {
+      const content = document.getElementById('examsListContent');
+      content.innerHTML = '';
+
+      const curVolIndex = currentVolumeIdx;
+      const curPartIndex = currentPartIdx;
+
+      const isPending = _currentExamsTab === 'pending';
+      const filtered = _allExamsList.filter(ex => {
+        const attempted = !!_userAttemptsList[ex.quizId];
+        if (isPending) {
+          if (attempted) return false;
+          // ONLY show pending exams up to current volume & part index
+          let vIdx = LESSONS.findIndex(l => l.volume === ex.vol);
+          if (vIdx < 0) return false;
+
+          if (vIdx < curVolIndex) return true; // past volume
+          if (vIdx === curVolIndex && ex.part <= curPartIndex) return true; // current volume, up to current part
+          return false; // future part
+        } else {
+          return attempted;
+        }
+      });
+
+      if (filtered.length === 0) {
+        content.innerHTML = `
+          <div style="text-align:center; padding:40px 20px; color:#888;">
+             <i class="fas fa-folder-open fa-3x" style="margin-bottom:12px; opacity:0.5;"></i>
+             <p>No ${isPending ? 'pending' : 'attempted'} exams found.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(ex => {
+        const item = document.createElement('div');
+        item.className = `exam-list-item ${isPending ? 'p-pending' : 'p-attempted'}`;
+
+        let actionBtn = '';
+        if (isPending) {
+          actionBtn = `<button onclick="attemptPendingExam('${ex.key}', '${ex.quizId}')" class="exam-btn-primary" style="padding:8px 14px; font-size:0.85rem; border:none; border-radius:8px; cursor:pointer;"><i class="fas fa-play" style="margin-right:6px;"></i>Take Exam</button>`;
+        } else {
+          const attemptData = _userAttemptsList[ex.quizId];
+          actionBtn = `
+             <div style="text-align:right;">
+               <div style="color:#4caf50; font-weight:700; font-size:1.1rem; margin-bottom:4px;">Score: ${attemptData.score}</div>
+               <button onclick="viewAttemptedReview('${ex.quizId}')" class="exam-btn-secondary" style="padding:6px 10px; font-size:0.8rem; border-radius:6px; cursor:pointer;"><i class="fas fa-eye" style="margin-right:6px;"></i>Review</button>
+             </div>
+           `;
+        }
+
+        item.innerHTML = `
+           <div>
+             <h4>${ex.title || 'Exam'}</h4>
+             <p><i class="fas fa-book-open" style="margin-right:4px;"></i>After Vol ${ex.vol}, Part ${ex.part + 1}</p>
+           </div>
+           ${actionBtn}
+        `;
+        content.appendChild(item);
+      });
+    }
+
+    function attemptPendingExam(key, quizId) {
+      closeExamsList();
+      db.ref('madeena_exams/' + key).once('value').then(snap => {
+        if (snap.exists()) {
+          _activeExamData = snap.val();
+          _pendingNextFn = () => { }; // dummy func, do nothing on success
+
+          if (!_examUserId && !_examGuestName) {
+            _examStep('name');
+            document.getElementById('examGateOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('examNameInput').focus(), 200);
+          } else {
+            startInlineExam();
+            document.getElementById('examGateOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+        }
+      });
+    }
+
+    function viewAttemptedReview(quizId) {
+      closeExamsList();
+      const attemptData = _userAttemptsList[quizId];
+      if (!attemptData) return;
+
+      db.ref('quizzes/' + quizId).once('value').then(snap => {
+        const data = snap.val();
+        if (!data || !data.questions) return;
+
+        _examQuestions = data.questions;
+        _examUserAnswers = attemptData.answers;
+        _examScore = attemptData.score;
+        // mock active exam data just for review renderer
+        _activeExamData = { quizId: quizId, title: 'Review: ' + quizId };
+
+        _examFinish(true); // pass true for review mode
+        document.getElementById('examGateOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
   </script>
 </body>
 

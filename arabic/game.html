@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Arabic Quest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="../pbc.css">
+  <link rel="icon" href="../logoo.png" type="image/icon type">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #000915;
+      --card-bg: rgba(13, 86, 79, 0.25);
+      --card-border: rgba(13, 86, 79, 0.6);
+      --primary: #a8f0e8;
+      --accent: #f1c40f;
+      /* For Coins */
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a1f1c 0%, #0d2b27 50%, #071a17 100%);
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Anek Latin', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      background: transparent;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 75px;
+      background: rgba(0, 9, 21, 0.9);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 10px;
+      z-index: 1100;
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .stat-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      padding: 5px;
+      border-radius: 0;
+      font-weight: 700;
+      font-size: 0.85rem;
+      height: auto;
+      min-width: 60px;
+    }
+
+    .stat-badge i {
+      font-size: 1.2rem;
+    }
+
+    #mapView,
+    #sessionView,
+    #examView {
+      padding-bottom: 90px !important;
+      /* Space for bottom nav */
+    }
+
+    /* Exam UI Styling */
+    .exam-view {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #1a2a29 0%, #0d1a19 100%);
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      overflow-y: auto;
+    }
+
+    .exam-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .exam-score-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .exam-question {
+      font-size: 3rem;
+      margin-bottom: 40px;
+      text-align: center;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .mc-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .mc-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(26, 122, 112, 0.4);
+      padding: 18px;
+      border-radius: 15px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .mc-btn:active {
+      transform: scale(0.98);
+    }
+
+    .mc-btn.correct {
+      background: var(--success) !important;
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .mc-btn.wrong {
+      background: var(--danger) !important;
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .stat-badge span {
+      line-height: 1;
+    }
+
+    .name-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .name-modal {
+      background: linear-gradient(135deg, #0d2b27, #071a17);
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid #1a7a70;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .name-modal input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #1a7a70;
+      border-radius: 12px;
+      color: #fff;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 1.1rem;
+      outline: none;
+    }
+
+    .name-modal input:focus {
+      border-color: var(--accent);
+    }
+
+    .name-modal .btn-start {
+      background: var(--accent);
+      color: #111;
+      font-weight: bold;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .stat-badge.coins {
+      color: var(--accent);
+    }
+
+    .stat-badge.streak {
+      color: #f39c12;
+    }
+
+    .scholar-tier-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .scholar-tier-card:hover {
+      border-color: var(--accent);
+      background: rgba(26, 122, 112, 0.1);
+    }
+
+    .scholar-tier-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      grayscale: 1;
+    }
+
+    #mapView,
+    #sessionView,
+    #examView {
+      padding-bottom: 110px !important;
+    }
+
+    /* Map View container */
+    #mapView {
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
+      background-image: radial-gradient(circle at center, rgba(13, 86, 79, 0.1) 0%, transparent 60%);
+    }
+
+    .level-node-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .level-node {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      border: 4px solid #1a7a70;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      z-index: 2;
+    }
+
+    .level-node:active {
+      transform: translateY(8px);
+      box-shadow: 0 0 0 #083c37, 0 5px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .level-node.locked {
+      background: #1a2a28;
+      border-color: #333;
+      color: #555;
+    }
+
+    .level-node.disabled {
+      opacity: 0.3;
+      filter: grayscale(1);
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    .level-node.locked:active, .level-node.disabled:active {
+      transform: none;
+      box-shadow: 0 8px 0 rgba(0,0,0,0.4);
+    }
+
+    .how-to-btn {
+      margin: 40px auto;
+      padding: 12px 25px;
+      color: #a0b8b5;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .how-to-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .guide-section {
+      text-align: left;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .guide-section h4 {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .guide-section p {
+      font-size: 0.85rem;
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    .how-to-modal {
+      background: linear-gradient(135deg, #0d2b27, #071a17);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      width: 95%;
+      max-width: 500px;
+      padding: 30px;
+      max-height: 85vh;
+      overflow-y: auto;
+      text-align: left;
+      color: white;
+    }
+
+    .level-label {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .level-path {
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 15px;
+      height: 50px;
+      background: #1a7a70;
+      z-index: 0;
+    }
+
+    .level-node-container:first-child .level-path {
+      display: none;
+    }
+
+    .locked-path {
+      background: #333;
+    }
+
+    /* Session View */
+    #sessionView {
+      display: none;
+      padding: 20px;
+      min-height: calc(100vh - 70px);
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .progress-container {
+      width: 100%;
+      max-width: 500px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .flashcard {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      min-height: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .arabic-word {
+      font-family: 'Amiri', serif;
+      font-size: 4.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .audio-btn {
+      background: var(--card-bg);
+      border: none;
+      color: var(--primary);
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background 0.2s;
+    }
+
+    .audio-btn:hover {
+      background: rgba(13, 86, 79, 0.5);
+    }
+
+    .translation {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      color: #fff;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .translation-ml {
+      font-size: 1.3rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--primary);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      margin-top: -10px;
+      margin-bottom: 25px;
+    }
+
+    .translation.visible,
+    .translation-ml.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn-reveal {
+      width: 100%;
+      max-width: 500px;
+      padding: 16px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 30px;
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 6px 0 #083c37;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .btn-reveal:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #083c37;
+    }
+
+    /* Coin Animation Styles */
+    .coin-particle {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8), inset 0 0 4px rgba(0, 0, 0, 0.3);
+      z-index: 10000;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      border: 1px solid #e5c100;
+    }
+
+    @keyframes coin-fly {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      15% {
+        transform: translate(var(--surge-x), var(--surge-y)) rotate(90deg) scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--target-x), var(--target-y)) rotate(360deg) scale(0.5);
+        opacity: 0.5;
+      }
+    }
+
+    .pulse-animation {
+      animation: balance-pulse 0.4s ease-out;
+    }
+
+    @keyframes balance-pulse {
+      0% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.2); filter: brightness(1.5); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+
+    .response-buttons {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .btn-response {
+      flex: 1;
+      padding: 16px 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-hard {
+      background: var(--danger);
+      box-shadow: 0 6px 0 #c0392b;
+    }
+
+    .btn-hard:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #c0392b;
+    }
+
+    .btn-good {
+      background: var(--warning);
+      box-shadow: 0 6px 0 #d35400;
+    }
+
+    .btn-good:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #d35400;
+    }
+
+    .btn-easy {
+      background: var(--success);
+      box-shadow: 0 6px 0 #27ae60;
+    }
+
+    .btn-easy:active {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 #27ae60;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .leaderboard-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      max-height: 80vh;
+      overflow-y: auto;
+      text-align: center;
+      color: white;
+    }
+
+    .lb-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .lb-row.me {
+      background: rgba(241, 196, 15, 0.2);
+      font-weight: bold;
+      border-radius: 8px;
+    }
+
+    .finish-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    .finish-icon {
+      font-size: 4rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar (Back Only) -->
+  <div class="top-bar">
+    <a href="../main.html"
+      style="color: #fff; font-size: 1.5rem; text-decoration: none; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: 50%;">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="stat-badge streak" title="Streak">
+      <i class="fa-solid fa-fire" style="color: #f39c12;"></i>
+      <span id="streakCount">0</span>
+    </div>
+    <div class="stat-badge" style="color:#afe9da;" title="XP">
+      <i class="fa-solid fa-star"></i>
+      <span id="xpCount">0</span>
+    </div>
+    <div class="stat-badge coins" title="IlmCoins">
+      <i class="fa-solid fa-coins" style="color: #f1c40f;"></i>
+      <span id="coinCount">0</span>
+    </div>
+    <div class="stat-badge" onclick="showScholarships()" style="cursor:pointer; color:#f1c40f;" title="Earn Coins">
+      <i class="fa-solid fa-hand-holding-dollar"></i>
+      <span style="font-size:0.7rem; opacity:0.7;">Earn</span>
+    </div>
+    <div class="stat-badge" onclick="showLeaderboard()" style="cursor:pointer; color:#3498db;" title="Leaderboard">
+      <i class="fa-solid fa-ranking-star"></i>
+      <span style="font-size:0.7rem; opacity:0.7;">Rank</span>
+    </div>
+    <div class="stat-badge" onclick="showCollection()" style="cursor:pointer; color:#9b59b6;" title="Card Collection">
+      <i class="fa-solid fa-layer-group"></i>
+      <span style="font-size:0.7rem; opacity:0.7;">Cards</span>
+    </div>
+  </div>
+
+  <!-- Map View -->
+  <div id="mapView">
+    <h2 style="font-weight: 700; text-align: center; color: var(--primary);">Islamic Arabic Quest</h2>
+    <p style="text-align: center; color: #a0b8b5; font-size: 0.9rem; max-width: 300px;">Master the language of the
+      Quran. Play daily, earn rewards!</p>
+
+    <div id="levelsContainer" style="width: 100%; max-width: 400px; padding: 20px;">
+      <!-- Dynamic levels rendered here -->
+      <div style="text-align:center;"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+    </div>
+
+    <div class="how-to-btn" onclick="showGuide()">
+      <i class="fa-solid fa-circle-question"></i> How to Play & Earn
+    </div>
+  </div>
+
+  <!-- Session View -->
+  <div id="sessionView">
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="flashcard">
+      <div id="wordCounter"
+        style="position: absolute; top: 15px; left: 15px; color: #7aa8a2; font-size: 0.8rem; font-weight:700;">1/10
+      </div>
+
+      <button class="audio-btn" onclick="playMockAudio()"><i class="fa-solid fa-volume-up"></i></button>
+      <div class="arabic-word" id="flashcardWord">--</div>
+      <div class="translation" id="flashcardTranslation">--</div>
+      <div class="translation-ml" id="flashcardTranslationMl">--</div>
+      <div style="font-size: 0.8rem; margin-top:10px; color: #5a7a76; font-style: italic;" id="flashcardNotes"></div>
+    </div>
+
+    <button class="btn-reveal" id="btnReveal" onclick="revealAnswer()">Show Answer</button>
+
+    <button class="btn-reveal" id="btnHint" onclick="showHint()"
+      style="background:var(--warning); color:#fff; border:none; margin-top:10px; width:100%; max-width:500px; padding:16px; border-radius:30px; font-weight:bold; box-shadow: 0 6px 0 #d35400;">
+      <i class="fa-solid fa-lightbulb"></i> Hint (-2 Coins)
+    </button>
+
+    <div id="hintOptions"
+      style="display:none; flex-direction:column; gap:10px; margin-top:15px; width:100%; max-width:500px;"></div>
+
+    <div class="response-buttons" id="responseButtons">
+      <button class="btn-response btn-hard" onclick="submitResponse('hard')">Hard</button>
+      <button class="btn-response btn-good" onclick="submitResponse('good')">Good</button>
+      <button class="btn-response btn-easy" onclick="submitResponse('easy')">Easy</button>
+    </div>
+  </div>
+
+  <!-- Exam View -->
+  <div id="examView" class="exam-view">
+    <div class="exam-header">
+      <div class="exam-score-card" id="examScoreDisplay">Score: 0</div>
+      <div id="examProgress" style="color:#a0b8b5;">1/5</div>
+    </div>
+    <div class="exam-question" id="examWord">--</div>
+    <div id="examCounter" style="font-size: 0.8rem; color: #777; margin-bottom: 20px;">Question 1/20</div>
+    <div class="mc-options" id="mcOptions"></div>
+  </div>
+
+  <!-- Leaderboard Modal -->
+  <div class="modal-overlay" id="leaderboardModal" onclick="closeLeaderboard(event)">
+    <div class="leaderboard-modal" onclick="event.stopPropagation()">
+      <h2 style="color:var(--primary);"><i class="fa-solid fa-crown" style="color:var(--accent);"></i> Top Scholars</h2>
+      <div id="lbContent" style="margin-top:20px; text-align:left;">
+        <div style="text-align:center;"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+      </div>
+      <button class="btn-reveal" style="margin-top:20px; padding: 10px;" onclick="closeLeaderboard()">Close</button>
+    </div>
+  </div>
+
+  <!-- Collection Modal -->
+  <div class="modal-overlay" id="collectionModal" onclick="closeCollection(event)">
+    <div class="leaderboard-modal" onclick="event.stopPropagation()">
+      <h2 style="color:var(--primary);"><i class="fa-solid fa-layer-group" style="color:#9b59b6;"></i> My Cards</h2>
+      <div style="font-size:0.9rem; color:#ccc; margin-bottom:15px;" id="collectionStats">0/114 Surahs Completed</div>
+      <div id="collectionContent" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
+      <button class="btn-reveal" style="margin-top:20px; padding: 10px;" onclick="closeCollection()">Close</button>
+    </div>
+  </div>
+
+  <!-- Scholarship Modal -->
+  <div class="modal-overlay" id="scholarModal" onclick="closeScholarships(event)">
+    <div class="leaderboard-modal" onclick="event.stopPropagation()">
+      <h2 style="color:var(--primary);"><i class="fa-solid fa-graduation-cap" style="color:var(--accent);"></i>
+        Scholarship Exams</h2>
+      <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Pay a fee to enter. Score 80%+ to win 3x-4x your
+        coins!</p>
+      <div id="scholarTiers"></div>
+      <button class="btn-reveal" style="margin-top:20px; padding: 10px; width:100%;"
+        onclick="closeScholarships()">Close</button>
+    </div>
+  </div>
+
+  <!-- How to Play Modal -->
+  <div class="modal-overlay" id="guideModal" onclick="closeGuide(event)">
+    <div class="how-to-modal" onclick="event.stopPropagation()">
+      <h2 style="color:var(--primary); margin-bottom: 25px;"><i class="fa-solid fa-book-open"></i> Scholar's Handbook
+      </h2>
+
+      <div class="guide-section">
+        <h4><i class="fa-solid fa-map"></i> The Quest Map</h4>
+        <p>Follow the path to master the Quran's language. Each node represents a Surah. Use <b>IlmCoins</b> earned in
+          previous levels to unlock new areas!</p>
+      </div>
+
+      <div class="guide-section">
+        <h4><i class="fa-solid fa-medal"></i> Checkpoint Exams</h4>
+        <p>Every 3 Surahs, you face a <b>Checkpoint Exam</b> (75% to pass). This is mandatory to unlock the next block
+          of levels. Passing gives you 100 coins!</p>
+      </div>
+
+      <div class="guide-section">
+        <h4><i class="fa-solid fa-hand-holding-dollar"></i> Earning Coins (Scholarships)</h4>
+        <p>Need more coins? Click the <b>Earn</b> button to enter high-stakes Scholarship Exams. Enter with a fee and
+          pass with <b>80%</b> to win up to <b>800 coins!</b></p>
+      </div>
+
+      <div class="guide-section">
+        <h4><i class="fa-solid fa-brain"></i> Spaced Repetition (SRS)</h4>
+        <p>The app is smart! When you mark a word as:</p>
+        <ul style="font-size:0.8rem; color:#ccc; list-style:none; padding:0;">
+          <li><b style="color:var(--danger)">Hard</b>: You see it again tomorrow.</li>
+          <li><b style="color:var(--warning)">Good</b>: You see it in 3-5 days.</li>
+          <li><b style="color:var(--success)">Easy</b>: You see it in 10+ days.</li>
+        </ul>
+        <p>The <b>Adaptive Selector</b> prioritizes your Hard and Due words in every session.</p>
+      </div>
+
+      <div class="guide-section" style="border:none;">
+        <h4><i class="fa-solid fa-fire"></i> Streaks & Cards</h4>
+        <p>Play every day to maintain your streak. Completing a Surah level unlocks a special <b>Collection Card</b>.
+          Master all 114 Surahs!</p>
+      </div>
+
+      <button class="btn-reveal" style="margin-top:10px; padding: 12px; width:100%;"
+        onclick="closeGuide()">Understood</button>
+    </div>
+  </div>
+
+  <!-- Guest Name Popup -->
+  <div id="guestNameModal" class="name-modal-overlay" style="display:none;">
+    <div class="name-modal">
+      <i class="fa-solid fa-user-graduate" style="font-size: 3rem; color: var(--accent); margin-bottom: 20px;"></i>
+      <h2>Welcome, Scholar!</h2>
+      <p style="color: #ccc; font-size: 0.9rem;">To compete in the global Top Scholars leaderboard, please enter your
+        name:</p>
+      <input type="text" id="guestNameInput" placeholder="Enter your Name..." maxlength="20">
+      <button class="btn-start" onclick="submitGuestName()">Begin Quest</button>
+    </div>
+  </div>
+
+  <!-- Finish Screen -->
+  <div id="finishScreen" class="finish-screen">
+    <div class="finish-icon"><i class="fa-solid fa-trophy"></i></div>
+    <h2>Session Complete!</h2>
+    <p id="finishMsg" style="color: #a0b8b5; margin-bottom: 20px;">Great job mastering these words.</p>
+    <div class="stat-badge coins"
+      style="font-size: 1.5rem; justify-content:center; margin-bottom: 25px; align-self:center;">
+      <i class="fa-solid fa-coins"></i> +<span id="earnedCoins">0</span>
+    </div>
+    <button class="btn-reveal" style="margin-top: 0;" onclick="returnToMap()">Continue</button>
+  </div>
+
+
+  <!-- Firebase and Dependencies -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script src="../guest-utils.js"></script>
+
+  <script>
+    // Ensure Firebase is initialized
+    const db = window.firebaseDb || firebase.database();
+    const auth = window.firebaseAuth || firebase.auth();
+
+    // ── Real API Dictionary (Al-Quran API v4) ──
+    const dictionary = {
+      level_1: [], level_2: [], level_3: [], level_4: [], level_5: [], level_6: [], level_7: [],
+      level_8: [], level_9: [], level_10: [], level_11: [], level_12: [], level_13: [], level_14: [], level_15: []
+    };
+
+    // We fetch real vocabulary from the Quran dynamically
+    // Level 1: Al-Fatiha (Chapter 1)
+    // Level 2: Al-Ikhlas (Chapter 112)
+    // Level 3: Al-Falaq (Chapter 113)
+    async function populateDictionaryFromAPI() {
+      try {
+        const fetchVerse = async (chapter, levelKey) => {
+          const res = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${chapter}?language=en&words=true&word_fields=text_uthmani,translation,audio_url`);
+          const data = await res.json();
+          let levelWords = [];
+
+          // 1. Prepare English words for translation
+          let enTexts = [];
+          data.verses.forEach(v => {
+            v.words.forEach(w => {
+              if (w.char_type_name === "word" && w.translation && w.translation.text) {
+                enTexts.push(w.translation.text);
+              }
+            });
+          });
+
+          // 2. Translate only unique words to save API time
+          const uniqueEn = [...new Set(enTexts)];
+          const mlMap = {};
+          
+          try {
+             // Translate each word individually for 100% accuracy
+             for (const en of uniqueEn) {
+                const q = encodeURIComponent(en);
+                const trRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${q}`);
+                const trData = await trRes.json();
+                if (trData && trData[0]) {
+                   // Join all segments if any
+                   mlMap[en] = trData[0].map(s => s[0]).join('').trim();
+                } else {
+                   mlMap[en] = en;
+                }
+             }
+          } catch(e) { console.error("Translation fail:", e); }
+
+          // 3. Populate dictionary with ML word meanings
+          data.verses.forEach(v => {
+            v.words.forEach(w => {
+              if (w.char_type_name === "word" && w.translation && w.translation.text) {
+                levelWords.push({
+                  id: `q_${w.id}`,
+                  ar: w.text_uthmani,
+                  en: w.translation.text,
+                  ml: mlMap[w.translation.text] || w.translation.text,
+                  audio: w.audio_url ? `https://verses.quran.com/${w.audio_url}` : null,
+                  note: `Surah ${chapter}, Verse ${v.verse_number}`
+                });
+              }
+            });
+          });
+
+          dictionary[levelKey] = levelWords;
+        };
+
+        await Promise.all([
+          fetchVerse(1, "level_1"),     // Al-Fatiha
+          fetchVerse(112, "level_2"),   // Al-Ikhlas
+          fetchVerse(113, "level_3"),   // Al-Falaq
+          fetchVerse(114, "level_4"),   // An-Nas
+          fetchVerse(108, "level_5"),   // Al-Kawthar
+          fetchVerse(103, "level_6"),   // Al-Asr
+          fetchVerse(97, "level_7"),    // Al-Qadr
+          fetchVerse(93, "level_8"),    // Ad-Duhaa
+          fetchVerse(94, "level_9"),    // Ash-Sharh
+          fetchVerse(95, "level_10"),   // At-Tin
+          fetchVerse(105, "level_11"),  // Al-Fil
+          fetchVerse(106, "level_12"),  // Quraysh
+          fetchVerse(107, "level_13"),  // Al-Ma'un
+          fetchVerse(109, "level_14"),  // Al-Kafirun
+          fetchVerse(110, "level_15"),  // An-Nasr
+          
+          // Phase 2: Major Landmarks (Limited to first 30 verses for performance)
+          fetchVerse(12, "level_16"),   // Yusuf
+          fetchVerse(19, "level_17"),   // Maryam
+          fetchVerse(18, "level_18"),   // Kahf
+          fetchVerse(2, "level_19"),    // Baqarah
+          fetchVerse(3, "level_20")     // Al-Imran (Bonus/Mastery)
+        ]);
+
+        console.log("Quran Vocabulary loaded with ML word support:", dictionary);
+      } catch (err) {
+        console.error("Quran API failed to load", err);
+      }
+    }
+
+    const levels = [
+      { id: "level_1", title: "Level 1 (Fatiha)", icon: "fa-book-quran", reqCoins: 0 },
+      { id: "level_2", title: "Level 2 (Ikhlas)", icon: "fa-tree", reqCoins: 100 },
+      { id: "level_3", title: "Level 3 (Falaq)", icon: "fa-fort-awesome", reqCoins: 100 },
+      { id: "exam_1", title: "Final Check (Tier 1)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_1", "level_2", "level_3"] },
+
+      { id: "level_4", title: "Level 4 (Nas)", icon: "fa-mountain", reqCoins: 100 },
+      { id: "level_5", title: "Level 5 (Kawthar)", icon: "fa-water", reqCoins: 100 },
+      { id: "level_6", title: "Level 6 (Asr)", icon: "fa-clock", reqCoins: 100 },
+      { id: "exam_2", title: "Final Check (Tier 2)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_4", "level_5", "level_6"] },
+
+      { id: "level_7", title: "Level 7 (Qadr)", icon: "fa-star-and-crescent", reqCoins: 100 },
+      { id: "level_8", title: "Level 8 (Duhaa)", icon: "fa-sun", reqCoins: 100 },
+      { id: "level_9", title: "Level 9 (Sharh)", icon: "fa-heart", reqCoins: 100 },
+      { id: "exam_3", title: "Final Check (Tier 3)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_7", "level_8", "level_9"] },
+
+      { id: "level_10", title: "Level 10 (Tin)", icon: "fa-leaf", reqCoins: 100 },
+      { id: "level_11", title: "Level 11 (Fil)", icon: "fa-elephant", reqCoins: 100 },
+      { id: "level_12", title: "Level 12 (Quraysh)", icon: "fa-caravan", reqCoins: 100 },
+      { id: "exam_4", title: "Final Check (Tier 4)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_10", "level_11", "level_12"] },
+
+      { id: "level_13", title: "Level 13 (Ma'un)", icon: "fa-handshake-angle", reqCoins: 100 },
+      { id: "level_14", title: "Level 14 (Kafirun)", icon: "fa-fire-burn", reqCoins: 100 },
+      { id: "level_15", title: "Level 15 (Nasr)", icon: "fa-flag-checkered", reqCoins: 100 },
+      
+      { id: "exam_checkpoint", title: "Grand Scholar Checkpoint", icon: "fa-graduation-cap", type: "checkpoint", reqCoins: 100, sources: ["level_1", "level_2", "level_3", "level_4", "level_5", "level_6", "level_7", "level_8", "level_9", "level_10", "level_11", "level_12", "level_13", "level_14", "level_15"] },
+
+      { id: "level_16", title: "Level 16 (Yusuf)", icon: "fa-user-tie", reqCoins: 1000 },
+      { id: "exam_yusuf", title: "Yusuf Exam", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_16"] },
+
+      { id: "level_17", title: "Level 17 (Maryam)", icon: "fa-person-breastfeeding", reqCoins: 1000 },
+      { id: "exam_maryam", title: "Maryam Exam", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_17"] },
+
+      { id: "level_18", title: "Level 18 (Kahf)", icon: "fa-mountain-sun", reqCoins: 1000 },
+      { id: "exam_kahf", title: "Kahf Exam", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_18"] },
+
+      { id: "level_19", title: "Level 19 (Baqarah)", icon: "fa-cow", reqCoins: 1000 },
+      { id: "exam_baqarah", title: "Baqarah Exam", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_19"] },
+
+      { id: "level_20", title: "Level 20 (Al-Imran)", icon: "fa-landmark", reqCoins: 1000 },
+      { id: "exam_final", title: "Final Mastery Exam", icon: "fa-crown", type: "exam", reqCoins: 50, sources: ["level_20"] },
+    ];
+
+    let currentUserContext = null;
+    let userProgress = { coins: 0, current_level: 1, streak: 0, last_active: "" };
+    let wordsMastery = {};
+    let userCards = [];
+
+    let sessionWords = [];
+    let currentSessionIndex = 0;
+    let currentSessionId = null;
+    let examScore = 0;
+    let examQuestions = [];
+    let isScholarship = false;
+
+    const SCHOLARSHIP_FEE = 25;
+    const SCHOLARSHIP_REWARD = 75;
+
+    try {
+      document.getElementById("levelsContainer").innerHTML = '<div style="text-align:center;"><i class="fa fa-spinner fa-spin fa-2x"></i><br>Initializing Quest...</div>';
+
+      auth.onAuthStateChanged(user => {
+        try {
+          if (user) {
+            document.getElementById("levelsContainer").innerHTML = '<div style="text-align:center;"><i class="fa fa-spinner fa-spin fa-2x"></i><br>User authenticated, loading data...</div>';
+            currentUserContext = { uid: user.uid, displayName: user.displayName || "Scholar", isGuest: false };
+            loadUserData();
+          } else if (typeof isGuestMode === 'function' && isGuestMode()) {
+            document.getElementById("levelsContainer").innerHTML = '<div style="text-align:center;"><i class="fa fa-spinner fa-spin fa-2x"></i><br>Guest Mode active...</div>';
+            let gName = localStorage.getItem('guestName_arabic');
+            if (!gName) {
+              document.getElementById("guestNameModal").style.display = "flex";
+              return; // Stop here and wait for modal submit
+            }
+            proceedAsGuest(gName);
+          } else {
+            document.getElementById("levelsContainer").innerHTML = '<div style="text-align:center; color:#e74c3c;">No user found. Redirecting...</div>';
+            window.location.href = "../login.html";
+          }
+        } catch (e) {
+          document.getElementById("levelsContainer").innerHTML = `<div style="color:var(--danger); font-weight:bold; padding:20px;">Auth Callback Error: ${e.message}</div>`;
+        }
+      });
+    } catch (err) {
+      document.getElementById("levelsContainer").innerHTML = `<div style="color:var(--danger); font-weight:bold; padding:20px; text-align:center;">
+        Critical Initialization Error: ${err.message}<br>
+        <span style="font-size:0.8rem; color:#ccc;">Check console for details. Path config might be wrong.</span>
+      </div>`;
+      console.error(err);
+    }
+
+    function submitGuestName() {
+      const input = document.getElementById("guestNameInput");
+      const name = input.value.trim();
+      if (!name) {
+        alert("Please enter a name to continue!");
+        return;
+      }
+      localStorage.setItem('guestName_arabic', name);
+      document.getElementById("guestNameModal").style.display = "none";
+      proceedAsGuest(name);
+    }
+
+    function proceedAsGuest(name) {
+      let gUid = localStorage.getItem('guestUid_arabic');
+      if (!gUid) {
+        gUid = "guest_" + Date.now();
+        localStorage.setItem('guestUid_arabic', gUid);
+      }
+      currentUserContext = { uid: gUid, displayName: name, isGuest: true };
+      loadUserData();
+    }
+
+    function isLevelReachable(lvl, idx) {
+      if (idx === 0) return true;
+      const prevLvl = levels[idx - 1];
+      const prevPurchased = (userProgress.purchased_levels || []).includes(prevLvl.id) || prevLvl.id === "level_1";
+      const prevPassed = (userProgress.badges || []).includes("passed_" + prevLvl.id);
+      
+      return (prevLvl.type === "exam" || prevLvl.type === "checkpoint") ? prevPassed : prevPurchased;
+    }
+
+    async function loadUserData() {
+      try {
+        const uid = currentUserContext.uid;
+
+        // Fetch official username if logged in (not guest)
+        if (!currentUserContext.isGuest) {
+          const userSnap = await db.ref(`users/${uid}/username`).get();
+          if (userSnap.exists()) {
+            currentUserContext.displayName = userSnap.val();
+          }
+        }
+
+        // Daily Arabic Analytics Tracking
+        const today = new Date();
+        const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        if (!sessionStorage.getItem('ilmify_arabic_quest_visited')) {
+          db.ref('analytics/arabic/totalViews').transaction(count => (count || 0) + 1);
+          db.ref('analytics/arabic/dailyViews/' + localDateStr).transaction(count => (count || 0) + 1);
+          sessionStorage.setItem('ilmify_arabic_quest_visited', 'true');
+        }
+
+        // Wait for API to populate the content
+        await populateDictionaryFromAPI();
+
+        // Load general progress
+        const progSnap = await db.ref(`users/${uid}/quest_progress`).get();
+        if (progSnap.exists()) {
+          userProgress = { ...userProgress, ...progSnap.val() };
+        } else {
+          // Initialize new user
+          await db.ref(`users/${uid}/quest_progress`).set(userProgress);
+        }
+
+        // Load words mastery for SM-2
+        const masterySnap = await db.ref(`users/${uid}/words_mastery`).get();
+        if (masterySnap.exists()) {
+          wordsMastery = masterySnap.val();
+        }
+
+        // Load specific card collections
+        const cardsSnap = await db.ref(`users/${uid}/quest_cards`).get();
+        if (cardsSnap.exists()) {
+          userCards = cardsSnap.val() || [];
+        }
+
+        updateTopBar();
+        renderMap();
+
+        // One-time onboarding guide for new users
+        if (!localStorage.getItem('arabic_quest_onboarded')) {
+          setTimeout(() => {
+            showGuide();
+            localStorage.setItem('arabic_quest_onboarded', 'true');
+          }, 1000);
+        }
+      } catch (error) {
+        console.error("Failed to load user data:", error);
+        document.getElementById("levelsContainer").innerHTML =
+          `<div style="color:var(--danger); font-weight:bold; padding:20px; background:var(--card-bg); border-radius:10px;">
+            Error loading data: ${error.message}
+           </div>`;
+      }
+    }
+
+    function updateTopBar() {
+      document.getElementById("coinCount").innerText = userProgress.coins;
+      document.getElementById("streakCount").innerText = userProgress.streak || 0;
+      document.getElementById("xpCount").innerText = userProgress.xp || 0;
+    }
+
+    function renderMap() {
+      const container = document.getElementById("levelsContainer");
+      container.innerHTML = "";
+
+      levels.forEach((lvl, idx) => {
+        const isPurchased = (userProgress.purchased_levels || []).includes(lvl.id) || lvl.id === "level_1";
+        const isReachable = isLevelReachable(lvl, idx);
+
+        const wrap = document.createElement("div");
+        wrap.className = "level-node-container";
+
+        const path = document.createElement("div");
+        path.className = "level-path" + (!isPurchased ? " locked-path" : "");
+        wrap.appendChild(path);
+
+        const node = document.createElement("div");
+        node.className = "level-node" + (!isReachable ? " disabled" : !isPurchased ? " locked" : "") + (lvl.type === "exam" ? " exam-node" : "");
+        node.innerHTML = `<i class="fa-solid ${lvl.icon}"></i>${(!isPurchased && isReachable) ? '<i class="fa-solid fa-lock status-lock"></i>' : ''}`;
+
+        if (isReachable) {
+          node.onclick = () => startLevel(lvl.id);
+          if (userProgress.badges && userProgress.badges.includes("passed_" + lvl.id)) {
+            node.innerHTML += '<i class="fa-solid fa-check-circle" style="position:absolute; top:-5px; right:-5px; font-size:1.2rem; color:var(--success); background:var(--bg-dark); border-radius:50%;"></i>';
+          }
+        } else {
+          node.title = "Complete previous levels first!";
+        }
+
+        wrap.appendChild(node);
+
+        const lbl = document.createElement("div");
+        lbl.className = "level-label";
+        lbl.style.color = !isReachable ? "#555" : "#fff";
+        lbl.innerHTML = lvl.title;
+        wrap.appendChild(lbl);
+
+        container.appendChild(wrap);
+      });
+    }
+
+    // ── SM-2 Core Logic ──
+    // Anki-style algorithm
+    // qualities: 1=hard, 3=good, 5=easy
+    function calcNextReview(quality, oldInterval, oldEase) {
+      let interval = 0;
+      let ease = oldEase;
+
+      if (quality < 2) {
+        // Failed or Hard (reset interval locally)
+        interval = 1;
+        ease = Math.max(1.3, ease - 0.2);
+      } else {
+        // Good or Easy
+        if (oldInterval === 0) interval = 1;      // first review
+        else if (oldInterval === 1) interval = 3; // second review
+        else interval = Math.round(oldInterval * ease); // subsequent regular reviews
+
+        if (quality === 5) ease += 0.15; // easier
+        if (quality === 3) ease -= 0.15; // slightly harder but ok
+      }
+
+      ease = Math.max(1.3, ease); // Cap minimum ease factor
+
+      return { interval, ease };
+    }
+
+    function updateWordMastery(wordId, quality) {
+      const stats = wordsMastery[wordId] || { interval: 0, ease: 2.5 };
+      const { interval, ease } = calcNextReview(quality, stats.interval, stats.ease);
+      const nowDay = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+
+      wordsMastery[wordId] = {
+        interval: interval,
+        ease: ease,
+        next_review: nowDay + interval,
+        last_quality: quality,
+        status: interval > 7 ? 'mastered' : 'learning'
+      };
+
+      // Background sync to Firebase
+      const uid = currentUserContext.uid;
+      db.ref(`users/${uid}/words_mastery/${wordId}`).set(wordsMastery[wordId]);
+    }
+
+    function getAdaptivePool(sourceLevelIds, count) {
+      const fullPool = [];
+      sourceLevelIds.forEach(id => fullPool.push(...(dictionary[id] || [])));
+
+      const nowDay = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+      const poolNew = [];
+      const poolDue = [];
+      const poolHard = [];
+      const poolMastered = [];
+
+      fullPool.forEach(w => {
+        const stats = wordsMastery[w.id];
+        if (!stats) {
+          poolNew.push(w);
+        } else if (nowDay >= (stats.next_review || 0)) {
+          poolDue.push(w);
+        } else if (stats.last_quality < 2) {
+          poolHard.push(w);
+        } else {
+          poolMastered.push(w);
+        }
+      });
+
+      // Shuffle categories independently
+      const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+      shuffle(poolNew);
+      shuffle(poolDue);
+      shuffle(poolHard);
+      shuffle(poolMastered);
+
+      const result = [];
+      const targetNew = Math.ceil(count * 0.6); // 60% New
+      const targetReview = count - targetNew;   // 40% Review
+
+      // 1. Fill New Words
+      for (let i = 0; i < targetNew && poolNew.length > 0; i++) {
+        result.push(poolNew.shift());
+      }
+
+      // 2. Fill Due Words
+      for (let i = 0; i < targetReview && poolDue.length > 0; i++) {
+        result.push(poolDue.shift());
+      }
+
+      // 3. Fill Hard Words (if review slot not full)
+      while (result.length < count && poolHard.length > 0) {
+        result.push(poolHard.shift());
+      }
+
+      // 4. Backfill from anywhere if still not enough
+      const leftovers = [...poolNew, ...poolDue, ...poolMastered];
+      shuffle(leftovers);
+      while (result.length < count && leftovers.length > 0) {
+        result.push(leftovers.shift());
+      }
+
+      return shuffle(result);
+    }
+
+    function startLevel(levelId) {
+      const lvl = levels.find(l => l.id === levelId);
+      if (!lvl) return;
+
+      // Enforcement of Sequential progression
+      const idx = levels.indexOf(lvl);
+      if (idx > 0) {
+        const prevLvl = levels[idx - 1];
+        const prevPurchased = (userProgress.purchased_levels || []).includes(prevLvl.id) || prevLvl.id === "level_1";
+        const prevPassed = (userProgress.badges || []).includes("passed_" + prevLvl.id);
+        
+        const ok = (prevLvl.type === "exam" || prevLvl.type === "checkpoint") ? prevPassed : prevPurchased;
+        if (!ok) {
+          alert(`You must unlock and master ${prevLvl.title} before entering this level!`);
+          return;
+        }
+      }
+
+      const uid = currentUserContext.uid;
+      const isExam = (lvl.type === "exam" || lvl.type === "checkpoint" || lvl.type === "scholarship");
+
+      // Initialize purchased_levels if missing
+      if (!userProgress.purchased_levels) userProgress.purchased_levels = [];
+
+      // Logic for Exams (Pay per attempt)
+      if (isExam) {
+        let fee = (lvl.type === "checkpoint") ? 100 : 50;
+        if (userProgress.coins < fee) {
+          alert(`Insufficient coins! Scholar needs ${fee} coins for this attempt.`);
+          return;
+        }
+
+        if (!confirm(`Enter ${lvl.title}? Attempt Fee: ${fee} coins.`)) return;
+        
+        userProgress.coins -= fee;
+        db.ref(`users/${uid}/quest_progress/coins`).set(userProgress.coins);
+        updateTopBar();
+        spawnCoinAnimation(5); // Mini fountain for feedback
+
+        const count = (lvl.type === "checkpoint") ? 50 : 20;
+        examQuestions = getAdaptivePool(lvl.sources || [], count);
+        
+        if (examQuestions.length < count) {
+          alert("Not enough learned words to start exam yet!");
+          return;
+        }
+        
+        currentSessionIndex = 0;
+        examScore = 0;
+        currentSessionId = levelId;
+        isScholarship = (lvl.type === "scholarship");
+
+        document.getElementById("mapView").style.display = "none";
+        document.getElementById("examView").style.display = "flex";
+        loadExamQuestion();
+        return;
+      }
+
+      // Logic for Levels (Pay to unlock once)
+      const levelNum = parseInt(levelId.replace("level_", ""));
+      const isPhase2 = levelNum >= 16;
+      const unlockFee = isPhase2 ? 1000 : 100;
+
+      // Level 1 is always free
+      if (levelId === "level_1") {
+        if (!userProgress.purchased_levels.includes("level_1")) {
+          userProgress.purchased_levels.push("level_1");
+          db.ref(`users/${uid}/quest_progress/purchased_levels`).set(userProgress.purchased_levels);
+        }
+      } else if (!userProgress.purchased_levels.includes(levelId)) {
+        if (userProgress.coins < unlockFee) {
+          alert(`Insufficient coins to unlock this level! Fee: ${unlockFee} coins.`);
+          return;
+        }
+
+        if (!confirm(`Unlock ${lvl.title} forever? Unlock Fee: ${unlockFee} coins.`)) return;
+
+        userProgress.coins -= unlockFee;
+        userProgress.purchased_levels.push(levelId);
+        
+        // Save immediately
+        db.ref(`users/${uid}/quest_progress`).set(userProgress);
+        updateTopBar();
+        spawnCoinAnimation(10);
+      }
+
+      currentSessionId = levelId;
+      sessionWords = getAdaptivePool([levelId], 10);
+      if (sessionWords.length === 0) {
+        alert("Not enough words in this section yet!");
+        return;
+      }
+
+      currentSessionId = levelId;
+      currentSessionIndex = 0;
+      document.getElementById("mapView").style.display = "none";
+      document.getElementById("sessionView").style.display = "flex";
+      loadFlashcard();
+    }
+
+    function showScholarships() {
+      document.getElementById("scholarModal").style.display = "flex";
+      const container = document.getElementById("scholarTiers");
+      container.innerHTML = `
+        <div class="scholar-tier-card" style="width:100% !important; border-color:var(--accent);">
+          <div style="text-align:left;">
+            <b style="color:white; font-size:1.2rem;">Scholarly Duel</b><br>
+            <span style="font-size:0.85rem; color:#aaa;">Test your entire known syllabus.</span>
+          </div>
+          <div style="text-align:right;">
+            <span style="color:var(--accent); font-weight:bold;">Reward: ${SCHOLARSHIP_REWARD} <i class="fa-solid fa-coins"></i></span><br>
+            <span style="font-size:0.8rem; color:#888;">Entry Fee: ${SCHOLARSHIP_FEE}</span>
+          </div>
+        </div>
+        <button class="btn-reveal" onclick="startAdaptiveScholarship()" style="margin-top:20px; font-size:1rem;">Apply for Scholarship</button>
+      `;
+    }
+
+    function closeScholarships(e) {
+      if (e && e.target !== document.getElementById("scholarModal")) return;
+      document.getElementById("scholarModal").style.display = "none";
+    }
+
+    function showGuide() {
+      document.getElementById("guideModal").style.display = "flex";
+    }
+
+    function closeGuide(e) {
+      if (e && e.target !== document.getElementById("guideModal")) return;
+      document.getElementById("guideModal").style.display = "none";
+    }
+
+    function startAdaptiveScholarship() {
+      if (userProgress.coins < SCHOLARSHIP_FEE) {
+        alert("You don't have enough coins for the entry fee (25 coins)!");
+        return;
+      }
+      if (!confirm(`Enter the Scholarly Duel? Fee ${SCHOLARSHIP_FEE} coins will be deducted now. This exam covers ALL of your unlocked surahs.`)) return;
+
+      userProgress.coins -= SCHOLARSHIP_FEE;
+      updateTopBar();
+      spawnCoinAnimation(5);
+
+      const sources = [...(userProgress.purchased_levels || []), "level_1"];
+      isScholarship = true;
+      startExamCommon("Scholarly Duel", sources, "scholarship_adaptive");
+      closeScholarships();
+    }
+
+    function startExamCommon(title, sources, id) {
+      examQuestions = getAdaptivePool(sources, 20);
+
+      if (examQuestions.length < 20) {
+        alert("Practice more levels first to unlock the full exam dictionary!");
+        return;
+      }
+
+      currentSessionIndex = 0;
+      examScore = 0;
+      currentSessionId = id;
+
+      document.getElementById("mapView").style.display = "none";
+      document.getElementById("examView").style.display = "flex";
+      loadExamQuestion();
+    }
+
+    function loadExamQuestion() {
+      if (currentSessionIndex >= examQuestions.length) {
+        finishExam();
+        return;
+      }
+
+      const q = examQuestions[currentSessionIndex];
+      document.getElementById("examWord").innerText = q.ar;
+      document.getElementById("examCounter").innerText = `Question ${currentSessionIndex + 1}/${examQuestions.length}`;
+      document.getElementById("examProgress").innerText = `${currentSessionIndex + 1}/${examQuestions.length}`;
+      document.getElementById("examScoreDisplay").innerText = `Score: ${examScore}`;
+
+      // Distractors: Get the full pool from current session sources
+      let sources = [];
+      const lvl = levels.find(l => l.id === currentSessionId);
+      if (lvl) {
+        sources = lvl.sources;
+      } else if (isScholarship) {
+        sources = [...(userProgress.purchased_levels || []), "level_1"];
+      } else {
+        // Fallback or Scholarship scholarship_adaptive
+        sources = ["level_1"]; 
+      }
+
+      const allLvlWords = [];
+      sources.forEach(s => allLvlWords.push(...(dictionary[s] || [])));
+
+      let options = [q.en];
+      while (options.length < 3 && allLvlWords.length >= 3) {
+        const rand = allLvlWords[Math.floor(Math.random() * allLvlWords.length)].en;
+        if (!options.includes(rand)) options.push(rand);
+      }
+      options.sort(() => 0.5 - Math.random());
+
+      const container = document.getElementById("mcOptions");
+      container.innerHTML = "";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "mc-btn";
+        btn.innerText = opt;
+        btn.onclick = () => handleExamSubmit(opt, q.en, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function handleExamSubmit(selected, correct, btn) {
+      const btns = document.querySelectorAll(".mc-btn");
+      btns.forEach(b => b.disabled = true);
+
+      if (selected === correct) {
+        btn.classList.add("correct");
+        examScore++;
+      } else {
+        btn.classList.add("wrong");
+        btns.forEach(b => { if (b.innerText === correct) b.classList.add("correct"); });
+
+        // Mark as hard in mastery immediately if they fail an exam question
+        const q = examQuestions[currentSessionIndex];
+        if (q && q.id) {
+          updateWordMastery(q.id, 1);
+        }
+      }
+
+      setTimeout(() => {
+        currentSessionIndex++;
+        loadExamQuestion();
+      }, 1000);
+    }
+
+    async function finishExam() {
+      document.getElementById("examView").style.display = "none";
+      document.getElementById("finishScreen").style.display = "flex";
+
+      const total = examQuestions.length;
+      const isCheckpoint = levels.find(l => l.id === currentSessionId)?.type === "checkpoint";
+      const threshold = isCheckpoint ? 0.8 : 0.75; // 80% for checkpoint
+      const passed = (examScore / total) >= threshold;
+
+      let coinDiff = 0;
+      if (isScholarship) {
+        coinDiff = passed ? SCHOLARSHIP_REWARD : 0;
+      } else if (passed) {
+        // Phase 2 Rewards (Checkpoint and Level 16+)
+        const phase2Exams = ["exam_checkpoint", "exam_yusuf", "exam_maryam", "exam_kahf", "exam_baqarah", "exam_final"];
+        if (phase2Exams.includes(currentSessionId)) {
+          coinDiff = 1000;
+        } else {
+          coinDiff = 100;
+        }
+      } else {
+        coinDiff = -50;
+      }
+
+      userProgress.coins = Math.max(0, userProgress.coins + coinDiff);
+
+      if (passed) {
+        if (!isScholarship) {
+          if (!userProgress.badges) userProgress.badges = [];
+          if (!userProgress.badges.includes("passed_" + currentSessionId)) {
+            userProgress.badges.push("passed_" + currentSessionId);
+          }
+        }
+        document.getElementById("finishMsg").innerHTML = `<h2 style='color:var(--success)'>${isScholarship ? 'Scholarship Awarded!' : 'Passed!'}</h2>Score: ${examScore}/${total} (${(examScore / total * 100).toFixed(0)}%)<br>${coinDiff > 0 ? 'You earned ' + coinDiff + ' coins!' : 'Great job!'}`;
+      } else {
+        document.getElementById("finishMsg").innerHTML = `<h2 style='color:var(--danger)'>${isScholarship ? 'Scholarship Denied' : 'Failed'}</h2>Score: ${examScore}/${total} (${(examScore / total * 100).toFixed(0)}%)<br>${isScholarship ? 'You lost your entry fee. Practice more!' : isCheckpoint ? 'Syllabus mastery required (80%).' : 'You lost 50 coins. Need 75% to pass.'}`;
+      }
+
+      document.getElementById("earnedCoins").innerText = Math.abs(coinDiff);
+
+      // Save
+      const uid = currentUserContext.uid;
+      try {
+        await db.ref(`users/${uid}/quest_progress`).set(userProgress);
+        await db.ref(`leaderboard_quests/${uid}`).update({ coins: userProgress.coins });
+      } catch (e) { }
+
+      updateTopBar();
+      if (passed && coinDiff > 0) {
+        spawnCoinAnimation(Math.min(15, Math.ceil(coinDiff / 5)));
+      }
+    }
+
+    function spawnCoinAnimation(count) {
+      const target = document.querySelector(".stat-badge i.fa-coins") || document.querySelector(".fa-coins");
+      const targetRect = target.getBoundingClientRect();
+      const startX = window.innerWidth / 2;
+      const startY = window.innerHeight / 2;
+
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const coin = document.createElement("div");
+          coin.className = "coin-particle";
+          coin.innerHTML = '<i class="fa-solid fa-coins"></i>';
+          coin.style.left = startX + "px";
+          coin.style.top = startY + "px";
+          
+          // Random initial surge path (fountain effect)
+          const surgeX = (Math.random() - 0.5) * 200;
+          const surgeY = -100 - Math.random() * 150;
+          
+          // Destination (relative to start)
+          const targetRelX = targetRect.left - startX + targetRect.width / 2;
+          const targetRelY = targetRect.top - startY + targetRect.height / 2;
+
+          coin.style.setProperty('--surge-x', `${surgeX}px`);
+          coin.style.setProperty('--surge-y', `${surgeY}px`);
+          coin.style.setProperty('--target-x', `${targetRelX}px`);
+          coin.style.setProperty('--target-y', `${targetRelY}px`);
+
+          coin.style.animation = `coin-fly 0.8s cubic-bezier(0.1, 0, 0.3, 1) forwards`;
+
+          document.body.appendChild(coin);
+
+          setTimeout(() => {
+            coin.remove();
+            if (i === count - 1) {
+              target.parentElement.classList.add("pulse-animation");
+              setTimeout(() => target.parentElement.classList.remove("pulse-animation"), 400);
+            }
+          }, 800);
+        }, i * 50);
+      }
+    }
+
+    function loadFlashcard() {
+      if (currentSessionIndex >= sessionWords.length) {
+        completeSession();
+        return;
+      }
+
+      const word = sessionWords[currentSessionIndex];
+      document.getElementById("flashcardWord").innerText = word.ar;
+      document.getElementById("flashcardTranslation").innerText = word.en;
+      document.getElementById("flashcardTranslationMl").innerText = word.ml || "";
+      document.getElementById("flashcardNotes").innerText = word.note || "";
+
+      document.getElementById("flashcardTranslation").classList.remove("visible");
+      document.getElementById("flashcardTranslationMl").classList.remove("visible");
+      document.getElementById("btnReveal").style.display = "block";
+      document.getElementById("btnHint").style.display = "block";
+      document.getElementById("hintOptions").style.display = "none";
+      document.getElementById("responseButtons").style.display = "none";
+
+      document.getElementById("wordCounter").innerText = `${currentSessionIndex + 1}/${sessionWords.length}`;
+
+      // Prog bar
+      const pct = (currentSessionIndex / sessionWords.length) * 100;
+      document.getElementById("progressBar").style.width = pct + "%";
+    }
+
+    function revealAnswer() {
+      document.getElementById("flashcardTranslation").classList.add("visible");
+      document.getElementById("flashcardTranslationMl").classList.add("visible");
+      document.getElementById("btnReveal").style.display = "none";
+      document.getElementById("btnHint").style.display = "none";
+      document.getElementById("hintOptions").style.display = "none";
+      document.getElementById("responseButtons").style.display = "flex";
+    }
+
+    function showHint() {
+      if (userProgress.coins < 2) {
+        alert("You need at least 2 coins to buy a hint!");
+        return;
+      }
+      userProgress.coins -= 2;
+      updateTopBar();
+
+      const uid = currentUserContext.uid;
+      // Soft-save deductive state immediately to avoid exploiting refresh
+      db.ref(`users/${uid}/quest_progress/coins`).set(userProgress.coins);
+
+      document.getElementById("btnHint").style.display = "none";
+
+      const currentWord = sessionWords[currentSessionIndex];
+      let options = [currentWord.en];
+
+      const allWords = dictionary[currentSessionId] || [];
+      if (allWords.length > 3) {
+        while (options.length < 3) {
+          const randomW = allWords[Math.floor(Math.random() * allWords.length)];
+          if (randomW && randomW.en !== currentWord.en && !options.includes(randomW.en)) {
+            options.push(randomW.en);
+          }
+        }
+      }
+      options.sort(() => Math.random() - 0.5);
+
+      const hintDiv = document.getElementById("hintOptions");
+      hintDiv.style.display = "flex";
+      hintDiv.innerHTML = "";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "btn-response";
+        btn.style.background = "#2c3e50";
+        btn.style.border = "2px solid #34495e";
+        btn.style.color = "white";
+        btn.style.padding = "15px";
+        btn.style.borderRadius = "15px";
+        btn.style.fontWeight = "bold";
+        btn.style.cursor = "pointer";
+        btn.innerText = opt;
+        btn.onclick = () => {
+          if (opt === currentWord.en) {
+            btn.style.background = "var(--success)";
+          } else {
+            btn.style.background = "var(--danger)";
+          }
+          setTimeout(() => {
+            revealAnswer();
+          }, 800);
+        };
+        hintDiv.appendChild(btn);
+      });
+    }
+
+    function submitResponse(type) {
+      const word = sessionWords[currentSessionIndex];
+      let quality = 3;
+      if (type === 'hard') quality = 1;
+      if (type === 'easy') quality = 5;
+
+      updateWordMastery(word.id, quality);
+
+      currentSessionIndex++;
+      loadFlashcard();
+    }
+
+    async function completeSession() {
+      document.getElementById("sessionView").style.display = "none";
+      document.getElementById("finishScreen").style.display = "flex";
+
+      // Award coins
+      const coinsEarned = 10;
+      userProgress.coins += coinsEarned;
+      userProgress.xp = (userProgress.xp || 0) + 50;
+
+      // Card logic
+      const lvlConfig = levels.find(l => l.id === currentSessionId);
+      const lvlIndex = levels.findIndex(l => l.id === currentSessionId) + 1;
+      const cardId = "card_" + currentSessionId;
+
+      if (!userCards.includes(cardId)) {
+        userCards.push(cardId);
+        const pct = ((userCards.length / 114) * 100).toFixed(1);
+        document.getElementById("finishMsg").innerHTML = `<b>Card Unlocked: Level ${lvlIndex}!</b><br>You have effectively mastered vocabulary from this section.<br>You have completed ${pct}% of the Quran.`;
+      } else {
+        document.getElementById("finishMsg").innerHTML = "<b>Session Complete!</b><br>Great job mastering these words. Keep it up!";
+      }
+
+      // Automatic Level Unlocking via Coins System
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+      // Streak Calculation
+      if (userProgress.last_active !== todayStr) {
+        if (userProgress.last_active) {
+          const lastActiveDate = new Date(userProgress.last_active);
+          const timeDiff = today.getTime() - lastActiveDate.getTime();
+          const dayDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+          if (dayDiff === 1) {
+            userProgress.streak = (userProgress.streak || 0) + 1;
+          } else {
+            userProgress.streak = 1;
+          }
+        } else {
+          userProgress.streak = 1;
+        }
+      }
+      userProgress.last_active = todayStr;
+      document.getElementById("earnedCoins").innerText = coinsEarned;
+
+      // Save to Firebase Realtime DB
+      const uid = currentUserContext.uid;
+      try {
+        await db.ref(`users/${uid}/quest_progress`).set(userProgress);
+        await db.ref(`users/${uid}/words_mastery`).set(wordsMastery);
+        await db.ref(`users/${uid}/quest_cards`).set(userCards);
+
+        // Push leaderboard update safely
+        await db.ref(`leaderboard_quests/${uid}`).update({
+          displayName: currentUserContext.displayName || "Scholar",
+          coins: userProgress.coins
+        });
+      } catch (e) {
+        console.error("Save error:", e);
+      }
+
+      updateTopBar();
+      spawnCoinAnimation(10);
+    }
+
+    function returnToMap() {
+      document.getElementById("finishScreen").style.display = "none";
+      document.getElementById("mapView").style.display = "flex";
+      renderMap();
+    }
+
+    function playMockAudio() {
+      const word = sessionWords[currentSessionIndex];
+      if (word.audio) {
+        const audio = new Audio(word.audio);
+        audio.play().catch(console.error);
+      } else {
+        // Fallback to TTS if no audio from API
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(word.ar);
+          utterance.lang = 'ar-SA';
+          window.speechSynthesis.speak(utterance);
+        } else {
+          alert("Audio normally plays here using TTS!");
+        }
+      }
+    }
+
+    async function showLeaderboard() {
+      document.getElementById("leaderboardModal").style.display = "flex";
+      const lbContent = document.getElementById("lbContent");
+      lbContent.innerHTML = '<div style="text-align:center;"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
+      try {
+        const snap = await db.ref('leaderboard_quests').orderByChild('coins').limitToLast(20).get();
+        let html = '';
+        const entries = [];
+        if (snap.exists()) {
+          snap.forEach(child => { entries.push(child.val()); });
+          entries.reverse(); // Highest first
+          entries.forEach((entry, idx) => {
+            const isMe = entry.displayName === currentUserContext.displayName;
+            html += `<div class="lb-row ${isMe ? 'me' : ''}">
+                <div><b>#${idx + 1}</b> ${entry.displayName || "Scholar"}</div>
+                <div style="color:var(--accent); font-weight:bold;">${entry.coins} <i class="fa-solid fa-coins"></i></div>
+             </div>`;
+          });
+          lbContent.innerHTML = html;
+        } else {
+          lbContent.innerHTML = "No scholars ranked yet!";
+        }
+      } catch (e) {
+        lbContent.innerHTML = "Leaderboard currently unavailable.";
+        console.error(e);
+      }
+    }
+
+    function closeLeaderboard(e) {
+      if (e && e.target !== document.getElementById("leaderboardModal")) return;
+      document.getElementById("leaderboardModal").style.display = "none";
+    }
+
+    function showCollection() {
+      document.getElementById("collectionModal").style.display = "flex";
+      const cContent = document.getElementById("collectionContent");
+      cContent.innerHTML = "";
+
+      const pct = ((userCards.length / 114) * 100).toFixed(1);
+      document.getElementById("collectionStats").innerText = `You have completed ${userCards.length} out of 114 Surahs (${pct}% of the Quran).`;
+
+      if (userCards.length === 0) {
+        cContent.innerHTML = "<p style='color:#777; width:100%; text-align:center;'>Complete learning sessions to unlock chapter collection cards!</p>";
+        return;
+      }
+
+      userCards.forEach(cardId => {
+        const lvlId = cardId.replace("card_", "");
+        const lvlIndex = levels.findIndex(l => l.id === lvlId) + 1;
+        const div = document.createElement("div");
+        div.style.background = "linear-gradient(135deg, #2c3e50, #34495e)";
+        div.style.padding = "15px";
+        div.style.borderRadius = "15px";
+        div.style.border = "1px solid #9b59b6";
+        div.style.width = "45%";
+        div.style.textAlign = "center";
+        div.innerHTML = `<i class="fa-solid fa-scroll" style="color:#f1c40f; font-size:2rem; margin-bottom:10px;"></i><br><b style="font-size:0.9rem;">Level ${lvlIndex}</b>`;
+        cContent.appendChild(div);
+      });
+    }
+
+    function closeCollection(e) {
+      if (e && e.target !== document.getElementById("collectionModal")) return;
+      document.getElementById("collectionModal").style.display = "none";
+    }
+  </script>
+</body>
+
+</html>
