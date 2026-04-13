@@ -172,6 +172,26 @@
       line-height: 1;
     }
 
+    .stat-badge.highlighted {
+      background: linear-gradient(135deg, rgba(241, 196, 15, 0.3), rgba(241, 196, 15, 0.1));
+      border: 2px solid var(--accent);
+      border-radius: 15px;
+      padding: 8px 12px;
+      box-shadow: 0 0 20px rgba(241, 196, 15, 0.6), inset 0 0 10px rgba(241, 196, 15, 0.2);
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(241, 196, 15, 0.6), inset 0 0 10px rgba(241, 196, 15, 0.2);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(241, 196, 15, 0.9), inset 0 0 15px rgba(241, 196, 15, 0.3);
+        transform: scale(1.05);
+      }
+    }
+
     .name-modal-overlay {
       position: fixed;
       top: 0;
@@ -652,6 +672,65 @@
       border-radius: 8px;
     }
 
+    .word-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(155, 89, 182, 0.4);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .word-card:hover {
+      background: rgba(155, 89, 182, 0.15);
+      border-color: #9b59b6;
+    }
+
+    .word-card.selected {
+      background: rgba(155, 89, 182, 0.3);
+      border-color: #9b59b6;
+      box-shadow: 0 0 15px rgba(155, 89, 182, 0.5);
+    }
+
+    .word-card-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .word-card-ar {
+      font-family: 'Amiri', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .word-card-en {
+      font-size: 0.85rem;
+      color: #a0b8b5;
+    }
+
+    .word-card-status {
+      font-size: 0.7rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px 8px;
+      border-radius: 8px;
+      color: #9b59b6;
+      margin-left: 10px;
+    }
+
+    .word-card-checkbox {
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+      cursor: pointer;
+      accent-color: #9b59b6;
+    }
+
     .finish-screen {
       display: none;
       flex-direction: column;
@@ -694,21 +773,21 @@
       <i class="fa-solid fa-star"></i>
       <span id="xpCount">0</span>
     </div>
+    <div class="stat-badge highlighted" onclick="showScholarships()" style="cursor:pointer; color:#f1c40f;" title="Earn Coins">
+      <i class="fa-solid fa-hand-holding-dollar"></i>
+      <span style="font-size:0.7rem; opacity:0.7;">Earn</span>
+    </div>
     <div class="stat-badge coins" title="IlmCoins">
       <i class="fa-solid fa-coins" style="color: #f1c40f;"></i>
       <span id="coinCount">0</span>
-    </div>
-    <div class="stat-badge" onclick="showScholarships()" style="cursor:pointer; color:#f1c40f;" title="Earn Coins">
-      <i class="fa-solid fa-hand-holding-dollar"></i>
-      <span style="font-size:0.7rem; opacity:0.7;">Earn</span>
     </div>
     <div class="stat-badge" onclick="showLeaderboard()" style="cursor:pointer; color:#3498db;" title="Leaderboard">
       <i class="fa-solid fa-ranking-star"></i>
       <span style="font-size:0.7rem; opacity:0.7;">Rank</span>
     </div>
-    <div class="stat-badge" onclick="showCollection()" style="cursor:pointer; color:#9b59b6;" title="Card Collection">
-      <i class="fa-solid fa-layer-group"></i>
-      <span style="font-size:0.7rem; opacity:0.7;">Cards</span>
+    <div class="stat-badge" onclick="showWordLibrary()" style="cursor:pointer; color:#9b59b6;" title="Word Library">
+      <i class="fa-solid fa-book"></i>
+      <span style="font-size:0.7rem; opacity:0.7;">Words</span>
     </div>
   </div>
 
@@ -785,23 +864,32 @@
     </div>
   </div>
 
-  <!-- Collection Modal -->
-  <div class="modal-overlay" id="collectionModal" onclick="closeCollection(event)">
-    <div class="leaderboard-modal" onclick="event.stopPropagation()">
-      <h2 style="color:var(--primary);"><i class="fa-solid fa-layer-group" style="color:#9b59b6;"></i> My Cards</h2>
-      <div style="font-size:0.9rem; color:#ccc; margin-bottom:15px;" id="collectionStats">0/114 Surahs Completed</div>
-      <div id="collectionContent" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
-      <button class="btn-reveal" style="margin-top:20px; padding: 10px;" onclick="closeCollection()">Close</button>
+  <!-- Word Library Modal -->
+  <div class="modal-overlay" id="libraryModal" onclick="closeWordLibrary(event)">
+    <div class="leaderboard-modal" onclick="event.stopPropagation()" style="max-height: 85vh; overflow-y: auto;">
+      <h2 style="color:var(--primary);"><i class="fa-solid fa-book" style="color:#9b59b6;"></i> Word Library</h2>
+      <p style="font-size:0.8rem; color:#999; margin-bottom:20px;">Review words you've attempted</p>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button class="btn-reveal" style="flex: 1; padding: 8px; font-size: 0.9rem; margin-top: 0;" onclick="filterLibraryWords('all')">All</button>
+        <button class="btn-reveal" style="flex: 1; padding: 8px; font-size: 0.9rem; margin-top: 0; background: #555;" onclick="filterLibraryWords('new')">New</button>
+        <button class="btn-reveal" style="flex: 1; padding: 8px; font-size: 0.9rem; margin-top: 0; background: #555;" onclick="filterLibraryWords('review')">Review</button>
+      </div>
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <button class="btn-reveal" style="flex: 1; padding: 8px; font-size: 0.9rem; margin-top: 0; background: #2e7d76;" onclick="selectAllWords()"><i class="fa-solid fa-check-double"></i> Select All</button>
+        <button class="btn-reveal" style="flex: 1; padding: 8px; font-size: 0.9rem; margin-top: 0; background: #555;" onclick="deselectAllWords()"><i class="fa-solid fa-xmark"></i> Clear</button>
+      </div>
+      <div id="libraryContent" style="max-height: 50vh; overflow-y: auto; margin-bottom: 20px;">
+        <div style="text-align:center; color:#777;">Loading words...</div>
+      </div>
+      <button class="btn-reveal" style="margin-top:0; padding: 10px; width:100%; display:none;" id="libraryPlayBtn" onclick="startLibrarySession()">Play Selected Words</button>
+      <button class="btn-reveal" style="margin-top:10px; padding: 10px; width:100%;" onclick="closeWordLibrary()">Close</button>
     </div>
   </div>
 
   <!-- Scholarship Modal -->
   <div class="modal-overlay" id="scholarModal" onclick="closeScholarships(event)">
     <div class="leaderboard-modal" onclick="event.stopPropagation()">
-      <h2 style="color:var(--primary);"><i class="fa-solid fa-graduation-cap" style="color:var(--accent);"></i>
-        Scholarship Exams</h2>
-      <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Pay a fee to enter. Score 80%+ to win 3x-4x your
-        coins!</p>
+     
       <div id="scholarTiers"></div>
       <button class="btn-reveal" style="margin-top:20px; padding: 10px; width:100%;"
         onclick="closeScholarships()">Close</button>
@@ -953,7 +1041,28 @@
             });
           });
 
-          dictionary[levelKey] = levelWords;
+          // 4. Deduplicate words by Arabic text - treat same word as one entry
+          const seenWords = new Map(); // Map of Arabic word -> first occurrence
+          const deduplicatedWords = [];
+          
+          levelWords.forEach(word => {
+            const arText = word.ar.trim();
+            if (!seenWords.has(arText)) {
+              // First occurrence - create unique ID based on Arabic word
+              let hash = 0;
+              for (let i = 0; i < arText.length; i++) {
+                hash = ((hash << 5) - hash) + arText.charCodeAt(i);
+                hash = hash & hash; // Convert to 32-bit integer
+              }
+              const uniqueId = `word_${Math.abs(hash)}`;
+              const deduplicatedWord = { ...word, id: uniqueId };
+              seenWords.set(arText, deduplicatedWord);
+              deduplicatedWords.push(deduplicatedWord);
+            }
+            // Subsequent occurrences are silently ignored
+          });
+
+          dictionary[levelKey] = deduplicatedWords;
         };
 
         await Promise.all([
@@ -991,26 +1100,27 @@
       { id: "level_1", title: "Level 1 (Fatiha)", icon: "fa-book-quran", reqCoins: 0 },
       { id: "level_2", title: "Level 2 (Ikhlas)", icon: "fa-tree", reqCoins: 100 },
       { id: "level_3", title: "Level 3 (Falaq)", icon: "fa-fort-awesome", reqCoins: 100 },
-      { id: "exam_1", title: "Final Check (Tier 1)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_1", "level_2", "level_3"] },
+      { id: "exam_1", title: "Final Check (Tier 1)", icon: "fa-medal", type: "exam", reqCoins: 30, sources: ["level_1", "level_2", "level_3"] },
 
       { id: "level_4", title: "Level 4 (Nas)", icon: "fa-mountain", reqCoins: 100 },
       { id: "level_5", title: "Level 5 (Kawthar)", icon: "fa-water", reqCoins: 100 },
       { id: "level_6", title: "Level 6 (Asr)", icon: "fa-clock", reqCoins: 100 },
-      { id: "exam_2", title: "Final Check (Tier 2)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_4", "level_5", "level_6"] },
+      { id: "exam_2", title: "Final Check (Tier 2)", icon: "fa-medal", type: "exam", reqCoins: 30, sources: ["level_4", "level_5", "level_6"] },
 
       { id: "level_7", title: "Level 7 (Qadr)", icon: "fa-star-and-crescent", reqCoins: 100 },
       { id: "level_8", title: "Level 8 (Duhaa)", icon: "fa-sun", reqCoins: 100 },
       { id: "level_9", title: "Level 9 (Sharh)", icon: "fa-heart", reqCoins: 100 },
-      { id: "exam_3", title: "Final Check (Tier 3)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_7", "level_8", "level_9"] },
+      { id: "exam_3", title: "Final Check (Tier 3)", icon: "fa-medal", type: "exam", reqCoins: 30, sources: ["level_7", "level_8", "level_9"] },
 
       { id: "level_10", title: "Level 10 (Tin)", icon: "fa-leaf", reqCoins: 100 },
       { id: "level_11", title: "Level 11 (Fil)", icon: "fa-elephant", reqCoins: 100 },
       { id: "level_12", title: "Level 12 (Quraysh)", icon: "fa-caravan", reqCoins: 100 },
-      { id: "exam_4", title: "Final Check (Tier 4)", icon: "fa-medal", type: "exam", reqCoins: 50, sources: ["level_10", "level_11", "level_12"] },
+      { id: "exam_4", title: "Final Check (Tier 4)", icon: "fa-medal", type: "exam", reqCoins: 30, sources: ["level_10", "level_11", "level_12"] },
 
       { id: "level_13", title: "Level 13 (Ma'un)", icon: "fa-handshake-angle", reqCoins: 100 },
       { id: "level_14", title: "Level 14 (Kafirun)", icon: "fa-fire-burn", reqCoins: 100 },
       { id: "level_15", title: "Level 15 (Nasr)", icon: "fa-flag-checkered", reqCoins: 100 },
+      { id: "exam_5", title: "Final Check (Tier 5)", icon: "fa-medal", type: "exam", reqCoins: 30, sources: ["level_13", "level_14", "level_15"] },
       
       { id: "exam_checkpoint", title: "Grand Scholar Checkpoint", icon: "fa-graduation-cap", type: "checkpoint", reqCoins: 100, sources: ["level_1", "level_2", "level_3", "level_4", "level_5", "level_6", "level_7", "level_8", "level_9", "level_10", "level_11", "level_12", "level_13", "level_14", "level_15"] },
 
@@ -1035,12 +1145,31 @@
     let wordsMastery = {};
     let userCards = [];
 
+    // Function to calculate current_level based on purchased/completed levels
+    function updateCurrentLevel() {
+      let maxLevel = 1;
+      levels.forEach((lvl, idx) => {
+        const isPurchased = (userProgress.purchased_levels || []).includes(lvl.id) || lvl.id === "level_1";
+        const isPassed = (userProgress.badges || []).includes("passed_" + lvl.id);
+        if (isPurchased || isPassed) {
+          // Extract level number from level_id (e.g., "level_6" -> 6)
+          const levelMatch = lvl.id.match(/level_(\d+)/);
+          if (levelMatch) {
+            const levelNum = parseInt(levelMatch[1], 10);
+            maxLevel = Math.max(maxLevel, levelNum);
+          }
+        }
+      });
+      userProgress.current_level = maxLevel;
+    }
+
     let sessionWords = [];
     let currentSessionIndex = 0;
     let currentSessionId = null;
     let examScore = 0;
     let examQuestions = [];
     let isScholarship = false;
+    let scholarshipLevelId = null; // Track which level the scholarship exam is for
 
     const SCHOLARSHIP_FEE = 25;
     const SCHOLARSHIP_REWARD = 75;
@@ -1141,6 +1270,9 @@
           // Initialize new user
           await db.ref(`users/${uid}/quest_progress`).set(userProgress);
         }
+
+        // Recalculate current_level based on actual progress
+        updateCurrentLevel();
 
         // Load words mastery for SM-2
         const masterySnap = await db.ref(`users/${uid}/words_mastery`).get();
@@ -1268,22 +1400,27 @@
       sourceLevelIds.forEach(id => fullPool.push(...(dictionary[id] || [])));
 
       const nowDay = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-      const poolNew = [];
-      const poolDue = [];
-      const poolHard = [];
-      const poolMastered = [];
+      const poolNew = [];        // Never seen
+      const poolDue = [];        // Due for review (scheduled)
+      const poolHard = [];       // Failed/hard words needing immediate practice
+      const poolMastered = [];   // True mastery (interval > 21 days)
 
       fullPool.forEach(w => {
         const stats = wordsMastery[w.id];
         if (!stats) {
+          // Brand new word, never attempted
           poolNew.push(w);
-        } else if (nowDay >= (stats.next_review || 0)) {
-          poolDue.push(w);
         } else if (stats.last_quality < 2) {
+          // Hard/failed word - priority for practice
           poolHard.push(w);
-        } else {
+        } else if (nowDay >= (stats.next_review || 0)) {
+          // Due for review today
+          poolDue.push(w);
+        } else if (stats.interval > 21) {
+          // Only truly mastered words (interval > 21 days)
           poolMastered.push(w);
         }
+        // Omit words that are "not due yet" and not hard - prevent repetition
       });
 
       // Shuffle categories independently
@@ -1294,29 +1431,224 @@
       shuffle(poolMastered);
 
       const result = [];
-      const targetNew = Math.ceil(count * 0.6); // 60% New
-      const targetReview = count - targetNew;   // 40% Review
-
-      // 1. Fill New Words
+      
+      // Priority order: New > Hard > Due > Mastered
+      // Fill new words first (70% of session)
+      const targetNew = Math.ceil(count * 0.7);
       for (let i = 0; i < targetNew && poolNew.length > 0; i++) {
         result.push(poolNew.shift());
       }
 
-      // 2. Fill Due Words
-      for (let i = 0; i < targetReview && poolDue.length > 0; i++) {
-        result.push(poolDue.shift());
-      }
-
-      // 3. Fill Hard Words (if review slot not full)
-      while (result.length < count && poolHard.length > 0) {
+      // Fill hard words (words that failed before)
+      for (let i = 0; i < Math.ceil(count * 0.15) && poolHard.length > 0; i++) {
         result.push(poolHard.shift());
       }
 
-      // 4. Backfill from anywhere if still not enough
-      const leftovers = [...poolNew, ...poolDue, ...poolMastered];
+      // Fill due words (scheduled reviews)
+      for (let i = 0; i < Math.ceil(count * 0.15) && poolDue.length > 0; i++) {
+        result.push(poolDue.shift());
+      }
+
+      // Backfill with remaining priority pools (avoid mastered word spam)
+      const leftovers = [...poolNew, ...poolHard, ...poolDue];
       shuffle(leftovers);
       while (result.length < count && leftovers.length > 0) {
         result.push(leftovers.shift());
+      }
+
+      // Only add mastered words as last resort if absolutely needed
+      shuffle(poolMastered);
+      while (result.length < count && poolMastered.length > 0) {
+        result.push(poolMastered.shift());
+      }
+
+      return shuffle(result);
+    }
+
+    // Get words from MULTIPLE LEVELS, following priority: New > Hard > Good > Easy
+    function getMultiLevelPool(levelIds, targetCount) {
+      const levelWords = [];
+      const seenIds = new Set();
+
+      // Collect all words from specified levels (deduplicated)
+      levelIds.forEach(levelId => {
+        (dictionary[levelId] || []).forEach(w => {
+          if (!seenIds.has(w.id)) {
+            levelWords.push(w);
+            seenIds.add(w.id);
+          }
+        });
+      });
+
+      if (levelWords.length === 0) return [];
+
+      const poolNew = [];        // Never seen
+      const poolHard = [];       // Quality < 2 (failed/hard)
+      const poolGood = [];       // Quality 3 (good but not easy)
+      const poolEasy = [];       // Quality >= 5 (mastered)
+
+      levelWords.forEach(w => {
+        const stats = wordsMastery[w.id];
+        if (!stats) {
+          poolNew.push(w);
+        } else if (stats.last_quality < 2) {
+          poolHard.push(w);
+        } else if (stats.last_quality === 3) {
+          poolGood.push(w);
+        } else if (stats.last_quality >= 5) {
+          poolEasy.push(w);
+        }
+      });
+
+      const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+      shuffle(poolNew);
+      shuffle(poolHard);
+      shuffle(poolGood);
+      shuffle(poolEasy);
+
+      const result = [];
+
+      // Priority: New > Hard > Good > Easy
+      while (result.length < targetCount && poolNew.length > 0) {
+        result.push(poolNew.shift());
+      }
+      while (result.length < targetCount && poolHard.length > 0) {
+        result.push(poolHard.shift());
+      }
+      while (result.length < targetCount && poolGood.length > 0) {
+        result.push(poolGood.shift());
+      }
+      while (result.length < targetCount && poolEasy.length > 0) {
+        result.push(poolEasy.shift());
+      }
+
+      return shuffle(result);
+    }
+
+    // Get words from a SPECIFIC LEVEL only, following priority: New > Hard > Good > Easy
+    function getLevelSpecificPool(levelId, targetCount) {
+      const levelWords = dictionary[levelId] || [];
+      
+      if (levelWords.length === 0) return [];
+
+      const poolNew = [];        // Never seen
+      const poolHard = [];       // Quality < 2 (failed/hard)
+      const poolGood = [];       // Quality 3 (good but not easy)
+      const poolEasy = [];       // Quality >= 5 (mastered)
+
+      levelWords.forEach(w => {
+        const stats = wordsMastery[w.id];
+        if (!stats) {
+          poolNew.push(w);
+        } else if (stats.last_quality < 2) {
+          poolHard.push(w);
+        } else if (stats.last_quality === 3) {
+          poolGood.push(w);
+        } else if (stats.last_quality >= 5) {
+          poolEasy.push(w);
+        }
+      });
+
+      const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+      shuffle(poolNew);
+      shuffle(poolHard);
+      shuffle(poolGood);
+      shuffle(poolEasy);
+
+      const result = [];
+
+      // Priority: New > Hard > Good > Easy (within this level only)
+      // 1. Exhaust all new words first
+      while (result.length < targetCount && poolNew.length > 0) {
+        result.push(poolNew.shift());
+      }
+
+      // 2. Then hard words
+      while (result.length < targetCount && poolHard.length > 0) {
+        result.push(poolHard.shift());
+      }
+
+      // 3. Then good words
+      while (result.length < targetCount && poolGood.length > 0) {
+        result.push(poolGood.shift());
+      }
+
+      // 4. Finally easy words
+      while (result.length < targetCount && poolEasy.length > 0) {
+        result.push(poolEasy.shift());
+      }
+
+      return shuffle(result);
+    }
+
+    // Fallback pool for when a level doesn't have enough words
+    // Priority: 50% Hard, 30% Good, 10% Easy, 10% New (from ALL attempted words across all levels)
+    function getFallbackPool(targetCount) {
+      const allWords = [];
+      // Collect all words from all levels
+      Object.keys(dictionary).forEach(levelId => {
+        dictionary[levelId].forEach(word => {
+          allWords.push(word);
+        });
+      });
+
+      const nowDay = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+      const poolNew = [];
+      const poolGood = [];  // Quality 3 (good attempt)
+      const poolHard = [];  // Quality 1 (failed/hard)
+      const poolEasy = [];  // Quality 5 (easy/mastered)
+
+      // Categorize all attempted words by their last quality score
+      allWords.forEach(w => {
+        const stats = wordsMastery[w.id];
+        if (!stats) {
+          poolNew.push(w);
+        } else if (stats.last_quality < 2) {
+          // Hard/failed
+          poolHard.push(w);
+        } else if (stats.last_quality === 3) {
+          // Good attempt
+          poolGood.push(w);
+        } else if (stats.last_quality >= 5) {
+          // Easy/mastered
+          poolEasy.push(w);
+        }
+      });
+
+      const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+      shuffle(poolHard);
+      shuffle(poolGood);
+      shuffle(poolEasy);
+      shuffle(poolNew);
+
+      const result = [];
+
+      // Fill according to priority: 50% Hard, 30% Good, 10% Easy, 10% New
+      const hardCount = Math.ceil(targetCount * 0.5);
+      for (let i = 0; i < hardCount && poolHard.length > 0; i++) {
+        result.push(poolHard.shift());
+      }
+
+      const goodCount = Math.ceil(targetCount * 0.3);
+      for (let i = 0; i < goodCount && poolGood.length > 0; i++) {
+        result.push(poolGood.shift());
+      }
+
+      const easyCount = Math.ceil(targetCount * 0.1);
+      for (let i = 0; i < easyCount && poolEasy.length > 0; i++) {
+        result.push(poolEasy.shift());
+      }
+
+      const newCount = Math.ceil(targetCount * 0.1);
+      for (let i = 0; i < newCount && poolNew.length > 0; i++) {
+        result.push(poolNew.shift());
+      }
+
+      // If still not enough, backfill from remaining in priority order
+      const remaining = [...poolHard, ...poolGood, ...poolEasy, ...poolNew];
+      shuffle(remaining);
+      while (result.length < targetCount && remaining.length > 0) {
+        result.push(remaining.shift());
       }
 
       return shuffle(result);
@@ -1348,7 +1680,7 @@
 
       // Logic for Exams (Pay per attempt)
       if (isExam) {
-        let fee = (lvl.type === "checkpoint") ? 100 : 50;
+        let fee = (lvl.type === "checkpoint") ? 100 : 30; // Final Check: 30 coins, Checkpoint: 100 coins
         if (userProgress.coins < fee) {
           alert(`Insufficient coins! Scholar needs ${fee} coins for this attempt.`);
           return;
@@ -1362,7 +1694,15 @@
         spawnCoinAnimation(5); // Mini fountain for feedback
 
         const count = (lvl.type === "checkpoint") ? 50 : 20;
-        examQuestions = getAdaptivePool(lvl.sources || [], count);
+        
+        // Use appropriate pool based on exam type
+        if (lvl.sources && lvl.sources.length > 1) {
+          // Multi-level exam (Final Check, Checkpoint)
+          examQuestions = getMultiLevelPool(lvl.sources, count);
+        } else {
+          // Single source or adaptive exams
+          examQuestions = getAdaptivePool(lvl.sources || [], count);
+        }
         
         if (examQuestions.length < count) {
           alert("Not enough learned words to start exam yet!");
@@ -1409,34 +1749,69 @@
       }
 
       currentSessionId = levelId;
-      sessionWords = getAdaptivePool([levelId], 10);
+      sessionWords = getLevelSpecificPool(levelId, 10);
+      
+      // Fallback strategy: if not enough words in this level, use words from all levels
+      if (sessionWords.length < 5) {
+        sessionWords = getFallbackPool(10);
+      }
+      
       if (sessionWords.length === 0) {
-        alert("Not enough words in this section yet!");
+        alert("Not enough words available yet! Complete more levels first.");
         return;
       }
 
-      currentSessionId = levelId;
       currentSessionIndex = 0;
       document.getElementById("mapView").style.display = "none";
       document.getElementById("sessionView").style.display = "flex";
       loadFlashcard();
     }
 
+    // Find the next level after the given level
+    function getNextLevel(currentLevelId) {
+      const currentIdx = levels.findIndex(l => l.id === currentLevelId);
+      if (currentIdx === -1) return null;
+      
+      // Find the next regular level (not exam/checkpoint)
+      for (let i = currentIdx + 1; i < levels.length; i++) {
+        const lvl = levels[i];
+        if (!lvl.type || lvl.type === "level") {
+          return lvl;
+        }
+      }
+      return null;
+    }
+
     function showScholarships() {
       document.getElementById("scholarModal").style.display = "flex";
       const container = document.getElementById("scholarTiers");
+      
+      // Find the highest unlocked level the user can take scholarship for
+      const unlockedLevels = (userProgress.purchased_levels || []).concat(["level_1"]);
+      const unlockedRegularLevels = levels.filter(l => unlockedLevels.includes(l.id) && (!l.type || l.type === "level"));
+      
+      if (unlockedRegularLevels.length === 0) {
+        container.innerHTML = `<p style="color:#aaa;">Unlock levels to take scholarship exams!</p>`;
+        return;
+      }
+      
+      // Get the last (highest) unlocked level
+      const currentLvl = unlockedRegularLevels[unlockedRegularLevels.length - 1];
+      const nextLvl = getNextLevel(currentLvl.id);
+      
+      if (!nextLvl) {
+        container.innerHTML = `<p style="color:#aaa;">You've reached the maximum level!</p>`;
+        return;
+      }
+      
+      const rewardText = `Unlock ${nextLvl.title} FREE!`;
+      
       container.innerHTML = `
-        <div class="scholar-tier-card" style="width:100% !important; border-color:var(--accent);">
-          <div style="text-align:left;">
-            <b style="color:white; font-size:1.2rem;">Scholarly Duel</b><br>
-            <span style="font-size:0.85rem; color:#aaa;">Test your entire known syllabus.</span>
-          </div>
-          <div style="text-align:right;">
-            <span style="color:var(--accent); font-weight:bold;">Reward: ${SCHOLARSHIP_REWARD} <i class="fa-solid fa-coins"></i></span><br>
-            <span style="font-size:0.8rem; color:#888;">Entry Fee: ${SCHOLARSHIP_FEE}</span>
-          </div>
+        <div style="text-align:center; margin-bottom:20px;">
+          <h3><i class="fa-solid fa-graduation-cap"></i> Scholarship Exam</h3>
+          <p style="font-size:0.9rem; color:#aaa;">Pass with 90% to unlock next level FREE!</p>
         </div>
-        <button class="btn-reveal" onclick="startAdaptiveScholarship()" style="margin-top:20px; font-size:1rem;">Apply for Scholarship</button>
+        <button class="btn-reveal" onclick="startAdaptiveScholarship('${currentLvl.id}')" style="margin:20px 0; width:100%; font-size:1rem; padding:20px;"><b>${currentLvl.title}</b><br><span style="font-size:0.9rem; color:#aaa;">${rewardText}</span></button>
       `;
     }
 
@@ -1454,28 +1829,61 @@
       document.getElementById("guideModal").style.display = "none";
     }
 
-    function startAdaptiveScholarship() {
-      if (userProgress.coins < SCHOLARSHIP_FEE) {
-        alert("You don't have enough coins for the entry fee (25 coins)!");
+    function startAdaptiveScholarship(levelId) {
+      if (!levelId) {
+        alert("Please select a level.");
         return;
       }
-      if (!confirm(`Enter the Scholarly Duel? Fee ${SCHOLARSHIP_FEE} coins will be deducted now. This exam covers ALL of your unlocked surahs.`)) return;
+      
+      const lvl = levels.find(l => l.id === levelId);
+      if (!lvl) return;
+      
+      const nextLvl = getNextLevel(levelId);
+      if (!nextLvl) {
+        alert("You've reached the maximum level!");
+        return;
+      }
+      
+      if (userProgress.coins < SCHOLARSHIP_FEE) {
+        alert(`You don't have enough coins for the entry fee (${SCHOLARSHIP_FEE} coins)!`);
+        return;
+      }
+      
+      const confirmMsg = `Enter Scholarship Exam for ${lvl.title}?\n\nRules:\n- Fee: ${SCHOLARSHIP_FEE} coins\n- Pass threshold: 90%\n- Reward: Unlock ${nextLvl.title} FREE!`;
+      if (!confirm(confirmMsg)) return;
 
       userProgress.coins -= SCHOLARSHIP_FEE;
       updateTopBar();
       spawnCoinAnimation(5);
 
-      const sources = [...(userProgress.purchased_levels || []), "level_1"];
+      // Scholarship exam is ONLY from the selected level
+      const sources = [levelId];
+      const levelWords = dictionary[levelId] || [];
+      // Phase 2 (level 16+) scholarships allow max 75 questions, Phase 1 allows max 25
+      const levelNum = parseInt(levelId.replace("level_", "")) || 0;
+      const maxQuestions = levelNum >= 16 ? 75 : 25;
+      const questionCount = Math.min(levelWords.length, maxQuestions);
+      
       isScholarship = true;
-      startExamCommon("Scholarly Duel", sources, "scholarship_adaptive");
+      scholarshipLevelId = levelId;
+      startExamCommon(`${lvl.title} Scholarship`, sources, `scholarship_${levelId}`, questionCount);
       closeScholarships();
     }
 
-    function startExamCommon(title, sources, id) {
-      examQuestions = getAdaptivePool(sources, 20);
+    function startExamCommon(title, sources, id, questionCount = 20) {
+      // For scholarship exams, use level-specific pool; for multi-level exams use multi-level pool; for others use adaptive
+      if (isScholarship) {
+        examQuestions = getLevelSpecificPool(sources[0], questionCount);
+      } else if (sources.length > 1) {
+        // Multi-level exam (Final Check, Checkpoint)
+        examQuestions = getMultiLevelPool(sources, questionCount);
+      } else {
+        // Single source exams
+        examQuestions = getAdaptivePool(sources, questionCount);
+      }
 
-      if (examQuestions.length < 20) {
-        alert("Practice more levels first to unlock the full exam dictionary!");
+      if (examQuestions.length < Math.min(questionCount, 5)) {
+        alert("Not enough words available for this exam!");
         return;
       }
 
@@ -1508,17 +1916,28 @@
       } else if (isScholarship) {
         sources = [...(userProgress.purchased_levels || []), "level_1"];
       } else {
-        // Fallback or Scholarship scholarship_adaptive
         sources = ["level_1"]; 
       }
 
       const allLvlWords = [];
       sources.forEach(s => allLvlWords.push(...(dictionary[s] || [])));
 
-      let options = [q.en];
-      while (options.length < 3 && allLvlWords.length >= 3) {
-        const rand = allLvlWords[Math.floor(Math.random() * allLvlWords.length)].en;
-        if (!options.includes(rand)) options.push(rand);
+      // Create option objects with both English and Malayalam
+      let options = [{
+        en: q.en,
+        ml: q.ml || "Malayalam not available",
+        word: q
+      }];
+
+      while (options.length < 3 && allLvlWords.length > 0) {
+        const rand = allLvlWords[Math.floor(Math.random() * allLvlWords.length)];
+        if (!options.some(o => o.en === rand.en)) {
+          options.push({
+            en: rand.en,
+            ml: rand.ml || "Malayalam not available",
+            word: rand
+          });
+        }
       }
       options.sort(() => 0.5 - Math.random());
 
@@ -1527,8 +1946,8 @@
       options.forEach(opt => {
         const btn = document.createElement("button");
         btn.className = "mc-btn";
-        btn.innerText = opt;
-        btn.onclick = () => handleExamSubmit(opt, q.en, btn);
+        btn.innerHTML = `<div style="font-weight:600;">${opt.en}</div><div style="font-size:0.85rem; opacity:0.8;">${opt.ml}</div>`;
+        btn.onclick = () => handleExamSubmit(opt.en, q.en, btn);
         container.appendChild(btn);
       });
     }
@@ -1563,17 +1982,35 @@
 
       const total = examQuestions.length;
       const isCheckpoint = levels.find(l => l.id === currentSessionId)?.type === "checkpoint";
-      const threshold = isCheckpoint ? 0.8 : 0.75; // 80% for checkpoint
+      let threshold = isCheckpoint ? 0.8 : 0.75; // 80% for checkpoint
+      
+      // Scholarship exams require 90% pass threshold
+      if (isScholarship) {
+        threshold = 0.9;
+      }
+      
       const passed = (examScore / total) >= threshold;
 
       let coinDiff = 0;
+      let nextLevelUnlocked = null;
+      
       if (isScholarship) {
-        coinDiff = passed ? SCHOLARSHIP_REWARD : 0;
+        if (passed) {
+          coinDiff = 0; // No coins for passing scholarship, only unlock next level free
+          // Unlock the next level for free
+          const nextLvl = getNextLevel(scholarshipLevelId);
+          if (nextLvl && !userProgress.purchased_levels.includes(nextLvl.id)) {
+            userProgress.purchased_levels.push(nextLvl.id);
+            nextLevelUnlocked = nextLvl.title;
+          }
+        } else {
+          coinDiff = 0;
+        }
       } else if (passed) {
         // Phase 2 Rewards (Checkpoint and Level 16+)
         const phase2Exams = ["exam_checkpoint", "exam_yusuf", "exam_maryam", "exam_kahf", "exam_baqarah", "exam_final"];
         if (phase2Exams.includes(currentSessionId)) {
-          coinDiff = 1000;
+          coinDiff = 200;
         } else {
           coinDiff = 100;
         }
@@ -1589,19 +2026,48 @@
           if (!userProgress.badges.includes("passed_" + currentSessionId)) {
             userProgress.badges.push("passed_" + currentSessionId);
           }
+          // Update current_level after passing an exam
+          updateCurrentLevel();
         }
-        document.getElementById("finishMsg").innerHTML = `<h2 style='color:var(--success)'>${isScholarship ? 'Scholarship Awarded!' : 'Passed!'}</h2>Score: ${examScore}/${total} (${(examScore / total * 100).toFixed(0)}%)<br>${coinDiff > 0 ? 'You earned ' + coinDiff + ' coins!' : 'Great job!'}`;
+        
+        let successMsg = `<h2 style='color:var(--success)'>${isScholarship ? 'Scholarship Awarded! 🎓' : 'Passed!'}</h2>Score: ${examScore}/${total} (${(examScore / total * 100).toFixed(0)}%)<br>`;
+        if (isScholarship) {
+          if (nextLevelUnlocked) {
+            successMsg += `<span style='color:var(--accent); font-weight:bold;'>✨ ${nextLevelUnlocked} UNLOCKED (FREE)!</span>`;
+          }
+        } else {
+          successMsg += `${coinDiff > 0 ? 'You earned ' + coinDiff + ' coins!' : 'Great job!'}`;
+        }
+        document.getElementById("finishMsg").innerHTML = successMsg;
       } else {
-        document.getElementById("finishMsg").innerHTML = `<h2 style='color:var(--danger)'>${isScholarship ? 'Scholarship Denied' : 'Failed'}</h2>Score: ${examScore}/${total} (${(examScore / total * 100).toFixed(0)}%)<br>${isScholarship ? 'You lost your entry fee. Practice more!' : isCheckpoint ? 'Syllabus mastery required (80%).' : 'You lost 50 coins. Need 75% to pass.'}`;
+        let failMsg = `<h2 style='color:var(--danger)'>${isScholarship ? 'Scholarship Denied' : 'Failed'}</h2>Score: ${examScore}/${total} (${(examScore / total * 100).toFixed(0)}%)<br>`;
+        if (isScholarship) {
+          failMsg += `You need 90% to pass. You lost your entry fee (${SCHOLARSHIP_FEE} coins). Practice more!`;
+        } else if (isCheckpoint) {
+          failMsg += `Syllabus mastery required (80%).`;
+        } else {
+          failMsg += `You lost 50 coins. Need 75% to pass.`;
+        }
+        document.getElementById("finishMsg").innerHTML = failMsg;
       }
 
       document.getElementById("earnedCoins").innerText = Math.abs(coinDiff);
 
+      // Reset scholarship context
+      isScholarship = false;
+      scholarshipLevelId = null;
+      
       // Save
       const uid = currentUserContext.uid;
       try {
         await db.ref(`users/${uid}/quest_progress`).set(userProgress);
-        await db.ref(`leaderboard_quests/${uid}`).update({ coins: userProgress.coins });
+        // Push leaderboard update with current_level and xp
+        await db.ref(`leaderboard_quests/${uid}`).update({
+          displayName: currentUserContext.displayName || "Scholar",
+          current_level: userProgress.current_level || 1,
+          xp: userProgress.xp || 0,
+          coins: userProgress.coins
+        });
       } catch (e) { }
 
       updateTopBar();
@@ -1764,6 +2230,13 @@
       userProgress.coins += coinsEarned;
       userProgress.xp = (userProgress.xp || 0) + 50;
 
+      // Mark level as purchased if not already
+      if (!userProgress.purchased_levels) userProgress.purchased_levels = [];
+      if (!userProgress.purchased_levels.includes(currentSessionId)) {
+        userProgress.purchased_levels.push(currentSessionId);
+      }
+      updateCurrentLevel();
+
       // Card logic
       const lvlConfig = levels.find(l => l.id === currentSessionId);
       const lvlIndex = levels.findIndex(l => l.id === currentSessionId) + 1;
@@ -1776,6 +2249,13 @@
       } else {
         document.getElementById("finishMsg").innerHTML = "<b>Session Complete!</b><br>Great job mastering these words. Keep it up!";
       }
+
+      // Mark level as purchased if not already
+      if (!userProgress.purchased_levels) userProgress.purchased_levels = [];
+      if (!userProgress.purchased_levels.includes(currentSessionId)) {
+        userProgress.purchased_levels.push(currentSessionId);
+      }
+      updateCurrentLevel();
 
       // Automatic Level Unlocking via Coins System
       const today = new Date();
@@ -1810,7 +2290,8 @@
         // Push leaderboard update safely
         await db.ref(`leaderboard_quests/${uid}`).update({
           displayName: currentUserContext.displayName || "Scholar",
-          coins: userProgress.coins
+          current_level: userProgress.current_level || 1,
+          xp: userProgress.xp || 0
         });
       } catch (e) {
         console.error("Save error:", e);
@@ -1848,17 +2329,22 @@
       const lbContent = document.getElementById("lbContent");
       lbContent.innerHTML = '<div style="text-align:center;"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
       try {
-        const snap = await db.ref('leaderboard_quests').orderByChild('coins').limitToLast(20).get();
+        const snap = await db.ref('leaderboard_quests').get();
         let html = '';
         const entries = [];
         if (snap.exists()) {
           snap.forEach(child => { entries.push(child.val()); });
-          entries.reverse(); // Highest first
+          // Sort by current_level first (descending), then XP as tiebreaker
+          entries.sort((a, b) => {
+            const levelDiff = (b.current_level || 1) - (a.current_level || 1);
+            if (levelDiff !== 0) return levelDiff;
+            return (b.xp || 0) - (a.xp || 0);
+          });
           entries.forEach((entry, idx) => {
             const isMe = entry.displayName === currentUserContext.displayName;
             html += `<div class="lb-row ${isMe ? 'me' : ''}">
                 <div><b>#${idx + 1}</b> ${entry.displayName || "Scholar"}</div>
-                <div style="color:var(--accent); font-weight:bold;">${entry.coins} <i class="fa-solid fa-coins"></i></div>
+                <div style="color:var(--primary); font-weight:bold;">Level ${entry.current_level || 1}</div>
              </div>`;
           });
           lbContent.innerHTML = html;
@@ -1876,37 +2362,174 @@
       document.getElementById("leaderboardModal").style.display = "none";
     }
 
-    function showCollection() {
-      document.getElementById("collectionModal").style.display = "flex";
-      const cContent = document.getElementById("collectionContent");
-      cContent.innerHTML = "";
+    let libraryFilter = 'all';
+    let selectedWords = new Set();
 
-      const pct = ((userCards.length / 114) * 100).toFixed(1);
-      document.getElementById("collectionStats").innerText = `You have completed ${userCards.length} out of 114 Surahs (${pct}% of the Quran).`;
+    async function showWordLibrary() {
+      document.getElementById("libraryModal").style.display = "flex";
+      selectedWords.clear();
+      libraryFilter = 'all';
+      await displayLibraryWords();
+    }
 
-      if (userCards.length === 0) {
-        cContent.innerHTML = "<p style='color:#777; width:100%; text-align:center;'>Complete learning sessions to unlock chapter collection cards!</p>";
+    function closeWordLibrary(e) {
+      if (e && e.target !== document.getElementById("libraryModal")) return;
+      document.getElementById("libraryModal").style.display = "none";
+      selectedWords.clear();
+    }
+
+    async function displayLibraryWords() {
+      const libraryContent = document.getElementById("libraryContent");
+      const allWords = [];
+      const seenIds = new Set(); // Track word IDs to prevent duplicates
+
+      // Collect all words from all levels that user has attempted (deduplicated by ID)
+      Object.keys(dictionary).forEach(levelId => {
+        dictionary[levelId].forEach(word => {
+          if (!seenIds.has(word.id)) {
+            allWords.push({ ...word, levelId });
+            seenIds.add(word.id);
+          }
+        });
+      });
+
+      if (allWords.length === 0) {
+        libraryContent.innerHTML = "<div style='text-align:center; color:#777; padding:20px;'>No words attempted yet. Start learning!</div>";
         return;
       }
 
-      userCards.forEach(cardId => {
-        const lvlId = cardId.replace("card_", "");
-        const lvlIndex = levels.findIndex(l => l.id === lvlId) + 1;
-        const div = document.createElement("div");
-        div.style.background = "linear-gradient(135deg, #2c3e50, #34495e)";
-        div.style.padding = "15px";
-        div.style.borderRadius = "15px";
-        div.style.border = "1px solid #9b59b6";
-        div.style.width = "45%";
-        div.style.textAlign = "center";
-        div.innerHTML = `<i class="fa-solid fa-scroll" style="color:#f1c40f; font-size:2rem; margin-bottom:10px;"></i><br><b style="font-size:0.9rem;">Level ${lvlIndex}</b>`;
-        cContent.appendChild(div);
+      // Filter words based on selected filter
+      let filtered = allWords.filter(w => {
+        if (!wordsMastery[w.id]) return false; // Only show attempted words
+        
+        if (libraryFilter === 'new') {
+          return !wordsMastery[w.id].last_reviewed; // Never reviewed
+        } else if (libraryFilter === 'review') {
+          return wordsMastery[w.id].last_reviewed && wordsMastery[w.id].next_review <= Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+        }
+        return true; // All
       });
+
+      if (filtered.length === 0) {
+        libraryContent.innerHTML = `<div style='text-align:center; color:#777; padding:20px;'>No ${libraryFilter} words found.</div>`;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(word => {
+        const stats = wordsMastery[word.id];
+        const isSelected = selectedWords.has(word.id);
+        
+        // Determine mastery category
+        let statusText = 'new';
+        let statusColor = '#888';
+        if (stats.last_quality < 2) {
+          statusText = 'hard';
+          statusColor = '#e74c3c'; // Red
+        } else if (stats.last_quality === 3) {
+          statusText = 'good';
+          statusColor = '#f39c12'; // Orange
+        } else if (stats.last_quality >= 5) {
+          statusText = 'easy';
+          statusColor = '#27ae60'; // Green
+        }
+        
+        html += `
+          <div class="word-card ${isSelected ? 'selected' : ''}" onclick="toggleWordSelection('${word.id}')">
+            <div class="word-card-text">
+              <div class="word-card-ar">${word.ar}</div>
+              <div class="word-card-en">${word.en}</div>
+            </div>
+            <div class="word-card-status" style="color: ${statusColor};">${statusText}</div>
+            <input type="checkbox" class="word-card-checkbox" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation()">
+          </div>
+        `;
+      });
+
+      libraryContent.innerHTML = html;
+      document.getElementById("libraryPlayBtn").style.display = selectedWords.size > 0 ? "block" : "none";
     }
 
-    function closeCollection(e) {
-      if (e && e.target !== document.getElementById("collectionModal")) return;
-      document.getElementById("collectionModal").style.display = "none";
+    function toggleWordSelection(wordId) {
+      if (selectedWords.has(wordId)) {
+        selectedWords.delete(wordId);
+      } else {
+        selectedWords.add(wordId);
+      }
+      document.getElementById("libraryPlayBtn").style.display = selectedWords.size > 0 ? "block" : "none";
+      displayLibraryWords();
+    }
+
+    async function filterLibraryWords(filterType) {
+      libraryFilter = filterType;
+      await displayLibraryWords();
+    }
+
+    function selectAllWords() {
+      const allWords = [];
+      // Collect all words from all levels that user has attempted
+      Object.keys(dictionary).forEach(levelId => {
+        dictionary[levelId].forEach(word => {
+          allWords.push({ ...word, levelId });
+        });
+      });
+
+      // Filter based on current filter
+      let filtered = allWords.filter(w => {
+        if (!wordsMastery[w.id]) return false;
+        
+        if (libraryFilter === 'new') {
+          return !wordsMastery[w.id].last_reviewed;
+        } else if (libraryFilter === 'review') {
+          return wordsMastery[w.id].last_reviewed && wordsMastery[w.id].next_review <= Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+        }
+        return true;
+      });
+
+      // Add all filtered words to selection
+      filtered.forEach(word => {
+        selectedWords.add(word.id);
+      });
+
+      document.getElementById("libraryPlayBtn").style.display = selectedWords.size > 0 ? "block" : "none";
+      displayLibraryWords();
+    }
+
+    function deselectAllWords() {
+      selectedWords.clear();
+      document.getElementById("libraryPlayBtn").style.display = "none";
+      displayLibraryWords();
+    }
+
+    function startLibrarySession() {
+      if (selectedWords.size === 0) {
+        alert("Please select at least one word to practice!");
+        return;
+      }
+
+      // Get selected words from dictionary
+      sessionWords = [];
+      Object.keys(dictionary).forEach(levelId => {
+        dictionary[levelId].forEach(word => {
+          if (selectedWords.has(word.id)) {
+            sessionWords.push(word);
+          }
+        });
+      });
+
+      if (sessionWords.length === 0) return;
+
+      // Shuffle words
+      sessionWords = sessionWords.sort(() => Math.random() - 0.5);
+
+      currentSessionIndex = 0;
+      currentSessionId = "library_session";
+      
+      document.getElementById("libraryModal").style.display = "none";
+      document.getElementById("mapView").style.display = "none";
+      document.getElementById("sessionView").style.display = "flex";
+      
+      loadFlashcard();
     }
   </script>
 </body>
