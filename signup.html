@@ -630,6 +630,8 @@
             username: username,
             email: email,
             createdAt: Date.now()
+          }).then(() => {
+            return db.ref('analytics/site/registeredUsers').transaction(count => (count || 0) + 1);
           });
         })
         .then(() => {

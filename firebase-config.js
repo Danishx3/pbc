@@ -49,6 +49,12 @@ if (typeof firebase !== 'undefined') {
           db.ref('analytics/site/dailyVisitors/' + today).transaction(count => (count || 0) + 1);
           sessionStorage.setItem('ilmify_global_visited', 'true');
         }
+
+        // 3. Global Unique Users (Lifetime per device)
+        if (!localStorage.getItem('ilmify_global_unique_first_time')) {
+          db.ref('analytics/site/globalUniqueUsers').transaction(count => (count || 0) + 1);
+          localStorage.setItem('ilmify_global_unique_first_time', 'true');
+        }
       } catch (e) {
         console.warn('Tracking initialization failed', e);
       }

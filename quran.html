@@ -2466,14 +2466,15 @@
 
             try {
                 // Fetch Data with Error Handling
-                const [resArabic, resEn, resAudio, resMl] = await Promise.all([
+                const [resArabic, resEn, resAudio, resMl, resV4] = await Promise.all([
                     fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-simple`),
                     fetch(`https://api.alquran.cloud/v1/surah/${num}/en.hilali`),
                     fetch(`https://api.alquran.cloud/v1/surah/${num}/${currentReciter}`),
-                    fetch(`https://api.alquran.cloud/v1/surah/${num}/ml.abdulhameed`)
+                    fetch(`https://api.alquran.cloud/v1/surah/${num}/ml.abdulhameed`),
+                    fetch(`https://api.quran.com/api/v4/verses/by_chapter/${num}?language=en&words=true&word_fields=text_imlaei,translation,audio_url&per_page=500`)
                 ]);
 
-                if (!resArabic.ok || !resEn.ok || !resAudio.ok || !resMl.ok) {
+                if (!resArabic.ok || !resEn.ok || !resAudio.ok || !resMl.ok || !resV4.ok) {
                     throw new Error(`API Error: One or more requests failed. Statuses: ${resArabic.status}, ${resEn.status}, ${resAudio.status}, ${resMl.status}`);
                 }
 
@@ -2481,6 +2482,7 @@
                 const dataEn = await resEn.json();
                 const dataAudio = await resAudio.json();
                 const dataMl = await resMl.json();
+                const dataV4 = await resV4.json();
 
                 if (dataArabic.code !== 200 || dataEn.code !== 200 || dataAudio.code !== 200 || dataMl.code !== 200) {
                     throw new Error('API returned non-200 code in JSON body');
@@ -2490,7 +2492,8 @@
                     arabicText: dataArabic.data,
                     arabicAudio: dataAudio.data,
                     english: dataEn.data,
-                    malayalam: dataMl.data
+                    malayalam: dataMl.data,
+                    v4Verses: dataV4.verses
                 };
 
                 // Validate Ayah Range
@@ -2641,6 +2644,29 @@
                 return cleaned;
             };
 
+            const generateWordHtml = (verseIdx) => {
+                let htmlInner = '';
+                if (surahData.v4Verses && surahData.v4Verses[verseIdx]) {
+                    const wVerse = surahData.v4Verses[verseIdx];
+                    wVerse.words.forEach(w => {
+                        if (w.char_type_name === "word") {
+                            const enWord = w.translation?.text?.replace(/'/g, "&apos;") || "";
+                            const arWord = w.text_imlaei || "";
+                            const strPos = String(w.position).padStart(3, '0');
+                            const strSurah = String(currentSurah).padStart(3, '0');
+                            const strAyah = String(verseIdx + 1).padStart(3, '0');
+                            const auWordUrl = `https://verses.quran.com/wbw/${strSurah}_${strAyah}_${strPos}.mp3`;
+                            htmlInner += `<span class="quran-word" onclick="event.stopPropagation(); handleWordClick('${enWord}', '${auWordUrl}')" style="cursor:pointer; display:inline-block; margin: 0 2px; padding: 0 4px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='rgba(26, 122, 112, 0.15)'" onmouseout="this.style.background='transparent'">${arWord}</span>`;
+                        } else if (w.char_type_name !== "end") {
+                            htmlInner += `<span class="quran-symbol">${w.text_imlaei}</span>`;
+                        }
+                    });
+                } else {
+                    htmlInner = stripBismFromFirstAyah(verseIdx + 1, surahData.arabicText.ayahs[verseIdx].text);
+                }
+                return htmlInner;
+            };
+
             const showBismHeader = (currentSurah !== 1 && currentSurah !== 9);
 
             const isSaved = savedAyahs.some(item => item.id === `${currentSurah}:${currentAyahNumber}`);
@@ -2687,10 +2713,9 @@
             let html = '';
             for (let i = 1; i <= total; i++) {
                 const idx = i - 1;
-                const ar = surahData.arabicText.ayahs[idx];
-                let text = stripBismFromFirstAyah(i, ar.text);
+                let htmlInner = generateWordHtml(idx);
                 const textId = (i === currentAyahNumber) ? 'mainAyahText' : `ayahText-${i}`;
-                html += `<span class="mushaf-ayah ${i === currentAyahNumber ? 'active-mushaf-ayah' : ''}" id="ayah-${i}" data-ayah="${i}"><span class="mushaf-ayah-text" id="${textId}">${text}</span><span class="mushaf-marker">﴿${toArabicIndic(i)}﴾</span></span> `;
+                html += `<span class="mushaf-ayah ${i === currentAyahNumber ? 'active-mushaf-ayah' : ''}" id="ayah-${i}" data-ayah="${i}"><span class="mushaf-ayah-text" id="${textId}">${htmlInner}</span><span class="mushaf-marker">﴿${toArabicIndic(i)}﴾</span></span> `;
             }
             arabicEl.innerHTML = html;
 
@@ -2819,28 +2844,42 @@
         function getAyahCardInnerHtml(ayahNum) {
             const idx = ayahNum - 1;
             const arText = surahData.arabicText.ayahs[idx];
-            const arAudio = surahData.arabicAudio.ayahs[idx];
             const en = surahData.english.ayahs[idx];
             const ml = surahData.malayalam.ayahs[idx];
-            const info = surahNames.find(s => s.number === currentSurah);
 
-            let text = arText.text;
-            if (ayahNum === 1 && currentSurah !== 1 && currentSurah !== 9) {
-                const bismVariants = ["بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"];
-                for (let bism of bismVariants) {
-                    if (text.startsWith(bism)) { text = text.replace(bism, "").trim(); break; }
+            let htmlInner = '';
+            if (surahData.v4Verses && surahData.v4Verses[idx]) {
+                const wVerse = surahData.v4Verses[idx];
+                wVerse.words.forEach(w => {
+                    if (w.char_type_name === "word") {
+                        const enWord = w.translation?.text?.replace(/'/g, "&apos;") || "";
+                        const arWord = w.text_imlaei || "";
+                        const strPos = String(w.position).padStart(3, '0');
+                        const strSurah = String(currentSurah).padStart(3, '0');
+                        const strAyah = String(idx + 1).padStart(3, '0');
+                        const auWordUrl = `https://verses.quran.com/wbw/${strSurah}_${strAyah}_${strPos}.mp3`;
+                        htmlInner += `<span class="quran-word" onclick="event.stopPropagation(); handleWordClick('${enWord}', '${auWordUrl}')" style="cursor:pointer; display:inline-block; margin: 0 4px; padding: 2px 4px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='rgba(26, 122, 112, 0.2)'" onmouseout="this.style.background='transparent'">${arWord}</span>`;
+                    } else if (w.char_type_name !== "end") {
+                        htmlInner += ` ${w.text_imlaei} `;
+                    }
+                });
+            } else {
+                let text = arText.text;
+                if (ayahNum === 1 && currentSurah !== 1 && currentSurah !== 9) {
+                    const bismVariants = ["بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"];
+                    for (let bism of bismVariants) {
+                        if (text.startsWith(bism)) { text = text.replace(bism, "").trim(); break; }
+                    }
                 }
+                htmlInner = text;
             }
 
             const showBismHeader = (ayahNum === 1 && currentSurah !== 1 && currentSurah !== 9);
             const bismHeader = showBismHeader ? `<div class="ayah-arabic" style="font-size:2rem; color:#1a7a70; background: transparent; box-shadow: none; padding: 0; margin-bottom: 10px;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : '';
 
-            const isSaved = savedAyahs.some(item => item.id === `${currentSurah}:${ayahNum}`);
-            const heartIcon = isSaved ? 'fas fa-heart text-danger' : 'far fa-heart';
-
             return `
                 ${bismHeader}
-                <div class="ayah-arabic" id="${(ayahNum === currentAyahNumber) ? 'mainAyahText' : `ayahText-${ayahNum}`}">${text}</div>
+                <div class="ayah-arabic" id="${(ayahNum === currentAyahNumber) ? 'mainAyahText' : `ayahText-${ayahNum}`}">${htmlInner}</div>
                 <div class="ayah-translation" style="${translationMode === 'ml' ? "font-family: 'Noto Sans Malayalam', sans-serif;" : ""}">
                     ${translationMode === 'en' ? en.text : ml.text}
                 </div>
@@ -3054,6 +3093,65 @@
                     btn.classList.remove('active');
                 }
             }
+        }
+
+        async function handleWordClick(enText, audioUrl) {
+            // Stop existing word audio if any
+            if (window.currentWordAudio) {
+                window.currentWordAudio.pause();
+            }
+            if (audioUrl) {
+                window.currentWordAudio = new Audio(audioUrl);
+                window.currentWordAudio.play().catch(e => console.warn(e));
+            }
+
+            showLiteralWordTranslation(enText, "..."); 
+            
+            try {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${encodeURIComponent(enText)}`);
+                const trData = await res.json();
+                const mlText = trData[0]?.map?.(s => s[0])?.join('')?.trim() || "N/A";
+                showLiteralWordTranslation(enText, mlText);
+            } catch (e) {
+                console.error("Translate err", e);
+                showLiteralWordTranslation(enText, "Translation unavailable");
+            }
+        }
+
+        function showLiteralWordTranslation(enText, mlText) {
+            let popup = document.getElementById('wordTranslationPopup');
+            if (!popup) {
+                popup = document.createElement('div');
+                popup.id = 'wordTranslationPopup';
+                document.body.appendChild(popup);
+            }
+            popup.style.cssText = `
+                position: fixed;
+                bottom: 120px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(8, 28, 25, 0.95);
+                backdrop-filter: blur(10px);
+                border: 2px solid #1a7a70;
+                border-radius: 20px;
+                padding: 15px 30px;
+                color: #fff;
+                z-index: 2050;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+                text-align: center;
+                min-width: 200px;
+                animation: slideUp 0.3s ease;
+            `;
+            popup.innerHTML = `
+                <div style="font-size:0.75rem; color:#5effc8; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Word Breakdown</div>
+                <div style="font-size:1.2rem; font-weight:bold; margin-bottom:3px; color:#fff;">${enText}</div>
+                <div style="font-size:1.15rem; font-family:'Noto Sans Malayalam', sans-serif; color:#cfd3da;">${mlText}</div>
+            `;
+            
+            if (window.wordPopupTimeout) clearTimeout(window.wordPopupTimeout);
+            window.wordPopupTimeout = setTimeout(() => {
+                if (popup && popup.parentNode) popup.remove();
+            }, 5000);
         }
 
         function nextAyah(autoPlay = false) {
