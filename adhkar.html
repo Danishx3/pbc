@@ -159,21 +159,49 @@
       letter-spacing: 1px;
     }
 
+    .adhkar-text-wrapper {
+      background: rgb(255, 255, 255);
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .adhkar-count-row {
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px 20px 0 20px;
+    }
+
+    .adhkar-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      color: #fff;
+      font-family: 'Anek Latin', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(13, 86, 79, 0.3);
+    }
+
+    .adhkar-count-badge i {
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+
     .adhkar-text {
       font-family: var(--adhkar-font, 'Amiri', serif);
       font-size: var(--adhkar-size, 1.8rem);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
       line-height: 2.2;
       color: black;
       text-align: right;
       direction: rtl;
-      background: rgb(255, 255, 255);
-      padding: 25px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 18px 25px 25px 25px;
       white-space: pre-wrap;
       word-wrap: break-word;
     }
@@ -464,6 +492,178 @@
         opacity: 1;
       }
     }
+
+    /* ── Welcome Splash Modal ── */
+    .welcome-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(ellipse at 50% 0%, #0d564f 0%, #001a18 55%, #00060f 100%);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeIn 0.5s ease;
+      overflow: hidden;
+    }
+
+    .welcome-overlay.active {
+      display: flex;
+    }
+
+    /* Decorative rings */
+    .welcome-overlay::before,
+    .welcome-overlay::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 215, 0, 0.1);
+      pointer-events: none;
+    }
+
+    .welcome-overlay::before {
+      width: 500px;
+      height: 500px;
+      top: -120px;
+      right: -120px;
+      border-width: 2px;
+      border-color: rgba(26, 122, 112, 0.25);
+    }
+
+    .welcome-overlay::after {
+      width: 350px;
+      height: 350px;
+      bottom: -80px;
+      left: -80px;
+      border-color: rgba(26, 122, 112, 0.18);
+    }
+
+    .welcome-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      width: 92%;
+      text-align: center;
+      padding: 40px 30px 36px;
+      background: linear-gradient(160deg, rgba(13, 86, 79, 0.3) 0%, rgba(0, 6, 15, 0.55) 100%);
+      border: 1px solid rgba(26, 122, 112, 0.45);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 215, 0, 0.06);
+      backdrop-filter: blur(16px);
+      animation: welcomePop 0.55s cubic-bezier(.22, .68, 0, 1.2) both;
+    }
+
+    @keyframes welcomePop {
+      from {
+        opacity: 0;
+        transform: scale(.88) translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .welcome-icon {
+      font-size: 3rem;
+      margin-bottom: 6px;
+      display: block;
+      filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.35));
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    .welcome-bismillah {
+      font-family: 'Amiri', serif;
+      font-size: 1.65rem;
+      color: #ffd700;
+      direction: rtl;
+      margin-bottom: 16px;
+      text-shadow: 0 0 18px rgba(255, 215, 0, 0.3);
+      line-height: 1.8;
+    }
+
+    .welcome-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    .welcome-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.68);
+      line-height: 1.75;
+      margin-bottom: 8px;
+    }
+
+    .welcome-quote {
+      font-family: 'Amiri', serif;
+      font-size: 1.1rem;
+      direction: rtl;
+      color: rgba(255, 215, 0, 0.85);
+      background: rgba(255, 215, 0, 0.07);
+      border: 1px solid rgba(255, 215, 0, 0.18);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 18px 0 22px;
+      line-height: 2;
+    }
+
+    .welcome-quote-en {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
+      margin-top: 6px;
+      display: block;
+    }
+
+    .welcome-begin-btn {
+      background: linear-gradient(135deg, #0d564f, #1a7a70);
+      color: #fff;
+      border: none;
+      padding: 14px 38px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: 'Anek Latin', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 22px rgba(13, 86, 79, 0.55);
+      transition: all 0.3s ease;
+      letter-spacing: 0.4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-begin-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0);
+      transition: background 0.25s;
+    }
+
+    .welcome-begin-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(13, 86, 79, 0.7);
+    }
+
+    .welcome-begin-btn:hover::after {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .welcome-timer {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.38);
+      letter-spacing: 0.5px;
+    }
+
+    .welcome-timer span {
+      color: rgba(255, 215, 0, 0.6);
+      font-weight: 600;
+    }
   </style>
   <script src="guest-utils.js"></script>
   <!-- Firebase Scripts -->
@@ -474,6 +674,23 @@
 </head>
 
 <body>
+
+  <!-- ══ Welcome Splash ══ -->
+  <div class="welcome-overlay" id="welcomeOverlay">
+    <div class="welcome-inner">
+      <div class="welcome-bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+      <div class="welcome-title" id="welcomeTitle">Evening Adhkar</div>
+      <div class="welcome-subtitle" id="welcomeSubtitle">Take a moment to reconnect with Allah. Your Adhkar for this
+        session are ready.</div>
+      <div class="welcome-quote" id="welcomeQuote">
+        أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ
+        <span class="welcome-quote-en" id="welcomeQuoteEn">"Verily, in the remembrance of Allah do hearts find rest." —
+          Qur'an 13:28</span>
+      </div>
+      <button class="welcome-begin-btn" id="welcomeBeginBtn">Begin ✦</button>
+      <div class="welcome-timer">Auto-starting in <span id="welcomeCountdown">10</span>s</div>
+    </div>
+  </div>
   <header class="header-custom">
     <a class="home-btn" href="/main.html"><i class="fa fa-home"></i></a>
     <center id="pageTitle">
@@ -504,7 +721,15 @@
 
     <div class="adhkar-card">
       <div class="adhkar-index" id="adhkarIndex">Adhkar 1 of ...</div>
-      <div class="adhkar-text" id="adhkarText"></div>
+      <div class="adhkar-text-wrapper">
+        <div class="adhkar-count-row" id="adhkarCountRow" style="display:none;">
+          <span class="adhkar-count-badge" id="adhkarCountBadge">
+            <i class="fas fa-redo-alt"></i>
+            <span id="adhkarCountText"></span>
+          </span>
+        </div>
+        <div class="adhkar-text" id="adhkarText"></div>
+      </div>
       <div class="adhkar-malayalam" id="adhkarMalayalam"></div>
     </div>
 
@@ -586,10 +811,10 @@
   </div>
 
   <script>
-        const adhkars = {
+    const adhkars = {
       morning: [
         {
-          arabic: "Begin your day with remembrance\n\n      الْحَمْدُ لِلهِ وَحْدَهُ، وَالصَّلاَةُ وَالسَّلاَمُ عَلَى مَنْ لاَ نَبِيَّ بَعْدَهُ ",
+          arabic: "Begin your day with remembrance\nالْحَمْدُ لِلهِ وَحْدَهُ، وَالصَّلاَةُ وَالسَّلاَمُ عَلَى مَنْ لاَ نَبِيَّ بَعْدَهُ ",
           malayalam: "അല്ലാഹുവിനെ സ്മരിച്ചുകൊണ്ട് നിങ്ങളുടെ ദിവസം ആരംഭിക്കുക\n\n      അല്ലാഹുവിന് മാത്രമാകുന്നു സര്‍വ്വസ്തുതിയും. ആർക്കു ശേഷം മറ്റൊരു പ്രവാചകൻ ഇല്ലയോ അദ്ദേഹത്തിന്റെ മേൽ അല്ലാഹുവിന്റെ അനുഗ്രഹവും ശാന്തിയുമുണ്ടാകട്ടെ."
         },
         {
@@ -729,8 +954,8 @@
           malayalam: "(100 തവണ)\n\n      അല്ലാഹു എത്ര പരിശുദ്ധന്‍! സര്‍വ്വ സ്തുതിയും അവനാകുന്നു."
         },
         {
-          arabic: "(10 times)\n لَا إِلٰهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ ",
-          malayalam: "(10 തവണ)\n\n      അല്ലാഹുവല്ലാതെ മറ്റൊരു ആരാധ്യനുമില്ല. അവന്‍ ഏകനും പങ്കുകാരില്ലാത്തവനുമാണ്. പരമാധികാരവും സര്‍വ്വ സ്തുതിയും അവനാണ്. അവന്‍ എല്ലാറ്റിനും കഴിവുള്ളവനാണ്."
+          arabic: "(10 times)\n\n      لَا إِلٰهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، يُحْيِي وَيُمِيتُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِير",
+          malayalam: "(10 തവണ)\n\n      അല്ലാഹുവല്ലാതെ മറ്റൊരു ആരാധ്യനുമില്ല. അവന്‍ ഏകനും പങ്കുകാരില്ലാത്തവനുമാണ്. പരമാധികാരവും സര്‍വ്വ സ്തുതിയും അവനാണ്. അവൻ ജീവിപ്പിക്കുകയും മരിപ്പിക്കുകയും ചെയ്യുന്നു. അവന്‍ എല്ലാറ്റിനും കഴിവുള്ളവനാണ്."
         },
         {
           arabic: "(3 times)\n أَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
@@ -814,6 +1039,73 @@
       : now >= 9 && now < 16 ? 'general'
         : now >= 16 && now < 19 ? 'evening'
           : 'night';
+
+    // ── Welcome Splash ──────────────────────────────────────────
+    const welcomeMessages = {
+      morning: {
+        icon: '🌅',
+        title: 'Morning Adhkar',
+        subtitle: 'A blessed morning begins with the remembrance of Allah. Purify your heart and protect your day.',
+        quoteAr: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلهِ وَالْحَمْدُ لِلهِ',
+        quoteEn: '"We have entered the morning and the whole kingdom of Allah entered the morning." — Morning Dhikr'
+      },
+      general: {
+        icon: '☀️',
+        title: 'Daily Adhkar',
+        subtitle: 'Fill your day with remembrance. These Adhkar keep your heart close to Allah throughout the hours.',
+        quoteAr: 'وَاذْكُر رَّبَّكَ كَثِيرًا وَسَبِّحْ بِالْعَشِيِّ وَالْإِبْكَارِ',
+        quoteEn: '"And remember your Lord much, and exalt His praise in the evening and the morning." — Qur\'an 3:41'
+      },
+      evening: {
+        icon: '🌆',
+        title: 'Evening Adhkar',
+        subtitle: 'As the sun sets, settle your heart with the remembrance of Allah. Let tranquility fill your soul.',
+        quoteAr: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ',
+        quoteEn: '"Verily, in the remembrance of Allah do hearts find rest." — Qur\'an 13:28'
+      },
+      night: {
+        icon: '🌙',
+        title: 'Night Adhkar',
+        subtitle: 'End your day with gratitude and seek Allah\'s protection through the night.',
+        quoteAr: 'بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ',
+        quoteEn: '"In Your name, my Lord, I lie down and in Your name I rise." — Night Dhikr'
+      }
+    };
+
+    function showWelcomeSplash() {
+      const sessionKey = `adhkar_welcomed_${slot}_${new Date().toDateString()}`;
+      if (sessionStorage.getItem(sessionKey)) return; // already shown this session-day
+
+      const msg = welcomeMessages[slot];
+      const overlay = document.getElementById('welcomeOverlay');
+      document.getElementById('welcomeIcon').textContent = msg.icon;
+      document.getElementById('welcomeTitle').textContent = msg.title;
+      document.getElementById('welcomeSubtitle').textContent = msg.subtitle;
+      document.getElementById('welcomeQuote').childNodes[0].textContent = msg.quoteAr + '\n';
+      document.getElementById('welcomeQuoteEn').textContent = msg.quoteEn;
+      overlay.classList.add('active');
+
+      let secs = 10;
+      const countdownEl = document.getElementById('welcomeCountdown');
+      const timer = setInterval(() => {
+        secs--;
+        if (countdownEl) countdownEl.textContent = secs;
+        if (secs <= 0) { clearInterval(timer); dismissWelcome(); }
+      }, 1000);
+
+      document.getElementById('welcomeBeginBtn').onclick = () => {
+        clearInterval(timer);
+        dismissWelcome();
+      };
+
+      function dismissWelcome() {
+        overlay.style.transition = 'opacity 0.4s ease';
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.classList.remove('active'); overlay.style.opacity = ''; overlay.style.transition = ''; }, 420);
+        sessionStorage.setItem(sessionKey, '1');
+      }
+    }
+    // ─────────────────────────────────────────────────────────────
 
     let selectedAdhkar = adhkars[slot];
     let index = 0;
@@ -935,10 +1227,10 @@
 
     function checkReminders() {
       if (typeof isGuestMode === 'function' && isGuestMode()) return;
-      
+
       const currentHour = new Date().getHours();
       let currentSlot = '';
-      
+
       if (currentHour >= 5 && currentHour < 9) currentSlot = 'morning';
       else if (currentHour >= 16 && currentHour < 19) currentSlot = 'evening';
       else if (currentHour >= 19 || currentHour < 5) currentSlot = 'night';
@@ -960,7 +1252,7 @@
     function sendNotification(title, body) {
       if ('Notification' in window && Notification.permission === 'granted') {
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          navigator.serviceWorker.register('/sw.js').then(function (registration) {
             registration.showNotification(title, {
               body: body,
               icon: '/logoo.png',
@@ -969,7 +1261,7 @@
               tag: 'adhkar-reminder',
               data: { url: '/adhkar.html' }
             });
-          }).catch(function() {
+          }).catch(function () {
             // Fallback
             new Notification(title, { body: body, icon: '/logoo.png' });
           });
@@ -1091,15 +1383,46 @@
       totalCount.textContent = total;
     }
 
+    const adhkarCountRow = document.getElementById('adhkarCountRow');
+    const adhkarCountBadge = document.getElementById('adhkarCountBadge');
+    const adhkarCountText = document.getElementById('adhkarCountText');
+
+    // Parse count prefix like "(1 time)", "(3 times)", "(100 times)", "(After fajr 1 time)" etc.
+    function parseCountPrefix(text) {
+      if (!text) return { count: null, body: text };
+      // Match patterns like (N time), (N times), (After fajr N time), (Complete it before the day ends,N times) etc.
+      const match = text.match(/^\(([^)]+)\)\s*\n?/);
+      if (match) {
+        return { count: match[1].trim(), body: text.slice(match[0].length) };
+      }
+      return { count: null, body: text };
+    }
+
     function showAdhkar() {
       const currentAdhkar = selectedAdhkar[index];
+      let arabicRaw = '';
+      let malayalamRaw = '';
+
       if (typeof currentAdhkar === 'string') {
-        adhkarText.textContent = currentAdhkar;
-        adhkarMalayalam.textContent = '';
+        arabicRaw = currentAdhkar;
       } else {
-        adhkarText.textContent = currentAdhkar.arabic || currentAdhkar;
-        adhkarMalayalam.textContent = currentAdhkar.malayalam || '';
+        arabicRaw = currentAdhkar.arabic || currentAdhkar;
+        malayalamRaw = currentAdhkar.malayalam || '';
       }
+
+      // Parse count badge from Arabic text
+      const { count, body } = parseCountPrefix(arabicRaw);
+      if (count) {
+        adhkarCountText.textContent = count;
+        adhkarCountRow.style.display = 'flex';
+      } else {
+        adhkarCountRow.style.display = 'none';
+      }
+      adhkarText.textContent = body.trimStart();
+
+      // Also parse malayalam prefix to keep in sync if needed
+      adhkarMalayalam.textContent = malayalamRaw;
+
       adhkarIndex.textContent = `Adhkar ${index + 1} of ${selectedAdhkar.length}`;
 
       // Mark as viewed
@@ -1185,6 +1508,9 @@
     showAdhkar();
     updateProgress();
 
+    // Show welcome splash
+    showWelcomeSplash();
+
     // Swipe Gestures — strict directional check to avoid scroll triggering slide change
     let touchStartX = 0;
     let touchStartY = 0;
@@ -1225,15 +1551,15 @@
           const db = window.firebaseDb || firebase.database();
           const date = new Date();
           const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-          
+
           // Total Usage
           db.ref('analytics/adhkar/usageCount').transaction(count => (count || 0) + 1).catch(e => console.error("Analytics error", e));
-          
+
           // Daily Usage
           db.ref('analytics/adhkar/dailyViews/' + today).transaction(count => (count || 0) + 1).catch(e => console.error("Daily tracking error", e));
-          
+
           sessionStorage.setItem('adhkar_tracked', 'true');
-        } catch(e) {
+        } catch (e) {
           console.error('Firebase DB not ready', e);
         }
       }

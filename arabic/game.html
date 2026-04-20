@@ -135,9 +135,9 @@
     }
 
     .mc-options {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       width: 100%;
       max-width: 500px;
     }
@@ -145,10 +145,10 @@
     .mc-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(26, 122, 112, 0.4);
-      padding: 18px;
+      padding: 14px 10px;
       border-radius: 15px;
       color: #fff;
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -1267,6 +1267,17 @@
     <div class="exam-header">
       <div class="exam-score-card" id="examScoreDisplay">Score: 0</div>
       <div id="examProgress" style="color:#a0b8b5;">1/5</div>
+    </div>
+    <!-- 25-second timer -->
+    <div style="position:relative; width:80px; height:80px; margin: 0 auto 10px;">
+      <svg style="transform:rotate(-90deg);" width="80" height="80" viewBox="0 0 80 80">
+        <circle fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6" cx="40" cy="40" r="33"/>
+        <circle id="examTimerRing" fill="none" stroke="var(--primary)" stroke-width="6"
+          stroke-linecap="round" cx="40" cy="40" r="33"
+          stroke-dasharray="207.35" stroke-dashoffset="0"
+          style="transition:stroke-dashoffset 1s linear, stroke 0.5s;"/>
+      </svg>
+      <div id="examTimerText" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;font-weight:900;color:#fff;">15</div>
     </div>
     <div class="exam-question" id="examWord">--</div>
     <div id="examCounter" style="font-size: 0.8rem; color: #777; margin-bottom: 20px;">Question 1/20</div>
@@ -2496,7 +2507,7 @@
         word: q
       }];
 
-      while (options.length < 3 && allLvlWords.length > 0) {
+      while (options.length < 6 && allLvlWords.length > 0) {
         const rand = allLvlWords[Math.floor(Math.random() * allLvlWords.length)];
         if (!options.some(o => o.en === rand.en)) {
           options.push({
@@ -2513,22 +2524,30 @@
       options.forEach(opt => {
         const btn = document.createElement("button");
         btn.className = "mc-btn";
-        btn.innerHTML = `<div style="font-weight:600;">${opt.en}</div><div style="font-size:0.85rem; opacity:0.8;">${opt.ml}</div>`;
+        btn.innerHTML = `<div style="font-weight:600;">${opt.en}</div><div style="font-size:0.8rem; opacity:0.75; margin-top:3px;">${opt.ml}</div>`;
         btn.onclick = () => handleExamSubmit(opt.en, q.en, btn);
         container.appendChild(btn);
       });
+
+      // Start 25-second countdown
+      _startExamTimer(15, () => { handleExamSubmit(null, q.en, null); });
     }
 
     function handleExamSubmit(selected, correct, btn) {
+      _clearExamTimer();
       const btns = document.querySelectorAll(".mc-btn");
       btns.forEach(b => b.disabled = true);
 
       if (selected === correct) {
-        btn.classList.add("correct");
+        if (btn) btn.classList.add("correct");
         examScore++;
       } else {
-        btn.classList.add("wrong");
-        btns.forEach(b => { if (b.innerText === correct) b.classList.add("correct"); });
+        if (btn) btn.classList.add("wrong");
+        // Reveal correct answer
+        btns.forEach(b => {
+          // match by the first text node (en text)
+          if (b.querySelector('div')?.textContent === correct) b.classList.add("correct");
+        });
 
         // Mark as hard in mastery immediately if they fail an exam question
         const q = examQuestions[currentSessionIndex];
@@ -2540,7 +2559,34 @@
       setTimeout(() => {
         currentSessionIndex++;
         loadExamQuestion();
+      }, 1200);
+    }
+
+    let examTimerIv = null;
+
+    function _startExamTimer(secs, onEnd) {
+      _clearExamTimer();
+      const ring = document.getElementById('examTimerRing');
+      const txt  = document.getElementById('examTimerText');
+      if (!ring || !txt) return;
+      const C = 2 * Math.PI * 33; // circumference r=33
+      ring.style.strokeDasharray  = C;
+      ring.style.strokeDashoffset = 0;
+      ring.style.stroke = 'var(--primary)';
+      txt.textContent = secs;
+      let rem = secs;
+      examTimerIv = setInterval(() => {
+        rem--;
+        txt.textContent = rem;
+        ring.style.strokeDashoffset = C * (1 - rem / secs);
+        ring.style.stroke = rem <= 8 ? '#e74c3c' : 'var(--primary)';
+        if (rem <= 0) { _clearExamTimer(); onEnd(); }
       }, 1000);
+    }
+
+    function _clearExamTimer() {
+      clearInterval(examTimerIv);
+      examTimerIv = null;
     }
 
     async function finishExam() {

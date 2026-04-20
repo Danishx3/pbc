@@ -1004,18 +1004,18 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px 30px;
-            text-align: center;
+            border-radius: 20px;
+            padding: 18px 22px;
+            text-align: left;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            justify-content: center;
-            min-height: 320px;
+            gap: 18px;
+            min-height: 0;
         }
 
         .mode-card::before {
@@ -1042,16 +1042,16 @@
         }
 
         .mode-icon-wrapper {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+            border-radius: 16px;
             background: rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 25px;
             transition: transform 0.4s ease, background 0.4s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .mode-card:hover .mode-icon-wrapper {
@@ -1100,20 +1100,53 @@
             border-color: rgba(167, 139, 250, 0.3);
         }
 
+        .mode-card-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mode-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .mode-card-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 2px 9px;
+            white-space: nowrap;
+        }
+
+        .mode-card-chip.gold {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.08);
+            border-color: rgba(255, 215, 0, 0.2);
+        }
+
         .mode-card h3 {
             font-family: 'Anek Latin', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 3px;
             color: white;
         }
 
         .mode-card p {
             font-family: 'Anek Latin', sans-serif;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin: 0;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.82rem;
+            line-height: 1.4;
+            margin: 0 0 8px 0;
         }
 
         @keyframes fadeInDown {
@@ -1138,9 +1171,214 @@
             }
 
             .mode-card {
-                min-height: auto;
-                padding: 30px 20px;
+                padding: 14px 16px;
+                gap: 14px;
             }
+
+            .mode-icon-wrapper {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* ── Quran Completion Overlay ── */
+        .quran-completion-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 6, 15, 0.93);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            animation: qFadeIn 0.4s ease;
+        }
+
+        @keyframes qFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .quran-completion-card {
+            background: linear-gradient(145deg, rgba(13, 86, 79, 0.88), rgba(0, 6, 15, 0.95));
+            border: 1px solid rgba(26, 122, 112, 0.55);
+            border-radius: 28px;
+            padding: 44px 32px 38px;
+            max-width: 420px;
+            width: 92%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 215, 0, 0.07);
+            animation: qCardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes qCardPop {
+            from {
+                opacity: 0;
+                transform: scale(0.72) translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .quran-completion-icon {
+            font-size: 3.8rem;
+            margin-bottom: 16px;
+            animation: qIconBounce 1s ease 0.3s both;
+        }
+
+        @keyframes qIconBounce {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.25);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .quran-completion-arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.85rem;
+            color: #ffd700;
+            direction: rtl;
+            line-height: 1.8;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .quran-completion-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .quran-completion-subtitle {
+            font-size: 0.93rem;
+            color: #9da0a6;
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        .quran-completion-stats {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin-bottom: 28px;
+            padding: 16px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 15px;
+            border: 1px solid rgba(26, 122, 112, 0.25);
+        }
+
+        .quran-stat-item {
+            text-align: center;
+        }
+
+        .quran-stat-value {
+            display: block;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #ffd700;
+        }
+
+        .quran-stat-label {
+            font-size: 0.76rem;
+            color: #9da0a6;
+            margin-top: 2px;
+        }
+
+        .quran-completion-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .qbtn-done {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #00060f;
+            border: none;
+            padding: 13px 30px;
+            border-radius: 13px;
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: 'Anek Latin', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 18px rgba(255, 215, 0, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qbtn-done:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 26px rgba(255, 215, 0, 0.5);
+        }
+
+        .qbtn-continue {
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 13px 20px;
+            border-radius: 13px;
+            font-size: 0.97rem;
+            font-weight: 600;
+            font-family: 'Anek Latin', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qbtn-continue:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+        }
+
+        /* Done button in nav bar */
+        .nav-btn-done {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #00060f;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            font-family: 'Anek Latin', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn-done:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.45);
+        }
+
+        /* Permanently hidden cards */
+        #ramadanCard {
+            display: none !important;
         }
     </style>
     <script src="guest-utils.js"></script>
@@ -1185,57 +1423,80 @@
                 <!-- Night Surahs Card (7pm–4pm) -->
                 <div class="mode-card night" id="nightCard" onclick="selectMode('night')" style="display: none;">
                     <div class="mode-icon-wrapper">
-                        <i class="fas fa-moon fa-3x"></i>
+                        <i class="fas fa-moon fa-lg"></i>
                     </div>
-                    <h3>Night Surahs</h3>
-                    <p class="mb-3">Al-Mulk · As-Sajdah · Ayatul Kursi · &amp; more</p>
-                    <!-- Card Progress Bar -->
-                    <div class="progress w-75 mx-auto" style="height: 6px; background-color: rgba(255,255,255,0.1);">
-                        <div id="cardNightProgressBar" class="progress-bar" role="progressbar"
-                            style="width: 0%; background-color: #a78bfa;"></div>
+                    <div class="mode-card-content">
+                        <h3>Night Surahs</h3>
+                        <p>Al-Mulk · As-Sajdah · Ayatul Kursi · &amp; more</p>
+                        <div class="progress"
+                            style="height: 5px; background-color: rgba(255,255,255,0.1); border-radius:4px;">
+                            <div id="cardNightProgressBar" class="progress-bar" role="progressbar"
+                                style="width: 0%; background-color: #a78bfa;"></div>
+                        </div>
+                        <small id="cardNightProgressText" class="text-white-50 d-block"
+                            style="font-size: 0.72rem; margin-top:4px;">0% Complete</small>
                     </div>
-                    <small id="cardNightProgressText" class="text-white-50 mt-2 d-block" style="font-size: 0.75rem;">0%
-                        Complete</small>
                 </div>
                 <div class="mode-card kahf" id="kahfCard" onclick="selectMode('kahf')" style="display: none;">
                     <div class="mode-icon-wrapper">
-                        <i class="fas fa-mosque fa-3x"></i>
+                        <i class="fas fa-mosque fa-lg"></i>
                     </div>
-                    <h3>Friday Kahf</h3>
-                    <p class="mb-3">Read Surah Al-Kahf</p>
-
-                    <!-- Card Progress Bar -->
-                    <div class="progress w-75 mx-auto" style="height: 6px; background-color: rgba(255,255,255,0.1);">
-                        <div id="cardKahfProgressBar" class="progress-bar" role="progressbar"
-                            style="width: 0%; background-color: #1abc9c;"></div>
+                    <div class="mode-card-content">
+                        <h3>Friday Kahf</h3>
+                        <p>Read Surah Al-Kahf</p>
+                        <div class="progress"
+                            style="height: 5px; background-color: rgba(255,255,255,0.1); border-radius:4px;">
+                            <div id="cardKahfProgressBar" class="progress-bar" role="progressbar"
+                                style="width: 0%; background-color: #1abc9c;"></div>
+                        </div>
+                        <small id="cardKahfProgressText" class="text-white-50 d-block"
+                            style="font-size: 0.72rem; margin-top:4px;">0% Complete</small>
                     </div>
-                    <small id="cardKahfProgressText" class="text-white-50 mt-2 d-block" style="font-size: 0.75rem;">0%
-                        Complete</small>
                 </div>
 
                 <!-- Khatm Challenge Card -->
                 <div class="mode-card khatm" onclick="selectMode('khatm')">
                     <div class="mode-icon-wrapper">
-                        <i class="fas fa-medal fa-3x"></i>
+                        <i class="fas fa-medal fa-lg"></i>
                     </div>
-                    <h3>Quran Completing Challenge</h3>
-                    <p>Complete the whole Quran. Track your stats.</p>
+                    <div class="mode-card-content">
+                        <h3>Quran Completing Challenge</h3>
+                        <p>Complete the whole Quran. Track your stats.</p>
+                    </div>
                 </div>
 
-                <div class="mode-card ramadan" onclick="selectMode('ramadan')">
+                <div style="display: none;" id="ramadanCard" class="mode-card ramadan" onclick="selectMode('ramadan')">
                     <div class="mode-icon-wrapper">
-                        <i class="fas fa-kaaba fa-3x"></i>
+                        <i class="fas fa-kaaba fa-lg"></i>
                     </div>
-                    <h3>Ramadan Challenge</h3>
-                    <p>Complete whole Quran. Track stats.</p>
+                    <div class="mode-card-content">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                            <h3 style="margin:0;">Ramadan Challenge</h3>
+                            <span class="mode-card-chip gold" id="ramadanCountdownChip" style="display:none;"><i
+                                    class="fas fa-clock" style="font-size:0.65rem;"></i> <span
+                                    id="ramadanCountdownVal"></span></span>
+                        </div>
+                        <p style="margin-bottom: 6px;">Complete whole Quran. Track stats.</p>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="progress flex-grow-1"
+                                style="height:4px; background:rgba(255,255,255,0.1); border-radius:4px; margin:0;">
+                                <div id="cardRamadanProgressBar" class="progress-bar" role="progressbar"
+                                    style="width:0%; background: linear-gradient(90deg,#ffd700,#ffaa00);"></div>
+                            </div>
+                            <small id="cardRamadanProgressText"
+                                style="font-size:0.72rem; color:rgba(255,255,255,0.5); white-space:nowrap;">0%</small>
+                        </div>
+                    </div>
                 </div>
                 <!-- Regular Reading Card -->
                 <div class="mode-card regular" onclick="selectMode('regular')">
                     <div class="mode-icon-wrapper">
-                        <i class="fas fa-book-open fa-3x"></i>
+                        <i class="fas fa-book-open fa-lg"></i>
                     </div>
-                    <h3>Regular Reading</h3>
-                    <p>Read at your own pace. Resume anytime.</p>
+                    <div class="mode-card-content">
+                        <h3>Regular Reading</h3>
+                        <p>Read at your own pace. Resume anytime.</p>
+                    </div>
                 </div>
 
 
@@ -1260,7 +1521,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Font Size</label>
-                    <input type="range" class="form-range" id="fontSizeRange" min="1.5" max="4.0" step="0.1"
+                    <input type="range" class="form-range" id="fontSizeRange" min="0.8" max="4.0" step="0.1"
                         oninput="changeFontSize()">
                 </div>
                 <div class="mb-3">
@@ -1470,6 +1731,9 @@
             <button class="nav-btn" id="prevBtn" onclick="previousAyah()" disabled>
                 <i class="fas fa-arrow-left"></i> Previous
             </button>
+            <button class="nav-btn-done" id="doneBtn" onclick="showQuranCompletion()">
+                <i class="fas fa-check-circle"></i> Done
+            </button>
             <button class="nav-btn" id="nextBtn" onclick="nextAyah()" disabled>
                 Next <i class="fas fa-arrow-right"></i>
             </button>
@@ -1663,7 +1927,7 @@
         function sendNotification(title, body) {
             if ('Notification' in window && Notification.permission === 'granted') {
                 if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    navigator.serviceWorker.register('/sw.js').then(function (registration) {
                         registration.showNotification(title, {
                             body: body,
                             icon: '/logoo.png',
@@ -1672,7 +1936,7 @@
                             tag: 'quran-reminder',
                             data: { url: '/quran.html' }
                         });
-                    }).catch(function() {
+                    }).catch(function () {
                         new Notification(title, { body: body, icon: '/logoo.png' });
                     });
                 } else {
@@ -1712,7 +1976,7 @@
         function checkQuranReminders() {
             if (!('Notification' in window) || Notification.permission !== 'granted') return;
             if (typeof isGuestMode === 'function' && isGuestMode()) return;
-            
+
             const now = new Date();
 
             const day = now.getDay();
@@ -1749,6 +2013,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             checkKahfWindow();
             checkNightWindow();
+            updateRamadanCardStats();
         });
 
         function checkKahfWindow() {
@@ -1803,6 +2068,43 @@
 
             if (bar) bar.style.width = `${Math.min(percentage, 100)}%`;
             if (text) text.innerText = `${Math.min(percentage, 100).toFixed(1)}% Complete`;
+        }
+
+        function updateRamadanCardStats() {
+            // Progress
+            const saved = localStorage.getItem('ramadanProgress');
+            const bar = document.getElementById('cardRamadanProgressBar');
+            const txt = document.getElementById('cardRamadanProgressText');
+            if (saved && bar && txt) {
+                try {
+                    const p = JSON.parse(saved);
+                    const info = getJuzInfo(p.surah, p.ayah);
+                    const pct = Math.min(((info.juz - 1 + info.ayahInJuz / info.totalAyahsInJuz) / 30) * 100, 100);
+                    bar.style.width = `${pct.toFixed(1)}%`;
+                    txt.textContent = `${pct.toFixed(0)}%`;
+                } catch (e) { }
+            }
+
+            // Countdown to next Ramadan (approx)
+            const chip = document.getElementById('ramadanCountdownChip');
+            const val = document.getElementById('ramadanCountdownVal');
+            if (chip && val) {
+                const now = new Date();
+                // Approximate next Ramadan: use fixed date for current year; if passed, next year
+                let ramadanYear = now.getFullYear();
+                // Ramadan 2026 starts ~Feb 18 (approx); simple heuristic
+                let ramadanStart = new Date(ramadanYear, 1, 18); // Feb 18
+                if (now > ramadanStart) {
+                    ramadanStart = new Date(ramadanYear + 1, 1, 7); // next year approx
+                }
+                const diff = ramadanStart - now;
+                if (diff > 0) {
+                    const days = Math.floor(diff / 86400000);
+                    const hrs = Math.floor((diff % 86400000) / 3600000);
+                    val.textContent = days > 0 ? `${days}d ${hrs}h` : `${hrs}h`;
+                    chip.style.display = 'inline-flex';
+                }
+            }
         }
 
         // Helper to get global ayah index (1-based)
@@ -2423,7 +2725,7 @@
                 const opt = new Option(i, i);
                 ayahSelect.add(opt);
             }
-            
+
             // Try to keep previous value if valid for new surah, else 1
             if (parseInt(currentVal) <= surah.verses) {
                 ayahSelect.value = currentVal;
@@ -2442,7 +2744,7 @@
             if (!num) return;
 
             currentSurah = parseInt(num);
-            
+
             // If startAyah is provided, use it. Otherwise, look at ayahSelect. 
             // If neither, default to 1.
             if (startAyah !== null) {
@@ -3006,6 +3308,34 @@
             if (ayahSelect) ayahSelect.value = currentAyahNumber;
         }
 
+        // --- Quran Completion Overlay ---
+        function showQuranCompletion() {
+            const overlay = document.getElementById('quranCompletionOverlay');
+            if (!overlay) return;
+
+            // Determine mode label
+            let modeLabel = 'Regular';
+            let surahLabel = '—';
+            if (isKahfMode) { modeLabel = 'Al-Kahf'; surahLabel = 'Surah 18'; }
+            else if (isNightMode) { modeLabel = 'Night Surahs'; surahLabel = 'Completed'; }
+            else if (isRamadanMode) { modeLabel = 'Ramadan'; surahLabel = 'Session done'; }
+            else if (isKhatmMode) { modeLabel = 'Khatm'; surahLabel = 'Full Quran'; }
+            else {
+                const info = surahNames.find(s => s.number === currentSurah);
+                surahLabel = info ? info.english : `Surah ${currentSurah}`;
+            }
+
+            document.getElementById('qCompletionMode').textContent = modeLabel;
+            document.getElementById('qCompletionSurah').textContent = surahLabel;
+            overlay.style.display = 'flex';
+        }
+
+        function closeQuranCompletion() {
+            const overlay = document.getElementById('quranCompletionOverlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+        // --- End Quran Completion Overlay ---
+
         function playHeartAnimation(containerEl) {
             // Ensure container is relative for absolute positioning of heart
             if (getComputedStyle(containerEl).position === 'static') {
@@ -3105,8 +3435,8 @@
                 window.currentWordAudio.play().catch(e => console.warn(e));
             }
 
-            showLiteralWordTranslation(enText, "..."); 
-            
+            showLiteralWordTranslation(enText, "...");
+
             try {
                 const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${encodeURIComponent(enText)}`);
                 const trData = await res.json();
@@ -3147,7 +3477,7 @@
                 <div style="font-size:1.2rem; font-weight:bold; margin-bottom:3px; color:#fff;">${enText}</div>
                 <div style="font-size:1.15rem; font-family:'Noto Sans Malayalam', sans-serif; color:#cfd3da;">${mlText}</div>
             `;
-            
+
             if (window.wordPopupTimeout) clearTimeout(window.wordPopupTimeout);
             window.wordPopupTimeout = setTimeout(() => {
                 if (popup && popup.parentNode) popup.remove();
@@ -3206,6 +3536,7 @@
                 } else {
                     // End of Quran
                     document.getElementById('playIcon').className = 'fas fa-play';
+                    showQuranCompletion();
                 }
             }
         }
@@ -3821,20 +4152,50 @@
                     const db = window.firebaseDb || firebase.database();
                     const date = new Date();
                     const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                    
+
                     // Total Usage
                     db.ref('analytics/quran/usageCount').transaction(count => (count || 0) + 1).catch(e => console.error("Analytics error", e));
-                    
+
                     // Daily Usage
                     db.ref('analytics/quran/dailyViews/' + today).transaction(count => (count || 0) + 1).catch(e => console.error("Daily tracking error", e));
-                    
+
                     sessionStorage.setItem('quran_tracked', 'true');
-                } catch(e) {
+                } catch (e) {
                     console.error('Firebase DB not ready', e);
                 }
             }
         });
     </script>
+
+    <!-- Quran Completion Overlay -->
+    <div id="quranCompletionOverlay" class="quran-completion-overlay">
+        <div class="quran-completion-card">
+            <div class="quran-completion-icon">📖</div>
+            <div class="quran-completion-arabic">بَارَكَ اللهُ فِيكَ</div>
+            <div class="quran-completion-title">Reading Complete!</div>
+            <div class="quran-completion-subtitle">
+                May Allah bless your recitation and make it a source of light for you.
+            </div>
+            <div class="quran-completion-stats">
+                <div class="quran-stat-item">
+                    <span class="quran-stat-value" id="qCompletionMode">—</span>
+                    <div class="quran-stat-label">Mode</div>
+                </div>
+                <div class="quran-stat-item">
+                    <span class="quran-stat-value" id="qCompletionSurah">—</span>
+                    <div class="quran-stat-label">Surah</div>
+                </div>
+            </div>
+            <div class="quran-completion-actions">
+                <button class="qbtn-done" onclick="window.location.href='/main.html'">
+                    <i class="fas fa-check-circle"></i> Done
+                </button>
+                <button class="qbtn-continue" onclick="closeQuranCompletion()">
+                    <i class="fas fa-book-open"></i> Continue
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
