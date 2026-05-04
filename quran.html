@@ -1390,10 +1390,6 @@
             <a style="position: fixed; left: 20px; color: rgb(251, 249, 249);" href="/main.html"><i
                     class="fa fa-home"></i></a>
             Quran
-            <a id="pageViewToggle" style="position: fixed; right: 60px; color: rgb(251, 249, 249); cursor: pointer;"
-                onclick="togglePageView()" title="Toggle Page View">
-                <i class="fas fa-list"></i>
-            </a>
             <a style="position: fixed; right: 20px; color: rgb(251, 249, 249); cursor: pointer;"
                 onclick="toggleSettings()"><i class="fa fa-cog" id="settingsIcon"></i></a>
         </center>
@@ -1900,7 +1896,6 @@
             done += currentAyahNumber - nightSegments[segIdx].startAyah + 1;
             return done;
         }
-        let isPageView = false;
         let autoPlay = false;
         let repeatMode = 'none'; // 'none' or 'one'
         let translationMode = localStorage.getItem('translationMode') || 'ml'; // 'en' or 'ml'
@@ -2527,30 +2522,6 @@
             }
         }
 
-        function togglePageView() {
-            isPageView = !isPageView;
-            const btn = document.getElementById('pageViewToggle');
-            const container = document.querySelector('.quran-container');
-
-            if (btn) {
-                btn.innerHTML = isPageView ? '<i class="fas fa-sticky-note"></i>' : '<i class="fas fa-list"></i>';
-                btn.title = isPageView ? 'Single Ayah View' : 'Page View';
-                btn.style.color = isPageView ? '#0cff04' : '#fff';
-            }
-
-            if (container) {
-                if (isPageView) {
-                    container.classList.add('full-screen-page-view');
-                } else {
-                    container.classList.remove('full-screen-page-view');
-                }
-            }
-
-            if (surahData) {
-                displayAyah();
-            }
-        }
-
         function changeFont() {
             currentFont = document.getElementById('fontSelect').value;
             localStorage.setItem('quranFont', currentFont);
@@ -2631,14 +2602,6 @@
             const iconMainHtml = isSaved ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
 
             if (btnMain) btnMain.innerHTML = iconMainHtml;
-
-            // Sync current card heart in Page View
-            if (isPageView) {
-                const cardBtn = document.getElementById(`cardBookmark-${currentAyahNumber}`);
-                if (cardBtn) {
-                    cardBtn.innerHTML = isSaved ? '<i class="fas fa-heart text-danger"></i>' : '<i class="far fa-heart"></i>';
-                }
-            }
         }
 
         function renderSavedAyahs() {
@@ -3190,16 +3153,6 @@
 
         function displayAyah(autoPlay = false) {
             if (!surahData) return;
-
-            if (isPageView) {
-                if (!document.getElementById('mushafPage')) {
-                    renderSurahPageView();
-                }
-                syncPageViewActiveAyah(autoPlay);
-                applyFont();
-                applyFontSize();
-                return;
-            }
 
             const idx = currentAyahNumber - 1;
             const arText = surahData.arabicText.ayahs[idx];

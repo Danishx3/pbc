@@ -52,7 +52,7 @@
       left: 0;
       right: 0;
       height: 75px;
-      background: linear-gradient(to bottom, transparent, #0d564f8c);
+      background: rgba(10, 31, 28, 0.95);
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
       backdrop-filter: blur(15px);
@@ -63,6 +63,39 @@
       padding: 0 10px;
       z-index: 1100;
       box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .battle-fab {
+      position: fixed;
+      bottom: 95px;
+      right: 20px;
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border: 3px solid #ff7979;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      box-shadow: 0 5px 20px rgba(231, 76, 60, 0.6), 0 0 0 5px rgba(231, 76, 60, 0.2);
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.2s ease;
+    }
+    .battle-fab i {
+      font-size: 1.5rem;
+      margin-bottom: 2px;
+    }
+    .battle-fab span {
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .battle-fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(231, 76, 60, 0.8), 0 0 0 8px rgba(231, 76, 60, 0.3);
     }
 
     .stat-badge {
@@ -406,25 +439,21 @@
       text-align: center;
       position: relative;
       z-index: 2;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 6px 12px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .level-path {
-      position: absolute;
-      top: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 15px;
-      height: 50px;
-      background: #1a7a70;
-      z-index: 0;
+    @keyframes pulse-current {
+      0% { box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 0 rgba(241, 196, 15, 0.7); transform: translateY(0); }
+      50% { box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(241, 196, 15, 0.9); border-color: var(--accent); transform: translateY(-8px); }
+      100% { box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 0 rgba(241, 196, 15, 0); transform: translateY(0); }
     }
 
-    .level-node-container:first-child .level-path {
-      display: none;
-    }
-
-    .locked-path {
-      background: #333;
+    .level-node.current {
+      animation: pulse-current 2s infinite;
+      border-color: var(--accent);
     }
 
     /* Session View */
@@ -1054,10 +1083,12 @@
       <i class="fa-solid fa-book"></i>
       <span style="font-size:0.7rem; opacity:0.7;">Words</span>
     </div>
-    <div class="stat-badge" onclick="openBattleLobby()" style="cursor:pointer; color:#e74c3c;" title="Battle">
-      <i class="fa-solid fa-bolt"></i>
-      <span style="font-size:0.7rem; opacity:0.7;">Battle</span>
-    </div>
+  </div>
+
+  <!-- Floating Battle Button -->
+  <div class="battle-fab" onclick="openBattleLobby()" title="Word Battle">
+    <i class="fa-solid fa-bolt"></i>
+    <span>BATTLE</span>
   </div>
 
   <!-- ======================================
@@ -1777,25 +1808,62 @@
       const container = document.getElementById("levelsContainer");
       container.innerHTML = "";
 
+      const NODE_GAP = 130; // Matches flex gap + element heights
+      let highestReachableIdx = 0;
+      levels.forEach((lvl, idx) => {
+        if (isLevelReachable(lvl, idx)) highestReachableIdx = idx;
+      });
+
       levels.forEach((lvl, idx) => {
         const isPurchased = (userProgress.purchased_levels || []).includes(lvl.id) || lvl.id === "level_1";
         const isReachable = isLevelReachable(lvl, idx);
 
         const wrap = document.createElement("div");
         wrap.className = "level-node-container";
+        wrap.style.zIndex = 100 - idx;
 
-        const path = document.createElement("div");
-        path.className = "level-path" + (!isPurchased ? " locked-path" : "");
-        wrap.appendChild(path);
+        // Sine wave offset for winding path
+        const currentX = Math.sin(idx * 0.7) * 90; 
+        wrap.style.transform = `translateX(${currentX}px)`;
+
+        // Connect to previous node
+        if (idx > 0) {
+          const prevX = Math.sin((idx - 1) * 0.7) * 90;
+          const dx = prevX - currentX;
+          const dy = -NODE_GAP; // Since flex-direction is column, previous is ABOVE
+          const distance = Math.sqrt(dx*dx + dy*dy);
+          const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+          
+          const path = document.createElement("div");
+          path.style.position = "absolute";
+          path.style.top = "40px"; // Center of the 80px node
+          path.style.left = "50%";
+          path.style.marginTop = "-4px"; // Half of the 8px height
+          path.style.width = `${distance}px`;
+          path.style.height = "8px";
+          path.style.background = "transparent";
+          path.style.borderTop = `8px dashed ${(!isPurchased && !isReachable) ? "#333" : "#1a7a70"}`;
+          path.style.transformOrigin = "left center";
+          path.style.transform = `rotate(${angle}deg)`;
+          path.style.zIndex = "0";
+          
+          wrap.appendChild(path);
+        }
 
         const node = document.createElement("div");
         node.className = "level-node" + (!isReachable ? " disabled" : !isPurchased ? " locked" : "") + (lvl.type === "exam" ? " exam-node" : "");
-        node.innerHTML = `<i class="fa-solid ${lvl.icon}"></i>${(!isPurchased && isReachable) ? '<i class="fa-solid fa-lock status-lock"></i>' : ''}`;
+        
+        // Highlight current frontier level
+        if (idx === highestReachableIdx) {
+          node.classList.add("current");
+        }
+
+        node.innerHTML = `<i class="fa-solid ${lvl.icon}"></i>${(!isPurchased && isReachable) ? '<i class="fa-solid fa-lock status-lock" style="font-size:0.8rem; position:absolute; bottom:-5px; right:-5px; background:#1a2a28; padding:5px; border-radius:50%; border:2px solid #333;"></i>' : ''}`;
 
         if (isReachable) {
           node.onclick = () => startLevel(lvl.id);
           if (userProgress.badges && userProgress.badges.includes("passed_" + lvl.id)) {
-            node.innerHTML += '<i class="fa-solid fa-check-circle" style="position:absolute; top:-5px; right:-5px; font-size:1.2rem; color:var(--success); background:var(--bg-dark); border-radius:50%;"></i>';
+            node.innerHTML += '<i class="fa-solid fa-star" style="position:absolute; top:-10px; right:-10px; font-size:1.5rem; color:var(--accent); filter: drop-shadow(0 0 5px rgba(241,196,15,0.8));"></i>';
           }
         } else {
           node.title = "Complete previous levels first!";
