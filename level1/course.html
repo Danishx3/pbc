@@ -25,61 +25,106 @@
   <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* ── Main-page matching button style ── */
+    :root {
+      --accent-cyan: #4fd1c5;
+      --accent-teal: #0d564f;
+      --glow-teal: rgba(13, 86, 79, 0.4);
+    }
     .quick-actions {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 16px;
-      padding: 20px 16px 30px;
-      max-width: 520px;
+      padding: 20px 16px 40px;
+      max-width: 600px;
       margin: 0 auto;
     }
 
     .qa-btn {
+      width: 110px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      background: rgba(13, 86, 79, 0.25);
-      border: 1px solid rgba(13, 86, 79, 0.6);
-      border-radius: 18px;
+      gap: 10px;
+      background: rgba(13, 86, 79, 0.1);
+      border: 1px solid rgba(26, 122, 112, 0.3);
+      border-radius: 20px;
       padding: 20px;
-      width: 100px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
       color: #ffffff;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      font-family: 'Anek Latin', sans-serif;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .qa-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .qa-btn:hover {
-      background: rgba(13, 86, 79, 0.45);
-      border-color: #0d564f;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(13, 86, 79, 0.35);
+      background: rgba(13, 86, 79, 0.3);
+      border-color: var(--accent-cyan);
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(79, 209, 197, 0.4);
     }
 
+    .qa-btn:hover::before { opacity: 1; }
+
     .qa-icon {
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(13, 86, 79, 0.8), rgba(26, 122, 112, 0.8));
+      background: linear-gradient(135deg, var(--accent-teal), #1a7a70);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       color: #ffffff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      z-index: 2;
+    }
+
+    .qa-icon::after {
+      content: '';
+      position: absolute;
+      top: -5px; left: -5px; right: -5px; bottom: -5px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent 0%, var(--accent-cyan) 25%, transparent 50%);
+      animation: spin 2s linear infinite;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .qa-btn:hover .qa-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .qa-btn:hover .qa-icon::after {
+      opacity: 1;
     }
 
     @media (max-width: 480px) {
+      .quick-actions { grid-template-columns: repeat(3, 1fr); gap: 12px; }
       .qa-btn {
-        width: 85px;
-        padding: 16px 12px;
+        width: auto;
+        padding: 15px 10px;
         font-size: 0.8rem;
       }
+      .qa-icon { width: 46px; height: 46px; font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -93,42 +138,42 @@
     </center>
   </header>
   <br><br><br><br><br><br><br><br>
-  <div class="center1">
+  <div class="center1 reveal-scale">
     <center>
       <h5>Select a course</h5>
     </center><br>
     <div class="quick-actions">
-      <button class="qa-btn" onclick="aqeeda1()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.05s;" onclick="aqeeda1()">
         <div class="qa-icon"><i class="fas fa-shield"></i></div>Aqeeda
       </button>
-      <button class="qa-btn" onclick="akhlaq()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.1s;" onclick="akhlaq()">
         <div class="qa-icon"><i class="fas fa-chart-line"></i></div>Akhlaq
       </button>
-      <button class="qa-btn" onclick="thajweed()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.15s;" onclick="thajweed()">
         <div class="qa-icon"><i class="fas fa-book-reader"></i></div>Tajweed
       </button>
 
-      <button class="qa-btn" onclick="fiqh()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.2s;" onclick="fiqh()">
         <div class="qa-icon"><i class="fa-solid fa-scale-balanced"></i></div>Fiqh
       </button>
-      <button class="qa-btn" onclick="arabic()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.25s;" onclick="arabic()">
         <div class="qa-icon"><i class="fa-solid fa-language"></i></div>Arabic
       </button>
-      <button class="qa-btn" onclick="hadees()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.3s;" onclick="hadees()">
         <div class="qa-icon"><i class="fas fa-book"></i></div>Hadeeth
       </button>
 
-      <button class="qa-btn" onclick="stories()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.35s;" onclick="stories()">
         <div class="qa-icon"><i class="fa fa-book-open"></i></div>History
       </button>
-      <button class="qa-btn" onclick="playlist()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.4s;" onclick="playlist()">
         <div class="qa-icon"><i class="fas fa-play-circle"></i></div>Playlists
       </button>
-      <button class="qa-btn" onclick="doubt()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.45s;" onclick="doubt()">
         <div class="qa-icon"><i class="fa fa-question"></i></div>Q&A
       </button>
 
-      <button class="qa-btn" onclick="search()">
+      <button class="qa-btn reveal-up" style="transition-delay: 0.5s;" onclick="search()">
         <div class="qa-icon"><i class="fas fa-search"></i></div>Search
       </button>
     </div><br><br>
@@ -136,6 +181,8 @@
   </div>
   <script src="/pbc.js"></script>
 
+
+  <script src="../js/global-animations.js"></script>
 </body>
 
 </html>
