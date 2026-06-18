@@ -366,13 +366,32 @@
     </style>
 </head>
 
-<body class="black">
+<body class="black1 light-theme">
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('pbc_theme') || 'light';
+        let isDark = savedTheme === 'dark';
+        if (isDark) {
+          document.body.className = 'black';
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.body.className = 'black1 light-theme';
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
     <!-- Navigation -->
     <nav class="nav navbar navbar-expand-lg text-white">
         <div class="container-fluid">
             <img src="logoo.png" style="margin-right: 10px; border-radius: 70px; width: 40px; height: 40px;" alt="">
             <center><a style="font-weight: bold;" href="#" class="navbar-brand text-white"> &#8193;ILMIFY</a></center>
-            <button style="border: transparent;" type="button" data-bs-toggle="collapse"
+            <!-- Theme Toggle Button (always visible next to toggler/logout) -->
+            <div class="ms-auto me-2 order-lg-last">
+                <button class="btn-theme-toggle" id="themeToggleBtn" type="button" onclick="window.togglePBCTheme && window.togglePBCTheme();" title="Toggle Theme">
+                    <i class="fa-solid fa-sun" id="themeToggleIcon"></i>
+                </button>
+            </div>
+            <button class="navbar-toggler" style="border: transparent;" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span><i class="fa fa-bars text-white"></i></span>
@@ -389,7 +408,7 @@
                         <a class="nav-link active text-white" aria-current="page" href="donation.html">Donate</a>
                     </li>
                 </ul>
-                <button
+                <button class="logout-btn" id="logoutBtn"
                     style="border-radius: 20px; border-color: transparent; color: #fff; background-color: rgb(43, 44, 43);"
                     onclick="logout()">Logout</button>
             </div>

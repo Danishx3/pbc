@@ -220,6 +220,7 @@
             margin-top: 15px;
         }
     </style>
+<script src="/theme.js"></script>
 </head>
 
 <body class="black">
@@ -238,11 +239,6 @@
 
                 <!-- Countdown Header -->
                 <div id="countdownArea" class="countdown-section" style="display: none;">
-                    <div class="header-visual">
-                        <div class="visual-circle">
-                            <i class="fas fa-sun"></i>
-                        </div>
-                    </div>
                     <div class="countdown-label-top">Time until</div>
                     <h1 id="nextPrayerNameLarge" class="next-prayer-title">Asr</h1>
                     <div id="countdownTimerLarge" class="countdown-timer-large">00:00:00</div>
@@ -570,13 +566,6 @@
             document.getElementById('countdownTimerLarge').innerText =
                 `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-            // Update Visual Circle Icon
-            const circleIcon = document.querySelector('.visual-circle i');
-            if (nextName === 'Fajr' || nextName === 'Maghrib' || nextName === 'Isha') {
-                circleIcon.className = 'fas fa-moon';
-            } else {
-                circleIcon.className = 'fas fa-sun';
-            }
             
             // Notification Check
             if ('Notification' in window && Notification.permission === 'granted' && (!window.isGuestMode || !isGuestMode())) {

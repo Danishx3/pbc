@@ -308,6 +308,18 @@ if (document.readyState === 'loading') {
    imports guest-utils.js. Fades out on load.
 ══════════════════════════════════════════ */
 (function () {
+    // Detect theme on initial script run (works immediately before HTML parsing is complete)
+    const isLightTheme = (function () {
+        try {
+            const saved = localStorage.getItem('pbc_theme') || 'current';
+            if (saved === 'light') return true;
+            if (saved === 'dark') return false;
+            return window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches;
+        } catch (e) {
+            return false;
+        }
+    })();
+
     // Inject styles
     const style = document.createElement('style');
     style.textContent = `
@@ -323,6 +335,9 @@ if (document.readyState === 'loading') {
             gap: 28px;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
+        #pageLoader.light {
+            background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 50%, #edf2f7 100%) !important;
+        }
         #pageLoader.hidden {
             opacity: 0;
             visibility: hidden;
@@ -334,6 +349,9 @@ if (document.readyState === 'loading') {
             animation: loaderPulse 1.4s ease-in-out infinite;
             filter: drop-shadow(0 0 18px rgba(26,158,143,0.55));
         }
+        #pageLoader.light .loader-icon {
+            filter: drop-shadow(0 0 18px rgba(13, 148, 136, 0.15)) !important;
+        }
         .loader-ring {
             width: 64px;
             height: 64px;
@@ -342,6 +360,10 @@ if (document.readyState === 'loading') {
             border-radius: 50%;
             animation: loaderSpin 0.85s linear infinite;
         }
+        #pageLoader.light .loader-ring {
+            border: 4px solid rgba(13, 148, 136, 0.15) !important;
+            border-top-color: #0d9488 !important;
+        }
         .loader-text {
             font-family: 'Anek Latin', 'Inter', sans-serif;
             font-size: 0.85rem;
@@ -349,6 +371,9 @@ if (document.readyState === 'loading') {
             color: rgba(174,233,218,0.55);
             text-transform: uppercase;
             animation: loaderFade 1.4s ease-in-out infinite;
+        }
+        #pageLoader.light .loader-text {
+            color: #4a5568 !important;
         }
         @keyframes loaderSpin  { to { transform: rotate(360deg); } }
         @keyframes loaderPulse { 0%,100% { transform: scale(1);    opacity:.9; }
@@ -362,8 +387,12 @@ if (document.readyState === 'loading') {
         if (document.getElementById('pageLoader')) return;
         const loader = document.createElement('div');
         loader.id = 'pageLoader';
+        if (isLightTheme) {
+            loader.className = 'light';
+        }
+        const logoSrc = isLightTheme ? '/app1.jpg' : '/logoo.png';
         loader.innerHTML = `
-            <img src="/logoo.png" alt="Ilmify" class="loader-icon" style="width:80px;height:80px;object-fit:contain;border-radius:16px;">
+            <img src="${logoSrc}" alt="Ilmify" class="loader-icon" style="width:80px;height:80px;object-fit:contain;border-radius:16px;">
             <div class="loader-ring"></div>
             <span class="loader-text">Loading…</span>
         `;

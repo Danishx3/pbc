@@ -720,25 +720,34 @@
         }
 
         .quran-container {
-            padding-bottom: 100px;
+            padding-bottom: 130px;
             /* Ensure content isn't hidden behind nav */
             min-height: 100vh;
         }
 
-        .nav-btn {
-            background: linear-gradient(135deg, #0d564f, #1a7a70);
-            color: white;
+        .nav-btn,
+        .nav-btn-done {
             border: none;
-            padding: 15px 30px;
             border-radius: 12px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(13, 86, 79, 0.3);
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
+            height: 50px;
+            padding: 0 28px;
+            box-sizing: border-box;
+            font-family: 'Anek Latin', sans-serif;
+            text-decoration: none;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #0d564f, #1a7a70);
+            color: white;
+            box-shadow: 0 4px 15px rgba(13, 86, 79, 0.3);
         }
 
         .nav-btn:hover:not(:disabled) {
@@ -746,7 +755,8 @@
             box-shadow: 0 6px 20px rgba(13, 86, 79, 0.4);
         }
 
-        .nav-btn:active {
+        .nav-btn:active,
+        .nav-btn-done:active {
             transform: translateY(0);
         }
 
@@ -754,6 +764,7 @@
             background: linear-gradient(135deg, #6c757d, #5a6268);
             cursor: not-allowed;
             opacity: 0.6;
+            box-shadow: none;
         }
 
         .loading {
@@ -822,9 +833,12 @@
                 min-height: 350px;
             }
 
-            .nav-btn {
-                padding: 12px 20px;
+            .nav-btn,
+            .nav-btn-done {
+                height: 42px;
+                padding: 0 18px;
                 font-size: 0.9rem;
+                gap: 6px;
             }
         }
 
@@ -1357,18 +1371,8 @@
         .nav-btn-done {
             background: linear-gradient(135deg, #ffd700, #ffaa00);
             color: #00060f;
-            border: none;
-            padding: 13px 22px;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            font-family: 'Anek Latin', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 800;
         }
 
         .nav-btn-done:hover {
@@ -1382,6 +1386,7 @@
         }
     </style>
     <script src="guest-utils.js"></script>
+<script src="/theme.js"></script>
 </head>
 
 <body>
@@ -2038,7 +2043,7 @@
 
             const card = document.getElementById('kahfCard');
             if (card) {
-                card.style.display = isOpen ? 'block' : 'none';
+                card.style.display = isOpen ? 'flex' : 'none';
                 // Adjust layout if needed (if 3 cards, col-md-4? currently col-md-6, so it wraps. Fine for now.)
             }
 

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /out.json
+Disallow: /temp_diff.txt
+
+Sitemap: https://ilmify.me/sitemap.xml
