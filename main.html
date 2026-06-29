@@ -393,6 +393,23 @@
       opacity: 1;
     }
 
+    /* Special Game Button Styling (Gold/Amber Theme) */
+    .qa-game {
+      background: rgba(217, 119, 6, 0.1) !important;
+      border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    }
+    .qa-game:hover {
+      background: rgba(217, 119, 6, 0.25) !important;
+      border-color: #f59e0b !important;
+      box-shadow: 0 15px 30px rgba(245, 158, 11, 0.4) !important;
+    }
+    .qa-game .qa-icon {
+      background: linear-gradient(135deg, #b45309, #d97706) !important;
+    }
+    .qa-game .qa-icon::after {
+      background: conic-gradient(from 0deg, transparent 0%, #f59e0b 25%, transparent 50%) !important;
+    }
+
     /* Install button */
     #installBtn {
       background: rgba(13, 86, 79, 0.3);
@@ -1392,11 +1409,8 @@
     <!-- Quick Actions -->
     <div class="quick-actions-wrap reveal-up">
       <div class="quick-actions">
-        <button class="qa-btn" onclick="alert('Arabic Quest is currently in development and will be available soon!')"
-          style="position: relative; opacity: 0.6; cursor: not-allowed;">
-          <span
-            style="position: absolute; top: -5px; right: -5px; background: #e74c3c; color: #fff; font-size: 0.65rem; font-weight: bold; padding: 2px 5px; border-radius: 8px; border: 1px solid #111;">SOON</span>
-          <div class="qa-icon" style="background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: #fff;">
+        <button class="qa-btn qa-game" onclick="window.location.href='/arabic/game.html'">
+          <div class="qa-icon">
             <i class="fa-solid fa-gamepad"></i>
           </div>
           Game
