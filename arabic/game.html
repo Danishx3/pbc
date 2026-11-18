@@ -87,15 +87,18 @@
       z-index: 1000;
       transition: all 0.2s ease;
     }
+
     .battle-fab i {
       font-size: 1.5rem;
       margin-bottom: 2px;
     }
+
     .battle-fab span {
       font-size: 0.65rem;
       font-weight: 900;
       letter-spacing: 0.5px;
     }
+
     .battle-fab:hover {
       transform: scale(1.05);
       box-shadow: 0 8px 25px rgba(231, 76, 60, 0.8), 0 0 0 8px rgba(231, 76, 60, 0.3);
@@ -191,8 +194,119 @@
       text-align: center;
     }
 
-    .mc-btn:active {
+    .btn-reveal:active {
       transform: scale(0.98);
+    }
+
+    .mic-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 15px;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .mic-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .mic-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #117864;
+      color: white;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .mic-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .mic-btn.listening {
+      background: #e74c3c;
+      animation: pulse-red 1.5s infinite;
+      box-shadow: 0 0 20px rgba(231, 76, 60, 0.6);
+    }
+
+    @keyframes pulse-red {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .lang-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 5px;
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .lang-toggle button {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      padding: 5px 12px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .lang-toggle button.active {
+      background: #117864;
+      color: white;
+    }
+
+    .speech-feedback {
+      font-size: 0.9rem;
+      color: #e74c3c;
+      margin-top: 5px;
+      min-height: 20px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .btn-reveal.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      box-shadow: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .btn-reveal.secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
     }
 
     .mc-btn.correct {
@@ -449,9 +563,21 @@
     }
 
     @keyframes pulse-current {
-      0% { box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 0 rgba(241, 196, 15, 0.7); transform: translateY(0); }
-      50% { box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(241, 196, 15, 0.9); border-color: var(--accent); transform: translateY(-8px); }
-      100% { box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 0 rgba(241, 196, 15, 0); transform: translateY(0); }
+      0% {
+        box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 0 rgba(241, 196, 15, 0.7);
+        transform: translateY(0);
+      }
+
+      50% {
+        box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(241, 196, 15, 0.9);
+        border-color: var(--accent);
+        transform: translateY(-8px);
+      }
+
+      100% {
+        box-shadow: 0 8px 0 #083c37, 0 15px 20px rgba(0, 0, 0, 0.4), 0 0 0 rgba(241, 196, 15, 0);
+        transform: translateY(0);
+      }
     }
 
     .level-node.current {
@@ -461,13 +587,14 @@
 
     /* ── Node Entry Animation ── */
     @keyframes nodeEntry {
-      from { 
-        opacity: 0; 
-        transform: translateY(60px) scale(0.6); 
+      from {
+        opacity: 0;
+        transform: translateY(60px) scale(0.6);
       }
-      to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
       }
     }
 
@@ -478,7 +605,8 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      left: var(--node-x, 0); /* Sine wave positioning */
+      left: var(--node-x, 0);
+      /* Sine wave positioning */
       margin-bottom: 50px;
     }
 
@@ -564,7 +692,7 @@
       color: #fff;
       opacity: 0;
       transform: translateY(10px);
-      transition: all 0.3s ease;
+      transition: none;
       margin-bottom: 20px;
     }
 
@@ -575,7 +703,7 @@
       color: var(--primary);
       opacity: 0;
       transform: translateY(10px);
-      transition: all 0.3s ease;
+      transition: none;
       margin-top: -10px;
       margin-bottom: 25px;
     }
@@ -584,6 +712,7 @@
     .translation-ml.visible {
       opacity: 1;
       transform: translateY(0);
+      transition: all 0.3s ease;
     }
 
     .btn-reveal {
@@ -833,8 +962,11 @@
     /* ======================================
        MULTIPLAYER BATTLE MODE STYLES
        ====================================== */
-    #battleLobbyView, #battleWaitingView, #battleSpinView,
-    #battleView, #battleFinalView {
+    #battleLobbyView,
+    #battleWaitingView,
+    #battleSpinView,
+    #battleView,
+    #battleFinalView {
       display: none;
       flex-direction: column;
       align-items: center;
@@ -853,6 +985,7 @@
       text-align: center;
       margin-bottom: 6px;
     }
+
     .battle-subtitle {
       font-size: 0.85rem;
       color: #7a9e99;
@@ -864,8 +997,8 @@
       width: 100%;
       padding: 14px 18px;
       border-radius: 16px;
-      border: 2px solid rgba(168,240,232,0.2);
-      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(168, 240, 232, 0.2);
+      background: rgba(255, 255, 255, 0.06);
       color: #fff;
       font-size: 1rem;
       outline: none;
@@ -875,8 +1008,16 @@
       text-transform: uppercase;
       transition: border 0.2s;
     }
-    .battle-input:focus { border-color: var(--primary); }
-    .battle-input::placeholder { letter-spacing: 1px; text-transform: none; font-weight: 400; }
+
+    .battle-input:focus {
+      border-color: var(--primary);
+    }
+
+    .battle-input::placeholder {
+      letter-spacing: 1px;
+      text-transform: none;
+      font-weight: 400;
+    }
 
     .battle-btn {
       width: 100%;
@@ -888,21 +1029,56 @@
       cursor: pointer;
       transition: opacity 0.2s, transform 0.15s;
     }
-    .battle-btn:active { transform: scale(0.97); }
-    .battle-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .battle-btn-primary { background: linear-gradient(135deg, #1a7a70, #0d5e56); color: #fff; box-shadow: 0 6px 0 #0a3d38; }
-    .battle-btn-danger { background: linear-gradient(135deg, #c0392b, #922b21); color: #fff; box-shadow: 0 6px 0 #7b241c; }
-    .battle-btn-ready { background: linear-gradient(135deg, #27ae60, #1e8449); color: #fff; box-shadow: 0 6px 0 #17643a; }
-    .battle-btn-gold { background: linear-gradient(135deg, #f39c12, #d68910); color: #fff; box-shadow: 0 6px 0 #9a6109; }
+
+    .battle-btn:active {
+      transform: scale(0.97);
+    }
+
+    .battle-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .battle-btn-primary {
+      background: linear-gradient(135deg, #1a7a70, #0d5e56);
+      color: #fff;
+      box-shadow: 0 6px 0 #0a3d38;
+    }
+
+    .battle-btn-danger {
+      background: linear-gradient(135deg, #c0392b, #922b21);
+      color: #fff;
+      box-shadow: 0 6px 0 #7b241c;
+    }
+
+    .battle-btn-ready {
+      background: linear-gradient(135deg, #27ae60, #1e8449);
+      color: #fff;
+      box-shadow: 0 6px 0 #17643a;
+    }
+
+    .battle-btn-gold {
+      background: linear-gradient(135deg, #f39c12, #d68910);
+      color: #fff;
+      box-shadow: 0 6px 0 #9a6109;
+    }
 
     .battle-divider {
-      display: flex; align-items: center; gap: 12px;
-      width: 100%; margin: 20px 0;
-      color: #4a6a66; font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      margin: 20px 0;
+      color: #4a6a66;
+      font-size: 0.85rem;
     }
-    .battle-divider::before, .battle-divider::after {
-      content: ''; flex: 1;
-      height: 1px; background: rgba(255,255,255,0.1);
+
+    .battle-divider::before,
+    .battle-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     /* Room code display */
@@ -911,15 +1087,16 @@
       font-weight: 900;
       letter-spacing: 10px;
       color: var(--accent);
-      text-shadow: 0 0 20px rgba(241,196,15,0.4);
+      text-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
       text-align: center;
-      background: rgba(241,196,15,0.08);
-      border: 2px dashed rgba(241,196,15,0.3);
+      background: rgba(241, 196, 15, 0.08);
+      border: 2px dashed rgba(241, 196, 15, 0.3);
       border-radius: 18px;
       padding: 18px 24px;
       width: 100%;
       margin-bottom: 8px;
     }
+
     .battle-room-hint {
       font-size: 0.75rem;
       color: #6a8a86;
@@ -933,15 +1110,16 @@
       align-items: center;
       justify-content: space-between;
       padding: 13px 16px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 14px;
       margin-bottom: 8px;
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       transition: background 0.2s;
     }
+
     .battle-player-card.me {
-      background: rgba(26,122,112,0.2);
-      border-color: rgba(168,240,232,0.3);
+      background: rgba(26, 122, 112, 0.2);
+      border-color: rgba(168, 240, 232, 0.3);
     }
 
     /* Spinner */
@@ -965,8 +1143,17 @@
       height: 110px;
       margin-bottom: 18px;
     }
-    .battle-timer-svg { transform: rotate(-90deg); }
-    .battle-timer-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 8; }
+
+    .battle-timer-svg {
+      transform: rotate(-90deg);
+    }
+
+    .battle-timer-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 8;
+    }
+
     .battle-timer-ring {
       fill: none;
       stroke: var(--primary);
@@ -974,9 +1161,11 @@
       stroke-linecap: round;
       transition: stroke-dashoffset 1s linear, stroke 0.5s;
     }
+
     .battle-timer-text {
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
       font-size: 2rem;
       font-weight: 900;
@@ -1004,8 +1193,8 @@
     .battle-option-btn {
       padding: 16px 10px;
       border-radius: 16px;
-      border: 2px solid rgba(168,240,232,0.15);
-      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(168, 240, 232, 0.15);
+      background: rgba(255, 255, 255, 0.06);
       color: #fff;
       font-size: 0.95rem;
       font-weight: 600;
@@ -1013,19 +1202,40 @@
       transition: background 0.2s, border-color 0.2s, transform 0.15s;
       text-align: center;
     }
-    .battle-option-btn:hover { background: rgba(168,240,232,0.12); border-color: rgba(168,240,232,0.35); }
-    .battle-option-btn:active { transform: scale(0.96); }
-    .battle-option-btn.correct { background: rgba(46,204,113,0.25); border-color: #2ecc71; color: #2ecc71; }
-    .battle-option-btn.wrong { background: rgba(231,76,60,0.25); border-color: #e74c3c; color: #e74c3c; }
-    .battle-option-btn.reveal { background: rgba(46,204,113,0.15); border-color: rgba(46,204,113,0.5); }
+
+    .battle-option-btn:hover {
+      background: rgba(168, 240, 232, 0.12);
+      border-color: rgba(168, 240, 232, 0.35);
+    }
+
+    .battle-option-btn:active {
+      transform: scale(0.96);
+    }
+
+    .battle-option-btn.correct {
+      background: rgba(46, 204, 113, 0.25);
+      border-color: #2ecc71;
+      color: #2ecc71;
+    }
+
+    .battle-option-btn.wrong {
+      background: rgba(231, 76, 60, 0.25);
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+
+    .battle-option-btn.reveal {
+      background: rgba(46, 204, 113, 0.15);
+      border-color: rgba(46, 204, 113, 0.5);
+    }
 
     .battle-waiting-banner {
       display: none;
       align-items: center;
       gap: 10px;
       padding: 12px 18px;
-      background: rgba(168,240,232,0.08);
-      border: 1px solid rgba(168,240,232,0.2);
+      background: rgba(168, 240, 232, 0.08);
+      border: 1px solid rgba(168, 240, 232, 0.2);
       border-radius: 30px;
       color: var(--primary);
       font-size: 0.9rem;
@@ -1038,24 +1248,27 @@
       align-items: center;
       justify-content: space-between;
       padding: 15px 18px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 16px;
       margin-bottom: 10px;
-      border: 1px solid rgba(255,255,255,0.07);
+      border: 1px solid rgba(255, 255, 255, 0.07);
       width: 100%;
     }
+
     .battle-lb-row.me {
-      background: rgba(26,122,112,0.25);
-      border-color: rgba(168,240,232,0.3);
+      background: rgba(26, 122, 112, 0.25);
+      border-color: rgba(168, 240, 232, 0.3);
     }
+
     .battle-countdown-bar {
       height: 4px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 2px;
       width: 100%;
       margin-top: 8px;
       overflow: hidden;
     }
+
     .battle-countdown-fill {
       height: 100%;
       background: var(--accent);
@@ -1064,12 +1277,27 @@
     }
 
     @keyframes floatUp {
-      0%   { opacity: 1; transform: translate(-50%, -50%); }
-      100% { opacity: 0; transform: translate(-50%, -180%); }
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -180%);
+      }
     }
+
     @keyframes battlePulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.6;
+      }
     }
 
     /* ── Preloader (Card Edition) ── */
@@ -1086,6 +1314,7 @@
       overflow: hidden;
       transition: opacity 0.7s ease, visibility 0.7s ease;
     }
+
     #preloader.hide {
       opacity: 0;
       visibility: hidden;
@@ -1099,13 +1328,23 @@
       width: 500px;
       height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(13,86,79,0.35) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(13, 86, 79, 0.35) 0%, transparent 70%);
       animation: preGlowPulse 3s ease-in-out infinite;
       pointer-events: none;
     }
+
     @keyframes preGlowPulse {
-      0%, 100% { transform: scale(1); opacity: 0.7; }
-      50%       { transform: scale(1.15); opacity: 1; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
     }
 
     /* ─ Cards stack ─ */
@@ -1116,6 +1355,7 @@
       margin-bottom: 45px;
       perspective: 1000px;
     }
+
     .pre-card {
       position: absolute;
       width: 260px;
@@ -1127,39 +1367,53 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      border: 1px solid rgba(168,240,232,0.3);
+      border: 1px solid rgba(168, 240, 232, 0.3);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       opacity: 0;
       transform: translateY(50px) scale(0.85);
     }
+
     .pre-card:nth-child(1) {
-      background: linear-gradient(135deg, rgba(13,86,79,0.95), rgba(7,50,45,0.98));
-      box-shadow: 0 25px 50px rgba(0,0,0,0.7), 0 0 15px rgba(168,240,232,0.2), inset 0 0 0 1px rgba(168,240,232,0.3);
+      background: linear-gradient(135deg, rgba(13, 86, 79, 0.95), rgba(7, 50, 45, 0.98));
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 15px rgba(168, 240, 232, 0.2), inset 0 0 0 1px rgba(168, 240, 232, 0.3);
       z-index: 3;
-      animation: cardFanIn1 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s forwards;
+      animation: cardFanIn1 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
     }
+
     .pre-card:nth-child(2) {
-      background: linear-gradient(135deg, rgba(26,70,65,0.9), rgba(13,50,46,0.95));
-      box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+      background: linear-gradient(135deg, rgba(26, 70, 65, 0.9), rgba(13, 50, 46, 0.95));
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
       z-index: 2;
-      animation: cardFanIn2 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.25s forwards;
+      animation: cardFanIn2 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s forwards;
     }
+
     .pre-card:nth-child(3) {
-      background: linear-gradient(135deg, rgba(20,55,50,0.8), rgba(10,38,34,0.9));
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      background: linear-gradient(135deg, rgba(20, 55, 50, 0.8), rgba(10, 38, 34, 0.9));
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
       z-index: 1;
-      animation: cardFanIn3 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s forwards;
+      animation: cardFanIn3 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards;
     }
 
     @keyframes cardFanIn1 {
-      to { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
     }
+
     @keyframes cardFanIn2 {
-      to { opacity: 0.75; transform: translateY(15px) scale(0.95) rotate(-6deg); }
+      to {
+        opacity: 0.75;
+        transform: translateY(15px) scale(0.95) rotate(-6deg);
+      }
     }
+
     @keyframes cardFanIn3 {
-      to { opacity: 0.5; transform: translateY(28px) scale(0.9) rotate(7deg); }
+      to {
+        opacity: 0.5;
+        transform: translateY(28px) scale(0.9) rotate(7deg);
+      }
     }
 
     .pre-card-ar {
@@ -1168,14 +1422,16 @@
       font-weight: 700;
       color: #a8f0e8;
       line-height: 1.1;
-      text-shadow: 0 0 25px rgba(168,240,232,0.4);
+      text-shadow: 0 0 25px rgba(168, 240, 232, 0.4);
     }
+
     .pre-card-en {
       font-size: 1rem;
-      color: rgba(255,255,255,0.85);
+      color: rgba(255, 255, 255, 0.85);
       letter-spacing: 1.5px;
       font-weight: 500;
     }
+
     .pre-card-tag {
       font-size: 0.65rem;
       color: #0d2b27;
@@ -1188,7 +1444,7 @@
       top: 15px;
       right: 15px;
       font-weight: bold;
-      box-shadow: 0 4px 15px rgba(168,240,232,0.3);
+      box-shadow: 0 4px 15px rgba(168, 240, 232, 0.3);
     }
 
     /* ─ Branding ─ */
@@ -1198,21 +1454,32 @@
       opacity: 0;
       animation: preBrandIn 0.6s ease 0.8s forwards;
     }
+
     @keyframes preBrandIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
+
     .pre-brand-title {
       font-size: 2rem;
       font-weight: 900;
       color: #fff;
       letter-spacing: 1.5px;
-      text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
+
     .pre-brand-title em {
       color: #a8f0e8;
       font-style: normal;
     }
+
     .pre-brand-sub {
       font-size: 0.85rem;
       color: #4a938b;
@@ -1226,33 +1493,56 @@
     .pre-bar-wrap {
       width: 220px;
       height: 4px;
-      background: rgba(255,255,255,0.07);
+      background: rgba(255, 255, 255, 0.07);
       border-radius: 4px;
       overflow: hidden;
       opacity: 0;
       animation: preBrandIn 0.4s ease 1s forwards;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) inset;
     }
+
     .pre-bar {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #a8f0e8, #f1c40f);
       border-radius: 4px;
-      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: 0 0 10px rgba(241,196,15,0.5);
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
     }
+
     /* Card flip animation for cycling */
     @keyframes cardFlipOut {
-      0%   { opacity: 1; transform: translateY(0) scale(1) rotateY(0deg); }
-      100% { opacity: 0; transform: translateY(-40px) scale(0.9) rotateY(-90deg); }
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateY(0deg);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.9) rotateY(-90deg);
+      }
     }
+
     @keyframes cardFlipIn {
-      0%   { opacity: 0; transform: translateY(40px) scale(0.9) rotateY(90deg); }
-      100% { opacity: 1; transform: translateY(0) scale(1) rotateY(0deg); }
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9) rotateY(90deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateY(0deg);
+      }
     }
-    .pre-card.flip-out { animation: cardFlipOut 0.35s ease-in forwards; }
-    .pre-card.flip-in  { animation: cardFlipIn  0.35s ease-out forwards; }
+
+    .pre-card.flip-out {
+      animation: cardFlipOut 0.35s ease-in forwards;
     }
+
+    .pre-card.flip-in {
+      animation: cardFlipIn 0.35s ease-out forwards;
+    }
+
 
     /* ======================================
        LIGHT THEME STYLES (Antigravity Neat UI update)
@@ -1272,14 +1562,17 @@
       color: #0d9488 !important;
       background: rgba(13, 86, 79, 0.08) !important;
     }
+
     body.light-theme .top-bar a:hover {
       background: rgba(13, 86, 79, 0.15) !important;
     }
+
     body.light-theme .top-bar .btn-reveal {
       background: rgba(13, 86, 79, 0.08) !important;
       color: #0d9488 !important;
       box-shadow: none !important;
     }
+
     body.light-theme .top-bar .btn-reveal:hover {
       background: rgba(13, 86, 79, 0.15) !important;
     }
@@ -1287,6 +1580,7 @@
     body.light-theme #mapView h2 {
       color: #0f766e !important;
     }
+
     body.light-theme #mapView p {
       color: #4a5568 !important;
     }
@@ -1296,27 +1590,34 @@
       border-top: 1px solid rgba(13, 86, 79, 0.15) !important;
       box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.06) !important;
     }
+
     body.light-theme .bottom-nav .stat-badge {
       color: #475569 !important;
     }
+
     body.light-theme .bottom-nav .stat-badge[title="XP"] {
       color: #0d9488 !important;
     }
+
     body.light-theme .bottom-nav .stat-badge.coins {
       color: #b45309 !important;
     }
+
     body.light-theme .bottom-nav .stat-badge.coins i {
       color: #d97706 !important;
     }
+
     body.light-theme .bottom-nav .stat-badge.highlighted {
       background: linear-gradient(135deg, rgba(217, 119, 6, 0.15), rgba(217, 119, 6, 0.05)) !important;
       border: 2px solid #d97706 !important;
       color: #b45309 !important;
       box-shadow: 0 0 15px rgba(217, 119, 6, 0.15) !important;
     }
+
     body.light-theme .bottom-nav .stat-badge[title="Leaderboard"] {
       color: #1d4ed8 !important;
     }
+
     body.light-theme .bottom-nav .stat-badge[title="Word Library"] {
       color: #7e22ce !important;
     }
@@ -1329,6 +1630,7 @@
       color: #0d9488 !important;
       border-color: rgba(13, 86, 79, 0.25) !important;
     }
+
     body.light-theme .how-to-btn:hover {
       background: rgba(13, 86, 79, 0.05) !important;
       border-color: #0d9488 !important;
@@ -1339,20 +1641,24 @@
       border-color: #0f766e !important;
       box-shadow: 0 8px 0 #0f766e, 0 15px 20px rgba(13, 148, 136, 0.15) !important;
     }
+
     body.light-theme .level-node:active {
       transform: translateY(8px);
       box-shadow: 0 0 0 #0f766e, 0 5px 10px rgba(13, 148, 136, 0.15) !important;
     }
+
     body.light-theme .level-node.locked {
       background: #e2e8f0 !important;
       border-color: #cbd5e0 !important;
       color: #94a3b8 !important;
       box-shadow: 0 8px 0 #cbd5e0, 0 15px 20px rgba(0, 0, 0, 0.05) !important;
     }
+
     body.light-theme .level-node.locked:active {
       transform: none !important;
       box-shadow: 0 8px 0 #cbd5e0, 0 15px 20px rgba(0, 0, 0, 0.05) !important;
     }
+
     body.light-theme .level-label {
       background: rgba(255, 255, 255, 0.95) !important;
       color: #0f766e !important;
@@ -1362,10 +1668,23 @@
     }
 
     @keyframes pulse-current-light {
-      0% { box-shadow: 0 8px 0 #0f766e, 0 15px 20px rgba(13, 148, 136, 0.15), 0 0 0 rgba(217, 119, 6, 0.6); transform: translateY(0); }
-      50% { box-shadow: 0 8px 0 #0f766e, 0 15px 20px rgba(13, 148, 136, 0.15), 0 0 30px rgba(217, 119, 6, 0.8); border-color: #d97706 !important; transform: translateY(-8px); }
-      100% { box-shadow: 0 8px 0 #0f766e, 0 15px 20px rgba(13, 148, 136, 0.15), 0 0 0 rgba(217, 119, 6, 0); transform: translateY(0); }
+      0% {
+        box-shadow: 0 8px 0 #0f766e, 0 15px 20px rgba(13, 148, 136, 0.15), 0 0 0 rgba(217, 119, 6, 0.6);
+        transform: translateY(0);
+      }
+
+      50% {
+        box-shadow: 0 8px 0 #0f766e, 0 15px 20px rgba(13, 148, 136, 0.15), 0 0 30px rgba(217, 119, 6, 0.8);
+        border-color: #d97706 !important;
+        transform: translateY(-8px);
+      }
+
+      100% {
+        box-shadow: 0 8px 0 #0f766e, 0 15px 20px rgba(13, 148, 136, 0.15), 0 0 0 rgba(217, 119, 6, 0);
+        transform: translateY(0);
+      }
     }
+
     body.light-theme .level-node.current {
       animation: pulse-current-light 2s infinite !important;
       border-color: #d97706 !important;
@@ -1374,6 +1693,7 @@
     body.light-theme .map-path {
       border-top-color: #0d9488 !important;
     }
+
     body.light-theme .map-path.locked {
       border-top-color: #cbd5e0 !important;
     }
@@ -1381,16 +1701,20 @@
     body.light-theme .translation {
       color: #1a202c !important;
     }
+
     body.light-theme .translation-ml {
       color: #0f766e !important;
     }
+
     body.light-theme #flashcardNotes {
       color: #4a5568 !important;
     }
+
     body.light-theme #wordCounter,
     body.light-theme #practiceCounter {
       color: #4a5568 !important;
     }
+
     body.light-theme .progress-container {
       background: rgba(0, 0, 0, 0.08) !important;
     }
@@ -1406,16 +1730,20 @@
       box-shadow: 0 6px 0 #115e59 !important;
       color: #fff !important;
     }
+
     body.light-theme .btn-reveal:active {
       box-shadow: 0 0 0 #115e59 !important;
     }
+
     body.light-theme #btnHint {
       background: #d97706 !important;
       box-shadow: 0 6px 0 #b45309 !important;
     }
+
     body.light-theme #btnHint:active {
       box-shadow: 0 0 0 #b45309 !important;
     }
+
     body.light-theme #hintOptions .btn-response {
       background: #f1f5f9 !important;
       border: 2px solid #cbd5e0 !important;
@@ -1426,10 +1754,12 @@
     body.light-theme .how-to-modal p {
       color: #4a5568 !important;
     }
+
     body.light-theme .lb-row {
       border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .lb-row.me {
       background: rgba(217, 119, 6, 0.1) !important;
     }
@@ -1438,20 +1768,25 @@
       background: rgba(255, 255, 255, 0.8) !important;
       border: 1px solid rgba(155, 89, 182, 0.25) !important;
     }
+
     body.light-theme .word-card-ar {
       color: #1a202c !important;
     }
+
     body.light-theme .word-card-en {
       color: #4a5568 !important;
     }
+
     body.light-theme .word-card.selected {
       background: rgba(155, 89, 182, 0.12) !important;
       border-color: #9b59b6 !important;
     }
+
     body.light-theme #practiceLevelsList .btn-reveal {
       background: rgba(13, 86, 79, 0.08) !important;
       color: #1a202c !important;
     }
+
     body.light-theme #practiceLevelsList .btn-reveal:hover {
       background: rgba(13, 86, 79, 0.15) !important;
     }
@@ -1459,12 +1794,15 @@
     body.light-theme .guide-section {
       border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
     }
+
     body.light-theme .guide-section h4 {
       color: #0d9488 !important;
     }
+
     body.light-theme .guide-section p {
       color: #4a5568 !important;
     }
+
     body.light-theme .how-to-modal {
       background: rgba(255, 255, 255, 0.98) !important;
       color: #1a202c !important;
@@ -1477,6 +1815,7 @@
       border-color: rgba(13, 86, 79, 0.2) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .scholar-tier-card:hover {
       border-color: #0d9488 !important;
       background: rgba(13, 86, 79, 0.05) !important;
@@ -1487,20 +1826,25 @@
       border: 1px solid rgba(13, 86, 79, 0.2) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .name-modal h2 {
       color: #0d9488 !important;
     }
+
     body.light-theme .name-modal p {
       color: #4a5568 !important;
     }
+
     body.light-theme .name-modal input {
       background: #f8fafc !important;
       border: 1px solid rgba(13, 86, 79, 0.3) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .name-modal input:focus {
       border-color: #0d9488 !important;
     }
+
     body.light-theme .name-modal .btn-start {
       background: #0d9488 !important;
       color: #fff !important;
@@ -1510,31 +1854,38 @@
       background: radial-gradient(circle at center, #f4fbf9 0%, #e6f0ed 100%) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .exam-question {
       color: #1a202c !important;
     }
+
     body.light-theme .exam-score-card {
       background: rgba(13, 86, 79, 0.05) !important;
       border-color: #d97706 !important;
       color: #b45309 !important;
     }
+
     body.light-theme #examProgress {
       color: #4a5568 !important;
     }
+
     body.light-theme .mc-btn {
       background: rgba(255, 255, 255, 0.85) !important;
       border: 1px solid rgba(13, 86, 79, 0.2) !important;
       color: #2d3748 !important;
     }
+
     body.light-theme .mc-btn:hover {
       background: rgba(13, 86, 79, 0.05) !important;
       border-color: #0d9488 !important;
     }
+
     body.light-theme .mc-btn.correct {
       background: #10b981 !important;
       border-color: #059669 !important;
       color: #ffffff !important;
     }
+
     body.light-theme .mc-btn.wrong {
       background: #ef4444 !important;
       border-color: #dc2626 !important;
@@ -1544,83 +1895,103 @@
     body.light-theme .battle-title {
       color: #0d9488 !important;
     }
+
     body.light-theme .battle-subtitle {
       color: #4a5568 !important;
     }
+
     body.light-theme .battle-input {
       background: rgba(255, 255, 255, 0.9) !important;
       border: 2px solid rgba(13, 86, 79, 0.2) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .battle-input:focus {
       border-color: #0d9488 !important;
     }
+
     body.light-theme .battle-divider {
       color: #4a5568 !important;
     }
+
     body.light-theme .battle-divider::before,
     body.light-theme .battle-divider::after {
       background: rgba(0, 0, 0, 0.1) !important;
     }
+
     body.light-theme .battle-room-code {
       color: #b45309 !important;
       background: rgba(217, 119, 6, 0.05) !important;
       border-color: rgba(217, 119, 6, 0.25) !important;
     }
+
     body.light-theme .battle-room-hint {
       color: #4a5568 !important;
     }
+
     body.light-theme .battle-player-card {
       background: rgba(255, 255, 255, 0.85) !important;
       border-color: rgba(0, 0, 0, 0.08) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .battle-player-card.me {
       background: rgba(13, 86, 79, 0.08) !important;
       border-color: rgba(13, 86, 79, 0.2) !important;
     }
+
     body.light-theme .battle-timer-bg {
       stroke: rgba(0, 0, 0, 0.06) !important;
     }
+
     body.light-theme .battle-timer-text {
       color: #1a202c !important;
     }
+
     body.light-theme .battle-arabic-word {
       color: #1a202c !important;
     }
+
     body.light-theme .battle-option-btn {
       background: rgba(255, 255, 255, 0.85) !important;
       border-color: rgba(13, 86, 79, 0.2) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .battle-option-btn:hover {
       background: rgba(13, 86, 79, 0.05) !important;
       border-color: #0d9488 !important;
     }
+
     body.light-theme .battle-option-btn.correct {
       background: #10b981 !important;
       border-color: #059669 !important;
       color: #ffffff !important;
     }
+
     body.light-theme .battle-option-btn.wrong {
       background: #ef4444 !important;
       border-color: #dc2626 !important;
       color: #ffffff !important;
     }
+
     body.light-theme .battle-option-btn.reveal {
       background: rgba(16, 185, 129, 0.15) !important;
       border-color: rgba(16, 185, 129, 0.5) !important;
       color: #059669 !important;
     }
+
     body.light-theme .battle-lb-row {
       background: rgba(255, 255, 255, 0.85) !important;
       border-color: rgba(0, 0, 0, 0.08) !important;
       color: #1a202c !important;
     }
+
     body.light-theme .battle-lb-row.me {
       background: rgba(13, 86, 79, 0.1) !important;
       border-color: rgba(13, 86, 79, 0.2) !important;
     }
+
     body.light-theme .battle-countdown-bar {
       background: rgba(0, 0, 0, 0.08) !important;
     }
@@ -1628,72 +1999,87 @@
     body.light-theme #preloader {
       background: linear-gradient(160deg, #f4fbf9 0%, #e6f0ed 60%, #f4fbf9 100%) !important;
     }
+
     body.light-theme #preloader::before {
-      background: radial-gradient(circle, rgba(13,86,79,0.08) 0%, transparent 70%) !important;
+      background: radial-gradient(circle, rgba(13, 86, 79, 0.08) 0%, transparent 70%) !important;
     }
+
     body.light-theme .pre-card:nth-child(1) {
       background: linear-gradient(135deg, #ffffff, #f0fdfa) !important;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.08), 0 0 15px rgba(13,86,79,0.08), inset 0 0 0 1px rgba(13,86,79,0.1) !important;
-      border: 1px solid rgba(13,86,79,0.15) !important;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08), 0 0 15px rgba(13, 86, 79, 0.08), inset 0 0 0 1px rgba(13, 86, 79, 0.1) !important;
+      border: 1px solid rgba(13, 86, 79, 0.15) !important;
     }
+
     body.light-theme .pre-card:nth-child(2) {
       background: linear-gradient(135deg, #fcfdfd, #e6f4f2) !important;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.06) !important;
-      border: 1px solid rgba(13,86,79,0.12) !important;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06) !important;
+      border: 1px solid rgba(13, 86, 79, 0.12) !important;
     }
+
     body.light-theme .pre-card:nth-child(3) {
       background: linear-gradient(135deg, #f8faf9, #e0eeeb) !important;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.04) !important;
-      border: 1px solid rgba(13,86,79,0.1) !important;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04) !important;
+      border: 1px solid rgba(13, 86, 79, 0.1) !important;
     }
+
     body.light-theme .pre-card-ar {
       color: #0d9488 !important;
-      text-shadow: 0 0 25px rgba(13,86,79,0.15) !important;
+      text-shadow: 0 0 25px rgba(13, 86, 79, 0.15) !important;
     }
+
     body.light-theme .pre-card-en {
       color: #4a5568 !important;
     }
+
     body.light-theme .pre-card-tag {
       background: rgba(13, 86, 79, 0.1) !important;
       color: #0d9488 !important;
       box-shadow: 0 4px 15px rgba(13, 86, 79, 0.05) !important;
     }
+
     body.light-theme .pre-brand-title {
       color: #1a202c !important;
       text-shadow: none !important;
     }
+
     body.light-theme .pre-brand-title em {
       color: #0d9488 !important;
     }
+
     body.light-theme .pre-brand-sub {
       color: #4a5568 !important;
     }
+
     body.light-theme .pre-bar-wrap {
-      background: rgba(0,0,0,0.05) !important;
+      background: rgba(0, 0, 0, 0.05) !important;
       box-shadow: none !important;
     }
+
     body.light-theme .pre-bar {
       background: linear-gradient(90deg, #0d9488, #d97706) !important;
-      box-shadow: 0 0 10px rgba(13,86,79,0.1) !important;
+      box-shadow: 0 0 10px rgba(13, 86, 79, 0.1) !important;
     }
+
     body.light-theme .pre-loading-text {
       color: #4a5568 !important;
     }
+
     body.light-theme .finish-screen {
       background: rgba(255, 255, 255, 0.95) !important;
       border: 1px solid rgba(13, 86, 79, 0.15) !important;
       color: #1a202c !important;
     }
+
     body.light-theme #finishMsg {
       color: #4a5568 !important;
     }
   </style>
-<script src="/theme.js"></script>
+  <script src="/theme.js"></script>
 </head>
 
 <body>
   <script>
-    (function() {
+    (function () {
       const savedTheme = localStorage.getItem('pbc_theme') || 'current';
       let isDark = true;
       if (savedTheme === 'light') {
@@ -1813,7 +2199,8 @@
       <i class="fa-solid fa-door-open"></i> Join Room
     </button>
 
-    <button class="battle-btn" onclick="hideAllViews(); document.getElementById('mapView').style.display='flex';" style="margin-top:24px; background:rgba(255,255,255,0.07); color:#aaa;">
+    <button class="battle-btn" onclick="hideAllViews(); document.getElementById('mapView').style.display='flex';"
+      style="margin-top:24px; background:rgba(255,255,255,0.07); color:#aaa;">
       ← Back to Map
     </button>
   </div>
@@ -1831,13 +2218,15 @@
     <div style="font-size:0.85rem; color:#7a9e99; margin-bottom:10px; align-self:flex-start;">Players</div>
     <div id="battlePlayerList" style="width:100%; margin-bottom:18px;"></div>
 
-    <button class="battle-btn battle-btn-ready" id="battleReadyBtn" style="margin-bottom:12px;" onclick="toggleBattleReady()">
+    <button class="battle-btn battle-btn-ready" id="battleReadyBtn" style="margin-bottom:12px;"
+      onclick="toggleBattleReady()">
       Ready Up
     </button>
     <button class="battle-btn battle-btn-primary" id="battleStartBtn" style="display:none;" onclick="startBattle()">
       ⚔ Start Battle!
     </button>
-    <button class="battle-btn" onclick="leaveBattleRoom()" style="margin-top:12px; background:rgba(255,255,255,0.07); color:#aaa;">
+    <button class="battle-btn" onclick="leaveBattleRoom()"
+      style="margin-top:12px; background:rgba(255,255,255,0.07); color:#aaa;">
       Leave Room
     </button>
   </div>
@@ -1848,7 +2237,8 @@
   <div id="battleSpinView" style="justify-content:center;">
     <div style="text-align:center;">
       <div style="font-size:0.9rem; color:#7a9e99; letter-spacing:2px; margin-bottom:20px;">SELECTED SURAH</div>
-      <div style="width:260px; height:120px; overflow:hidden; border:2px solid rgba(168,240,232,0.2); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; background:rgba(0,0,0,0.3);">
+      <div
+        style="width:260px; height:120px; overflow:hidden; border:2px solid rgba(168,240,232,0.2); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; background:rgba(0,0,0,0.3);">
         <div class="battle-spin-drum" id="battleSpinResult">...</div>
       </div>
       <div style="font-size:0.85rem; color:#5a7a76;">Preparing questions…</div>
@@ -1868,9 +2258,9 @@
     <!-- Timer -->
     <div class="battle-timer-wrap">
       <svg class="battle-timer-svg" width="110" height="110" viewBox="0 0 110 110">
-        <circle class="battle-timer-bg" cx="55" cy="55" r="45"/>
-        <circle class="battle-timer-ring" id="battleTimerRing" cx="55" cy="55" r="45"
-          stroke-dasharray="282.74" stroke-dashoffset="0"/>
+        <circle class="battle-timer-bg" cx="55" cy="55" r="45" />
+        <circle class="battle-timer-ring" id="battleTimerRing" cx="55" cy="55" r="45" stroke-dasharray="282.74"
+          stroke-dashoffset="0" />
       </svg>
       <div class="battle-timer-text" id="battleTimerText">15</div>
     </div>
@@ -1905,10 +2295,12 @@
       <div class="battle-countdown-fill" id="battleCountdownFill" style="width:100%;"></div>
     </div>
 
-    <button class="battle-btn battle-btn-primary" id="battlePlayAgainBtn" style="display:none; margin-top:20px;" onclick="battlePlayAgain()">
+    <button class="battle-btn battle-btn-primary" id="battlePlayAgainBtn" style="display:none; margin-top:20px;"
+      onclick="battlePlayAgain()">
       <i class="fa-solid fa-rotate-right"></i> Play Again
     </button>
-    <button class="battle-btn" onclick="battleReturnToMap()" style="margin-top:12px; background:rgba(255,255,255,0.07); color:#aaa;">
+    <button class="battle-btn" onclick="battleReturnToMap()"
+      style="margin-top:12px; background:rgba(255,255,255,0.07); color:#aaa;">
       Return to Map
     </button>
   </div>
@@ -1951,7 +2343,7 @@
 
     <button class="btn-reveal" id="btnHint" onclick="showHint()"
       style="background:var(--warning); color:#fff; border:none; margin-top:10px; width:100%; max-width:500px; padding:16px; border-radius:30px; font-weight:bold; box-shadow: 0 6px 0 #d35400;">
-      <i class="fa-solid fa-lightbulb"></i> Hint (-2 Coins)
+      <i class="fa-solid fa-lightbulb"></i> Hint (-1 Coin)
     </button>
 
     <div id="hintOptions"
@@ -2005,13 +2397,14 @@
     <!-- 25-second timer -->
     <div style="position:relative; width:80px; height:80px; margin: 0 auto 10px;">
       <svg style="transform:rotate(-90deg);" width="80" height="80" viewBox="0 0 80 80">
-        <circle fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6" cx="40" cy="40" r="33"/>
-        <circle id="examTimerRing" fill="none" stroke="var(--primary)" stroke-width="6"
-          stroke-linecap="round" cx="40" cy="40" r="33"
-          stroke-dasharray="207.35" stroke-dashoffset="0"
-          style="transition:stroke-dashoffset 1s linear, stroke 0.5s;"/>
+        <circle fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6" cx="40" cy="40" r="33" />
+        <circle id="examTimerRing" fill="none" stroke="var(--primary)" stroke-width="6" stroke-linecap="round" cx="40"
+          cy="40" r="33" stroke-dasharray="207.35" stroke-dashoffset="0"
+          style="transition:stroke-dashoffset 1s linear, stroke 0.5s;" />
       </svg>
-      <div id="examTimerText" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;font-weight:900;color:#fff;">15</div>
+      <div id="examTimerText"
+        style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;font-weight:900;color:#fff;">
+        15</div>
     </div>
     <div class="exam-question" id="examWord">--</div>
     <div id="examCounter" style="font-size: 0.8rem; color: #777; margin-bottom: 20px;">Question 1/20</div>
@@ -2437,19 +2830,19 @@
 
     // ── Preloader helpers ────────────────────────────────────
     const PRE_CARDS_DATA = [
-      { surah: 'Al-Fatiha',  ar: 'الرَّحْمٰنِ', en: 'the Compassionate' },
-      { surah: 'Al-Ikhlas',  ar: 'أَحَدٌ',      en: 'One' },
-      { surah: 'Al-Falaq',   ar: 'الْفَلَقِ',   en: 'the Daybreak' },
-      { surah: 'An-Nas',     ar: 'النَّاسِ',    en: 'Mankind' },
-      { surah: 'Al-Qadr',    ar: 'لَيْلَةُ',    en: 'Night' },
-      { surah: 'Al-Asr',     ar: 'الْعَصْرِ',   en: 'the Time' },
-      { surah: 'Ad-Duhaa',   ar: 'الضُّحٰى',    en: 'the Morning' },
+      { surah: 'Al-Fatiha', ar: 'الرَّحْمٰنِ', en: 'the Compassionate' },
+      { surah: 'Al-Ikhlas', ar: 'أَحَدٌ', en: 'One' },
+      { surah: 'Al-Falaq', ar: 'الْفَلَقِ', en: 'the Daybreak' },
+      { surah: 'An-Nas', ar: 'النَّاسِ', en: 'Mankind' },
+      { surah: 'Al-Qadr', ar: 'لَيْلَةُ', en: 'Night' },
+      { surah: 'Al-Asr', ar: 'الْعَصْرِ', en: 'the Time' },
+      { surah: 'Ad-Duhaa', ar: 'الضُّحٰى', en: 'the Morning' },
       { surah: 'Al-Kawthar', ar: 'الْكَوْثَرَ', en: 'Abundance' },
-      { surah: 'Al-Fil',     ar: 'الْفِيلِ',    en: 'the Elephant' },
-      { surah: 'An-Nasr',    ar: 'النَّصْرُ',   en: 'the Victory' },
+      { surah: 'Al-Fil', ar: 'الْفِيلِ', en: 'the Elephant' },
+      { surah: 'An-Nasr', ar: 'النَّصْرُ', en: 'the Victory' },
     ];
     let _cardCyclerTimer = null;
-    let _cardCyclerIdx   = 3;
+    let _cardCyclerIdx = 3;
 
     function setPreloaderProgress(pct) {
       const bar = document.querySelector('.pre-bar');
@@ -2461,7 +2854,7 @@
       if (!frontCard) return;
       _cardCyclerTimer = setInterval(() => {
         let data;
-        
+
         // Try to get a random word from the live dictionary first
         const allWords = [];
         if (typeof dictionary !== 'undefined') {
@@ -2474,8 +2867,8 @@
           const rw = allWords[Math.floor(Math.random() * allWords.length)];
           let tag = 'Vocab';
           if (rw.note) {
-             const m = rw.note.match(/Surah (\d+)/);
-             if (m) tag = `Surah ${m[1]}`;
+            const m = rw.note.match(/Surah (\d+)/);
+            if (m) tag = `Surah ${m[1]}`;
           }
           data = { surah: tag, ar: rw.simpleAr || rw.ar, en: rw.en };
         } else {
@@ -2487,8 +2880,8 @@
         frontCard.classList.add('flip-out');
         setTimeout(() => {
           frontCard.querySelector('.pre-card-tag').textContent = data.surah;
-          frontCard.querySelector('.pre-card-ar').textContent  = data.ar;
-          frontCard.querySelector('.pre-card-en').textContent  = data.en;
+          frontCard.querySelector('.pre-card-ar').textContent = data.ar;
+          frontCard.querySelector('.pre-card-en').textContent = data.en;
           frontCard.classList.remove('flip-out');
           frontCard.classList.add('flip-in');
         }, 320);
@@ -2596,10 +2989,10 @@
         wrap.style.zIndex = 100 - idx;
 
         // Sine wave offset for winding path
-        const currentX = Math.sin(idx * 0.7) * 90; 
+        const currentX = Math.sin(idx * 0.7) * 90;
         wrap.style.setProperty('--node-x', `${currentX}px`);
         wrap.style.animationDelay = `${idx * 0.1}s`;
-        
+
         // Trigger animation after a tiny delay to ensure DOM readiness
         requestAnimationFrame(() => {
           wrap.classList.add('animate');
@@ -2610,9 +3003,9 @@
           const prevX = Math.sin((idx - 1) * 0.7) * 90;
           const dx = prevX - currentX;
           const dy = -NODE_GAP; // Since flex-direction is column, previous is ABOVE
-          const distance = Math.sqrt(dx*dx + dy*dy);
+          const distance = Math.sqrt(dx * dx + dy * dy);
           const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-          
+
           const path = document.createElement("div");
           path.className = (!isPurchased && !isReachable) ? "map-path locked" : "map-path";
           path.style.position = "absolute";
@@ -2626,13 +3019,13 @@
           path.style.transformOrigin = "left center";
           path.style.transform = `rotate(${angle}deg)`;
           path.style.zIndex = "0";
-          
+
           wrap.appendChild(path);
         }
 
         const node = document.createElement("div");
         node.className = "level-node" + (!isReachable ? " disabled" : !isPurchased ? " locked" : "") + (lvl.type === "exam" ? " exam-node" : "");
-        
+
         // Highlight current frontier level
         if (idx === highestReachableIdx) {
           node.classList.add("current");
@@ -3415,10 +3808,10 @@
     function _startExamTimer(secs, onEnd) {
       _clearExamTimer();
       const ring = document.getElementById('examTimerRing');
-      const txt  = document.getElementById('examTimerText');
+      const txt = document.getElementById('examTimerText');
       if (!ring || !txt) return;
       const C = 2 * Math.PI * 33; // circumference r=33
-      ring.style.strokeDasharray  = C;
+      ring.style.strokeDasharray = C;
       ring.style.strokeDashoffset = 0;
       ring.style.stroke = 'var(--primary)';
       txt.textContent = secs;
@@ -3594,7 +3987,10 @@
 
       document.getElementById("flashcardTranslation").classList.remove("visible");
       document.getElementById("flashcardTranslationMl").classList.remove("visible");
-      document.getElementById("btnReveal").style.display = "block";
+      const btnReveal = document.getElementById("btnReveal");
+      if (btnReveal) {
+        btnReveal.style.display = "block";
+      }
       document.getElementById("btnHint").style.display = "block";
       document.getElementById("hintOptions").style.display = "none";
       document.getElementById("responseButtons").style.display = "none";
@@ -3606,21 +4002,29 @@
       document.getElementById("progressBar").style.width = pct + "%";
     }
 
+    function buyRevealAnswer() {
+      userProgress.coins -= 1;
+      updateTopBar();
+
+      const uid = currentUserContext.uid;
+      db.ref(`users/${uid}/quest_progress/coins`).set(userProgress.coins);
+
+      revealAnswer();
+    }
+
     function revealAnswer() {
       document.getElementById("flashcardTranslation").classList.add("visible");
       document.getElementById("flashcardTranslationMl").classList.add("visible");
-      document.getElementById("btnReveal").style.display = "none";
+      const btnReveal = document.getElementById("btnReveal");
+      if (btnReveal) btnReveal.style.display = "none";
+
       document.getElementById("btnHint").style.display = "none";
       document.getElementById("hintOptions").style.display = "none";
       document.getElementById("responseButtons").style.display = "flex";
     }
 
     function showHint() {
-      if (userProgress.coins < 2) {
-        alert("You need at least 2 coins to buy a hint!");
-        return;
-      }
-      userProgress.coins -= 2;
+      userProgress.coins -= 1;
       updateTopBar();
 
       const uid = currentUserContext.uid;
@@ -3701,7 +4105,7 @@
       if (currentSessionId === "library_session") {
         document.getElementById("finishMsg").innerHTML = "<b>Library Review Complete!</b><br>Your word mastery progress has been updated.";
         document.getElementById("earnedCoins").parentElement.style.display = 'none';
-        
+
         const uid = currentUserContext.uid;
         try {
           if (window.db && uid) {
@@ -4023,558 +4427,560 @@
 
       loadFlashcard();
     }
-  // ============================================================
-  //  MULTIPLAYER BATTLE MODE
-  // ============================================================
+    // ============================================================
+    //  MULTIPLAYER BATTLE MODE
+    // ============================================================
 
-  const PHASE2_SURAHS = [
-    { levelId: 'level_16', surahNum: 12, name: 'Yusuf' },
-    { levelId: 'level_17', surahNum: 19, name: 'Maryam' },
-    { levelId: 'level_18', surahNum: 18, name: 'Al-Kahf' },
-    { levelId: 'level_19', surahNum: 2,  name: 'Al-Baqarah' },
-    { levelId: 'level_20', surahNum: 3,  name: 'Al-Imran' },
-  ];
+    const PHASE2_SURAHS = [
+      { levelId: 'level_16', surahNum: 12, name: 'Yusuf' },
+      { levelId: 'level_17', surahNum: 19, name: 'Maryam' },
+      { levelId: 'level_18', surahNum: 18, name: 'Al-Kahf' },
+      { levelId: 'level_19', surahNum: 2, name: 'Al-Baqarah' },
+      { levelId: 'level_20', surahNum: 3, name: 'Al-Imran' },
+    ];
 
-  let battleRoomCode   = null;
-  let battleRoomRef    = null;
-  let battleMyUid      = null;
-  let battleIsHost     = false;
-  let battleMyScore    = 0;
-  let battleAnswered   = false;
-  let battleCurrentQ   = 0;
-  let battleQStartTime = null;
-  let battleTimerIv    = null;
-  let battleLastQ      = -1;
-  let battleSpinDone   = false;
-  let battleFinalDone  = false;
-  let battleCdInterval = null;
-  let battleCdTimeout  = null;
+    let battleRoomCode = null;
+    let battleRoomRef = null;
+    let battleMyUid = null;
+    let battleIsHost = false;
+    let battleMyScore = 0;
+    let battleAnswered = false;
+    let battleCurrentQ = 0;
+    let battleQStartTime = null;
+    let battleTimerIv = null;
+    let battleLastQ = -1;
+    let battleSpinDone = false;
+    let battleFinalDone = false;
+    let battleCdInterval = null;
+    let battleCdTimeout = null;
 
-  // ── Utilities ──────────────────────────────────────────────
-  function genRoomCode() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = '';
-    for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
-    return code;
-  }
-
-  function getBattleUid() {
-    if (currentUserContext && currentUserContext.uid) return currentUserContext.uid;
-    let gid = localStorage.getItem('battle_guestUid');
-    if (!gid) { gid = 'g_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('battle_guestUid', gid); }
-    return gid;
-  }
-
-  function getBattleName() {
-    return (currentUserContext && currentUserContext.displayName)
-      || localStorage.getItem('guestName_arabic')
-      || 'Scholar';
-  }
-
-  function hideAllViews() {
-    ['mapView','sessionView','practiceView','examView','finishScreen',
-     'battleLobbyView','battleWaitingView','battleSpinView','battleView','battleFinalView']
-      .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-  }
-
-  // ── Lobby ───────────────────────────────────────────────────
-  function openBattleLobby() {
-    hideAllViews();
-    document.getElementById('battleLobbyView').style.display = 'flex';
-  }
-
-  async function createBattleRoom() {
-    _resetBattleState();
-    const code = genRoomCode();
-    battleRoomCode = code;
-    battleIsHost   = true;
-    battleMyUid    = getBattleUid();
-
-    await db.ref(`multiplayer_rooms/${code}`).set({
-      host: battleMyUid,
-      status: 'waiting',
-      createdAt: Date.now(),
-      players: { [battleMyUid]: { name: getBattleName(), ready: false, score: 0 } }
-    });
-
-    // Auto-remove player on disconnect/tab close
-    db.ref(`multiplayer_rooms/${code}/players/${battleMyUid}`).onDisconnect().remove();
-
-    _showWaitingRoom(code);
-    _listenRoom(code);
-  }
-
-  async function joinBattleRoom() {
-    const input = document.getElementById('battleJoinCode');
-    const code  = (input.value || '').trim().toUpperCase();
-    if (code.length !== 6) { alert('Enter a 6-character room code.'); return; }
-
-    const snap = await db.ref(`multiplayer_rooms/${code}`).once('value');
-    if (!snap.exists()) { alert('Room not found. Check the code and try again.'); return; }
-    const room = snap.val();
-    if (room.status !== 'waiting') { alert('This game has already started.'); return; }
-
-    _resetBattleState();
-    battleRoomCode = code;
-    battleIsHost   = false;
-    battleMyUid    = getBattleUid();
-
-    await db.ref(`multiplayer_rooms/${code}/players/${battleMyUid}`).set({
-      name: getBattleName(), ready: false, score: 0
-    });
-
-    // Auto-remove player on disconnect/tab close
-    db.ref(`multiplayer_rooms/${code}/players/${battleMyUid}`).onDisconnect().remove();
-
-    _showWaitingRoom(code);
-    _listenRoom(code);
-  }
-
-  async function leaveBattleRoom() {
-    if (battleRoomRef) { battleRoomRef.off(); battleRoomRef = null; }
-    if (battleRoomCode && battleMyUid) {
-      await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}`).remove();
-      if (battleIsHost) await db.ref(`multiplayer_rooms/${battleRoomCode}`).remove();
+    // ── Utilities ──────────────────────────────────────────────
+    function genRoomCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+      return code;
     }
-    _resetBattleState();
-    openBattleLobby();
-  }
 
-  // ── Waiting Room ────────────────────────────────────────────
-  function _showWaitingRoom(code) {
-    hideAllViews();
-    document.getElementById('battleWaitingView').style.display = 'flex';
-    document.getElementById('battleRoomCode').textContent = code;
-  }
+    function getBattleUid() {
+      if (currentUserContext && currentUserContext.uid) return currentUserContext.uid;
+      let gid = localStorage.getItem('battle_guestUid');
+      if (!gid) { gid = 'g_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('battle_guestUid', gid); }
+      return gid;
+    }
 
-  function _renderWaiting(room) {
-    const players = room.players || {};
-    const allReady = Object.values(players).every(p => p.ready);
-    const count = Object.keys(players).length;
-    const imHost = room.host === battleMyUid;
+    function getBattleName() {
+      return (currentUserContext && currentUserContext.displayName)
+        || localStorage.getItem('guestName_arabic')
+        || 'Scholar';
+    }
 
-    let html = '';
-    Object.entries(players).forEach(([uid, p]) => {
-      const me = uid === battleMyUid;
-      html += `<div class="battle-player-card ${me ? 'me' : ''}">
+    function hideAllViews() {
+      ['mapView', 'sessionView', 'practiceView', 'examView', 'finishScreen',
+        'battleLobbyView', 'battleWaitingView', 'battleSpinView', 'battleView', 'battleFinalView']
+        .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+    }
+
+    // ── Lobby ───────────────────────────────────────────────────
+    function openBattleLobby() {
+      hideAllViews();
+      document.getElementById('battleLobbyView').style.display = 'flex';
+    }
+
+    async function createBattleRoom() {
+      _resetBattleState();
+      const code = genRoomCode();
+      battleRoomCode = code;
+      battleIsHost = true;
+      battleMyUid = getBattleUid();
+
+      await db.ref(`multiplayer_rooms/${code}`).set({
+        host: battleMyUid,
+        status: 'waiting',
+        createdAt: Date.now(),
+        players: { [battleMyUid]: { name: getBattleName(), ready: false, score: 0 } }
+      });
+
+      // Auto-remove player on disconnect/tab close
+      db.ref(`multiplayer_rooms/${code}/players/${battleMyUid}`).onDisconnect().remove();
+
+      _showWaitingRoom(code);
+      _listenRoom(code);
+    }
+
+    async function joinBattleRoom() {
+      const input = document.getElementById('battleJoinCode');
+      const code = (input.value || '').trim().toUpperCase();
+      if (code.length !== 6) { alert('Enter a 6-character room code.'); return; }
+
+      const snap = await db.ref(`multiplayer_rooms/${code}`).once('value');
+      if (!snap.exists()) { alert('Room not found. Check the code and try again.'); return; }
+      const room = snap.val();
+      if (room.status !== 'waiting') { alert('This game has already started.'); return; }
+
+      _resetBattleState();
+      battleRoomCode = code;
+      battleIsHost = false;
+      battleMyUid = getBattleUid();
+
+      await db.ref(`multiplayer_rooms/${code}/players/${battleMyUid}`).set({
+        name: getBattleName(), ready: false, score: 0
+      });
+
+      // Auto-remove player on disconnect/tab close
+      db.ref(`multiplayer_rooms/${code}/players/${battleMyUid}`).onDisconnect().remove();
+
+      _showWaitingRoom(code);
+      _listenRoom(code);
+    }
+
+    async function leaveBattleRoom() {
+      if (battleRoomRef) { battleRoomRef.off(); battleRoomRef = null; }
+      if (battleRoomCode && battleMyUid) {
+        await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}`).remove();
+        if (battleIsHost) await db.ref(`multiplayer_rooms/${battleRoomCode}`).remove();
+      }
+      _resetBattleState();
+      openBattleLobby();
+    }
+
+    // ── Waiting Room ────────────────────────────────────────────
+    function _showWaitingRoom(code) {
+      hideAllViews();
+      document.getElementById('battleWaitingView').style.display = 'flex';
+      document.getElementById('battleRoomCode').textContent = code;
+    }
+
+    function _renderWaiting(room) {
+      const players = room.players || {};
+      const allReady = Object.values(players).every(p => p.ready);
+      const count = Object.keys(players).length;
+      const imHost = room.host === battleMyUid;
+
+      let html = '';
+      Object.entries(players).forEach(([uid, p]) => {
+        const me = uid === battleMyUid;
+        html += `<div class="battle-player-card ${me ? 'me' : ''}">
         <span>${p.name}${me ? ' <span style="font-size:0.75rem;opacity:0.6;">(You)</span>' : ''}${uid === room.host ? ' <span style="font-size:0.7rem;color:var(--accent);">👑</span>' : ''}</span>
         <span style="color:${p.ready ? '#2ecc71' : '#e74c3c'}; font-size:0.85rem; font-weight:600;">${p.ready ? '✓ Ready' : '⌛ Waiting'}</span>
       </div>`;
-    });
-    document.getElementById('battlePlayerList').innerHTML = html;
+      });
+      document.getElementById('battlePlayerList').innerHTML = html;
 
-    const myReady = players[battleMyUid]?.ready;
-    const readyBtn = document.getElementById('battleReadyBtn');
-    readyBtn.textContent = myReady ? '✓ Ready!' : 'Ready Up';
-    readyBtn.style.background = myReady ? 'linear-gradient(135deg,#27ae60,#1e8449)' : '';
+      const myReady = players[battleMyUid]?.ready;
+      const readyBtn = document.getElementById('battleReadyBtn');
+      readyBtn.textContent = myReady ? '✓ Ready!' : 'Ready Up';
+      readyBtn.style.background = myReady ? 'linear-gradient(135deg,#27ae60,#1e8449)' : '';
 
-    const startBtn = document.getElementById('battleStartBtn');
-    if (imHost) {
-      startBtn.style.display = 'block';
-      const canStart = allReady && count >= 2;
-      startBtn.disabled = !canStart;
-      startBtn.textContent = count < 2
-        ? `⏳ Waiting for players… (${count}/2+)`
-        : !allReady ? '⌛ Waiting for everyone…'
-        : '⚔ Start Battle!';
-    } else {
-      startBtn.style.display = 'none';
-    }
-  }
-
-  async function toggleBattleReady() {
-    const cur = (await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}/ready`).once('value')).val();
-    await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}/ready`).set(!cur);
-  }
-
-  // ── Start / Generate Questions ───────────────────────────────
-  async function startBattle() {
-    // Pick a random Phase 2 surah
-    const surahInfo = PHASE2_SURAHS[Math.floor(Math.random() * PHASE2_SURAHS.length)];
-    const levelId   = surahInfo.levelId;
-
-    // Wait for dictionary to be populated
-    let words = dictionary[levelId] || [];
-    if (words.length < 6) {
       const startBtn = document.getElementById('battleStartBtn');
-      startBtn.textContent = '⏳ Loading words…'; startBtn.disabled = true;
-      await new Promise(res => setTimeout(res, 3000));
-      words = dictionary[levelId] || [];
-      if (words.length < 6) { alert('Words not loaded yet. Please wait a moment and try again.'); startBtn.disabled = false; return; }
+      if (imHost) {
+        startBtn.style.display = 'block';
+        const canStart = allReady && count >= 2;
+        startBtn.disabled = !canStart;
+        startBtn.textContent = count < 2
+          ? `⏳ Waiting for players… (${count}/2+)`
+          : !allReady ? '⌛ Waiting for everyone…'
+            : '⚔ Start Battle!';
+      } else {
+        startBtn.style.display = 'none';
+      }
     }
 
-    // Deduplicate by Arabic text
-    const seenAr  = new Set();
-    const unique  = words.filter(w => { const k = (w.ar || '').trim(); if (seenAr.has(k)) return false; seenAr.add(k); return true; });
+    async function toggleBattleReady() {
+      const cur = (await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}/ready`).once('value')).val();
+      await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}/ready`).set(!cur);
+    }
 
-    // Build distractor pool from ALL Phase 2 levels
-    const allPhase2En = [];
-    PHASE2_SURAHS.forEach(s => {
-      (dictionary[s.levelId] || []).forEach(w => { if (w.en) allPhase2En.push(w.en); });
-    });
+    // ── Start / Generate Questions ───────────────────────────────
+    async function startBattle() {
+      // Pick a random Phase 2 surah
+      const surahInfo = PHASE2_SURAHS[Math.floor(Math.random() * PHASE2_SURAHS.length)];
+      const levelId = surahInfo.levelId;
 
-    // Shuffle + pick 25
-    const shuffled  = unique.sort(() => Math.random() - 0.5);
-    const selected  = shuffled.slice(0, Math.min(25, shuffled.length));
+      // Wait for dictionary to be populated
+      let words = dictionary[levelId] || [];
+      if (words.length < 6) {
+        const startBtn = document.getElementById('battleStartBtn');
+        startBtn.textContent = '⏳ Loading words…'; startBtn.disabled = true;
+        await new Promise(res => setTimeout(res, 3000));
+        words = dictionary[levelId] || [];
+        if (words.length < 6) { alert('Words not loaded yet. Please wait a moment and try again.'); startBtn.disabled = false; return; }
+      }
 
-    const questions = selected.map(word => {
-      const wrongs = allPhase2En
-        .filter(en => en !== word.en)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 5);
-      const options = [word.en, ...wrongs].sort(() => Math.random() - 0.5);
-      return { ar: word.ar, en: word.en, options, correctIndex: options.indexOf(word.en) };
-    });
+      // Deduplicate by Arabic text
+      const seenAr = new Set();
+      const unique = words.filter(w => { const k = (w.ar || '').trim(); if (seenAr.has(k)) return false; seenAr.add(k); return true; });
 
-    // Set countdown status — all clients see the 5-sec timer
-    await db.ref(`multiplayer_rooms/${battleRoomCode}`).update({
-      status:       'countdown',
-      surahLevelId: levelId,
-      surahName:    surahInfo.name,
-      questions,
-      currentQ:     0,
-      countdownAt:  Date.now(),
-    });
-  }
+      // Build distractor pool from ALL Phase 2 levels
+      const allPhase2En = [];
+      PHASE2_SURAHS.forEach(s => {
+        (dictionary[s.levelId] || []).forEach(w => { if (w.en) allPhase2En.push(w.en); });
+      });
 
-  // ── Firebase Listener (drives all UI) ───────────────────────
-  function _listenRoom(code) {
-    if (battleRoomRef) battleRoomRef.off();
-    battleRoomRef = db.ref(`multiplayer_rooms/${code}`);
-    battleRoomRef.on('value', snap => {
-      if (!snap.exists()) { _handleRoomGone(); return; }
-      const room = snap.val();
-      const status = room.status;
-      if      (status === 'waiting')   _renderWaiting(room);
-      else if (status === 'countdown') _handleCountdown(room);
-      else if (status === 'spinning')  _handleSpinner(room);
-      else if (status === 'playing')   _handleQuestion(room);
-      else if (status === 'finished')  _handleFinal(room);
-    });
-  }
+      // Shuffle + pick 25
+      const shuffled = unique.sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, Math.min(25, shuffled.length));
 
-  function _handleRoomGone() {
-    if (battleFinalDone) return;
-    _resetBattleState();
-    openBattleLobby();
-  }
+      const questions = selected.map(word => {
+        const wrongs = allPhase2En
+          .filter(en => en !== word.en)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 5);
+        const options = [word.en, ...wrongs].sort(() => Math.random() - 0.5);
+        return { ar: word.ar, en: word.en, options, correctIndex: options.indexOf(word.en) };
+      });
 
-  // ── 5-Second Countdown ───────────────────────────────────────
-  let battleCountdownDone = false;
-  function _handleCountdown(room) {
-    if (battleCountdownDone) return;
-    battleCountdownDone = true;
+      // Set countdown status — all clients see the 5-sec timer
+      await db.ref(`multiplayer_rooms/${battleRoomCode}`).update({
+        status: 'countdown',
+        surahLevelId: levelId,
+        surahName: surahInfo.name,
+        questions,
+        currentQ: 0,
+        countdownAt: Date.now(),
+      });
+    }
 
-    hideAllViews();
-    // Show a full-screen countdown overlay
-    let overlay = document.getElementById('battleCountdownOverlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'battleCountdownOverlay';
-      overlay.style.cssText = `
+    // ── Firebase Listener (drives all UI) ───────────────────────
+    function _listenRoom(code) {
+      if (battleRoomRef) battleRoomRef.off();
+      battleRoomRef = db.ref(`multiplayer_rooms/${code}`);
+      battleRoomRef.on('value', snap => {
+        if (!snap.exists()) { _handleRoomGone(); return; }
+        const room = snap.val();
+        const status = room.status;
+        if (status === 'waiting') _renderWaiting(room);
+        else if (status === 'countdown') _handleCountdown(room);
+        else if (status === 'spinning') _handleSpinner(room);
+        else if (status === 'playing') _handleQuestion(room);
+        else if (status === 'finished') _handleFinal(room);
+      });
+    }
+
+    function _handleRoomGone() {
+      if (battleFinalDone) return;
+      _resetBattleState();
+      openBattleLobby();
+    }
+
+    // ── 5-Second Countdown ───────────────────────────────────────
+    let battleCountdownDone = false;
+    function _handleCountdown(room) {
+      if (battleCountdownDone) return;
+      battleCountdownDone = true;
+
+      hideAllViews();
+      // Show a full-screen countdown overlay
+      let overlay = document.getElementById('battleCountdownOverlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'battleCountdownOverlay';
+        overlay.style.cssText = `
         position:fixed; inset:0; z-index:5000;
         background:rgba(0,9,21,0.92); backdrop-filter:blur(8px);
         display:flex; flex-direction:column; align-items:center; justify-content:center;
         gap:14px;
       `;
-      document.body.appendChild(overlay);
-    }
-    overlay.innerHTML = `
+        document.body.appendChild(overlay);
+      }
+      overlay.innerHTML = `
       <div style="font-size:1rem; color:#7a9e99; letter-spacing:3px;">GAME STARTING IN</div>
       <div id="battlePreTimer" style="font-size:7rem; font-weight:900; color:#fff; line-height:1; text-shadow: 0 0 40px rgba(168,240,232,0.5);">5</div>
       <div style="font-size:0.9rem; color:var(--accent);">⚔ Get Ready!</div>
     `;
-    overlay.style.display = 'flex';
+      overlay.style.display = 'flex';
 
-    let t = 5;
-    const iv = setInterval(() => {
-      t--;
-      const el = document.getElementById('battlePreTimer');
-      if (el) { el.textContent = t > 0 ? t : '⚔'; el.style.color = t <= 2 ? '#e74c3c' : '#fff'; }
-      if (t <= 0) {
-        clearInterval(iv);
-        setTimeout(() => { overlay.style.display = 'none'; }, 400);
-        // Only host advances status to spinning
-        if (room.host === battleMyUid) {
-          db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'spinning' });
+      let t = 5;
+      const iv = setInterval(() => {
+        t--;
+        const el = document.getElementById('battlePreTimer');
+        if (el) { el.textContent = t > 0 ? t : '⚔'; el.style.color = t <= 2 ? '#e74c3c' : '#fff'; }
+        if (t <= 0) {
+          clearInterval(iv);
+          setTimeout(() => { overlay.style.display = 'none'; }, 400);
+          // Only host advances status to spinning
+          if (room.host === battleMyUid) {
+            db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'spinning' });
+          }
         }
-      }
-    }, 1000);
-  }
+      }, 1000);
+    }
 
-  // ── Spinner ─────────────────────────────────────────────────
-  function _handleSpinner(room) {
-    if (battleSpinDone) return;
-    battleSpinDone = true;
+    // ── Spinner ─────────────────────────────────────────────────
+    function _handleSpinner(room) {
+      if (battleSpinDone) return;
+      battleSpinDone = true;
 
-    // Hide countdown overlay if visible
-    const overlay = document.getElementById('battleCountdownOverlay');
-    if (overlay) overlay.style.display = 'none';
+      // Hide countdown overlay if visible
+      const overlay = document.getElementById('battleCountdownOverlay');
+      if (overlay) overlay.style.display = 'none';
 
-    hideAllViews();
-    document.getElementById('battleSpinView').style.display = 'flex';
+      hideAllViews();
+      document.getElementById('battleSpinView').style.display = 'flex';
 
-    const names = PHASE2_SURAHS.map(s => s.name);
-    const target = room.surahName || 'Surah';
-    const spinEl = document.getElementById('battleSpinResult');
-    let i = 0;
-    const iv = setInterval(() => { spinEl.textContent = names[i % names.length]; spinEl.style.color = 'var(--primary)'; i++; }, 90);
-
-    setTimeout(() => {
-      clearInterval(iv);
-      spinEl.textContent = target;
-      spinEl.style.color = '#f1c40f';
-      spinEl.style.textShadow = '0 0 30px #f1c40f';
+      const names = PHASE2_SURAHS.map(s => s.name);
+      const target = room.surahName || 'Surah';
+      const spinEl = document.getElementById('battleSpinResult');
+      let i = 0;
+      const iv = setInterval(() => { spinEl.textContent = names[i % names.length]; spinEl.style.color = 'var(--primary)'; i++; }, 90);
 
       setTimeout(() => {
-        if (room.host === battleMyUid) {
-          db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'playing' });
+        clearInterval(iv);
+        spinEl.textContent = target;
+        spinEl.style.color = '#f1c40f';
+        spinEl.style.textShadow = '0 0 30px #f1c40f';
+
+        setTimeout(() => {
+          if (room.host === battleMyUid) {
+            db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'playing' });
+          }
+        }, 1800);
+      }, 3000);
+    }
+
+    // ── Question Rendering ───────────────────────────────────────
+    function _handleQuestion(room) {
+      const q = room.currentQ || 0;
+      const questions = room.questions || [];
+
+      if (q !== battleLastQ) {
+        // New question
+        battleLastQ = q;
+        battleAnswered = false;
+        battleCurrentQ = q;
+        battleQStartTime = Date.now();
+
+        if (q >= questions.length) {
+          if (room.host === battleMyUid) db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'finished' });
+          return;
         }
-      }, 1800);
-    }, 3000);
-  }
 
-  // ── Question Rendering ───────────────────────────────────────
-  function _handleQuestion(room) {
-    const q = room.currentQ || 0;
-    const questions = room.questions || [];
+        hideAllViews();
+        document.getElementById('battleView').style.display = 'flex';
 
-    if (q !== battleLastQ) {
-      // New question
-      battleLastQ      = q;
-      battleAnswered   = false;
-      battleCurrentQ   = q;
-      battleQStartTime = Date.now();
+        const qData = questions[q];
+        document.getElementById('battleWordEl').textContent = qData.ar;
+        document.getElementById('battleQCounter').textContent = `${q + 1} / ${questions.length}`;
+        document.getElementById('battleMyScore').textContent = `Score: ${battleMyScore}`;
 
-      if (q >= questions.length) {
-        if (room.host === battleMyUid) db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'finished' });
-        return;
+        const grid = document.getElementById('battleOptions');
+        grid.innerHTML = '';
+        grid.style.pointerEvents = 'auto';
+        document.getElementById('battleWaiting').style.display = 'none';
+
+        qData.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'battle-option-btn';
+          btn.textContent = opt;
+          btn.dataset.idx = idx;
+          btn.onclick = () => _submitAnswer(idx, qData.correctIndex, questions);
+          grid.appendChild(btn);
+        });
+
+        _startTimer(15, () => { if (!battleAnswered) _submitAnswer(-1, qData.correctIndex, questions); });
+      } else {
+        // Same question — check if I've answered
+        const myAns = room.answers?.[q]?.[battleMyUid];
+        if (myAns !== undefined) {
+          _showWaitingUI();
+          if (room.host === battleMyUid) _hostCheckAdvance(room, q);
+        }
       }
+    }
 
-      hideAllViews();
-      document.getElementById('battleView').style.display = 'flex';
+    async function _submitAnswer(chosen, correct, questions) {
+      if (battleAnswered) return;
+      battleAnswered = true;
+      clearInterval(battleTimerIv);
 
-      const qData = questions[q];
-      document.getElementById('battleWordEl').textContent    = qData.ar;
-      document.getElementById('battleQCounter').textContent  = `${q + 1} / ${questions.length}`;
-      document.getElementById('battleMyScore').textContent   = `Score: ${battleMyScore}`;
+      const elapsed = Date.now() - battleQStartTime;
+      let pts = 0;
+      const isOk = chosen === correct;
 
-      const grid = document.getElementById('battleOptions');
-      grid.innerHTML = '';
-      grid.style.pointerEvents = 'auto';
-      document.getElementById('battleWaiting').style.display = 'none';
+      if (chosen === -1) pts = 0;
+      else if (isOk) pts = Math.max(100, Math.round(1000 - (elapsed / 15000) * 900));
+      else pts = -Math.min(400, Math.round(100 + (elapsed / 15000) * 300));
 
-      qData.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'battle-option-btn';
-        btn.textContent = opt;
-        btn.dataset.idx = idx;
-        btn.onclick = () => _submitAnswer(idx, qData.correctIndex, questions);
-        grid.appendChild(btn);
+      battleMyScore += pts;
+
+      // Highlight buttons
+      document.querySelectorAll('.battle-option-btn').forEach((btn, i) => {
+        if (i === chosen && isOk) btn.classList.add('correct');
+        if (i === chosen && !isOk) btn.classList.add('wrong');
+        if (i === correct && !isOk) btn.classList.add('reveal');
       });
 
-      _startTimer(15, () => { if (!battleAnswered) _submitAnswer(-1, qData.correctIndex, questions); });
-    } else {
-      // Same question — check if I've answered
-      const myAns = room.answers?.[q]?.[battleMyUid];
-      if (myAns !== undefined) {
-        _showWaitingUI();
-        if (room.host === battleMyUid) _hostCheckAdvance(room, q);
+      _showPointsPopup(pts);
+      _showWaitingUI();
+
+      await db.ref(`multiplayer_rooms/${battleRoomCode}/answers/${battleCurrentQ}/${battleMyUid}`)
+        .set({ optionIndex: chosen, points: pts, correct: isOk, ts: Date.now() });
+      await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}/score`)
+        .set(battleMyScore);
+    }
+
+    function _showWaitingUI() {
+      document.getElementById('battleOptions').style.pointerEvents = 'none';
+      document.getElementById('battleWaiting').style.display = 'flex';
+    }
+
+    let battleAdvanceGuard = -1; // track which Q we already scheduled advance for
+
+    function _hostCheckAdvance(room, q) {
+      if (battleAdvanceGuard === q) return; // already scheduled for this question
+      const players = room.players || {};
+      const answers = room.answers?.[q] || {};
+      if (Object.keys(answers).length >= Object.keys(players).length) {
+        battleAdvanceGuard = q; // mark so repeated Firebase events don't fire again
+        setTimeout(async () => {
+          const next = q + 1;
+          const total = (room.questions || []).length;
+          if (next >= total) {
+            await db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'finished' });
+          } else {
+            await db.ref(`multiplayer_rooms/${battleRoomCode}/currentQ`).set(next);
+          }
+        }, 2200);
       }
     }
-  }
 
-  async function _submitAnswer(chosen, correct, questions) {
-    if (battleAnswered) return;
-    battleAnswered = true;
-    clearInterval(battleTimerIv);
-
-    const elapsed = Date.now() - battleQStartTime;
-    let pts = 0;
-    const isOk = chosen === correct;
-
-    if (chosen === -1) pts = 0;
-    else if (isOk)    pts = Math.max(100, Math.round(1000 - (elapsed / 15000) * 900));
-    else              pts = -Math.min(400, Math.round(100 + (elapsed / 15000) * 300));
-
-    battleMyScore += pts;
-
-    // Highlight buttons
-    document.querySelectorAll('.battle-option-btn').forEach((btn, i) => {
-      if (i === chosen && isOk)  btn.classList.add('correct');
-      if (i === chosen && !isOk) btn.classList.add('wrong');
-      if (i === correct && !isOk) btn.classList.add('reveal');
-    });
-
-    _showPointsPopup(pts);
-    _showWaitingUI();
-
-    await db.ref(`multiplayer_rooms/${battleRoomCode}/answers/${battleCurrentQ}/${battleMyUid}`)
-      .set({ optionIndex: chosen, points: pts, correct: isOk, ts: Date.now() });
-    await db.ref(`multiplayer_rooms/${battleRoomCode}/players/${battleMyUid}/score`)
-      .set(battleMyScore);
-  }
-
-  function _showWaitingUI() {
-    document.getElementById('battleOptions').style.pointerEvents = 'none';
-    document.getElementById('battleWaiting').style.display = 'flex';
-  }
-
-  let battleAdvanceGuard = -1; // track which Q we already scheduled advance for
-
-  function _hostCheckAdvance(room, q) {
-    if (battleAdvanceGuard === q) return; // already scheduled for this question
-    const players = room.players || {};
-    const answers = room.answers?.[q] || {};
-    if (Object.keys(answers).length >= Object.keys(players).length) {
-      battleAdvanceGuard = q; // mark so repeated Firebase events don't fire again
-      setTimeout(async () => {
-        const next = q + 1;
-        const total = (room.questions || []).length;
-        if (next >= total) {
-          await db.ref(`multiplayer_rooms/${battleRoomCode}`).update({ status: 'finished' });
-        } else {
-          await db.ref(`multiplayer_rooms/${battleRoomCode}/currentQ`).set(next);
-        }
-      }, 2200);
-    }
-  }
-
-  // ── Timer ────────────────────────────────────────────────────
-  function _startTimer(secs, onEnd) {
-    clearInterval(battleTimerIv);
-    const ring = document.getElementById('battleTimerRing');
-    const txt  = document.getElementById('battleTimerText');
-    const C    = 2 * Math.PI * 45; // circumference
-    ring.style.strokeDasharray  = C;
-    ring.style.strokeDashoffset = 0;
-    ring.style.stroke = 'var(--primary)';
-    let rem = secs;
-    txt.textContent = rem;
-
-    battleTimerIv = setInterval(() => {
-      rem--;
+    // ── Timer ────────────────────────────────────────────────────
+    function _startTimer(secs, onEnd) {
+      clearInterval(battleTimerIv);
+      const ring = document.getElementById('battleTimerRing');
+      const txt = document.getElementById('battleTimerText');
+      const C = 2 * Math.PI * 45; // circumference
+      ring.style.strokeDasharray = C;
+      ring.style.strokeDashoffset = 0;
+      ring.style.stroke = 'var(--primary)';
+      let rem = secs;
       txt.textContent = rem;
-      ring.style.strokeDashoffset = C * (1 - rem / secs);
-      ring.style.stroke = rem <= 5 ? '#e74c3c' : 'var(--primary)';
-      if (rem <= 0) { clearInterval(battleTimerIv); onEnd(); }
-    }, 1000);
-  }
 
-  // ── Points Popup ─────────────────────────────────────────────
-  function _showPointsPopup(pts) {
-    const el = document.createElement('div');
-    el.style.cssText = `position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-size:2.8rem;
+      battleTimerIv = setInterval(() => {
+        rem--;
+        txt.textContent = rem;
+        ring.style.strokeDashoffset = C * (1 - rem / secs);
+        ring.style.stroke = rem <= 5 ? '#e74c3c' : 'var(--primary)';
+        if (rem <= 0) { clearInterval(battleTimerIv); onEnd(); }
+      }, 1000);
+    }
+
+    // ── Points Popup ─────────────────────────────────────────────
+    function _showPointsPopup(pts) {
+      const el = document.createElement('div');
+      el.style.cssText = `position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-size:2.8rem;
       font-weight:900;z-index:9999;color:${pts > 0 ? '#2ecc71' : '#e74c3c'};
       text-shadow:0 0 20px currentColor;animation:floatUp 1.5s ease forwards;pointer-events:none;`;
-    el.textContent = pts > 0 ? `+${pts}` : `${pts}`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1600);
-  }
+      el.textContent = pts > 0 ? `+${pts}` : `${pts}`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1600);
+    }
 
-  // ── Final Leaderboard ────────────────────────────────────────
-  function _handleFinal(room) {
-    if (battleFinalDone) return;
-    battleFinalDone = true;
-    clearInterval(battleTimerIv);
+    // ── Final Leaderboard ────────────────────────────────────────
+    function _handleFinal(room) {
+      if (battleFinalDone) return;
+      battleFinalDone = true;
+      clearInterval(battleTimerIv);
 
-    hideAllViews();
-    document.getElementById('battleFinalView').style.display = 'flex';
+      hideAllViews();
+      document.getElementById('battleFinalView').style.display = 'flex';
 
-    const players = Object.entries(room.players || {}).sort((a, b) => b[1].score - a[1].score);
-    const medals  = ['🥇','🥈','🥉'];
-    let html = '';
-    players.slice(0, 5).forEach(([uid, p], i) => {
-      const me = uid === battleMyUid;
-      html += `<div class="battle-lb-row ${me ? 'me' : ''}">
-        <span>${medals[i] || (i+1)+'.'} ${p.name}${me ? ' <span style="font-size:0.75rem;opacity:0.6;">(You)</span>' : ''}</span>
+      const players = Object.entries(room.players || {}).sort((a, b) => b[1].score - a[1].score);
+      const medals = ['🥇', '🥈', '🥉'];
+      let html = '';
+      players.slice(0, 5).forEach(([uid, p], i) => {
+        const me = uid === battleMyUid;
+        html += `<div class="battle-lb-row ${me ? 'me' : ''}">
+        <span>${medals[i] || (i + 1) + '.'} ${p.name}${me ? ' <span style="font-size:0.75rem;opacity:0.6;">(You)</span>' : ''}</span>
         <span style="font-weight:800;color:var(--accent);">${p.score >= 0 ? '+' : ''}${p.score} pts</span>
       </div>`;
-    });
-    document.getElementById('battleFinalLeaderboard').innerHTML = html;
+      });
+      document.getElementById('battleFinalLeaderboard').innerHTML = html;
 
-    if (battleIsHost) document.getElementById('battlePlayAgainBtn').style.display = 'block';
+      if (battleIsHost) document.getElementById('battlePlayAgainBtn').style.display = 'block';
 
-    // 10-second countdown then auto-cleanup
-    let t = 10;
-    const fill = document.getElementById('battleCountdownFill');
-    document.getElementById('battleCountdown').textContent = t;
-    fill.style.transition = 'none'; fill.style.width = '100%';
-    requestAnimationFrame(() => {
-      fill.style.transition = 'width 10s linear'; fill.style.width = '0%';
-    });
-
-    clearInterval(battleCdInterval);
-    battleCdInterval = setInterval(async () => {
-      t--;
+      // 10-second countdown then auto-cleanup
+      let t = 10;
+      const fill = document.getElementById('battleCountdownFill');
       document.getElementById('battleCountdown').textContent = t;
-      if (t <= 0) {
-        clearInterval(battleCdInterval);
-        await _cleanupRoom();
-        openBattleLobby();
-      }
-    }, 1000);
-  }
+      fill.style.transition = 'none'; fill.style.width = '100%';
+      requestAnimationFrame(() => {
+        fill.style.transition = 'width 10s linear'; fill.style.width = '0%';
+      });
 
-  // ── Play Again ───────────────────────────────────────────────
-  async function battlePlayAgain() {
-    clearInterval(battleCdInterval);
-    const oldCode = battleRoomCode;
-    const newCode = genRoomCode();
-
-    if (battleRoomRef) { battleRoomRef.off(); battleRoomRef = null; }
-    if (oldCode) { try { await db.ref(`multiplayer_rooms/${oldCode}`).remove(); } catch(e){} }
-
-    battleRoomCode  = newCode;
-    battleIsHost    = true;
-    battleFinalDone = false;
-    battleSpinDone  = false;
-    battleLastQ     = -1;
-    battleMyScore   = 0;
-    battleAnswered  = false;
-
-    await db.ref(`multiplayer_rooms/${newCode}`).set({
-      host: battleMyUid,
-      status: 'waiting',
-      createdAt: Date.now(),
-      players: { [battleMyUid]: { name: getBattleName(), ready: false, score: 0 } }
-    });
-
-    _showWaitingRoom(newCode);
-    _listenRoom(newCode);
-  }
-
-  function battleReturnToMap() {
-    clearInterval(battleCdInterval);
-    _cleanupRoom().then(() => {
-      hideAllViews();
-      document.getElementById('mapView').style.display = 'flex';
-    });
-  }
-
-  // ── Helpers ──────────────────────────────────────────────────
-  async function _cleanupRoom() {
-    if (battleRoomRef) { battleRoomRef.off(); battleRoomRef = null; }
-    if (battleRoomCode) {
-      try { await db.ref(`multiplayer_rooms/${battleRoomCode}`).remove(); } catch(e){}
+      clearInterval(battleCdInterval);
+      battleCdInterval = setInterval(async () => {
+        t--;
+        document.getElementById('battleCountdown').textContent = t;
+        if (t <= 0) {
+          clearInterval(battleCdInterval);
+          await _cleanupRoom();
+          openBattleLobby();
+        }
+      }, 1000);
     }
-    _resetBattleState();
-  }
 
-  function _resetBattleState() {
-    battleRoomCode      = null;
-    battleIsHost        = false;
-    battleMyScore       = 0;
-    battleAnswered      = false;
-    battleCurrentQ      = 0;
-    battleLastQ         = -1;
-    battleSpinDone      = false;
-    battleFinalDone     = false;
-    battleCountdownDone = false;
-    battleAdvanceGuard  = -1;
-    clearInterval(battleTimerIv);
-    clearInterval(battleCdInterval);
-  }
+    // ── Play Again ───────────────────────────────────────────────
+    async function battlePlayAgain() {
+      clearInterval(battleCdInterval);
+      const oldCode = battleRoomCode;
+      const newCode = genRoomCode();
+
+      if (battleRoomRef) { battleRoomRef.off(); battleRoomRef = null; }
+      if (oldCode) { try { await db.ref(`multiplayer_rooms/${oldCode}`).remove(); } catch (e) { } }
+
+      battleRoomCode = newCode;
+      battleIsHost = true;
+      battleFinalDone = false;
+      battleSpinDone = false;
+      battleLastQ = -1;
+      battleMyScore = 0;
+      battleAnswered = false;
+
+      await db.ref(`multiplayer_rooms/${newCode}`).set({
+        host: battleMyUid,
+        status: 'waiting',
+        createdAt: Date.now(),
+        players: { [battleMyUid]: { name: getBattleName(), ready: false, score: 0 } }
+      });
+
+      _showWaitingRoom(newCode);
+      _listenRoom(newCode);
+    }
+
+    function battleReturnToMap() {
+      clearInterval(battleCdInterval);
+      _cleanupRoom().then(() => {
+        hideAllViews();
+        document.getElementById('mapView').style.display = 'flex';
+      });
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────
+    async function _cleanupRoom() {
+      if (battleRoomRef) { battleRoomRef.off(); battleRoomRef = null; }
+      if (battleRoomCode) {
+        try { await db.ref(`multiplayer_rooms/${battleRoomCode}`).remove(); } catch (e) { }
+      }
+      _resetBattleState();
+    }
+
+    function _resetBattleState() {
+      battleRoomCode = null;
+      battleIsHost = false;
+      battleMyScore = 0;
+      battleAnswered = false;
+      battleCurrentQ = 0;
+      battleLastQ = -1;
+      battleSpinDone = false;
+      battleFinalDone = false;
+      battleCountdownDone = false;
+      battleAdvanceGuard = -1;
+      clearInterval(battleTimerIv);
+      clearInterval(battleCdInterval);
+    }
+
+    // Speech Recognition removed
 
   </script>
 

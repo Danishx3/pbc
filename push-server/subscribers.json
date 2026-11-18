@@ -1,0 +1,36 @@
+[
+  {
+    "subscription": {
+      "endpoint": "https://fcm.googleapis.com/fcm/send/e5-VVMRnXM8:APA91bEigyAeRkh4L5W5cu48PXF0silx5V8pXaLA00ABIVRVd3l7qc56BkDsAo7uORNR2xM638HorSmLwPwXowt8AXbSs6vpoeymG5Tecj4HteUubEaDhYHV0Qm40XZnOZCtwIttyRMd",
+      "expirationTime": null,
+      "keys": {
+        "p256dh": "BKEoAjnEYrmoUIvX0CavJqZYrT1oVVhvhFQirFXQsCkfa0Md64DhxHvZkCPYwhed_1kcWoPCELdRimvZutNxzUU",
+        "auth": "sVwBfoPzhHtkTGma05SwpA"
+      }
+    },
+    "timings": {
+      "Fajr": "05:07",
+      "Sunrise": "06:20",
+      "Dhuhr": "12:10",
+      "Asr": "15:30",
+      "Sunset": "17:59",
+      "Maghrib": "17:59",
+      "Isha": "19:13",
+      "Imsak": "04:57",
+      "Midnight": "00:10",
+      "Firstthird": "22:06",
+      "Lastthird": "02:13"
+    },
+    "prayers": [
+      "Dhuhr",
+      "Asr",
+      "Maghrib",
+      "Isha",
+      "Fajr"
+    ],
+    "timezone": "Asia/Calcutta",
+    "tone": "standard",
+    "lastUpdated": "2026-11-18T15:03:01.279Z",
+    "lastNotified": {}
+  }
+]

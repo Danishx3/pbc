@@ -17,16 +17,64 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
-    <script src="auth.js"></script>
     <script src="guest-utils.js"></script>
     <style>
         :root {
             --bg-deep: #00060f;
             --card-bg: rgba(13, 86, 79, 0.2);
             --highlight: #afe9da;
+            --highlight-contrast: #061916;
             --text-muted: #a0aec0;
             --text-main: #ffffff;
             --border-glow: rgba(175, 233, 218, 0.4);
+            --setting-card-bg: rgba(255, 255, 255, 0.04);
+            --setting-card-border: rgba(175, 233, 218, 0.15);
+            --input-bg: rgba(0, 0, 0, 0.4);
+            --input-border: rgba(175, 233, 218, 0.25);
+            --input-text: #ffffff;
+            --pill-bg: rgba(255, 255, 255, 0.08);
+            --pill-border: rgba(255, 255, 255, 0.2);
+            --pill-text: rgba(255, 255, 255, 0.85);
+            --pill-active-bg: rgba(175, 233, 218, 0.25);
+            --pill-active-border: #afe9da;
+            --pill-active-text: #afe9da;
+            --toggle-bg: rgba(255, 255, 255, 0.25);
+            --toggle-checked-bg: #afe9da;
+            --info-box-bg: rgba(13, 86, 79, 0.28);
+            --info-box-border: #afe9da;
+            --info-box-text: rgba(255, 255, 255, 0.92);
+        }
+
+        /* Light Theme System Adaptation */
+        body.black1,
+        body.light-theme,
+        [data-theme="light"],
+        [data-theme="light"] body {
+            --bg-deep: #f8fafc;
+            --card-bg: #ffffff;
+            --highlight: #0d564f;
+            --highlight-contrast: #ffffff;
+            --text-muted: #475569;
+            --text-main: #0f172a;
+            --border-glow: rgba(13, 86, 79, 0.25);
+            --setting-card-bg: #ffffff;
+            --setting-card-border: #cbd5e1;
+            --input-bg: #ffffff;
+            --input-border: #94a3b8;
+            --input-text: #0f172a;
+            --pill-bg: #f8fafc;
+            --pill-border: #94a3b8;
+            --pill-text: #1e293b;
+            --pill-active-bg: #0d564f;
+            --pill-active-border: #0d564f;
+            --pill-active-text: #ffffff;
+            --toggle-bg: #cbd5e1;
+            --toggle-checked-bg: #0d564f;
+            --info-box-bg: #ecfdf5;
+            --info-box-border: #0d564f;
+            --info-box-text: #064e3b;
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
         }
 
         body.black {
@@ -38,6 +86,13 @@
             background-attachment: fixed;
             font-family: 'Anek Latin', sans-serif;
             color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        body.black1 {
+            background-color: #f8fafc;
+            font-family: 'Anek Latin', sans-serif;
+            color: #0f172a;
             min-height: 100vh;
         }
 
@@ -71,13 +126,20 @@
             text-shadow: 0 0 20px rgba(175, 233, 218, 0.3);
         }
 
+        body.black1 .next-prayer-title,
+        body.light-theme .next-prayer-title,
+        [data-theme="light"] .next-prayer-title {
+            text-shadow: none;
+            color: #0d564f;
+        }
+
         .countdown-timer-large {
             font-size: 4.5rem;
             font-weight: 700;
             letter-spacing: -1px;
             margin: 10px 0;
             font-family: 'Anek Latin', sans-serif;
-            color: white;
+            color: var(--text-main);
         }
 
         /* Circular Progress Mockup */
@@ -118,7 +180,12 @@
         .date-divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid rgba(175, 233, 218, 0.1);
+            border-bottom: 1px solid rgba(175, 233, 218, 0.15);
+        }
+
+        body.black1 .date-divider::before,
+        body.black1 .date-divider::after {
+            border-bottom-color: rgba(13, 86, 79, 0.2);
         }
 
         .date-divider:not(:empty)::before {
@@ -149,12 +216,21 @@
             backdrop-filter: blur(5px);
         }
 
+        body.black1 .prayer-row,
+        body.light-theme .prayer-row,
+        [data-theme="light"] .prayer-row {
+            border-color: #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            color: #0f172a;
+        }
+
         .prayer-row.active {
             background: linear-gradient(135deg, #0d564f, #063e39);
             border-color: var(--highlight);
             box-shadow: 0 8px 25px rgba(13, 86, 79, 0.5);
             transform: scale(1.03);
             z-index: 2;
+            color: #ffffff !important;
         }
 
         .prayer-row.next {
@@ -162,8 +238,16 @@
             background: rgba(13, 86, 79, 0.3);
         }
 
+        body.black1 .prayer-row.next,
+        body.light-theme .prayer-row.next,
+        [data-theme="light"] .prayer-row.next {
+            border-color: #0d564f;
+            background: rgba(13, 86, 79, 0.08);
+            color: #0d564f;
+        }
+
         .prayer-row.past {
-            opacity: 0.4;
+            opacity: 0.45;
             transform: scale(0.98);
         }
 
@@ -181,32 +265,39 @@
         }
 
         .settings-panel {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: white;
-            padding: 20px;
-            border-radius: 18px;
+            background: var(--setting-card-bg);
+            border: 1px solid var(--setting-card-border);
+            color: var(--text-main);
+            padding: 24px;
+            border-radius: 20px;
             margin-top: 40px;
             margin-bottom: 40px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
         }
 
         .form-control-custom {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(175, 233, 218, 0.2);
-            color: #ffffff !important;
+            background: var(--input-bg) !important;
+            border: 1.5px solid var(--input-border) !important;
+            color: var(--input-text) !important;
             border-radius: 12px;
             padding: 12px 15px;
+            font-weight: 500;
+        }
+
+        .form-control-custom option {
+            background: var(--card-bg);
+            color: var(--text-main);
         }
 
         .form-control-custom::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-muted);
+            opacity: 0.7;
         }
 
         .form-control-custom:focus {
-            background: rgba(0, 0, 0, 0.5);
-            border-color: var(--highlight);
-            box-shadow: 0 0 10px rgba(175, 233, 218, 0.2);
-            color: #ffffff !important;
+            border-color: var(--highlight) !important;
+            box-shadow: 0 0 0 3px rgba(13, 86, 79, 0.2) !important;
+            color: var(--input-text) !important;
         }
 
         .location-badge {
@@ -219,16 +310,442 @@
             color: var(--highlight);
             margin-top: 15px;
         }
+
+        body.black1 .location-badge,
+        body.light-theme .location-badge,
+        [data-theme="light"] .location-badge {
+            background: rgba(13, 86, 79, 0.1);
+            border-color: rgba(13, 86, 79, 0.25);
+            color: #0d564f;
+            font-weight: 600;
+        }
+
+        /* Settings Switches & Badges */
+        .setting-item-card {
+            background: var(--setting-card-bg);
+            border: 1.5px solid var(--setting-card-border);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 15px;
+            text-align: left;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .setting-item-card:hover {
+            border-color: var(--highlight);
+        }
+
+        .setting-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .setting-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(13, 86, 79, 0.1);
+            color: #0d564f;
+            font-size: 1.15rem;
+            border: 1px solid rgba(13, 86, 79, 0.2);
+            flex-shrink: 0;
+        }
+
+        body.black .setting-icon-box {
+            background: rgba(175, 233, 218, 0.12);
+            color: var(--highlight);
+            border-color: rgba(175, 233, 218, 0.2);
+        }
+
+        .setting-title {
+            font-weight: 700;
+            font-size: 0.98rem;
+            color: var(--text-main);
+        }
+
+        .setting-status-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .setting-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .setting-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            display: block;
+            text-align: left;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--toggle-bg);
+            border: 1.5px solid #94a3b8;
+            transition: 0.3s;
+            border-radius: 34px;
+        }
+
+        body.black .toggle-slider {
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 2.5px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background-color: var(--toggle-checked-bg);
+            border-color: var(--toggle-checked-bg);
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(21px);
+        }
+
+        .status-badge {
+            font-size: 0.72rem;
+            padding: 2px 9px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .status-badge.active {
+            background: rgba(22, 163, 74, 0.15);
+            color: #15803d;
+            border: 1px solid rgba(22, 163, 74, 0.4);
+        }
+
+        .status-badge.inactive {
+            background: rgba(100, 116, 139, 0.15);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.35);
+        }
+
+        body.black .status-badge.active {
+            background: rgba(46, 213, 115, 0.2);
+            color: #2ed573;
+            border: 1px solid rgba(46, 213, 115, 0.4);
+        }
+
+        body.black .status-badge.inactive {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .prayer-toggles-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1.5px solid var(--setting-card-border);
+            border-radius: 14px;
+            padding: 6px 14px;
+        }
+
+        body.black1 .prayer-toggles-container,
+        body.light-theme .prayer-toggles-container,
+        [data-theme="light"] .prayer-toggles-container {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }
+
+        .prayer-toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 4px;
+        }
+
+        .prayer-toggle-item:not(:last-child) {
+            border-bottom: 1px solid var(--setting-card-border);
+        }
+
+        body.black1 .prayer-toggle-item:not(:last-child),
+        body.light-theme .prayer-toggle-item:not(:last-child),
+        [data-theme="light"] .prayer-toggle-item:not(:last-child) {
+            border-bottom-color: #e2e8f0;
+        }
+
+        .prayer-toggle-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-switch-sm {
+            width: 44px;
+            height: 25px;
+        }
+
+        .toggle-switch-sm .toggle-slider:before {
+            height: 17px;
+            width: 17px;
+            left: 3px;
+            bottom: 2.5px;
+        }
+
+        .toggle-switch-sm input:checked+.toggle-slider:before {
+            transform: translateX(19px);
+        }
+
+        .btn-alarm-test {
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            border: 1.5px solid var(--highlight);
+            color: var(--highlight);
+            background: transparent;
+        }
+
+        .btn-alarm-test:hover {
+            background: var(--highlight);
+            color: var(--highlight-contrast);
+        }
+
+        .btn-alarm-test.ringing {
+            background: #dc2626 !important;
+            border-color: #dc2626 !important;
+            color: #ffffff !important;
+            animation: pulseRed 1s infinite alternate;
+        }
+
+        @keyframes pulseRed {
+            from {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5);
+            }
+
+            to {
+                box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+            }
+        }
+
+        .btn-autodetect {
+            background: rgba(13, 86, 79, 0.08);
+            border: 1.5px solid var(--highlight);
+            color: var(--highlight);
+            border-radius: 12px;
+            padding: 11px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .btn-autodetect:hover {
+            background: var(--highlight);
+            color: var(--highlight-contrast);
+        }
+
+        .btn-update-times {
+            background: var(--highlight);
+            border: 1.5px solid var(--highlight);
+            color: var(--highlight-contrast);
+            border-radius: 12px;
+            padding: 11px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .btn-update-times:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .alarm-info-box {
+            background: var(--info-box-bg);
+            border: 1px solid var(--info-box-border);
+            border-left-width: 4px;
+            padding: 12px 14px;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.79rem;
+            color: var(--info-box-text);
+            margin-top: 12px;
+            line-height: 1.45;
+            text-align: left;
+        }
+
+        .alarm-info-box strong {
+            color: var(--info-box-text);
+        }
+
+        /* Fullscreen Ringing Alarm Modal */
+        .alarm-ringing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(14px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeInOverlay 0.3s ease;
+        }
+
+        .alarm-ringing-overlay.active {
+            display: flex;
+        }
+
+        .alarm-ringing-card {
+            background: linear-gradient(145deg, #0f2d27, #061916);
+            border: 2px solid var(--highlight);
+            border-radius: 28px;
+            max-width: 440px;
+            width: 100%;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(175, 233, 218, 0.35);
+            animation: popInCard 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+        }
+
+        .alarm-bell-wrap {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(175, 233, 218, 0.25) 0%, rgba(13, 86, 79, 0.1) 70%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(175, 233, 218, 0.4);
+            animation: bellRingPulse 1.2s infinite ease-in-out;
+        }
+
+        .alarm-bell-wrap i {
+            font-size: 2.8rem;
+            color: var(--highlight);
+            animation: bellShake 0.8s infinite ease-in-out;
+        }
+
+        @keyframes bellShake {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            20% {
+                transform: rotate(-18deg);
+            }
+
+            40% {
+                transform: rotate(18deg);
+            }
+
+            60% {
+                transform: rotate(-12deg);
+            }
+
+            80% {
+                transform: rotate(12deg);
+            }
+        }
+
+        @keyframes bellRingPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(175, 233, 218, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 0 22px rgba(175, 233, 218, 0);
+            }
+        }
+
+        @keyframes fadeInOverlay {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popInCard {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
-<script src="/theme.js"></script>
+    <script src="/theme.js"></script>
 </head>
 
 <body class="black">
     <header class="fix intro" style="z-index: 1000;">
         <center>
-            <a style="position: fixed; left: 20px; color: rgb(251, 249, 249);" href="/main.html"><i
-                    class="fa fa-home"></i></a>
+            <a style="position: fixed; left: 20px; color: inherit;" href="/main.html"><i class="fa fa-home"></i></a>
             PRAYER TIMES
+            <button type="button" onclick="window.togglePBCTheme && window.togglePBCTheme();"
+                style="position: fixed; right: 20px; top: 12px; background: none; border: none; color: inherit; font-size: 1.15rem; cursor: pointer; padding: 4px;"
+                title="Toggle Theme">
+                <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
+            </button>
         </center>
     </header>
     <br><br><br>
@@ -249,24 +766,26 @@
                 </div>
 
                 <!-- Initial Prompt -->
-                <div id="initialPrompt" style="padding: 80px 0;">
-                    <i class="fas fa-map-marked-alt fa-4x mb-4" style="color: var(--highlight); opacity: 0.5;"></i>
-                    <h3 style="font-weight: 700;">Prayer Times</h3>
-                    <p class="text-white-50">Enter your city below to get accurate<br>salah times for your location.</p>
+                <div id="initialPrompt" style="padding: 80px 0; display: none;">
+                    <i class="fas fa-map-marked-alt fa-4x mb-4" style="color: var(--highlight); opacity: 0.8;"></i>
+                    <h3 style="font-weight: 700; color: var(--text-main);">Prayer Times</h3>
+                    <p style="color: var(--text-muted);">Unable to auto-detect location.<br>Enter your city below to get
+                        accurate times.</p>
                 </div>
 
                 <!-- Loader -->
-                <div id="loader" style="padding: 100px 0; display: none;">
-                    <i class="fa-solid fa-spinner fa-spin fa-3x text-white-50"></i>
-                    <p class="mt-3 text-white-50">Calculating times...</p>
+                <div id="loader" style="padding: 100px 0;">
+                    <i class="fa-solid fa-spinner fa-spin fa-3x" style="color: var(--highlight);"></i>
+                    <p class="mt-3" style="color: var(--text-muted);" id="loaderText">Detecting location & calculating
+                        times...</p>
                 </div>
 
                 <!-- Error -->
                 <div id="errorMsg"
                     style="display: none; padding: 40px; border-radius: 12px; background: rgba(230, 57, 70, 0.1); border: 1px solid var(--highlight);">
                     <i class="fa fa-exclamation-circle fa-2x mb-2" style="color: var(--highlight);"></i>
-                    <h5 id="errorText">Failed to load data</h5>
-                    <button class="btn btn-sm btn-outline-light mt-2" onclick="init()">Retry</button>
+                    <h5 id="errorText" style="color: var(--text-main);">Failed to load data</h5>
+                    <button class="btn btn-sm btn-autodetect mt-2" onclick="autoDetectAndFetchLocation()">Retry</button>
                 </div>
 
                 <!-- Date Divider -->
@@ -320,35 +839,233 @@
 
                 <!-- Settings -->
                 <div class="settings-panel">
+                    <button class="btn btn-autodetect w-100 mb-3" onclick="autoDetectAndFetchLocation()">
+                        <i class="fas fa-location-crosshairs me-2"></i> Auto-Detect My Location
+                    </button>
+
                     <div
-                        style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
-                        Change Location</div>
+                        style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">
+                        Or Search City Manually
+                    </div>
                     <div class="row g-2">
                         <div class="col-6">
-                            <input type="text" id="cityInput" class="form-control form-control-custom white-text"
+                            <input type="text" id="cityInput" class="form-control form-control-custom"
                                 placeholder="City">
                         </div>
                         <div class="col-6">
-                            <input type="text" id="countryInput" class="form-control form-control-custom white-text"
+                            <input type="text" id="countryInput" class="form-control form-control-custom"
                                 placeholder="Country">
                         </div>
                     </div>
-                    <button class="btn btn-outline-light w-100 mt-3"
-                        style="border-radius: 10px; border-color: rgba(255,255,255,0.2);"
-                        onclick="saveAndFetch()">Update Times</button>
-                    
-                    <hr style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-                    
-                    <div style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
-                        Notifications</div>
-                    <p class="mt-2 mb-0" style="font-size: 0.75rem; opacity: 0.7;">
-                        Allow push notifications in your browser to receive prayer time reminders.
-                    </p>
-                    <p class="mt-2 mb-0" style="font-size: 0.75rem; opacity: 0.5;">Method: Karachi Islamic Sciences</p>
+                    <button class="btn btn-update-times w-100 mt-3" onclick="saveAndFetch()">
+                        <i class="fas fa-arrows-rotate me-1"></i> Update Times
+                    </button>
+
+                    <hr style="border-top: 1px solid var(--setting-card-border); margin: 24px 0 18px 0;">
+
+                    <div
+                        style="text-align: left; margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
+                        Notifications & Prayer Alarm
+                    </div>
+
+                    <!-- Web Push Notifications Card -->
+                    <div class="setting-item-card">
+                        <div class="setting-header-flex">
+                            <div class="setting-title-wrap">
+                                <div class="setting-icon-box"><i class="fa-solid fa-bell"></i></div>
+                                <div>
+                                    <div class="setting-title">Web Push Notifications</div>
+                                    <div class="setting-status-sub">
+                                        Status: <span id="notifStatusBadge"
+                                            class="status-badge inactive">Disabled</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pushNotifToggle"
+                                    onchange="togglePushNotifications(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="setting-desc">
+                            Uses Cloud Web Push to wake your phone and deliver notifications with vibrations even when the app is completely closed.
+                        </p>
+                        <div class="mt-2 d-flex flex-column gap-2">
+                            <button id="testPushBtn" type="button" class="btn btn-sm btn-alarm-test w-100"
+                                onclick="sendTestPushClosed()">
+                                <i class="fa-solid fa-paper-plane me-1"></i> Send 5s Test Push (Lock phone to test)
+                            </button>
+                            <div id="pushServerConfigToggle" style="font-size: 0.75rem; color: var(--text-muted); cursor: pointer; text-decoration: underline;" onclick="togglePushConfigUI()">
+                                <i class="fa-solid fa-sliders me-1"></i> Push Server Connection Settings
+                            </div>
+                            <div id="pushServerConfigBox" style="display: none; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.05); font-size: 0.8rem;">
+                                <label style="font-weight: 600; margin-bottom: 4px; display: block; color: var(--text-color);">Push Server URL:</label>
+                                <div class="d-flex gap-2">
+                                    <input type="text" id="pushServerUrlInput" class="form-control form-control-sm form-control-custom"
+                                        placeholder="http://localhost:3000 or https://your-server.onrender.com" />
+                                    <button type="button" class="btn btn-sm btn-autodetect" onclick="savePushServerUrl()">Save</button>
+                                </div>
+                                <div class="form-text" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                                    Default: http://localhost:3000 (or cloud URL when hosted on Render / Railway / Glitch)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prayer Alarm & Adhan Card -->
+                    <div class="setting-item-card">
+                        <div class="setting-header-flex">
+                            <div class="setting-title-wrap">
+                                <div class="setting-icon-box"><i class="fa-solid fa-volume-high"></i></div>
+                                <div>
+                                    <div class="setting-title">Prayer Alarm / Adhan</div>
+                                    <div class="setting-status-sub">
+                                        Status: <span id="alarmStatusBadge"
+                                            class="status-badge inactive">Disabled</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="alarmSoundToggle" onchange="toggleAlarmSound(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Sound Options -->
+                        <div class="mt-3">
+                            <label class="setting-label">Select Adhan Recitation (Mu'adhin)</label>
+                            <div class="d-flex gap-2">
+                                <select id="alarmToneSelect" class="form-control form-control-custom"
+                                    style="padding: 9px 12px; font-size: 0.85rem;"
+                                    onchange="changeAlarmTone(this.value)">
+                                    <option value="makkah">Makkah Al-Haram (Sheikh Ali Mulla)</option>
+                                    <option value="madinah">Madinah Al-Nabawi (Al-Haram Al-Madani)</option>
+                                    <option value="mishary">Mishary Rashid Al-Afasy</option>
+                                    <option value="fajr">Fajr Adhan (As-Salatu Khayrun Minan-Nawm)</option>
+                                    <option value="standard">Traditional Beautiful Adhan</option>
+                                </select>
+                                <button id="testAlarmBtn" type="button" class="btn btn-sm btn-alarm-test text-nowrap"
+                                    onclick="testAlarmToggle()">
+                                    <i class="fas fa-play me-1"></i> Play Adhan
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Prayer Selection Toggles -->
+                        <div class="mt-3">
+                            <label class="setting-label">Ring Alarm for Prayers:</label>
+                            <div class="prayer-toggles-container">
+                                <div class="prayer-toggle-item">
+                                    <span class="prayer-toggle-title">
+                                        <i class="fa-solid fa-cloud-sun me-2" style="color: var(--highlight);"></i> Fajr
+                                    </span>
+                                    <label class="toggle-switch toggle-switch-sm">
+                                        <input type="checkbox" id="togglePrayerFajr" class="prayer-toggle-checkbox"
+                                            data-prayer="Fajr" onchange="togglePrayerSelection('Fajr', this.checked)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="prayer-toggle-item">
+                                    <span class="prayer-toggle-title">
+                                        <i class="fa-solid fa-sun me-2" style="color: var(--highlight);"></i> Dhuhr
+                                    </span>
+                                    <label class="toggle-switch toggle-switch-sm">
+                                        <input type="checkbox" id="togglePrayerDhuhr" class="prayer-toggle-checkbox"
+                                            data-prayer="Dhuhr" onchange="togglePrayerSelection('Dhuhr', this.checked)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="prayer-toggle-item">
+                                    <span class="prayer-toggle-title">
+                                        <i class="fa-solid fa-cloud-sun me-2" style="color: var(--highlight);"></i> Asr
+                                    </span>
+                                    <label class="toggle-switch toggle-switch-sm">
+                                        <input type="checkbox" id="togglePrayerAsr" class="prayer-toggle-checkbox"
+                                            data-prayer="Asr" onchange="togglePrayerSelection('Asr', this.checked)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="prayer-toggle-item">
+                                    <span class="prayer-toggle-title">
+                                        <i class="fa-solid fa-mountain-sun me-2" style="color: var(--highlight);"></i> Maghrib
+                                    </span>
+                                    <label class="toggle-switch toggle-switch-sm">
+                                        <input type="checkbox" id="togglePrayerMaghrib" class="prayer-toggle-checkbox"
+                                            data-prayer="Maghrib" onchange="togglePrayerSelection('Maghrib', this.checked)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="prayer-toggle-item">
+                                    <span class="prayer-toggle-title">
+                                        <i class="fa-solid fa-moon me-2" style="color: var(--highlight);"></i> Isha
+                                    </span>
+                                    <label class="toggle-switch toggle-switch-sm">
+                                        <input type="checkbox" id="togglePrayerIsha" class="prayer-toggle-checkbox"
+                                            data-prayer="Isha" onchange="togglePrayerSelection('Isha', this.checked)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                        <!-- Sync Alarms to Device / Native Calendar (Works 100% when website is closed) -->
+                        <div class="mt-3">
+                            <button class="btn btn-autodetect w-100" type="button" onclick="exportPrayerCalendar()">
+                                <i class="fa-solid fa-calendar-check me-2"></i> Sync Alarms to Phone / Calendar (.ics)
+                            </button>
+                        </div>
+
+                        <!-- Explainer Box -->
+                        <div class="alarm-info-box">
+                            <i class="fas fa-info-circle me-1" style="color: var(--highlight);"></i>
+                            <strong>How Alarms & Notifications work:</strong>
+                            <ul style="margin: 6px 0 0 16px; padding: 0; line-height: 1.5; font-size: 0.78rem;">
+                                <li><strong>When website is open or minimized:</strong> The Adhan alarm rings and vibrates automatically right on schedule.</li>
+                                <li><strong>When website is closed:</strong> Web browsers block background website audio when tabs are closed. Tap <em>"Sync Alarms to Phone"</em> above to add native alarms to your device clock/calendar that ring even when your phone is locked and the website is closed!</li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <p class="mt-2 mb-0" style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.7;">Method:
+                        Karachi Islamic Sciences</p>
                 </div>
 
             </div>
         </center>
+    </div>
+
+    <!-- Ringing Prayer Alarm Modal Overlay -->
+    <div id="alarmRingingModal" class="alarm-ringing-overlay">
+        <div class="alarm-ringing-card">
+            <div class="alarm-bell-wrap">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div
+                style="text-transform: uppercase; letter-spacing: 2.5px; font-size: 0.85rem; color: var(--highlight); font-weight: 600;">
+                Prayer Time Has Arrived
+            </div>
+            <h1 id="ringingPrayerName" style="font-size: 3rem; font-weight: 800; margin: 10px 0 5px 0; color: #ffffff;">
+                Salah
+            </h1>
+            <div id="ringingPrayerTime"
+                style="font-size: 1.25rem; color: rgba(255, 255, 255, 0.75); margin-bottom: 25px;">
+                --:--
+            </div>
+            <button class="btn w-100 mb-2 py-3"
+                style="background: var(--highlight); color: #042420; font-weight: 700; border-radius: 14px; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(175, 233, 218, 0.4);"
+                onclick="stopPrayerAlarm()">
+                <i class="fas fa-volume-xmark me-2"></i> Dismiss / Stop Alarm
+            </button>
+            <a href="/adhkar.html" class="btn btn-outline-light w-100 py-2"
+                style="border-radius: 14px; font-size: 0.9rem; border-color: rgba(255, 255, 255, 0.2);"
+                onclick="stopPrayerAlarm()">
+                <i class="fas fa-book-open me-2"></i> Open Daily Adhkar
+            </a>
+        </div>
     </div>
 
     <script src="pbc.js"></script>
@@ -361,21 +1078,37 @@
         let currentTimings = null;
         let countdownInterval = null;
 
+        // Alarm & Push Settings State
+        const ALARM_STORAGE_KEY = 'prayer_alarm_settings_v1';
+        let alarmSettings = {
+            pushEnabled: false,
+            alarmEnabled: false,
+            tone: 'makkah',
+            prayers: ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+        };
+
+        let currentAudioElement = null;
+        let isAlarmRinging = false;
+
         // Hardcoded Method: 1 = University of Islamic Sciences, Karachi
         const CALCULATION_METHOD = 1;
 
         document.addEventListener('DOMContentLoaded', () => {
             loadSettings();
-            init();
-            initPrayerPushNotifications();
+            initAlarmAndNotificationSettings();
+            checkUrlAlarmParam();
+            // Automatically detect & fetch based on location on page load
+            autoDetectAndFetchLocation(false);
         });
 
         function loadSettings() {
-            const saved = localStorage.getItem('prayerSettings_v4'); // v4 for manual-only
+            const saved = localStorage.getItem('prayerSettings_v4');
             if (saved) {
-                userSettings = JSON.parse(saved);
-                document.getElementById('cityInput').value = userSettings.city || '';
-                document.getElementById('countryInput').value = userSettings.country || '';
+                try {
+                    userSettings = JSON.parse(saved);
+                    if (userSettings.city) document.getElementById('cityInput').value = userSettings.city;
+                    if (userSettings.country) document.getElementById('countryInput').value = userSettings.country;
+                } catch (e) { }
             }
         }
 
@@ -385,8 +1118,206 @@
             localStorage.setItem('prayerSettings_v4', JSON.stringify(userSettings));
         }
 
-        function init() {
-            if (userSettings.city) fetchManualTimes();
+        // Auto-detect location via GPS or Network IP
+        function autoDetectAndFetchLocation(isUserClick = false) {
+            const loader = document.getElementById('loader');
+            const loaderText = document.getElementById('loaderText');
+            const prayerData = document.getElementById('prayerData');
+            const countdownArea = document.getElementById('countdownArea');
+            const initialPrompt = document.getElementById('initialPrompt');
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (prayerData) prayerData.style.display = 'none';
+            if (countdownArea) countdownArea.style.display = 'none';
+            if (initialPrompt) initialPrompt.style.display = 'none';
+            if (errorMsg) errorMsg.style.display = 'none';
+            if (loader) {
+                loader.style.display = 'block';
+                if (loaderText) loaderText.innerText = isUserClick ? "Requesting location access..." : "Detecting your location...";
+            }
+
+            // Check if browser geolocation is supported
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        const lat = pos.coords.latitude;
+                        const lon = pos.coords.longitude;
+                        if (loaderText) loaderText.innerText = "Calculating prayer times...";
+
+                        // Reverse geocode to get city name for badge & inputs
+                        const locationName = await reverseGeocode(lat, lon);
+                        fetchTimesByCoords(lat, lon, locationName);
+                    },
+                    (err) => {
+                        console.warn("Browser GPS not available or permission denied (code " + err.code + "). Falling back to network IP location.");
+                        fallbackIpLocation();
+                    },
+                    { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 }
+                );
+            } else {
+                fallbackIpLocation();
+            }
+        }
+
+        // Fast & reliable multi-provider network IP fallback
+        async function fallbackIpLocation() {
+            const loaderText = document.getElementById('loaderText');
+            if (loaderText) loaderText.innerText = "Detecting location via network...";
+
+            // Provider 1: GeoJS (Free, HTTPS, CORS, no rate limit)
+            try {
+                const res = await fetch('https://get.geojs.io/v1/ip/geo.json');
+                const data = await res.json();
+                if (data && data.latitude && data.longitude) {
+                    const lat = parseFloat(data.latitude);
+                    const lon = parseFloat(data.longitude);
+                    const city = data.city || '';
+                    const country = data.country || '';
+                    const locationName = city ? `${city}, ${country}` : (country || "Local Area");
+
+                    document.getElementById('cityInput').value = city;
+                    document.getElementById('countryInput').value = country;
+                    saveSettings();
+
+                    fetchTimesByCoords(lat, lon, locationName);
+                    return;
+                }
+            } catch (e) {
+                console.warn("GeoJS error:", e);
+            }
+
+            // Provider 2: FreeIPAPI (CORS, fast)
+            try {
+                const res = await fetch('https://freeipapi.com/api/json');
+                const data = await res.json();
+                if (data && data.latitude && data.longitude) {
+                    const lat = parseFloat(data.latitude);
+                    const lon = parseFloat(data.longitude);
+                    const city = data.cityName || '';
+                    const country = data.countryName || '';
+                    const locationName = city ? `${city}, ${country}` : (country || "Local Area");
+
+                    document.getElementById('cityInput').value = city;
+                    document.getElementById('countryInput').value = country;
+                    saveSettings();
+
+                    fetchTimesByCoords(lat, lon, locationName);
+                    return;
+                }
+            } catch (e) {
+                console.warn("FreeIPAPI error:", e);
+            }
+
+            // Provider 3: IPWho.is
+            try {
+                const res = await fetch('https://ipwho.is/');
+                const data = await res.json();
+                if (data && data.success && data.latitude && data.longitude) {
+                    const lat = data.latitude;
+                    const lon = data.longitude;
+                    const city = data.city || '';
+                    const country = data.country || '';
+                    const locationName = city ? `${city}, ${country}` : (country || "Local Area");
+
+                    document.getElementById('cityInput').value = city;
+                    document.getElementById('countryInput').value = country;
+                    saveSettings();
+
+                    fetchTimesByCoords(lat, lon, locationName);
+                    return;
+                }
+            } catch (e) {
+                console.warn("ipwho.is error:", e);
+            }
+
+            // Provider 4: IPAPI.co
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                if (data && data.latitude && data.longitude) {
+                    const lat = data.latitude;
+                    const lon = data.longitude;
+                    const city = data.city || '';
+                    const country = data.country_name || '';
+                    const locationName = city ? `${city}, ${country}` : (country || "Local Area");
+
+                    document.getElementById('cityInput').value = city;
+                    document.getElementById('countryInput').value = country;
+                    saveSettings();
+
+                    fetchTimesByCoords(lat, lon, locationName);
+                    return;
+                }
+            } catch (e) {
+                console.warn("ipapi.co error:", e);
+            }
+
+            // Fallback 5: Manually saved city if present
+            if (userSettings.city) {
+                fetchManualTimes();
+                return;
+            }
+
+            // If all detection fails, show prompt to type manually
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('initialPrompt').style.display = 'block';
+        }
+
+        // Reverse geocoding helper
+        async function reverseGeocode(lat, lon) {
+            try {
+                const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const city = data.city || data.locality || data.principalSubdivision || '';
+                    const country = data.countryName || '';
+                    if (city) {
+                        document.getElementById('cityInput').value = city;
+                        document.getElementById('countryInput').value = country;
+                        saveSettings();
+                        return country ? `${city}, ${country}` : city;
+                    }
+                }
+            } catch (e) {
+                console.warn("BigDataCloud error:", e);
+            }
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const addr = data.address || {};
+                    const city = addr.city || addr.town || addr.village || addr.suburb || addr.state_district || '';
+                    const country = addr.country || '';
+                    if (city) {
+                        document.getElementById('cityInput').value = city;
+                        document.getElementById('countryInput').value = country;
+                        saveSettings();
+                        return country ? `${city}, ${country}` : city;
+                    }
+                }
+            } catch (e) {
+                console.warn("Nominatim error:", e);
+            }
+
+            return "Current Location";
+        }
+
+        // Fetch prayer times using exact coordinates
+        function fetchTimesByCoords(lat, lon, locationName) {
+            userSettings.lat = lat;
+            userSettings.lon = lon;
+            userSettings.locationName = locationName;
+            localStorage.setItem('prayerSettings_v4', JSON.stringify(userSettings));
+
+            const apiUrl = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${CALCULATION_METHOD}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => handleApiResponse(data, locationName))
+                .catch(err => {
+                    handleApiError(err);
+                });
         }
 
         function saveAndFetch() {
@@ -400,7 +1331,6 @@
 
         function getCommonDateString() {
             const date = new Date();
-            // Using DD-MM-YYYY
             const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
@@ -408,9 +1338,10 @@
         }
 
         function fetchManualTimes() {
-            const city = document.getElementById('cityInput').value;
-            const country = document.getElementById('countryInput').value;
+            const city = document.getElementById('cityInput').value.trim();
+            const country = document.getElementById('countryInput').value.trim();
             const loader = document.getElementById('loader');
+            const loaderText = document.getElementById('loaderText');
             const prayerData = document.getElementById('prayerData');
             const errorMsg = document.getElementById('errorMsg');
             const initialPrompt = document.getElementById('initialPrompt');
@@ -420,7 +1351,10 @@
             prayerData.style.display = 'none';
             errorMsg.style.display = 'none';
             initialPrompt.style.display = 'none';
-            loader.style.display = 'block';
+            if (loader) {
+                loader.style.display = 'block';
+                if (loaderText) loaderText.innerText = `Fetching times for ${city}...`;
+            }
 
             const countdownArea = document.getElementById('countdownArea');
             if (countdownArea) countdownArea.style.display = 'none';
@@ -429,15 +1363,18 @@
 
             fetch(apiUrl)
                 .then(response => response.json())
-                .then(data => handleApiResponse(data))
+                .then(data => handleApiResponse(data, `${city}${country ? ', ' + country : ''}`))
                 .catch(err => {
                     handleApiError(err);
                 });
         }
 
-        function handleApiResponse(data) {
+        function handleApiResponse(data, locationName) {
             if (data.code === 200 && data.data) {
-                displayTimes(data.data);
+                const now = new Date();
+                const todayStr = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+                localStorage.setItem('prayer_cached_timings', JSON.stringify({ date: todayStr, timings: data.data.timings }));
+                displayTimes(data.data, locationName);
             } else {
                 throw new Error("API call failed or returned no data");
             }
@@ -451,7 +1388,7 @@
             document.getElementById('errorText').innerText = "Failed to fetch prayer data. " + err.message;
         }
 
-        function displayTimes(data) {
+        function displayTimes(data, locationName) {
             const timings = data.timings;
 
             // Format for display
@@ -468,9 +1405,11 @@
             }
 
             // Update UI components
-            const city = document.getElementById('cityInput').value;
-            const country = document.getElementById('countryInput').value;
-            document.getElementById('locText').innerText = `${city}${country ? ', ' + country : ''}`;
+            const city = document.getElementById('cityInput').value.trim();
+            const country = document.getElementById('countryInput').value.trim();
+            const fallbackLoc = city ? `${city}${country ? ', ' + country : ''}` : '';
+            const displayLoc = locationName || fallbackLoc || (data.meta && data.meta.timezone ? data.meta.timezone.replace(/_/g, ' ') : 'Current Location');
+            document.getElementById('locText').innerHTML = `<i class="fa fa-map-marker-alt me-1"></i> ${displayLoc}`;
 
             // Today's Date
             const now = new Date();
@@ -485,13 +1424,31 @@
             document.getElementById('dateDivider').style.display = 'flex';
 
             currentTimings = timings;
+            scheduleAlarmsWithServiceWorker(timings);
+            if (alarmSettings && alarmSettings.pushEnabled) {
+                syncPushSubscriptionWithServer();
+            }
             startCountdown();
         }
 
+        let timerWorker = null;
         function startCountdown() {
             if (countdownInterval) clearInterval(countdownInterval);
             updateCountdown();
             countdownInterval = setInterval(updateCountdown, 1000);
+
+            // Background Web Worker ensures ticking even if tab is minimized in background
+            if (!timerWorker && window.Worker && window.Blob) {
+                try {
+                    const blob = new Blob([
+                        'setInterval(function() { postMessage("tick"); }, 1000);'
+                    ], { type: 'application/javascript' });
+                    timerWorker = new Worker(URL.createObjectURL(blob));
+                    timerWorker.onmessage = function () {
+                        updateCountdown();
+                    };
+                } catch (e) { }
+            }
         }
 
         function updateCountdown() {
@@ -566,43 +1523,60 @@
             document.getElementById('countdownTimerLarge').innerText =
                 `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-            
-            // Notification Check
-            if ('Notification' in window && Notification.permission === 'granted' && (!window.isGuestMode || !isGuestMode())) {
-                const nowTotalMin = now.getHours() * 60 + now.getMinutes();
-                
-                prayerSequence.forEach(prayer => {
-                    const pTimeStr = prayer.time.split(' ')[0];
-                    const [pH, pM] = pTimeStr.split(':').map(Number);
-                    const prayerTotalMin = pH * 60 + pM;
 
-                    // Trigger if we are exactly at prayer time, or up to 15 mins after
-                    // (helps if the tab was frozen/throttled during the exact minute)
-                    if (nowTotalMin >= prayerTotalMin && nowTotalMin <= prayerTotalMin + 15) {
-                        const logicalDate = getCommonDateString();
-                        const lastNotifiedKey = `prayer_last_notified_${prayer.name}_${logicalDate}`;
-                        if (!localStorage.getItem(lastNotifiedKey)) {
-                            sendNotification(`Time for ${prayer.name}`, `It is currently time for ${prayer.name} prayer. Tap to open.`);
-                            localStorage.setItem(lastNotifiedKey, 'true');
+            // 4. Prayer Alarm & Notification Check
+            const nowTotalMin = now.getHours() * 60 + now.getMinutes();
+            const currentAlarmSettings = getAlarmSettings();
+
+            prayerSequence.forEach(prayer => {
+                if (prayer.name === 'Sunrise') return; // Only Salah prayers
+                const pTimeStr = prayer.time.split(' ')[0];
+                const [pH, pM] = pTimeStr.split(':').map(Number);
+                const prayerTotalMin = pH * 60 + pM;
+
+                // Trigger if we are within the prayer time window
+                if (nowTotalMin >= prayerTotalMin && nowTotalMin <= prayerTotalMin + 15) {
+                    const logicalDate = getCommonDateString();
+                    const lastNotifiedKey = `prayer_last_notified_${prayer.name}_${logicalDate}`;
+                    if (!localStorage.getItem(lastNotifiedKey)) {
+                        localStorage.setItem(lastNotifiedKey, 'true');
+
+                        const isPrayerSelected = !currentAlarmSettings.prayers || currentAlarmSettings.prayers.includes(prayer.name);
+
+                        // Web push notification
+                        if (currentAlarmSettings.pushEnabled && 'Notification' in window && Notification.permission === 'granted') {
+                            sendNotification(`Time for ${prayer.name} Prayer`, `It is time for ${prayer.name} prayer. Tap to open and sound the Adhan alarm.`, prayer.name);
+                        }
+
+                        // Audible alarm if tab is open/active
+                        if (currentAlarmSettings.alarmEnabled && isPrayerSelected) {
+                            triggerPrayerAlarm(prayer.name, prayer.time);
                         }
                     }
-                });
-            }
+                }
+            });
         }
 
-        function sendNotification(title, body) {
+        function sendNotification(title, body, prayerName) {
             if ('Notification' in window && Notification.permission === 'granted') {
+                const targetUrl = `/times.html?ring=1&prayer=${encodeURIComponent(prayerName || 'Salah')}`;
                 if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    navigator.serviceWorker.register('/sw.js').then(function (registration) {
                         registration.showNotification(title, {
                             body: body,
                             icon: '/logoo.png',
                             badge: '/logoo.png',
-                            vibrate: [200, 100, 200, 100, 200],
-                            tag: 'prayer-reminder',
-                            data: { url: '/times.html' }
+                            vibrate: [500, 200, 500, 200, 500, 200, 500, 200, 1000],
+                            tag: 'prayer-alarm-' + (prayerName || 'salah'),
+                            renotify: true,
+                            requireInteraction: true,
+                            data: { url: targetUrl },
+                            actions: [
+                                { action: 'ring', title: '🔊 Open & Sound Alarm' },
+                                { action: 'dismiss', title: 'Dismiss' }
+                            ]
                         });
-                    }).catch(function() {
+                    }).catch(function () {
                         new Notification(title, { body: body, icon: '/logoo.png' });
                     });
                 } else {
@@ -682,7 +1656,7 @@
 
             return `${hours}:${minutes} ${ampm}`;
         }
-        
+
         async function initPrayerPushNotifications() {
             if (!('Notification' in window)) return;
 
@@ -697,9 +1671,623 @@
                 }
             }
         }
+
+        /* ==========================================================
+           ALARM & WEB PUSH NOTIFICATION SYSTEM (ONLINE & OFFLINE)
+           ========================================================== */
+
+        function getAlarmSettings() {
+            try {
+                const raw = localStorage.getItem(ALARM_STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    // Migrate legacy tone names to authentic Adhan
+                    if (!parsed.tone || parsed.tone === 'adhan' || parsed.tone === 'takbeer' || parsed.tone === 'beep') {
+                        parsed.tone = 'makkah';
+                    } else if (parsed.tone === 'chime') {
+                        parsed.tone = 'standard';
+                    }
+                    return Object.assign({}, alarmSettings, parsed);
+                }
+            } catch (e) { }
+            return alarmSettings;
+        }
+
+        const VAPID_PUBLIC_KEY = 'BOV6m-17pyTWwl0hIO5lI8IXvDFyGmE8ZjS6TWbbsTi8iFAWGpeBKzpZ0qfRjOjUKEEfOP9EGd0csd70F10ff14';
+
+        function getPushServerUrl() {
+            const saved = localStorage.getItem('ilmify_push_server_url');
+            if (saved && saved.trim()) return saved.trim();
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:3000';
+            }
+            return window.location.origin;
+        }
+
+        function togglePushConfigUI() {
+            const box = document.getElementById('pushServerConfigBox');
+            if (box) {
+                const isHidden = box.style.display === 'none' || !box.style.display;
+                box.style.display = isHidden ? 'block' : 'none';
+                if (isHidden) {
+                    const input = document.getElementById('pushServerUrlInput');
+                    if (input) input.value = localStorage.getItem('ilmify_push_server_url') || (window.location.hostname === 'localhost' ? 'http://localhost:3000' : window.location.origin);
+                }
+            }
+        }
+
+        function savePushServerUrl() {
+            const input = document.getElementById('pushServerUrlInput');
+            if (input) {
+                const val = input.value.trim();
+                if (val) {
+                    localStorage.setItem('ilmify_push_server_url', val);
+                    alert('Push Server URL saved: ' + val);
+                    syncPushSubscriptionWithServer();
+                }
+            }
+        }
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        async function registerWebPushSubscription() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                console.warn('Push messaging is not supported in this browser.');
+                return null;
+            }
+
+            try {
+                const reg = await navigator.serviceWorker.ready;
+                let sub = await reg.pushManager.getSubscription();
+
+                if (!sub) {
+                    const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+                    sub = await reg.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: convertedKey
+                    });
+                    console.log('[PUSH] New Web Push subscription created:', sub);
+                }
+
+                await syncPushSubscriptionWithServer(sub);
+                return sub;
+            } catch (err) {
+                console.error('[PUSH] Failed to subscribe to Web Push:', err);
+                return null;
+            }
+        }
+
+        async function syncPushSubscriptionWithServer(existingSub = null) {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+            try {
+                const reg = await navigator.serviceWorker.ready;
+                const sub = existingSub || await reg.pushManager.getSubscription();
+                if (!sub) return;
+
+                const settings = getAlarmSettings();
+                if (!settings.pushEnabled) return;
+
+                const city = (document.getElementById('cityInput') && document.getElementById('cityInput').value.trim()) || userSettings.city || '';
+                const payload = {
+                    subscription: sub.toJSON(),
+                    timings: currentTimings,
+                    prayers: settings.prayers || ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'],
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
+                    tone: settings.tone || 'makkah',
+                    city: city
+                };
+
+                const serverUrl = getPushServerUrl();
+                const res = await fetch(`${serverUrl}/api/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                console.log('[PUSH] Synced subscription with push server:', data);
+            } catch (e) {
+                console.warn('[PUSH] Could not reach push server:', e.message || e);
+            }
+        }
+
+        async function sendTestPushClosed() {
+            const btn = document.getElementById('testPushBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Scheduling Test Push...';
+            }
+
+            try {
+                if (!('Notification' in window)) {
+                    alert('Notifications are not supported by this browser.');
+                    return;
+                }
+
+                let perm = Notification.permission;
+                if (perm !== 'granted') {
+                    perm = await Notification.requestPermission();
+                    if (perm !== 'granted') {
+                        alert('Please allow notification permission to receive prayer alerts.');
+                        return;
+                    }
+                }
+
+                saveAlarmSettings({ pushEnabled: true });
+                updateAlarmUIState();
+
+                const sub = await registerWebPushSubscription();
+                if (!sub) {
+                    alert('Could not initialize push subscription. Check browser push permissions.');
+                    return;
+                }
+
+                const serverUrl = getPushServerUrl();
+                const res = await fetch(`${serverUrl}/api/send-test`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        subscription: sub.toJSON(),
+                        delaySeconds: 5,
+                        prayer: 'Fajr'
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    alert('🔔 Test push scheduled in 5 seconds!\n\nLock your phone screen or close the browser tab NOW.\n\nYour device will receive the push alert, vibrate, and tapping it will open Ilmify and sound the Adhan alarm!');
+                } else {
+                    alert('Push server responded: ' + (data.message || 'Error scheduling test'));
+                }
+            } catch (err) {
+                console.error('Test push error:', err);
+                alert('Could not connect to Push Server (' + getPushServerUrl() + ').\n\nPlease ensure the push-server is running:\ncd push-server; node server.js');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> Send 5s Test Push (Lock phone to test)';
+                }
+            }
+        }
+
+        function saveAlarmSettings(newSettings) {
+            alarmSettings = Object.assign({}, alarmSettings, newSettings);
+            localStorage.setItem(ALARM_STORAGE_KEY, JSON.stringify(alarmSettings));
+            updateAlarmUIState();
+            if (currentTimings) {
+                scheduleAlarmsWithServiceWorker(currentTimings);
+            }
+            if (alarmSettings.pushEnabled) {
+                syncPushSubscriptionWithServer();
+            }
+        }
+
+        function initAlarmAndNotificationSettings() {
+            alarmSettings = getAlarmSettings();
+            updateAlarmUIState();
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    if (currentTimings) {
+                        scheduleAlarmsWithServiceWorker(currentTimings);
+                    }
+                    if (alarmSettings.pushEnabled) {
+                        registerWebPushSubscription();
+                    }
+                }).catch(err => {
+                    console.warn('Service worker registration error:', err);
+                });
+            }
+        }
+
+        function updateAlarmUIState() {
+            const settings = getAlarmSettings();
+
+            // Push Notification Switch & Badge
+            const pushToggle = document.getElementById('pushNotifToggle');
+            const notifBadge = document.getElementById('notifStatusBadge');
+            const hasPermission = ('Notification' in window) && Notification.permission === 'granted';
+            const isPushActive = settings.pushEnabled && hasPermission;
+
+            if (pushToggle) pushToggle.checked = isPushActive;
+            if (notifBadge) {
+                if (isPushActive) {
+                    notifBadge.className = 'status-badge active';
+                    notifBadge.innerText = 'Active (Web Push)';
+                } else if ('Notification' in window && Notification.permission === 'denied') {
+                    notifBadge.className = 'status-badge inactive';
+                    notifBadge.innerText = 'Blocked in Browser';
+                } else {
+                    notifBadge.className = 'status-badge inactive';
+                    notifBadge.innerText = 'Disabled';
+                }
+            }
+
+            // Alarm Switch & Badge
+            const alarmToggle = document.getElementById('alarmSoundToggle');
+            const alarmBadge = document.getElementById('alarmStatusBadge');
+            if (alarmToggle) alarmToggle.checked = !!settings.alarmEnabled;
+            if (alarmBadge) {
+                if (settings.alarmEnabled) {
+                    alarmBadge.className = 'status-badge active';
+                    alarmBadge.innerText = 'Enabled';
+                } else {
+                    alarmBadge.className = 'status-badge inactive';
+                    alarmBadge.innerText = 'Muted';
+                }
+            }
+
+            // Tone selector
+            const toneSelect = document.getElementById('alarmToneSelect');
+            if (toneSelect && settings.tone) {
+                toneSelect.value = settings.tone;
+            }
+
+            // Prayer toggle switches
+            const prayerToggles = document.querySelectorAll('.prayer-toggle-checkbox');
+            prayerToggles.forEach(toggle => {
+                const prayer = toggle.getAttribute('data-prayer');
+                toggle.checked = !settings.prayers || settings.prayers.includes(prayer);
+            });
+        }
+
+        async function togglePushNotifications(enabled) {
+            if (!('Notification' in window)) {
+                alert('Notifications are not supported on this browser or platform.');
+                updateAlarmUIState();
+                return;
+            }
+
+            if (enabled) {
+                let perm = Notification.permission;
+                if (perm !== 'granted') {
+                    try {
+                        perm = await Notification.requestPermission();
+                    } catch (e) {
+                        perm = Notification.permission;
+                    }
+                }
+
+                if (perm === 'granted') {
+                    saveAlarmSettings({ pushEnabled: true });
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.register('/sw.js').then(async () => {
+                            if (currentTimings) scheduleAlarmsWithServiceWorker(currentTimings);
+                            await registerWebPushSubscription();
+                        });
+                    }
+                    sendNotification('Web Push Notifications Active', 'You will receive prayer reminders even if this site is closed.', 'Fajr');
+                } else {
+                    alert('Notification permission was denied. Please allow notifications in your browser settings.');
+                    saveAlarmSettings({ pushEnabled: false });
+                }
+            } else {
+                saveAlarmSettings({ pushEnabled: false });
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.ready.then(async reg => {
+                        try {
+                            const sub = await reg.pushManager.getSubscription();
+                            if (sub) {
+                                const endpoint = sub.endpoint;
+                                await sub.unsubscribe();
+                                await fetch(`${getPushServerUrl()}/api/unsubscribe`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ endpoint })
+                                });
+                            }
+                        } catch (e) { }
+                    });
+                }
+            }
+            updateAlarmUIState();
+        }
+
+        async function toggleAlarmSound(enabled) {
+            if (enabled) {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    try {
+                        const perm = await Notification.requestPermission();
+                        if (perm === 'granted') {
+                            saveAlarmSettings({ pushEnabled: true });
+                        }
+                    } catch (e) { }
+                }
+                saveAlarmSettings({ alarmEnabled: true });
+            } else {
+                saveAlarmSettings({ alarmEnabled: false });
+                stopPrayerAlarm();
+            }
+            updateAlarmUIState();
+        }
+
+        function changeAlarmTone(tone) {
+            saveAlarmSettings({ tone: tone });
+            if (isAlarmRinging) {
+                playAlarmAudio(tone);
+            }
+        }
+
+        function togglePrayerSelection(prayerName, forceState) {
+            const settings = getAlarmSettings();
+            let prayers = settings.prayers ? [...settings.prayers] : ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            const shouldEnable = (typeof forceState === 'boolean') ? forceState : !prayers.includes(prayerName);
+
+            if (shouldEnable) {
+                if (!prayers.includes(prayerName)) prayers.push(prayerName);
+            } else {
+                prayers = prayers.filter(p => p !== prayerName);
+            }
+            saveAlarmSettings({ prayers: prayers });
+        }
+
+        const ADHAN_AUDIO_MAP = {
+            'makkah': '/audio/adhan_makkah.mp3',
+            'madinah': '/audio/adhan_madinah.mp3',
+            'mishary': '/audio/adhan_mishary.mp3',
+            'fajr': '/audio/adhan_fajr.mp3',
+            'standard': '/audio/adhan_standard.mp3'
+        };
+
+        function getAdhanAudioUrl(tone, prayerName) {
+            if (prayerName === 'Fajr' && (tone === 'fajr' || !tone || tone === 'makkah')) {
+                return '/audio/adhan_fajr.mp3';
+            }
+            if (tone && ADHAN_AUDIO_MAP[tone]) {
+                return ADHAN_AUDIO_MAP[tone];
+            }
+            return '/audio/adhan_makkah.mp3';
+        }
+
+        function testAlarmToggle() {
+            const testBtn = document.getElementById('testAlarmBtn');
+            if (isAlarmRinging) {
+                stopPrayerAlarm();
+            } else {
+                const settings = getAlarmSettings();
+                triggerPrayerAlarm('Test Adhan', '12:00');
+                if (testBtn) {
+                    testBtn.innerHTML = '<i class="fas fa-stop me-1"></i> Stop Adhan';
+                    testBtn.classList.add('ringing');
+                }
+            }
+        }
+
+        function triggerPrayerAlarm(prayerName, prayerTime) {
+            const modal = document.getElementById('alarmRingingModal');
+            const nameEl = document.getElementById('ringingPrayerName');
+            const timeEl = document.getElementById('ringingPrayerTime');
+
+            if (nameEl) nameEl.innerText = prayerName || 'Salah';
+            if (timeEl) timeEl.innerText = prayerTime ? convertTo12Hour(prayerTime) : 'Prayer Time Now';
+
+            if (modal) {
+                modal.classList.add('active');
+            }
+
+            const settings = getAlarmSettings();
+            playAlarmAudio(settings.tone || 'makkah', prayerName);
+
+            // Persistent vibration pattern if supported
+            if ('vibrate' in navigator) {
+                try {
+                    navigator.vibrate([600, 300, 600, 300, 600, 300, 1000]);
+                } catch (e) { }
+            }
+        }
+
+        function stopPrayerAlarm() {
+            stopAlarmAudio();
+            const modal = document.getElementById('alarmRingingModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+            const testBtn = document.getElementById('testAlarmBtn');
+            if (testBtn) {
+                testBtn.innerHTML = '<i class="fas fa-play me-1"></i> Play Adhan';
+                testBtn.classList.remove('ringing');
+            }
+        }
+
+        // Authentic Adhan Vocal Audio Player (Pure Adhan vocal recitation, no music)
+        function playAlarmAudio(tone, prayerName) {
+            stopAlarmAudio();
+            isAlarmRinging = true;
+
+            const audioSrc = getAdhanAudioUrl(tone, prayerName);
+            try {
+                currentAudioElement = new Audio(audioSrc);
+                currentAudioElement.loop = false;
+                currentAudioElement.volume = 1.0;
+
+                const playPromise = currentAudioElement.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn('Adhan playback error, falling back to backup Makkah Adhan:', error);
+                        if (audioSrc !== '/audio/adhan_makkah.mp3') {
+                            currentAudioElement = new Audio('/audio/adhan_makkah.mp3');
+                            currentAudioElement.play().catch(e => console.warn(e));
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('Audio play exception:', e);
+            }
+        }
+
+        function stopAlarmAudio() {
+            isAlarmRinging = false;
+            if (currentAudioElement) {
+                try {
+                    currentAudioElement.pause();
+                    currentAudioElement.currentTime = 0;
+                } catch (e) { }
+                currentAudioElement = null;
+            }
+        }
+
+        function checkUrlAlarmParam() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('ring') === '1') {
+                    const prayerName = params.get('prayer') || 'Salah';
+                    const prayerTime = params.get('time') || '';
+                    setTimeout(() => {
+                        triggerPrayerAlarm(prayerName, prayerTime);
+                    }, 400);
+                }
+            } catch (e) { }
+        }
+
+        function exportPrayerCalendar() {
+            if (!currentTimings) {
+                alert("Please wait for prayer times to calculate first.");
+                return;
+            }
+
+            const settings = getAlarmSettings();
+            const prayerNames = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            const now = new Date();
+            const city = (document.getElementById('cityInput') && document.getElementById('cityInput').value.trim()) || 'Local';
+
+            let icsLines = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//ILMIFY//Prayer Times Alarm//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH',
+                `X-WR-CALNAME:Prayer Times (${city})`,
+                'X-WR-TIMEZONE:UTC'
+            ];
+
+            // Schedule for next 30 days
+            for (let dayOffset = 0; dayOffset < 30; dayOffset++) {
+                const targetDate = new Date(now);
+                targetDate.setDate(now.getDate() + dayOffset);
+                const y = targetDate.getFullYear();
+                const m = String(targetDate.getMonth() + 1).padStart(2, '0');
+                const d = String(targetDate.getDate()).padStart(2, '0');
+
+                prayerNames.forEach(pName => {
+                    if (settings.prayers && !settings.prayers.includes(pName)) return;
+
+                    const timeStr = currentTimings[pName];
+                    if (timeStr) {
+                        const [pH, pM] = timeStr.split(' ')[0].split(':').map(Number);
+                        const startHour = String(pH).padStart(2, '0');
+                        const startMin = String(pM).padStart(2, '0');
+
+                        let endMinNum = pM + 25;
+                        let endHourNum = pH;
+                        if (endMinNum >= 60) {
+                            endMinNum -= 60;
+                            endHourNum = (endHourNum + 1) % 24;
+                        }
+                        const endHour = String(endHourNum).padStart(2, '0');
+                        const endMin = String(endMinNum).padStart(2, '0');
+
+                        const dtStart = `${y}${m}${d}T${startHour}${startMin}00`;
+                        const dtEnd = `${y}${m}${d}T${endHour}${endMin}00`;
+                        const uid = `prayer-${pName}-${y}${m}${d}@ilmify.com`;
+
+                        icsLines.push(
+                            'BEGIN:VEVENT',
+                            `UID:${uid}`,
+                            `DTSTAMP:${y}${m}${d}T000000Z`,
+                            `DTSTART:${dtStart}`,
+                            `DTEND:${dtEnd}`,
+                            `SUMMARY:🕌 ${pName} Prayer Time`,
+                            `DESCRIPTION:It is currently time for ${pName} prayer in ${city}. May Allah accept your prayers.`,
+                            'STATUS:CONFIRMED',
+                            'BEGIN:VALARM',
+                            'ACTION:AUDIO',
+                            'TRIGGER:-PT0M',
+                            `DESCRIPTION:Time for ${pName} Prayer`,
+                            'END:VALARM',
+                            'BEGIN:VALARM',
+                            'ACTION:DISPLAY',
+                            'TRIGGER:-PT0M',
+                            `DESCRIPTION:Time for ${pName} Prayer`,
+                            'END:VALARM',
+                            'END:VEVENT'
+                        );
+                    }
+                });
+            }
+
+            icsLines.push('END:VCALENDAR');
+            const blob = new Blob([icsLines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `prayer_alarms_${city.toLowerCase().replace(/[^a-z0-9]/g, '_')}.ics`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert("Prayer alarms downloaded! Open this file to import native ringing prayer alarms into your phone/PC Calendar & Clock.");
+        }
+
+        function scheduleAlarmsWithServiceWorker(timings) {
+            if (!('serviceWorker' in navigator) || !timings) return;
+
+            const settings = getAlarmSettings();
+            if (!settings.alarmEnabled && !settings.pushEnabled) return;
+
+            const prayerNames = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            const now = new Date();
+            const scheduleList = [];
+
+            prayerNames.forEach(name => {
+                if (!settings.prayers || settings.prayers.includes(name)) {
+                    const timeStr = timings[name];
+                    if (timeStr) {
+                        const [h, m] = timeStr.split(' ')[0].split(':').map(Number);
+                        const pDate = new Date(now);
+                        pDate.setHours(h, m, 0, 0);
+
+                        if (pDate.getTime() <= now.getTime()) {
+                            if (name === 'Fajr') {
+                                pDate.setDate(pDate.getDate() + 1);
+                                scheduleList.push({
+                                    name: name,
+                                    time: timeStr,
+                                    timestamp: pDate.getTime()
+                                });
+                            }
+                        } else {
+                            scheduleList.push({
+                                name: name,
+                                time: timeStr,
+                                timestamp: pDate.getTime()
+                            });
+                        }
+                    }
+                }
+            });
+
+            navigator.serviceWorker.ready.then(reg => {
+                if (reg && reg.active) {
+                    reg.active.postMessage({
+                        type: 'SCHEDULE_PRAYER_ALARMS',
+                        prayers: scheduleList
+                    });
+                }
+            }).catch(err => console.warn('Could not post to SW:', err));
+        }
     </script>
 
-  <script src="js/global-animations.js"></script>
+    <script src="js/global-animations.js"></script>
 </body>
 
 </html>
