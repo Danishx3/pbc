@@ -251,16 +251,7 @@
             <div class="mb-3">
               <label class="form-label" for="notifUrl"><i class="fa-solid fa-link me-1"></i> Open Page on Tap (URL)</label>
               <input type="text" class="form-control" id="notifUrl" value="/main.html" placeholder="/main.html or /class.html or full URL">
-              <small class="text-secondary" style="font-size: 0.78rem;">Where the user lands when clicking the push alert.</small>
-            </div>
-
-            <!-- Alarm Switch -->
-            <div class="form-check form-switch mb-4 p-3" style="background: rgba(13, 86, 79, 0.2); border-radius: 10px; border: 1px solid rgba(26, 122, 112, 0.3);">
-              <input class="form-check-input ms-0 me-2" type="checkbox" id="ringAlarmToggle" style="cursor: pointer;">
-              <label class="form-check-label text-white" for="ringAlarmToggle" style="cursor: pointer; font-size: 0.9rem;">
-                <strong>🔊 Sound Pure Vocal Adhan Alarm</strong>
-                <div class="text-secondary" style="font-size: 0.78rem;">Plays pure vocal Adhan recitation when user taps notification.</div>
-              </label>
+              <small class="text-secondary" style="font-size: 0.78rem;">Where the user lands when clicking the push alert (e.g. /main.html, /class.html).</small>
             </div>
 
             <!-- Server URL override (collapsible) -->
@@ -492,28 +483,23 @@
       const titleInput = document.getElementById('notifTitle');
       const bodyInput = document.getElementById('notifBody');
       const urlInput = document.getElementById('notifUrl');
-      const alarmToggle = document.getElementById('ringAlarmToggle');
 
       if (type === 'jummah') {
         titleInput.value = '🕌 Jummah Mubarak!';
         bodyInput.value = 'Don\'t forget to read Surah Al-Kahf, make abundant Durood, and prepare for Jummah prayer.';
         urlInput.value = '/Quran.html';
-        alarmToggle.checked = false;
       } else if (type === 'class') {
         titleInput.value = '📚 Live Islamic Class is Starting!';
         bodyInput.value = 'The live session is starting now. Tap here to join and benefit.';
         urlInput.value = '/class.html';
-        alarmToggle.checked = false;
       } else if (type === 'adhkar') {
         titleInput.value = '🌙 Daily Adhkar Reminder';
         bodyInput.value = 'Recite your morning and evening Adhkar to guard and purify your soul.';
         urlInput.value = '/adhkar.html';
-        alarmToggle.checked = false;
       } else if (type === 'announcement') {
         titleInput.value = '📢 ILMIFY Community Announcement';
         bodyInput.value = 'A new important update has been posted. Tap to see the details.';
         urlInput.value = '/main.html';
-        alarmToggle.checked = false;
       }
     }
 
@@ -561,7 +547,6 @@
       const title = document.getElementById('notifTitle').value.trim();
       const body = document.getElementById('notifBody').value.trim();
       const url = document.getElementById('notifUrl').value.trim() || '/main.html';
-      const ringAlarm = document.getElementById('ringAlarmToggle').checked;
 
       const sendBtn = document.getElementById('sendBtn');
       const sendBtnText = document.getElementById('sendBtnText');
@@ -579,7 +564,6 @@
             title,
             body,
             url,
-            ringAlarm,
             targetKey
           })
         });

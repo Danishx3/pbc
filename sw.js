@@ -1,4 +1,6 @@
-// ILMIFY Service Worker - Background Push Notifications & Prayer Alarms
+// ILMIFY Service Worker - Web Push Notifications (v2 - Clean Notifications)
+const SW_VERSION = 'ilmify-sw-v2';
+
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
@@ -7,18 +9,18 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-// Cache for scheduled prayer triggers in service worker
+// Cache for scheduled prayer reminders in service worker
 let scheduledPrayers = [];
 
-// Listen for messages from front-end to schedule prayer alarms
+// Listen for messages from front-end to schedule prayer notifications
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SCHEDULE_PRAYER_ALARMS') {
+  if (event.data && event.data.type === 'SCHEDULE_PRAYER_NOTIFICATIONS') {
     scheduledPrayers = event.data.prayers || [];
     schedulePrayerTriggers(scheduledPrayers);
   }
 });
 
-// Schedule local notification triggers (Supported in Chrome/Edge/Android when web is closed)
+// Schedule local notification triggers (When supported by Chrome/Edge/Android)
 function schedulePrayerTriggers(prayers) {
   if (!('showTrigger' in Notification.prototype) || typeof TimestampTrigger === 'undefined') {
     return;
@@ -30,19 +32,19 @@ function schedulePrayerTriggers(prayers) {
       try {
         const title = `Time for ${prayer.name} Prayer!`;
         const options = {
-          body: `It is currently time for ${prayer.name} prayer. Tap to open and sound the Adhan alarm.`,
+          body: `It is currently time for ${prayer.name} prayer.`,
           icon: '/logoo.png',
           badge: '/logoo.png',
-          tag: `prayer-alarm-${prayer.name}`,
+          tag: `prayer-notification-${prayer.name}`,
           renotify: true,
-          requireInteraction: true,
-          vibrate: [500, 200, 500, 200, 500, 200, 500, 200, 1000],
+          requireInteraction: false,
+          vibrate: [300, 150, 300],
           showTrigger: new TimestampTrigger(prayer.timestamp),
           data: {
-            url: `/times.html?ring=1&prayer=${encodeURIComponent(prayer.name)}&time=${encodeURIComponent(prayer.time || '')}`
+            url: '/times.html'
           },
           actions: [
-            { action: 'ring', title: '🔊 Open & Sound Alarm' },
+            { action: 'open', title: 'Open' },
             { action: 'dismiss', title: 'Dismiss' }
           ]
         };
@@ -55,12 +57,12 @@ function schedulePrayerTriggers(prayers) {
   });
 }
 
-// Web Push API (Handles background push messages sent from servers/FCM)
+// Web Push API (Handles push notifications sent from Push Server / Firebase)
 self.addEventListener('push', function(event) {
   let data = {
-    title: 'Prayer Time Alert',
-    body: 'Time for prayer. Tap to open and pray.',
-    prayer: 'Salah'
+    title: 'ILMIFY Alert',
+    body: 'You have a new update.',
+    url: '/main.html'
   };
 
   if (event.data) {
@@ -71,23 +73,21 @@ self.addEventListener('push', function(event) {
     }
   }
 
-  const title = data.title || `Time for ${data.prayer || 'Prayer'}`;
-  const targetUrl = data.url || (data.ringAlarm || data.prayer ? `/times.html?ring=1&prayer=${encodeURIComponent(data.prayer || 'Alert')}` : '/main.html');
+  const title = data.title || (data.prayer ? `Time for ${data.prayer} Prayer` : 'ILMIFY Notification');
+  const targetUrl = data.url || (data.prayer ? '/times.html' : '/main.html');
   const options = {
-    body: data.body || `It is time for ${data.prayer || 'Salah'} prayer.`,
+    body: data.body || (data.prayer ? `It is time for ${data.prayer} prayer.` : ''),
     icon: '/logoo.png',
     badge: '/logoo.png',
-    vibrate: [500, 200, 500, 200, 500, 200, 500, 200, 1000],
+    vibrate: [300, 150, 300],
     tag: 'ilmify-push-' + (data.prayer || Date.now()),
     renotify: true,
-    requireInteraction: true,
+    requireInteraction: false,
     data: {
-      url: targetUrl,
-      prayer: data.prayer || null,
-      ringAlarm: !!data.ringAlarm
+      url: targetUrl
     },
     actions: [
-      { action: 'open', title: data.ringAlarm ? '🔊 Open & Sound Alarm' : 'Open' },
+      { action: 'open', title: 'Open' },
       { action: 'dismiss', title: 'Dismiss' }
     ]
   };
@@ -95,14 +95,14 @@ self.addEventListener('push', function(event) {
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-// Periodic Sync handler (Runs periodically in background on supported devices)
+// Periodic Sync handler
 self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'prayer-time-check') {
     // Background check
   }
 });
 
-// Notification click handler: opens or focuses the tab and triggers alarm ringing
+// Notification click handler: opens or focuses the specified URL cleanly
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
@@ -110,24 +110,19 @@ self.addEventListener('notificationclick', function(event) {
     return;
   }
 
-  const prayerName = (event.notification.data && event.notification.data.prayer) || 'Prayer';
-  const targetUrl = (event.notification.data && event.notification.data.url)
-    ? event.notification.data.url
-    : `/times.html?ring=1&prayer=${encodeURIComponent(prayerName)}`;
+  const rawUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/main.html';
+  // Strip any legacy ring parameters just in case
+  const targetUrl = rawUrl.replace(/[?&]ring=1/g, '').replace(/\?$/, '');
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+      const targetBase = targetUrl.split('?')[0];
       for (let i = 0; i < clientList.length; i++) {
         let client = clientList[i];
-        if (targetUrl.includes('/times.html') && client.url && client.url.includes('/times.html')) {
-          client.postMessage({
-            type: 'TRIGGER_ALARM',
-            prayer: prayerName,
-            ring: true
-          });
-          client.navigate(targetUrl);
-          return client.focus();
-        } else if (client.url && client.url.includes(targetUrl.split('?')[0]) && 'focus' in client) {
+        if (client.url && client.url.includes(targetBase) && 'focus' in client) {
+          if (client.url !== targetUrl) {
+            client.navigate(targetUrl);
+          }
           return client.focus();
         }
       }

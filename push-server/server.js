@@ -238,8 +238,9 @@ app.post('/api/send-test', (req, res) => {
   setTimeout(async () => {
     const payload = JSON.stringify({
       title: `Time for ${prayer} Prayer!`,
-      body: `ILMIFY Web Push Alert: It is currently time for ${prayer}. Tap to open and sound Adhan.`,
+      body: `ILMIFY Web Push Alert: It is currently time for ${prayer}.`,
       prayer: prayer,
+      url: '/times.html',
       timestamp: Date.now()
     });
 
@@ -367,9 +368,9 @@ async function checkAndDispatchPrayers() {
 
         const payload = JSON.stringify({
           title: `Time for ${prayerName} Prayer!`,
-          body: `It is time for ${prayerName} prayer (${normPrayerTime}). Tap to open and listen to the Adhan.`,
+          body: `It is time for ${prayerName} prayer (${normPrayerTime}).`,
           prayer: prayerName,
-          tone: sub.tone || 'standard',
+          url: '/times.html',
           timestamp: Date.now()
         });
 
@@ -422,7 +423,7 @@ app.get('/api/cron', async (req, res) => {
 
 // 7. Admin Endpoint: Send Custom Push Notification (Broadcast or Target Single Device)
 app.post('/api/send-custom-notification', async (req, res) => {
-  const { title, body, url, ringAlarm, targetKey } = req.body;
+  const { title, body, url, targetKey } = req.body;
 
   if (!title && !body) {
     return res.status(400).json({ error: 'Title or message body is required.' });
@@ -446,14 +447,13 @@ app.post('/api/send-custom-notification', async (req, res) => {
   let sentCount = 0;
   let failedCount = 0;
   const errors = [];
+  const targetUrl = (url && url.trim()) ? url.trim() : '/main.html';
 
   for (const sub of targets) {
     const payload = JSON.stringify({
       title: title || 'ILMIFY Notification',
       body: body || '',
-      url: url || (ringAlarm ? '/times.html?ring=1' : '/main.html'),
-      ringAlarm: !!ringAlarm,
-      prayer: ringAlarm ? (title || 'Adhan Alert') : null,
+      url: targetUrl,
       timestamp: Date.now()
     });
 

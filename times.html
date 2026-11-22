@@ -542,190 +542,7 @@
             transform: translateX(19px);
         }
 
-        .btn-alarm-test {
-            border-radius: 12px;
-            padding: 8px 16px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-            border: 1.5px solid var(--highlight);
-            color: var(--highlight);
-            background: transparent;
-        }
-
-        .btn-alarm-test:hover {
-            background: var(--highlight);
-            color: var(--highlight-contrast);
-        }
-
-        .btn-alarm-test.ringing {
-            background: #dc2626 !important;
-            border-color: #dc2626 !important;
-            color: #ffffff !important;
-            animation: pulseRed 1s infinite alternate;
-        }
-
-        @keyframes pulseRed {
-            from {
-                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5);
-            }
-
-            to {
-                box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
-            }
-        }
-
-        .btn-autodetect {
-            background: rgba(13, 86, 79, 0.08);
-            border: 1.5px solid var(--highlight);
-            color: var(--highlight);
-            border-radius: 12px;
-            padding: 11px;
-            font-weight: 700;
-            transition: all 0.2s ease;
-        }
-
-        .btn-autodetect:hover {
-            background: var(--highlight);
-            color: var(--highlight-contrast);
-        }
-
-        .btn-update-times {
-            background: var(--highlight);
-            border: 1.5px solid var(--highlight);
-            color: var(--highlight-contrast);
-            border-radius: 12px;
-            padding: 11px;
-            font-weight: 700;
-            transition: all 0.2s ease;
-        }
-
-        .btn-update-times:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .alarm-info-box {
-            background: var(--info-box-bg);
-            border: 1px solid var(--info-box-border);
-            border-left-width: 4px;
-            padding: 12px 14px;
-            border-radius: 0 12px 12px 0;
-            font-size: 0.79rem;
-            color: var(--info-box-text);
-            margin-top: 12px;
-            line-height: 1.45;
-            text-align: left;
-        }
-
-        .alarm-info-box strong {
-            color: var(--info-box-text);
-        }
-
-        /* Fullscreen Ringing Alarm Modal */
-        .alarm-ringing-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.88);
-            backdrop-filter: blur(14px);
-            z-index: 99999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeInOverlay 0.3s ease;
-        }
-
-        .alarm-ringing-overlay.active {
-            display: flex;
-        }
-
-        .alarm-ringing-card {
-            background: linear-gradient(145deg, #0f2d27, #061916);
-            border: 2px solid var(--highlight);
-            border-radius: 28px;
-            max-width: 440px;
-            width: 100%;
-            padding: 35px 25px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(175, 233, 218, 0.35);
-            animation: popInCard 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: white;
-        }
-
-        .alarm-bell-wrap {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px auto;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(175, 233, 218, 0.25) 0%, rgba(13, 86, 79, 0.1) 70%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid rgba(175, 233, 218, 0.4);
-            animation: bellRingPulse 1.2s infinite ease-in-out;
-        }
-
-        .alarm-bell-wrap i {
-            font-size: 2.8rem;
-            color: var(--highlight);
-            animation: bellShake 0.8s infinite ease-in-out;
-        }
-
-        @keyframes bellShake {
-
-            0%,
-            100% {
-                transform: rotate(0deg);
-            }
-
-            20% {
-                transform: rotate(-18deg);
-            }
-
-            40% {
-                transform: rotate(18deg);
-            }
-
-            60% {
-                transform: rotate(-12deg);
-            }
-
-            80% {
-                transform: rotate(12deg);
-            }
-        }
-
-        @keyframes bellRingPulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(175, 233, 218, 0.5);
-            }
-
-            50% {
-                box-shadow: 0 0 0 22px rgba(175, 233, 218, 0);
-            }
-        }
-
-        @keyframes fadeInOverlay {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes popInCard {
-            from {
-                transform: scale(0.85);
-                opacity: 0;
-            }
+        
 
             to {
                 transform: scale(1);
@@ -865,7 +682,7 @@
 
                     <div
                         style="text-align: left; margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
-                        Notifications & Prayer Alarm
+                        Notifications
                     </div>
 
                     <!-- Web Push Notifications Card -->
@@ -889,136 +706,11 @@
                         </div>
                     </div>
 
-                    <!-- Prayer Alarm & Adhan Card -->
-                    <div class="setting-item-card">
-                        <div class="setting-header-flex">
-                            <div class="setting-title-wrap">
-                                <div class="setting-icon-box"><i class="fa-solid fa-volume-high"></i></div>
-                                <div>
-                                    <div class="setting-title">Prayer Alarm / Adhan</div>
-                                    <div class="setting-status-sub">
-                                        Status: <span id="alarmStatusBadge"
-                                            class="status-badge inactive">Disabled</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="alarmSoundToggle" onchange="toggleAlarmSound(this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <!-- Sound Options -->
-                        <div class="mt-3">
-                            <label class="setting-label">Select Adhan Recitation (Mu'adhin)</label>
-                            <select id="alarmToneSelect" class="form-control form-control-custom"
-                                style="padding: 9px 12px; font-size: 0.85rem;" onchange="changeAlarmTone(this.value)">
-                                <option value="makkah">Makkah Al-Haram (Sheikh Ali Mulla)</option>
-                                <option value="madinah">Madinah Al-Nabawi (Al-Haram Al-Madani)</option>
-                                <option value="mishary">Mishary Rashid Al-Afasy</option>
-                                <option value="fajr">Fajr Adhan (As-Salatu Khayrun Minan-Nawm)</option>
-                                <option value="standard">Traditional Beautiful Adhan</option>
-                            </select>
-                        </div>
-
-                        <!-- Prayer Selection Toggles -->
-                        <div class="mt-3">
-                            <label class="setting-label">Ring Alarm for Prayers:</label>
-                            <div class="prayer-toggles-container">
-                                <div class="prayer-toggle-item">
-                                    <span class="prayer-toggle-title">
-                                        <i class="fa-solid fa-cloud-sun me-2" style="color: var(--highlight);"></i> Fajr
-                                    </span>
-                                    <label class="toggle-switch toggle-switch-sm">
-                                        <input type="checkbox" id="togglePrayerFajr" class="prayer-toggle-checkbox"
-                                            data-prayer="Fajr" onchange="togglePrayerSelection('Fajr', this.checked)">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="prayer-toggle-item">
-                                    <span class="prayer-toggle-title">
-                                        <i class="fa-solid fa-sun me-2" style="color: var(--highlight);"></i> Dhuhr
-                                    </span>
-                                    <label class="toggle-switch toggle-switch-sm">
-                                        <input type="checkbox" id="togglePrayerDhuhr" class="prayer-toggle-checkbox"
-                                            data-prayer="Dhuhr" onchange="togglePrayerSelection('Dhuhr', this.checked)">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="prayer-toggle-item">
-                                    <span class="prayer-toggle-title">
-                                        <i class="fa-solid fa-cloud-sun me-2" style="color: var(--highlight);"></i> Asr
-                                    </span>
-                                    <label class="toggle-switch toggle-switch-sm">
-                                        <input type="checkbox" id="togglePrayerAsr" class="prayer-toggle-checkbox"
-                                            data-prayer="Asr" onchange="togglePrayerSelection('Asr', this.checked)">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="prayer-toggle-item">
-                                    <span class="prayer-toggle-title">
-                                        <i class="fa-solid fa-mountain-sun me-2" style="color: var(--highlight);"></i>
-                                        Maghrib
-                                    </span>
-                                    <label class="toggle-switch toggle-switch-sm">
-                                        <input type="checkbox" id="togglePrayerMaghrib" class="prayer-toggle-checkbox"
-                                            data-prayer="Maghrib"
-                                            onchange="togglePrayerSelection('Maghrib', this.checked)">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="prayer-toggle-item">
-                                    <span class="prayer-toggle-title">
-                                        <i class="fa-solid fa-moon me-2" style="color: var(--highlight);"></i> Isha
-                                    </span>
-                                    <label class="toggle-switch toggle-switch-sm">
-                                        <input type="checkbox" id="togglePrayerIsha" class="prayer-toggle-checkbox"
-                                            data-prayer="Isha" onchange="togglePrayerSelection('Isha', this.checked)">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
 
             </div>
         </center>
-    </div>
-
-    <!-- Ringing Prayer Alarm Modal Overlay -->
-    <div id="alarmRingingModal" class="alarm-ringing-overlay">
-        <div class="alarm-ringing-card">
-            <div class="alarm-bell-wrap">
-                <i class="fas fa-bell"></i>
-            </div>
-            <div
-                style="text-transform: uppercase; letter-spacing: 2.5px; font-size: 0.85rem; color: var(--highlight); font-weight: 600;">
-                Prayer Time Has Arrived
-            </div>
-            <div id="tapToPlayBanner"
-                style="display: none; background: var(--highlight); color: #042420; padding: 12px 16px; border-radius: 12px; font-weight: 700; margin: 15px 0; cursor: pointer; box-shadow: 0 4px 15px rgba(175, 233, 218, 0.4);"
-                onclick="resumeAdhanAudio()">
-                <i class="fas fa-volume-high me-2"></i> Tap Screen to Play Loud Adhan
-            </div>
-            <h1 id="ringingPrayerName" style="font-size: 3rem; font-weight: 800; margin: 10px 0 5px 0; color: #ffffff;">
-                Salah
-            </h1>
-            <div id="ringingPrayerTime"
-                style="font-size: 1.25rem; color: rgba(255, 255, 255, 0.75); margin-bottom: 25px;">
-                --:--
-            </div>
-            <button class="btn w-100 mb-2 py-3"
-                style="background: var(--highlight); color: #042420; font-weight: 700; border-radius: 14px; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(175, 233, 218, 0.4);"
-                onclick="stopPrayerAlarm()">
-                <i class="fas fa-volume-xmark me-2"></i> Dismiss / Stop Alarm
-            </button>
-            <a href="/adhkar.html" class="btn btn-outline-light w-100 py-2"
-                style="border-radius: 14px; font-size: 0.9rem; border-color: rgba(255, 255, 255, 0.2);"
-                onclick="stopPrayerAlarm()">
-                <i class="fas fa-book-open me-2"></i> Open Daily Adhkar
-            </a>
-        </div>
     </div>
 
     <script src="pbc.js"></script>
@@ -1031,17 +723,12 @@
         let currentTimings = null;
         let countdownInterval = null;
 
-        // Alarm & Push Settings State
+        // Push Notification Settings State
         const ALARM_STORAGE_KEY = 'prayer_alarm_settings_v1';
         let alarmSettings = {
             pushEnabled: false,
-            alarmEnabled: false,
-            tone: 'makkah',
             prayers: ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
         };
-
-        let currentAudioElement = null;
-        let isAlarmRinging = false;
 
         // Hardcoded Method: 1 = University of Islamic Sciences, Karachi
         const CALCULATION_METHOD = 1;
@@ -1049,7 +736,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadSettings();
             initAlarmAndNotificationSettings();
-            checkUrlAlarmParam();
             // Automatically detect & fetch based on location on page load
             autoDetectAndFetchLocation(false);
         });
@@ -1477,7 +1163,7 @@
                 `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
 
-            // 4. Prayer Alarm & Notification Check
+            // 4. Prayer Notification Check
             const nowTotalMin = now.getHours() * 60 + now.getMinutes();
             const currentAlarmSettings = getAlarmSettings();
 
@@ -1490,20 +1176,13 @@
                 // Trigger if we are within the prayer time window
                 if (nowTotalMin >= prayerTotalMin && nowTotalMin <= prayerTotalMin + 15) {
                     const logicalDate = getCommonDateString();
-                    const lastNotifiedKey = `prayer_last_notified_${prayer.name}_${logicalDate}`;
+                    const lastNotifiedKey = prayer_last_notified_${prayer.name}_${logicalDate};
                     if (!localStorage.getItem(lastNotifiedKey)) {
                         localStorage.setItem(lastNotifiedKey, 'true');
 
-                        const isPrayerSelected = !currentAlarmSettings.prayers || currentAlarmSettings.prayers.includes(prayer.name);
-
                         // Web push notification
                         if (currentAlarmSettings.pushEnabled && 'Notification' in window && Notification.permission === 'granted') {
-                            sendNotification(`Time for ${prayer.name} Prayer`, `It is time for ${prayer.name} prayer. Tap to open and sound the Adhan alarm.`, prayer.name);
-                        }
-
-                        // Audible alarm if tab is open/active
-                        if (currentAlarmSettings.alarmEnabled && isPrayerSelected) {
-                            triggerPrayerAlarm(prayer.name, prayer.time);
+                            sendNotification(Time for ${prayer.name} Prayer, It is time for ${prayer.name} prayer., prayer.name);
                         }
                     }
                 }
@@ -1512,20 +1191,19 @@
 
         function sendNotification(title, body, prayerName) {
             if ('Notification' in window && Notification.permission === 'granted') {
-                const targetUrl = `/times.html?ring=1&prayer=${encodeURIComponent(prayerName || 'Salah')}`;
+                const targetUrl = '/times.html';
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.register('/sw.js').then(function (registration) {
                         registration.showNotification(title, {
                             body: body,
                             icon: '/logoo.png',
                             badge: '/logoo.png',
-                            vibrate: [500, 200, 500, 200, 500, 200, 500, 200, 1000],
-                            tag: 'prayer-alarm-' + (prayerName || 'salah'),
+                            vibrate: [300, 150, 300],
+                            tag: 'prayer-alert-' + (prayerName || 'salah'),
                             renotify: true,
-                            requireInteraction: true,
                             data: { url: targetUrl },
                             actions: [
-                                { action: 'ring', title: '🔊 Open & Sound Alarm' },
+                                { action: 'open', title: 'Open' },
                                 { action: 'dismiss', title: 'Dismiss' }
                             ]
                         });
@@ -1709,7 +1387,6 @@
                     timings: currentTimings,
                     prayers: settings.prayers || ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'],
                     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
-                    tone: settings.tone || 'makkah',
                     city: city
                 };
 
@@ -1723,71 +1400,6 @@
                 console.log('[PUSH] Synced subscription with push server:', data);
             } catch (e) {
                 console.warn('[PUSH] Could not reach push server:', e.message || e);
-            }
-        }
-
-        async function sendTestPushClosed() {
-            const btn = document.getElementById('testPushBtn');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Scheduling Test Push...';
-            }
-
-            try {
-                if (!('Notification' in window)) {
-                    alert('Notifications are not supported by this browser.');
-                    return;
-                }
-
-                let perm = Notification.permission;
-                if (perm !== 'granted') {
-                    perm = await Notification.requestPermission();
-                    if (perm !== 'granted') {
-                        alert('Please allow notification permission to receive prayer alerts.');
-                        return;
-                    }
-                }
-
-                saveAlarmSettings({ pushEnabled: true });
-                updateAlarmUIState();
-
-                const sub = await registerWebPushSubscription();
-                if (!sub) {
-                    alert('Could not initialize push subscription. Check browser push permissions.');
-                    return;
-                }
-
-                const serverUrl = getPushServerUrl();
-                console.log('[TEST PUSH] Sending request to:', `${serverUrl}/api/send-test`);
-                const res = await fetch(`${serverUrl}/api/send-test`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        subscription: sub.toJSON(),
-                        delaySeconds: 5,
-                        prayer: 'Fajr'
-                    })
-                });
-
-                if (!res.ok) {
-                    const errorText = await res.text();
-                    throw new Error(`Server returned HTTP ${res.status}: ${errorText}`);
-                }
-
-                const data = await res.json();
-                if (data.success) {
-                    alert('🔔 Test push scheduled in 5 seconds!\n\nLock your phone screen or close the browser tab NOW.\n\nYour device will receive the push alert, vibrate, and tapping it will open Ilmify and sound the Adhan alarm!');
-                } else {
-                    alert('Push server responded: ' + (data.message || 'Error scheduling test'));
-                }
-            } catch (err) {
-                console.error('Test push error:', err);
-                alert('Could not connect to Push Server (' + getPushServerUrl() + ').\n\nDetails: ' + (err.message || 'Connection failed'));
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> Send 5s Test Push (Lock phone to test)';
-                }
             }
         }
 
@@ -1843,33 +1455,6 @@
                     notifBadge.innerText = 'Disabled';
                 }
             }
-
-            // Alarm Switch & Badge
-            const alarmToggle = document.getElementById('alarmSoundToggle');
-            const alarmBadge = document.getElementById('alarmStatusBadge');
-            if (alarmToggle) alarmToggle.checked = !!settings.alarmEnabled;
-            if (alarmBadge) {
-                if (settings.alarmEnabled) {
-                    alarmBadge.className = 'status-badge active';
-                    alarmBadge.innerText = 'Enabled';
-                } else {
-                    alarmBadge.className = 'status-badge inactive';
-                    alarmBadge.innerText = 'Muted';
-                }
-            }
-
-            // Tone selector
-            const toneSelect = document.getElementById('alarmToneSelect');
-            if (toneSelect && settings.tone) {
-                toneSelect.value = settings.tone;
-            }
-
-            // Prayer toggle switches
-            const prayerToggles = document.querySelectorAll('.prayer-toggle-checkbox');
-            prayerToggles.forEach(toggle => {
-                const prayer = toggle.getAttribute('data-prayer');
-                toggle.checked = !settings.prayers || settings.prayers.includes(prayer);
-            });
         }
 
         async function togglePushNotifications(enabled) {
@@ -1923,327 +1508,6 @@
             }
             updateAlarmUIState();
         }
-
-        async function toggleAlarmSound(enabled) {
-            if (enabled) {
-                if ('Notification' in window && Notification.permission === 'default') {
-                    try {
-                        const perm = await Notification.requestPermission();
-                        if (perm === 'granted') {
-                            saveAlarmSettings({ pushEnabled: true });
-                        }
-                    } catch (e) { }
-                }
-                saveAlarmSettings({ alarmEnabled: true });
-            } else {
-                saveAlarmSettings({ alarmEnabled: false });
-                stopPrayerAlarm();
-            }
-            updateAlarmUIState();
-        }
-
-        function changeAlarmTone(tone) {
-            saveAlarmSettings({ tone: tone });
-            if (isAlarmRinging) {
-                playAlarmAudio(tone);
-            }
-        }
-
-        function togglePrayerSelection(prayerName, forceState) {
-            const settings = getAlarmSettings();
-            let prayers = settings.prayers ? [...settings.prayers] : ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-            const shouldEnable = (typeof forceState === 'boolean') ? forceState : !prayers.includes(prayerName);
-
-            if (shouldEnable) {
-                if (!prayers.includes(prayerName)) prayers.push(prayerName);
-            } else {
-                prayers = prayers.filter(p => p !== prayerName);
-            }
-            saveAlarmSettings({ prayers: prayers });
-        }
-
-        const ADHAN_AUDIO_MAP = {
-            'makkah': '/audio/adhan_makkah.mp3',
-            'madinah': '/audio/adhan_madinah.mp3',
-            'mishary': '/audio/adhan_mishary.mp3',
-            'fajr': '/audio/adhan_fajr.mp3',
-            'standard': '/audio/adhan_standard.mp3'
-        };
-
-        function getAdhanAudioUrl(tone, prayerName) {
-            if (prayerName === 'Fajr' && (tone === 'fajr' || !tone || tone === 'makkah')) {
-                return '/audio/adhan_fajr.mp3';
-            }
-            if (tone && ADHAN_AUDIO_MAP[tone]) {
-                return ADHAN_AUDIO_MAP[tone];
-            }
-            return '/audio/adhan_makkah.mp3';
-        }
-
-        let testAlarmWorker = null;
-        let testAlarmInterval = null;
-        let testAlarmSecondsLeft = 0;
-
-        function cancelTestAlarmCountdown() {
-            if (testAlarmInterval) {
-                clearInterval(testAlarmInterval);
-                testAlarmInterval = null;
-            }
-            if (testAlarmWorker) {
-                try {
-                    testAlarmWorker.postMessage('stop');
-                    testAlarmWorker.terminate();
-                } catch (e) { }
-                testAlarmWorker = null;
-            }
-            testAlarmSecondsLeft = 0;
-            const fullBtn = document.getElementById('testFullAlarmBtn');
-            if (fullBtn) {
-                fullBtn.innerHTML = '<i class="fa-solid fa-stopwatch me-1"></i> Test Alarm in 10s (Lock/Minimize to test)';
-                fullBtn.classList.remove('ringing');
-            }
-        }
-
-        // Instant audio preview for selected Mu'adhin
-        function testAdhanAudioPreview() {
-            const previewBtn = document.getElementById('testAlarmBtn');
-            if (isAlarmRinging) {
-                stopPrayerAlarm();
-            } else {
-                const settings = getAlarmSettings();
-                playAlarmAudio(settings.tone || 'makkah');
-                if (previewBtn) {
-                    previewBtn.innerHTML = '<i class="fas fa-stop me-1"></i> Stop';
-                    previewBtn.classList.add('ringing');
-                }
-            }
-        }
-
-        // 10-Second Countdown Alarm Trigger (Allows locking phone or minimizing app)
-        async function testAlarmToggle() {
-            const fullBtn = document.getElementById('testFullAlarmBtn');
-
-            // 1. If alarm is already ringing, stop it
-            if (isAlarmRinging) {
-                stopPrayerAlarm();
-                return;
-            }
-
-            // 2. If countdown is currently running, tapping cancels it
-            if (testAlarmSecondsLeft > 0) {
-                cancelTestAlarmCountdown();
-                return;
-            }
-
-            // 3. Start 10-second countdown
-            testAlarmSecondsLeft = 10;
-            if (fullBtn) {
-                fullBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Ringing in ${testAlarmSecondsLeft}s... (Tap to Cancel)`;
-                fullBtn.classList.add('ringing');
-            }
-
-            if ('vibrate' in navigator) {
-                try { navigator.vibrate(120); } catch (e) { }
-            }
-
-            // Also schedule background push through server if push available,
-            // so phone lock screen wakes up even if browser tab is suspended by mobile OS!
-            try {
-                if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
-                    const reg = await navigator.serviceWorker.ready;
-                    const sub = await reg.pushManager.getSubscription();
-                    if (sub) {
-                        fetch(`${getPushServerUrl()}/api/send-test`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                subscription: sub.toJSON(),
-                                delaySeconds: 10,
-                                prayer: 'Fajr'
-                            })
-                        }).catch(() => { });
-                    }
-                }
-            } catch (e) { }
-
-            function onTimerTick(sec) {
-                testAlarmSecondsLeft = sec;
-                if (sec > 0) {
-                    if (fullBtn && !isAlarmRinging) {
-                        fullBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Ringing in ${sec}s... (Tap to Cancel)`;
-                    }
-                } else {
-                    cancelTestAlarmCountdown();
-                    triggerPrayerAlarm('Test Adhan', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-                    if (fullBtn) {
-                        fullBtn.innerHTML = '<i class="fas fa-stop me-1"></i> Stop Alarm';
-                        fullBtn.classList.add('ringing');
-                    }
-                }
-            }
-
-            // Use background Web Worker (won't be throttled in background/minimized tab)
-            try {
-                const blob = new Blob([
-                    "let timer = null; onmessage = function(e) { if (e.data === 'start') { let s = 10; timer = setInterval(() => { s--; postMessage(s); if (s <= 0) clearInterval(timer); }, 1000); } else if (e.data === 'stop') { clearInterval(timer); } };"
-                ], { type: 'application/javascript' });
-                testAlarmWorker = new Worker(URL.createObjectURL(blob));
-                testAlarmWorker.onmessage = function (e) {
-                    onTimerTick(e.data);
-                };
-                testAlarmWorker.postMessage('start');
-            } catch (err) {
-                // Fallback to standard setInterval
-                testAlarmInterval = setInterval(() => {
-                    onTimerTick(testAlarmSecondsLeft - 1);
-                }, 1000);
-            }
-        }
-
-        function triggerPrayerAlarm(prayerName, prayerTime) {
-            const modal = document.getElementById('alarmRingingModal');
-            const nameEl = document.getElementById('ringingPrayerName');
-            const timeEl = document.getElementById('ringingPrayerTime');
-
-            if (nameEl) nameEl.innerText = prayerName || 'Salah';
-            if (timeEl) timeEl.innerText = prayerTime ? convertTo12Hour(prayerTime) : 'Prayer Time Now';
-
-            if (modal) {
-                modal.classList.add('active');
-            }
-
-            const settings = getAlarmSettings();
-            playAlarmAudio(settings.tone || 'makkah', prayerName);
-
-            // Persistent vibration pattern if supported
-            if ('vibrate' in navigator) {
-                try {
-                    navigator.vibrate([600, 300, 600, 300, 600, 300, 1000]);
-                } catch (e) { }
-            }
-        }
-
-        function stopPrayerAlarm() {
-            cancelTestAlarmCountdown();
-            stopAlarmAudio();
-            const modal = document.getElementById('alarmRingingModal');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-            const testBtn = document.getElementById('testAlarmBtn');
-            if (testBtn) {
-                testBtn.innerHTML = '<i class="fas fa-play me-1"></i> Preview';
-                testBtn.classList.remove('ringing');
-            }
-            const fullBtn = document.getElementById('testFullAlarmBtn');
-            if (fullBtn) {
-                fullBtn.innerHTML = '<i class="fa-solid fa-stopwatch me-1"></i> Test Alarm in 10s (Lock/Minimize to test)';
-                fullBtn.classList.remove('ringing');
-            }
-        }
-
-        function showAudioUnlockPrompt() {
-            const promptEl = document.getElementById('tapToPlayBanner');
-            if (promptEl) {
-                promptEl.style.display = 'block';
-            }
-            const unlockAndPlay = function () {
-                if (currentAudioElement && isAlarmRinging) {
-                    currentAudioElement.play().then(() => {
-                        if (promptEl) promptEl.style.display = 'none';
-                    }).catch(() => { });
-                }
-                document.removeEventListener('click', unlockAndPlay);
-                document.removeEventListener('touchstart', unlockAndPlay);
-            };
-            document.addEventListener('click', unlockAndPlay, { once: true });
-            document.addEventListener('touchstart', unlockAndPlay, { once: true });
-        }
-
-        function resumeAdhanAudio() {
-            if (currentAudioElement && isAlarmRinging) {
-                currentAudioElement.play().then(() => {
-                    const promptEl = document.getElementById('tapToPlayBanner');
-                    if (promptEl) promptEl.style.display = 'none';
-                }).catch(() => { });
-            }
-        }
-
-        // Authentic Adhan Vocal Audio Player (Pure Adhan vocal recitation, no music)
-        function playAlarmAudio(tone, prayerName) {
-            stopAlarmAudio();
-            isAlarmRinging = true;
-
-            const audioSrc = getAdhanAudioUrl(tone, prayerName);
-            try {
-                currentAudioElement = new Audio(audioSrc);
-                currentAudioElement.loop = false;
-                currentAudioElement.volume = 1.0;
-
-                const playPromise = currentAudioElement.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.warn('Adhan playback blocked by browser or backgrounded:', error);
-                        showAudioUnlockPrompt();
-                        if (audioSrc !== '/audio/adhan_makkah.mp3') {
-                            try {
-                                currentAudioElement = new Audio('/audio/adhan_makkah.mp3');
-                                currentAudioElement.play().catch(() => showAudioUnlockPrompt());
-                            } catch (e) {
-                                showAudioUnlockPrompt();
-                            }
-                        }
-                    });
-                }
-            } catch (e) {
-                console.warn('Audio play exception:', e);
-                showAudioUnlockPrompt();
-            }
-        }
-
-        function stopAlarmAudio() {
-            isAlarmRinging = false;
-            const promptEl = document.getElementById('tapToPlayBanner');
-            if (promptEl) {
-                promptEl.style.display = 'none';
-            }
-            if (currentAudioElement) {
-                try {
-                    currentAudioElement.pause();
-                    currentAudioElement.currentTime = 0;
-                } catch (e) { }
-                currentAudioElement = null;
-            }
-        }
-
-        function checkUrlAlarmParam() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                if (params.get('ring') === '1') {
-                    const prayerName = params.get('prayer') || 'Salah';
-                    const prayerTime = params.get('time') || '';
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    setTimeout(() => {
-                        triggerPrayerAlarm(prayerName, prayerTime);
-                    }, 200);
-                }
-            } catch (e) { }
-        }
-
-        // Service Worker message listener (triggers alarm when push notification is clicked)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('message', (event) => {
-                if (event.data && event.data.type === 'TRIGGER_ALARM') {
-                    triggerPrayerAlarm(event.data.prayer || 'Salah', '');
-                }
-            });
-        }
-        window.addEventListener('focus', checkUrlAlarmParam);
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                checkUrlAlarmParam();
-            }
-        });
 
         function exportPrayerCalendar() {
             if (!currentTimings) {
@@ -2338,7 +1602,7 @@
             if (!('serviceWorker' in navigator) || !timings) return;
 
             const settings = getAlarmSettings();
-            if (!settings.alarmEnabled && !settings.pushEnabled) return;
+            if (!settings.pushEnabled) return;
 
             const prayerNames = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
             const now = new Date();
@@ -2375,7 +1639,7 @@
             navigator.serviceWorker.ready.then(reg => {
                 if (reg && reg.active) {
                     reg.active.postMessage({
-                        type: 'SCHEDULE_PRAYER_ALARMS',
+                        type: 'SCHEDULE_PRAYER_NOTIFICATIONS',
                         prayers: scheduleList
                     });
                 }
