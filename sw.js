@@ -72,19 +72,22 @@ self.addEventListener('push', function(event) {
   }
 
   const title = data.title || `Time for ${data.prayer || 'Prayer'}`;
+  const targetUrl = data.url || (data.ringAlarm || data.prayer ? `/times.html?ring=1&prayer=${encodeURIComponent(data.prayer || 'Alert')}` : '/main.html');
   const options = {
     body: data.body || `It is time for ${data.prayer || 'Salah'} prayer.`,
     icon: '/logoo.png',
     badge: '/logoo.png',
     vibrate: [500, 200, 500, 200, 500, 200, 500, 200, 1000],
-    tag: 'prayer-alarm-' + (data.prayer || 'salah'),
+    tag: 'ilmify-push-' + (data.prayer || Date.now()),
     renotify: true,
     requireInteraction: true,
     data: {
-      url: `/times.html?ring=1&prayer=${encodeURIComponent(data.prayer || 'Prayer')}`
+      url: targetUrl,
+      prayer: data.prayer || null,
+      ringAlarm: !!data.ringAlarm
     },
     actions: [
-      { action: 'ring', title: '🔊 Open & Sound Alarm' },
+      { action: 'open', title: data.ringAlarm ? '🔊 Open & Sound Alarm' : 'Open' },
       { action: 'dismiss', title: 'Dismiss' }
     ]
   };
@@ -108,7 +111,7 @@ self.addEventListener('notificationclick', function(event) {
   }
 
   const prayerName = (event.notification.data && event.notification.data.prayer) || 'Prayer';
-  const targetUrl = event.notification.data && event.notification.data.url
+  const targetUrl = (event.notification.data && event.notification.data.url)
     ? event.notification.data.url
     : `/times.html?ring=1&prayer=${encodeURIComponent(prayerName)}`;
 
@@ -116,13 +119,15 @@ self.addEventListener('notificationclick', function(event) {
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
       for (let i = 0; i < clientList.length; i++) {
         let client = clientList[i];
-        if (client.url && client.url.includes('/times.html')) {
+        if (targetUrl.includes('/times.html') && client.url && client.url.includes('/times.html')) {
           client.postMessage({
             type: 'TRIGGER_ALARM',
             prayer: prayerName,
             ring: true
           });
           client.navigate(targetUrl);
+          return client.focus();
+        } else if (client.url && client.url.includes(targetUrl.split('?')[0]) && 'focus' in client) {
           return client.focus();
         }
       }

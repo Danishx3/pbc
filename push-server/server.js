@@ -420,6 +420,66 @@ app.get('/api/cron', async (req, res) => {
   }
 });
 
+// 7. Admin Endpoint: Send Custom Push Notification (Broadcast or Target Single Device)
+app.post('/api/send-custom-notification', async (req, res) => {
+  const { title, body, url, ringAlarm, targetKey } = req.body;
+
+  if (!title && !body) {
+    return res.status(400).json({ error: 'Title or message body is required.' });
+  }
+
+  const subs = await loadSubscribers();
+  if (!subs.length) {
+    return res.json({ success: false, message: 'No active subscribers found in database.' });
+  }
+
+  let targets = subs;
+  if (targetKey && targetKey !== 'all') {
+    targets = subs.filter(s => (s._fbKey === targetKey || getEndpointKey(s.subscription && s.subscription.endpoint) === targetKey));
+    if (!targets.length) {
+      return res.status(404).json({ error: 'Selected subscriber device was not found.' });
+    }
+  }
+
+  console.log(`[ADMIN BROADCAST] Sending "${title}" to ${targets.length} subscriber(s)...`);
+
+  let sentCount = 0;
+  let failedCount = 0;
+  const errors = [];
+
+  for (const sub of targets) {
+    const payload = JSON.stringify({
+      title: title || 'ILMIFY Notification',
+      body: body || '',
+      url: url || (ringAlarm ? '/times.html?ring=1' : '/main.html'),
+      ringAlarm: !!ringAlarm,
+      prayer: ringAlarm ? (title || 'Adhan Alert') : null,
+      timestamp: Date.now()
+    });
+
+    try {
+      await webpush.sendNotification(sub.subscription, payload);
+      sentCount++;
+    } catch (err) {
+      failedCount++;
+      errors.push(err.statusCode || err.message);
+      if (err.statusCode === 404 || err.statusCode === 410) {
+        const key = sub._fbKey || getEndpointKey(sub.subscription && sub.subscription.endpoint);
+        firebaseDelete(`/${key}`);
+      }
+    }
+  }
+
+  res.json({
+    success: true,
+    message: `Push delivered to ${sentCount} device(s)${failedCount > 0 ? `, ${failedCount} failed` : ''}.`,
+    sentCount,
+    failedCount,
+    totalTargets: targets.length,
+    errors
+  });
+});
+
 // Automated internal loop (every 30 seconds)
 setInterval(async () => {
   try {

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Push Alerts & Subscribers - ILMIFY Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Styles -->
+  <link rel="stylesheet" href="../pbc.css">
+  <link rel="icon" href="../logoo.png" type="image/icon type">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="/theme.js"></script>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body {
+      background-color: #0b1414;
+      color: #e2e8f0;
+      font-family: 'Anek Latin', sans-serif;
+      min-height: 100vh;
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 16px 50px;
+    }
+    .card-glass {
+      background: rgba(13, 86, 79, 0.12);
+      border: 1px solid rgba(26, 122, 112, 0.35);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+    }
+    .stat-badge {
+      background: rgba(13, 86, 79, 0.22);
+      border: 1px solid rgba(13, 86, 79, 0.45);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      flex: 1;
+      min-width: 160px;
+    }
+    .stat-val {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #afe9da;
+    }
+    .stat-lbl {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+    }
+    .form-control, .form-select {
+      background-color: rgba(6, 32, 29, 0.7);
+      border: 1px solid rgba(26, 122, 112, 0.5);
+      color: #fff !important;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: rgba(6, 32, 29, 0.95);
+      border-color: #2dd4bf;
+      box-shadow: 0 0 0 0.25rem rgba(45, 212, 191, 0.25);
+    }
+    .form-label {
+      color: #afe9da;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+    .btn-ilmify {
+      background: linear-gradient(135deg, #13776d, #0d564f);
+      color: #fff;
+      font-weight: 600;
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      border-radius: 10px;
+      padding: 10px 22px;
+      transition: all 0.2s ease;
+    }
+    .btn-ilmify:hover {
+      background: linear-gradient(135deg, #1aa394, #13776d);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(26, 163, 148, 0.4);
+    }
+    .template-chip {
+      background: rgba(13, 86, 79, 0.3);
+      border: 1px solid rgba(45, 212, 191, 0.3);
+      color: #afe9da;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-block;
+      margin: 3px;
+      transition: all 0.2s ease;
+    }
+    .template-chip:hover {
+      background: rgba(45, 212, 191, 0.25);
+      color: #fff;
+      border-color: #2dd4bf;
+    }
+    .subscriber-card {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(26, 122, 112, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+    .subscriber-card:hover {
+      border-color: rgba(45, 212, 191, 0.6);
+      background: rgba(15, 23, 42, 0.85);
+    }
+    .device-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(26, 122, 112, 0.25);
+      color: #afe9da;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #10b981;
+    }
+    .code-pill {
+      font-family: monospace;
+      font-size: 0.75rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg text-white" style="background: rgba(6, 32, 29, 0.85); border-bottom: 1px solid rgba(26, 122, 112, 0.3);">
+    <div class="container-fluid px-3">
+      <a href="admin.html" class="d-flex align-items-center text-decoration-none text-white">
+        <img src="../logoo.png" style="border-radius: 70px; width: 36px; height: 36px; margin-right: 10px;" alt="Logo">
+        <span style="font-weight: bold; letter-spacing: 0.5px;">ILMIFY ADMIN</span>
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <a href="admin.html" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+          <i class="fa fa-arrow-left me-1"></i> Dashboard
+        </a>
+        <button onclick="logout()" class="btn btn-sm btn-outline-danger" style="border-radius: 20px;">
+          <i class="fa fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-4 mb-4">
+      <div>
+        <h2 style="color: #afe9da; font-weight: 700; margin-bottom: 4px;">
+          <i class="fa-solid fa-tower-broadcast me-2"></i> Push Alerts & Subscribers
+        </h2>
+        <p class="text-secondary mb-0" style="font-size: 0.95rem;">
+          View real-time subscriber devices from Firebase and broadcast custom push notifications.
+        </p>
+      </div>
+      <div>
+        <button class="btn btn-sm btn-outline-light" onclick="reloadSubscribers()" style="border-radius: 20px;">
+          <i class="fa fa-rotate me-1" id="refreshIcon"></i> Refresh Data
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="d-flex gap-3 flex-wrap mb-4">
+      <div class="stat-badge">
+        <div class="stat-lbl"><i class="fa-solid fa-users me-1"></i> Total Subscribers</div>
+        <div class="stat-val" id="statTotalSubscribers">0</div>
+        <small class="text-secondary">Firebase Realtime DB</small>
+      </div>
+      <div class="stat-badge">
+        <div class="stat-lbl"><i class="fa-solid fa-globe me-1"></i> Active Timezones</div>
+        <div class="stat-val" id="statTimezones">0</div>
+        <small class="text-secondary" id="statTzSummary">Detecting...</small>
+      </div>
+      <div class="stat-badge">
+        <div class="stat-lbl"><i class="fa-solid fa-server me-1"></i> Push Cloud Server</div>
+        <div class="stat-val" id="statServerStatus" style="font-size: 1.4rem; padding-top: 8px;">
+          <span class="badge bg-secondary">Checking...</span>
+        </div>
+        <small class="text-secondary" id="serverHostLabel">https://pbc-onuf.onrender.com</small>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Composer Column -->
+      <div class="col-lg-5">
+        <div class="card-glass">
+          <h4 style="color: #afe9da; font-weight: 700; margin-bottom: 16px;">
+            <i class="fa-solid fa-paper-plane me-2"></i> Send Push Notification
+          </h4>
+
+          <!-- Quick Templates -->
+          <div class="mb-3">
+            <label class="form-label d-block"><i class="fa-solid fa-wand-magic-sparkles me-1"></i> Quick Presets</label>
+            <span class="template-chip" onclick="applyPreset('jummah')">🕌 Jummah Mubarak</span>
+            <span class="template-chip" onclick="applyPreset('class')">📚 Live Class Starting</span>
+            <span class="template-chip" onclick="applyPreset('adhkar')">🌙 Morning / Evening Adhkar</span>
+            <span class="template-chip" onclick="applyPreset('announcement')">📢 Community Alert</span>
+          </div>
+
+          <form id="pushForm" onsubmit="sendPushNotification(event)">
+            <!-- Target Audience -->
+            <div class="mb-3">
+              <label class="form-label" for="targetSelect"><i class="fa-solid fa-bullseye me-1"></i> Target Audience</label>
+              <select class="form-select" id="targetSelect">
+                <option value="all">📢 All Subscribed Devices (Broadcast)</option>
+              </select>
+            </div>
+
+            <!-- Title -->
+            <div class="mb-3">
+              <label class="form-label" for="notifTitle"><i class="fa-solid fa-heading me-1"></i> Notification Title</label>
+              <input type="text" class="form-control" id="notifTitle" required placeholder="e.g. 🕌 Jummah Mubarak!" maxlength="80">
+            </div>
+
+            <!-- Message Body -->
+            <div class="mb-3">
+              <label class="form-label" for="notifBody"><i class="fa-solid fa-align-left me-1"></i> Message Body</label>
+              <textarea class="form-control" id="notifBody" rows="3" required placeholder="Type your notification message to deliver..." maxlength="240"></textarea>
+            </div>
+
+            <!-- Action URL -->
+            <div class="mb-3">
+              <label class="form-label" for="notifUrl"><i class="fa-solid fa-link me-1"></i> Open Page on Tap (URL)</label>
+              <input type="text" class="form-control" id="notifUrl" value="/main.html" placeholder="/main.html or /class.html or full URL">
+              <small class="text-secondary" style="font-size: 0.78rem;">Where the user lands when clicking the push alert.</small>
+            </div>
+
+            <!-- Alarm Switch -->
+            <div class="form-check form-switch mb-4 p-3" style="background: rgba(13, 86, 79, 0.2); border-radius: 10px; border: 1px solid rgba(26, 122, 112, 0.3);">
+              <input class="form-check-input ms-0 me-2" type="checkbox" id="ringAlarmToggle" style="cursor: pointer;">
+              <label class="form-check-label text-white" for="ringAlarmToggle" style="cursor: pointer; font-size: 0.9rem;">
+                <strong>🔊 Sound Pure Vocal Adhan Alarm</strong>
+                <div class="text-secondary" style="font-size: 0.78rem;">Plays pure vocal Adhan recitation when user taps notification.</div>
+              </label>
+            </div>
+
+            <!-- Server URL override (collapsible) -->
+            <div class="mb-3">
+              <a class="text-secondary text-decoration-none" data-bs-toggle="collapse" href="#serverConfigCollapse" role="button" style="font-size: 0.8rem;">
+                <i class="fa-solid fa-gear me-1"></i> Advanced Push Server Settings
+              </a>
+              <div class="collapse mt-2" id="serverConfigCollapse">
+                <input type="text" class="form-control form-control-sm" id="pushServerUrl" value="https://pbc-onuf.onrender.com">
+                <small class="text-muted" style="font-size: 0.75rem;">Default: https://pbc-onuf.onrender.com (Render Cloud Server)</small>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="sendBtn" class="btn btn-ilmify w-100 d-flex align-items-center justify-content-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span id="sendBtnText">Dispatch Push Notification</span>
+            </button>
+          </form>
+
+          <div id="pushStatusAlert" class="mt-3" style="display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Subscribers List Column -->
+      <div class="col-lg-7">
+        <div class="card-glass">
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h4 style="color: #afe9da; font-weight: 700; margin-bottom: 0;">
+              <i class="fa-solid fa-mobile-screen-button me-2"></i> Subscribed Devices
+            </h4>
+            <div class="d-flex gap-2 align-items-center">
+              <input type="text" id="subSearchInput" class="form-control form-control-sm" placeholder="Search timezone / city / key..." style="max-width: 200px;" oninput="filterSubscribers()">
+            </div>
+          </div>
+
+          <!-- Subscribers Container -->
+          <div id="subscribersListContainer" style="max-height: 650px; overflow-y: auto; padding-right: 4px;">
+            <div class="text-center py-5 text-secondary">
+              <div class="spinner-border text-teal mb-2" role="status" style="color: #afe9da;"></div>
+              <div>Connecting to Firebase Realtime Database...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_SERVER_URL = "https://pbc-onuf.onrender.com";
+    const FIREBASE_PATH = "analytics/prayer_subscribers";
+
+    let allSubscribers = {};
+    let filteredKeys = [];
+
+    // 1. Auth Guard
+    const auth = window.firebaseAuth || firebase.auth();
+    const db = window.firebaseDb || firebase.database();
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "../login.html";
+      } else if (user.email !== "piousbrotherscommunity@gmail.com") {
+        window.location.href = "../login.html";
+      } else {
+        initSubscribersListener();
+        checkPushServerHealth();
+      }
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "../login.html";
+      });
+    }
+
+    // 2. Real-time Firebase Subscriber Listener
+    function initSubscribersListener() {
+      db.ref(FIREBASE_PATH).on('value', snapshot => {
+        const data = snapshot.val() || {};
+        allSubscribers = data;
+        renderSubscribersUI();
+      }, err => {
+        console.error("Firebase read error:", err);
+        document.getElementById('subscribersListContainer').innerHTML = `
+          <div class="alert alert-danger">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> Failed to read subscribers: ${err.message}
+          </div>
+        `;
+      });
+    }
+
+    function reloadSubscribers() {
+      const icon = document.getElementById('refreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+      db.ref(FIREBASE_PATH).once('value').then(snapshot => {
+        allSubscribers = snapshot.val() || {};
+        renderSubscribersUI();
+        checkPushServerHealth();
+      }).finally(() => {
+        if (icon) icon.classList.remove('fa-spin');
+      });
+    }
+
+    // 3. Render Subscribers UI
+    function renderSubscribersUI() {
+      const keys = Object.keys(allSubscribers);
+      const container = document.getElementById('subscribersListContainer');
+      const targetSelect = document.getElementById('targetSelect');
+
+      // Update Stats
+      document.getElementById('statTotalSubscribers').innerText = keys.length;
+
+      const tzMap = {};
+      keys.forEach(k => {
+        const sub = allSubscribers[k];
+        const tz = sub.timezone || 'Unknown';
+        tzMap[tz] = (tzMap[tz] || 0) + 1;
+      });
+      const tzCount = Object.keys(tzMap).length;
+      document.getElementById('statTimezones').innerText = tzCount;
+      const tzNames = Object.keys(tzMap).slice(0, 2).join(', ') + (tzCount > 2 ? ` +${tzCount - 2} more` : '');
+      document.getElementById('statTzSummary').innerText = tzCount ? tzNames : 'None registered';
+
+      // Update Target Select options
+      const currentSelected = targetSelect.value;
+      targetSelect.innerHTML = `<option value="all">📢 All Subscribed Devices (Broadcast - ${keys.length} devices)</option>`;
+      keys.forEach((k, idx) => {
+        const sub = allSubscribers[k];
+        const label = sub.city || sub.timezone || `Device #${idx + 1}`;
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.innerText = `📱 ${label} (${k.substring(0, 8)}...)`;
+        targetSelect.appendChild(opt);
+      });
+      targetSelect.value = keys.includes(currentSelected) ? currentSelected : 'all';
+
+      // Render list
+      filterSubscribers();
+    }
+
+    function filterSubscribers() {
+      const search = (document.getElementById('subSearchInput').value || '').toLowerCase().trim();
+      const container = document.getElementById('subscribersListContainer');
+      const keys = Object.keys(allSubscribers);
+
+      const matchedKeys = keys.filter(k => {
+        const s = allSubscribers[k];
+        const str = `${k} ${s.timezone || ''} ${s.city || ''} ${s.tone || ''} ${JSON.stringify(s.timings || {})}`.toLowerCase();
+        return str.includes(search);
+      });
+
+      if (!keys.length) {
+        container.innerHTML = `
+          <div class="text-center py-5 text-secondary">
+            <i class="fa-regular fa-bell-slash fa-3x mb-3" style="opacity: 0.4;"></i>
+            <h5>No Subscribed Devices Yet</h5>
+            <p class="text-muted small">When users enable Web Push in Prayer Times, their devices will appear here automatically.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (!matchedKeys.length) {
+        container.innerHTML = `
+          <div class="text-center py-4 text-secondary">
+            <i class="fa-solid fa-magnifying-glass fa-2x mb-2" style="opacity: 0.4;"></i>
+            <p>No devices matched "${search}"</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      matchedKeys.forEach((key, index) => {
+        const sub = allSubscribers[key];
+        const dateStr = sub.updatedAt ? new Date(sub.updatedAt).toLocaleString() : (sub.subscribedAt ? new Date(sub.subscribedAt).toLocaleString() : 'Recent');
+        const timings = sub.timings || {};
+        const timingsPreview = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+          .filter(p => timings[p])
+          .map(p => `<span class="badge bg-dark border border-secondary text-light me-1" style="font-size: 0.7rem;">${p}: ${timings[p]}</span>`)
+          .join('') || '<span class="text-muted small">No prayer times cached</span>';
+
+        const lastNotif = sub.lastNotified ? Object.entries(sub.lastNotified).map(([p, d]) => `${p} (${d})`).join(', ') : 'None yet';
+
+        html += `
+          <div class="subscriber-card">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <span class="status-dot"></span>
+                  <strong class="text-light">${sub.city || sub.timezone || 'Subscribed Device'}</strong>
+                  <span class="code-pill">${key.substring(0, 10)}...</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2 text-secondary small mb-2">
+                  <span><i class="fa-regular fa-clock me-1"></i> ${sub.timezone || 'UTC'}</span>
+                  <span><i class="fa-solid fa-volume-high me-1"></i> Tone: <strong class="text-teal">${sub.tone || 'standard'}</strong></span>
+                  <span><i class="fa-regular fa-calendar-check me-1"></i> ${dateStr}</span>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-info" onclick="directMessageDevice('${key}')" title="Send Push to this device">
+                  <i class="fa-solid fa-paper-plane me-1"></i> Message
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteSubscriber('${key}')" title="Remove device">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Prayer times preview -->
+            <div class="mt-2 pt-2 border-top border-secondary border-opacity-25 d-flex align-items-center flex-wrap gap-1">
+              <span class="text-secondary small me-2"><i class="fa-solid fa-kaaba me-1"></i> Prayers:</span>
+              ${timingsPreview}
+            </div>
+
+            <div class="mt-1 text-muted" style="font-size: 0.72rem;">
+              <i class="fa-solid fa-history me-1"></i> Last notified: ${lastNotif}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 4. Quick Presets
+    function applyPreset(type) {
+      const titleInput = document.getElementById('notifTitle');
+      const bodyInput = document.getElementById('notifBody');
+      const urlInput = document.getElementById('notifUrl');
+      const alarmToggle = document.getElementById('ringAlarmToggle');
+
+      if (type === 'jummah') {
+        titleInput.value = '🕌 Jummah Mubarak!';
+        bodyInput.value = 'Don\'t forget to read Surah Al-Kahf, make abundant Durood, and prepare for Jummah prayer.';
+        urlInput.value = '/Quran.html';
+        alarmToggle.checked = false;
+      } else if (type === 'class') {
+        titleInput.value = '📚 Live Islamic Class is Starting!';
+        bodyInput.value = 'The live session is starting now. Tap here to join and benefit.';
+        urlInput.value = '/class.html';
+        alarmToggle.checked = false;
+      } else if (type === 'adhkar') {
+        titleInput.value = '🌙 Daily Adhkar Reminder';
+        bodyInput.value = 'Recite your morning and evening Adhkar to guard and purify your soul.';
+        urlInput.value = '/adhkar.html';
+        alarmToggle.checked = false;
+      } else if (type === 'announcement') {
+        titleInput.value = '📢 ILMIFY Community Announcement';
+        bodyInput.value = 'A new important update has been posted. Tap to see the details.';
+        urlInput.value = '/main.html';
+        alarmToggle.checked = false;
+      }
+    }
+
+    function directMessageDevice(key) {
+      const select = document.getElementById('targetSelect');
+      select.value = key;
+      document.getElementById('notifTitle').focus();
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function deleteSubscriber(key) {
+      if (!confirm("Are you sure you want to remove this subscriber device from the database?")) {
+        return;
+      }
+      db.ref(`${FIREBASE_PATH}/${key}`).remove().then(() => {
+        showAlert('Subscriber device removed successfully.', 'info');
+      }).catch(err => {
+        alert("Failed to remove subscriber: " + err.message);
+      });
+    }
+
+    // 5. Server Health Check
+    function checkPushServerHealth() {
+      const serverUrl = (document.getElementById('pushServerUrl').value || DEFAULT_SERVER_URL).replace(/\/+$/, '');
+      const statusBadge = document.getElementById('statServerStatus');
+      const hostLabel = document.getElementById('serverHostLabel');
+      hostLabel.innerText = serverUrl;
+
+      fetch(`${serverUrl}/api/subscribers`, { method: 'GET' })
+        .then(res => res.json())
+        .then(data => {
+          statusBadge.innerHTML = `<span class="badge bg-success"><i class="fa-solid fa-check me-1"></i> Active (${data.count || 0})</span>`;
+        })
+        .catch(err => {
+          statusBadge.innerHTML = `<span class="badge bg-warning text-dark"><i class="fa-solid fa-triangle-exclamation me-1"></i> Awake / Cold</span>`;
+        });
+    }
+
+    // 6. Push Notification Dispatch
+    async function sendPushNotification(event) {
+      event.preventDefault();
+
+      const serverUrl = (document.getElementById('pushServerUrl').value || DEFAULT_SERVER_URL).replace(/\/+$/, '');
+      const targetKey = document.getElementById('targetSelect').value;
+      const title = document.getElementById('notifTitle').value.trim();
+      const body = document.getElementById('notifBody').value.trim();
+      const url = document.getElementById('notifUrl').value.trim() || '/main.html';
+      const ringAlarm = document.getElementById('ringAlarmToggle').checked;
+
+      const sendBtn = document.getElementById('sendBtn');
+      const sendBtnText = document.getElementById('sendBtnText');
+
+      sendBtn.disabled = true;
+      sendBtnText.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Dispatching Web Push...`;
+
+      try {
+        const response = await fetch(`${serverUrl}/api/send-custom-notification`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title,
+            body,
+            url,
+            ringAlarm,
+            targetKey
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          showAlert(`✅ ${result.message}`, 'success');
+        } else {
+          showAlert(`❌ ${result.error || result.message || 'Push dispatch failed.'}`, 'danger');
+        }
+      } catch (err) {
+        console.error('Push dispatch error:', err);
+        showAlert(`⚠️ Could not reach Push Server at ${serverUrl}. If the server is in sleep mode, wait 15 seconds and try again.`, 'warning');
+      } finally {
+        sendBtn.disabled = false;
+        sendBtnText.innerHTML = `Dispatch Push Notification`;
+      }
+    }
+
+    function showAlert(msg, type = 'info') {
+      const el = document.getElementById('pushStatusAlert');
+      el.className = `alert alert-${type} alert-dismissible fade show`;
+      el.innerHTML = `
+        ${msg}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      el.style.display = 'block';
+      setTimeout(() => {
+        el.style.display = 'none';
+      }, 7000);
+    }
+  </script>
+</body>
+
+</html>
