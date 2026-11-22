@@ -908,6 +908,126 @@
         font-size: 2.7rem;
       }
     }
+
+    /* Adhkar Reminders Prompt & Bell */
+    .adhkar-notif-prompt-overlay {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 500px;
+      z-index: 10000;
+      animation: slideUpPrompt 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUpPrompt {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 30px);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    .adhkar-notif-prompt-card {
+      background: linear-gradient(135deg, rgba(6, 32, 29, 0.96), rgba(13, 86, 79, 0.96));
+      border: 1.5px solid rgba(45, 212, 191, 0.45);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(45, 212, 191, 0.2);
+      backdrop-filter: blur(16px);
+      color: #fff;
+    }
+
+    .adhkar-prompt-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(45, 212, 191, 0.2);
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2dd4bf;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .btn-adhkar-enable {
+      background: linear-gradient(135deg, #1aa394, #0d564f);
+      color: #fff;
+      font-weight: 700;
+      border: 1px solid rgba(45, 212, 191, 0.6);
+      border-radius: 12px;
+      padding: 7px 18px;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-adhkar-enable:hover {
+      background: linear-gradient(135deg, #2dd4bf, #1aa394);
+      color: #042420;
+      box-shadow: 0 4px 14px rgba(45, 212, 191, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-adhkar-later {
+      background: transparent;
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 7px 14px;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-adhkar-later:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-close-prompt {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 2px 4px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .btn-close-prompt:hover {
+      color: #fff;
+    }
+
+    .adhkar-toast {
+      position: fixed;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(6, 32, 29, 0.95);
+      border: 1px solid rgba(45, 212, 191, 0.5);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      z-index: 10001;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: fadeInToast 0.3s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    @keyframes fadeInToast {
+      from { opacity: 0; transform: translate(-50%, -10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
   </style>
   <script src="guest-utils.js"></script>
   <!-- Firebase Scripts -->
@@ -924,13 +1044,55 @@
     <center id="pageTitle">
       Daily Adhkar
     </center>
-    <button id="settingsBtn" title="Settings"
-      style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 1.4rem; cursor: pointer; color: white; z-index: 1001; transition: transform 0.3s;"
-      onmouseover="this.style.transform='translateY(-50%) rotate(90deg)'"
-      onmouseout="this.style.transform='translateY(-50%) rotate(0deg)'">
-      <i class="fas fa-cog"></i>
-    </button>
+    <div style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 14px; z-index: 1001;">
+      <button id="adhkarNotifBellBtn" title="Daily Adhkar Reminders" onclick="handleAdhkarBellClick()"
+        style="background: none; border: none; font-size: 1.35rem; cursor: pointer; color: white; position: relative; padding: 4px; transition: transform 0.2s;"
+        onmouseover="this.style.transform='scale(1.15)'"
+        onmouseout="this.style.transform='scale(1)'">
+        <i id="adhkarBellIcon" class="far fa-bell"></i>
+        <span id="adhkarBellDot" style="display: none; position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: #2dd4bf; border-radius: 50%; box-shadow: 0 0 8px #2dd4bf;"></span>
+      </button>
+
+      <button id="settingsBtn" title="Settings"
+        style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: white; transition: transform 0.3s;"
+        onmouseover="this.style.transform='rotate(90deg)'"
+        onmouseout="this.style.transform='rotate(0deg)'">
+        <i class="fas fa-cog"></i>
+      </button>
+    </div>
   </header>
+
+  <!-- ── Adhkar Notification Prompt Card (Shown only once to unsubscribed users) ── -->
+  <div id="adhkarNotifPrompt" class="adhkar-notif-prompt-overlay" style="display: none;">
+    <div class="adhkar-notif-prompt-card">
+      <div class="d-flex align-items-start gap-3">
+        <div class="adhkar-prompt-icon">
+          <i class="fa-solid fa-bell"></i>
+        </div>
+        <div class="flex-grow-1">
+          <h5 style="margin: 0 0 4px 0; font-weight: 700; color: #afe9da; font-size: 1.05rem;">
+            Daily Adhkar Reminders
+          </h5>
+          <p style="margin: 0; font-size: 0.88rem; color: #cbd5e1; line-height: 1.4;">
+            Never miss your Morning & Evening Adhkar. Enable gentle daily reminders on this device.
+          </p>
+          <div class="d-flex align-items-center gap-2 mt-3 flex-wrap">
+            <button class="btn btn-adhkar-enable" onclick="acceptAdhkarReminders()">
+              <i class="fa-solid fa-bell me-1"></i> Enable Reminders
+            </button>
+            <button class="btn btn-adhkar-later" onclick="dismissAdhkarPrompt()">
+              Maybe Later
+            </button>
+          </div>
+        </div>
+        <button type="button" class="btn-close-prompt" onclick="dismissAdhkarPrompt()" title="Dismiss">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="adhkarToast" class="adhkar-toast" style="display: none;"></div>
 
   <div class="main-container">
     <div class="category-selector" id="categorySelector">
@@ -1985,6 +2147,205 @@
         }
       }
     });
+
+    /* ═══════════════════════════════════════════════════════
+       DAILY ADHKAR NOTIFICATIONS & BELL SUBSCRIBER SYSTEM
+       ═══════════════════════════════════════════════════════ */
+    const ADHKAR_VAPID_PUBLIC_KEY = 'BOV6m-17pyTWwl0hIO5lI8IXvDFyGmE8ZjS6TWbbsTi8iFAWGpeBKzpZ0qfRjOjUKEEfOP9EGd0csd70F10ff14';
+    const ADHKAR_PUSH_SERVER_URL = 'https://pbc-onuf.onrender.com';
+    const ADHKAR_PROMPT_STORAGE_KEY = 'adhkar_reminders_prompted_once_v1';
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+    async function checkAdhkarSubscriptionStatus() {
+      const bellIcon = document.getElementById('adhkarBellIcon');
+      const bellDot = document.getElementById('adhkarBellDot');
+
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        if (bellIcon) bellIcon.className = 'far fa-bell';
+        if (bellDot) bellDot.style.display = 'none';
+        return false;
+      }
+
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        const isSubscribed = !!sub && Notification.permission === 'granted';
+
+        if (isSubscribed) {
+          if (bellIcon) {
+            bellIcon.className = 'fas fa-bell';
+            bellIcon.style.color = '#2dd4bf';
+          }
+          if (bellDot) bellDot.style.display = 'block';
+          return true;
+        } else {
+          if (bellIcon) {
+            bellIcon.className = 'far fa-bell';
+            bellIcon.style.color = 'white';
+          }
+          if (bellDot) bellDot.style.display = 'none';
+          return false;
+        }
+      } catch (e) {
+        console.warn('Error checking push subscription:', e);
+        return false;
+      }
+    }
+
+    // Initialize prompt check on page entry (only once for unsubscribed users)
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(async () => {
+        const isSubscribed = await checkAdhkarSubscriptionStatus();
+        if (isSubscribed) return; // Already subscribed, do not prompt
+
+        const alreadyPrompted = localStorage.getItem(ADHKAR_PROMPT_STORAGE_KEY);
+        if (!alreadyPrompted) {
+          // Ask user only once
+          const promptEl = document.getElementById('adhkarNotifPrompt');
+          if (promptEl) {
+            promptEl.style.display = 'block';
+            // Mark as prompted so they will NEVER be auto-prompted again on future visits
+            localStorage.setItem(ADHKAR_PROMPT_STORAGE_KEY, 'true');
+          }
+        }
+      }, 1200);
+    });
+
+    function dismissAdhkarPrompt() {
+      const promptEl = document.getElementById('adhkarNotifPrompt');
+      if (promptEl) {
+        promptEl.style.display = 'none';
+      }
+      localStorage.setItem(ADHKAR_PROMPT_STORAGE_KEY, 'true');
+    }
+
+    async function acceptAdhkarReminders() {
+      dismissAdhkarPrompt();
+      await subscribeToAdhkarReminders();
+    }
+
+    async function handleAdhkarBellClick() {
+      const isSubscribed = await checkAdhkarSubscriptionStatus();
+      if (isSubscribed) {
+        const confirmDisable = confirm("🔔 Daily Adhkar reminders are active on this device.\n\nWould you like to turn off reminders?");
+        if (confirmDisable) {
+          await unsubscribeFromAdhkarReminders();
+        }
+      } else {
+        await subscribeToAdhkarReminders();
+      }
+    }
+
+    async function subscribeToAdhkarReminders() {
+      if (!('Notification' in window)) {
+        showAdhkarToast("⚠️ Push notifications are not supported on this browser.");
+        return;
+      }
+
+      let perm = Notification.permission;
+      if (perm !== 'granted') {
+        try {
+          perm = await Notification.requestPermission();
+        } catch (e) {
+          perm = Notification.permission;
+        }
+      }
+
+      if (perm !== 'granted') {
+        showAdhkarToast("⚠️ Notifications blocked. Please allow permissions in browser settings.");
+        await checkAdhkarSubscriptionStatus();
+        return;
+      }
+
+      try {
+        showAdhkarToast("⏳ Enabling Daily Adhkar Reminders...");
+
+        if (!('serviceWorker' in navigator)) return;
+        const reg = await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.ready;
+
+        let sub = await reg.pushManager.getSubscription();
+        if (!sub) {
+          const convertedKey = urlBase64ToUint8Array(ADHKAR_VAPID_PUBLIC_KEY);
+          sub = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: convertedKey
+          });
+        }
+
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+        const payload = {
+          subscription: sub.toJSON(),
+          timezone: tz,
+          city: 'Adhkar Reader',
+          category: 'adhkar',
+          subscribedAt: new Date().toISOString()
+        };
+
+        // Sync with Push Server
+        fetch(`${ADHKAR_PUSH_SERVER_URL}/api/subscribe`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(err => console.warn('Push server sync note:', err));
+
+        // Sync with Firebase Realtime Database
+        try {
+          const db = window.firebaseDb || firebase.database();
+          const endpointHash = btoa(sub.endpoint).replace(/[^a-zA-Z0-9]/g, '').slice(-32);
+          db.ref(`analytics/prayer_subscribers/${endpointHash}`).set(payload).catch(() => {});
+        } catch(e) {}
+
+        localStorage.setItem(ADHKAR_PROMPT_STORAGE_KEY, 'true');
+        await checkAdhkarSubscriptionStatus();
+        showAdhkarToast("✅ Daily Adhkar reminders enabled! You'll receive morning & evening reminders.");
+      } catch (err) {
+        console.error("Adhkar subscription error:", err);
+        showAdhkarToast("⚠️ Could not enable reminders: " + (err.message || 'Please try again'));
+      }
+    }
+
+    async function unsubscribeFromAdhkarReminders() {
+      try {
+        if ('serviceWorker' in navigator) {
+          const reg = await navigator.serviceWorker.ready;
+          const sub = await reg.pushManager.getSubscription();
+          if (sub) {
+            const endpoint = sub.endpoint;
+            await sub.unsubscribe();
+            fetch(`${ADHKAR_PUSH_SERVER_URL}/api/unsubscribe`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ endpoint })
+            }).catch(() => {});
+          }
+        }
+        await checkAdhkarSubscriptionStatus();
+        showAdhkarToast("🔔 Daily Adhkar reminders turned off.");
+      } catch (err) {
+        console.error("Unsubscribe error:", err);
+      }
+    }
+
+    function showAdhkarToast(msg) {
+      const toast = document.getElementById('adhkarToast');
+      if (!toast) return;
+      toast.innerText = msg;
+      toast.style.display = 'flex';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 4500);
+    }
   </script>
 
   <script src="js/global-animations.js"></script>

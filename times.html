@@ -1176,13 +1176,13 @@
                 // Trigger if we are within the prayer time window
                 if (nowTotalMin >= prayerTotalMin && nowTotalMin <= prayerTotalMin + 15) {
                     const logicalDate = getCommonDateString();
-                    const lastNotifiedKey = prayer_last_notified_${prayer.name}_${logicalDate};
+                    const lastNotifiedKey = `prayer_last_notified_${prayer.name}_${logicalDate}`;
                     if (!localStorage.getItem(lastNotifiedKey)) {
                         localStorage.setItem(lastNotifiedKey, 'true');
 
                         // Web push notification
                         if (currentAlarmSettings.pushEnabled && 'Notification' in window && Notification.permission === 'granted') {
-                            sendNotification(Time for ${prayer.name} Prayer, It is time for ${prayer.name} prayer., prayer.name);
+                            sendNotification(`Time for ${prayer.name} Prayer`, `It is time for ${prayer.name} prayer.`, prayer.name);
                         }
                     }
                 }
