@@ -107,15 +107,21 @@ self.addEventListener('notificationclick', function(event) {
     return;
   }
 
+  const prayerName = (event.notification.data && event.notification.data.prayer) || 'Prayer';
   const targetUrl = event.notification.data && event.notification.data.url
     ? event.notification.data.url
-    : '/times.html?ring=1';
+    : `/times.html?ring=1&prayer=${encodeURIComponent(prayerName)}`;
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
       for (let i = 0; i < clientList.length; i++) {
         let client = clientList[i];
-        if (client.url && client.url.includes('/times.html') && 'focus' in client) {
+        if (client.url && client.url.includes('/times.html')) {
+          client.postMessage({
+            type: 'TRIGGER_ALARM',
+            prayer: prayerName,
+            ring: true
+          });
           client.navigate(targetUrl);
           return client.focus();
         }

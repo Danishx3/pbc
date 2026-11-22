@@ -887,29 +887,6 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-                        <p class="setting-desc">
-                            Uses Cloud Web Push to wake your phone and deliver notifications with vibrations even when the app is completely closed.
-                        </p>
-                        <div class="mt-2 d-flex flex-column gap-2">
-                            <button id="testPushBtn" type="button" class="btn btn-sm btn-alarm-test w-100"
-                                onclick="sendTestPushClosed()">
-                                <i class="fa-solid fa-paper-plane me-1"></i> Send 5s Test Push (Lock phone to test)
-                            </button>
-                            <div id="pushServerConfigToggle" style="font-size: 0.75rem; color: var(--text-muted); cursor: pointer; text-decoration: underline;" onclick="togglePushConfigUI()">
-                                <i class="fa-solid fa-sliders me-1"></i> Push Server Connection Settings
-                            </div>
-                            <div id="pushServerConfigBox" style="display: none; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.05); font-size: 0.8rem;">
-                                <label style="font-weight: 600; margin-bottom: 4px; display: block; color: var(--text-color);">Push Server URL:</label>
-                                <div class="d-flex gap-2">
-                                    <input type="text" id="pushServerUrlInput" class="form-control form-control-sm form-control-custom"
-                                        placeholder="http://localhost:3000 or https://your-server.onrender.com" />
-                                    <button type="button" class="btn btn-sm btn-autodetect" onclick="savePushServerUrl()">Save</button>
-                                </div>
-                                <div class="form-text" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
-                                    Default: http://localhost:3000 (or cloud URL when hosted on Render / Railway / Glitch)
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Prayer Alarm & Adhan Card -->
@@ -934,21 +911,14 @@
                         <!-- Sound Options -->
                         <div class="mt-3">
                             <label class="setting-label">Select Adhan Recitation (Mu'adhin)</label>
-                            <div class="d-flex gap-2">
-                                <select id="alarmToneSelect" class="form-control form-control-custom"
-                                    style="padding: 9px 12px; font-size: 0.85rem;"
-                                    onchange="changeAlarmTone(this.value)">
-                                    <option value="makkah">Makkah Al-Haram (Sheikh Ali Mulla)</option>
-                                    <option value="madinah">Madinah Al-Nabawi (Al-Haram Al-Madani)</option>
-                                    <option value="mishary">Mishary Rashid Al-Afasy</option>
-                                    <option value="fajr">Fajr Adhan (As-Salatu Khayrun Minan-Nawm)</option>
-                                    <option value="standard">Traditional Beautiful Adhan</option>
-                                </select>
-                                <button id="testAlarmBtn" type="button" class="btn btn-sm btn-alarm-test text-nowrap"
-                                    onclick="testAlarmToggle()">
-                                    <i class="fas fa-play me-1"></i> Play Adhan
-                                </button>
-                            </div>
+                            <select id="alarmToneSelect" class="form-control form-control-custom"
+                                style="padding: 9px 12px; font-size: 0.85rem;" onchange="changeAlarmTone(this.value)">
+                                <option value="makkah">Makkah Al-Haram (Sheikh Ali Mulla)</option>
+                                <option value="madinah">Madinah Al-Nabawi (Al-Haram Al-Madani)</option>
+                                <option value="mishary">Mishary Rashid Al-Afasy</option>
+                                <option value="fajr">Fajr Adhan (As-Salatu Khayrun Minan-Nawm)</option>
+                                <option value="standard">Traditional Beautiful Adhan</option>
+                            </select>
                         </div>
 
                         <!-- Prayer Selection Toggles -->
@@ -987,11 +957,13 @@
                                 </div>
                                 <div class="prayer-toggle-item">
                                     <span class="prayer-toggle-title">
-                                        <i class="fa-solid fa-mountain-sun me-2" style="color: var(--highlight);"></i> Maghrib
+                                        <i class="fa-solid fa-mountain-sun me-2" style="color: var(--highlight);"></i>
+                                        Maghrib
                                     </span>
                                     <label class="toggle-switch toggle-switch-sm">
                                         <input type="checkbox" id="togglePrayerMaghrib" class="prayer-toggle-checkbox"
-                                            data-prayer="Maghrib" onchange="togglePrayerSelection('Maghrib', this.checked)">
+                                            data-prayer="Maghrib"
+                                            onchange="togglePrayerSelection('Maghrib', this.checked)">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
@@ -1005,33 +977,9 @@
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
-
-
-
                             </div>
                         </div>
-
-                        <!-- Sync Alarms to Device / Native Calendar (Works 100% when website is closed) -->
-                        <div class="mt-3">
-                            <button class="btn btn-autodetect w-100" type="button" onclick="exportPrayerCalendar()">
-                                <i class="fa-solid fa-calendar-check me-2"></i> Sync Alarms to Phone / Calendar (.ics)
-                            </button>
-                        </div>
-
-                        <!-- Explainer Box -->
-                        <div class="alarm-info-box">
-                            <i class="fas fa-info-circle me-1" style="color: var(--highlight);"></i>
-                            <strong>How Alarms & Notifications work:</strong>
-                            <ul style="margin: 6px 0 0 16px; padding: 0; line-height: 1.5; font-size: 0.78rem;">
-                                <li><strong>When website is open or minimized:</strong> The Adhan alarm rings and vibrates automatically right on schedule.</li>
-                                <li><strong>When website is closed:</strong> Web browsers block background website audio when tabs are closed. Tap <em>"Sync Alarms to Phone"</em> above to add native alarms to your device clock/calendar that ring even when your phone is locked and the website is closed!</li>
-                            </ul>
-                        </div>
-
                     </div>
-
-                    <p class="mt-2 mb-0" style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.7;">Method:
-                        Karachi Islamic Sciences</p>
                 </div>
 
             </div>
@@ -1047,6 +995,11 @@
             <div
                 style="text-transform: uppercase; letter-spacing: 2.5px; font-size: 0.85rem; color: var(--highlight); font-weight: 600;">
                 Prayer Time Has Arrived
+            </div>
+            <div id="tapToPlayBanner"
+                style="display: none; background: var(--highlight); color: #042420; padding: 12px 16px; border-radius: 12px; font-weight: 700; margin: 15px 0; cursor: pointer; box-shadow: 0 4px 15px rgba(175, 233, 218, 0.4);"
+                onclick="resumeAdhanAudio()">
+                <i class="fas fa-volume-high me-2"></i> Tap Screen to Play Loud Adhan
             </div>
             <h1 id="ringingPrayerName" style="font-size: 3rem; font-weight: 800; margin: 10px 0 5px 0; color: #ffffff;">
                 Salah
@@ -1694,38 +1647,10 @@
         }
 
         const VAPID_PUBLIC_KEY = 'BOV6m-17pyTWwl0hIO5lI8IXvDFyGmE8ZjS6TWbbsTi8iFAWGpeBKzpZ0qfRjOjUKEEfOP9EGd0csd70F10ff14';
+        const PUSH_SERVER_URL = 'https://pbc-onuf.onrender.com';
 
         function getPushServerUrl() {
-            const saved = localStorage.getItem('ilmify_push_server_url');
-            if (saved && saved.trim()) return saved.trim();
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                return 'http://localhost:3000';
-            }
-            return window.location.origin;
-        }
-
-        function togglePushConfigUI() {
-            const box = document.getElementById('pushServerConfigBox');
-            if (box) {
-                const isHidden = box.style.display === 'none' || !box.style.display;
-                box.style.display = isHidden ? 'block' : 'none';
-                if (isHidden) {
-                    const input = document.getElementById('pushServerUrlInput');
-                    if (input) input.value = localStorage.getItem('ilmify_push_server_url') || (window.location.hostname === 'localhost' ? 'http://localhost:3000' : window.location.origin);
-                }
-            }
-        }
-
-        function savePushServerUrl() {
-            const input = document.getElementById('pushServerUrlInput');
-            if (input) {
-                const val = input.value.trim();
-                if (val) {
-                    localStorage.setItem('ilmify_push_server_url', val);
-                    alert('Push Server URL saved: ' + val);
-                    syncPushSubscriptionWithServer();
-                }
-            }
+            return PUSH_SERVER_URL;
         }
 
         function urlBase64ToUint8Array(base64String) {
@@ -1833,6 +1758,7 @@
                 }
 
                 const serverUrl = getPushServerUrl();
+                console.log('[TEST PUSH] Sending request to:', `${serverUrl}/api/send-test`);
                 const res = await fetch(`${serverUrl}/api/send-test`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1843,6 +1769,11 @@
                     })
                 });
 
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`Server returned HTTP ${res.status}: ${errorText}`);
+                }
+
                 const data = await res.json();
                 if (data.success) {
                     alert('🔔 Test push scheduled in 5 seconds!\n\nLock your phone screen or close the browser tab NOW.\n\nYour device will receive the push alert, vibrate, and tapping it will open Ilmify and sound the Adhan alarm!');
@@ -1851,7 +1782,7 @@
                 }
             } catch (err) {
                 console.error('Test push error:', err);
-                alert('Could not connect to Push Server (' + getPushServerUrl() + ').\n\nPlease ensure the push-server is running:\ncd push-server; node server.js');
+                alert('Could not connect to Push Server (' + getPushServerUrl() + ').\n\nDetails: ' + (err.message || 'Connection failed'));
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -2049,17 +1980,123 @@
             return '/audio/adhan_makkah.mp3';
         }
 
-        function testAlarmToggle() {
-            const testBtn = document.getElementById('testAlarmBtn');
+        let testAlarmWorker = null;
+        let testAlarmInterval = null;
+        let testAlarmSecondsLeft = 0;
+
+        function cancelTestAlarmCountdown() {
+            if (testAlarmInterval) {
+                clearInterval(testAlarmInterval);
+                testAlarmInterval = null;
+            }
+            if (testAlarmWorker) {
+                try {
+                    testAlarmWorker.postMessage('stop');
+                    testAlarmWorker.terminate();
+                } catch (e) { }
+                testAlarmWorker = null;
+            }
+            testAlarmSecondsLeft = 0;
+            const fullBtn = document.getElementById('testFullAlarmBtn');
+            if (fullBtn) {
+                fullBtn.innerHTML = '<i class="fa-solid fa-stopwatch me-1"></i> Test Alarm in 10s (Lock/Minimize to test)';
+                fullBtn.classList.remove('ringing');
+            }
+        }
+
+        // Instant audio preview for selected Mu'adhin
+        function testAdhanAudioPreview() {
+            const previewBtn = document.getElementById('testAlarmBtn');
             if (isAlarmRinging) {
                 stopPrayerAlarm();
             } else {
                 const settings = getAlarmSettings();
-                triggerPrayerAlarm('Test Adhan', '12:00');
-                if (testBtn) {
-                    testBtn.innerHTML = '<i class="fas fa-stop me-1"></i> Stop Adhan';
-                    testBtn.classList.add('ringing');
+                playAlarmAudio(settings.tone || 'makkah');
+                if (previewBtn) {
+                    previewBtn.innerHTML = '<i class="fas fa-stop me-1"></i> Stop';
+                    previewBtn.classList.add('ringing');
                 }
+            }
+        }
+
+        // 10-Second Countdown Alarm Trigger (Allows locking phone or minimizing app)
+        async function testAlarmToggle() {
+            const fullBtn = document.getElementById('testFullAlarmBtn');
+
+            // 1. If alarm is already ringing, stop it
+            if (isAlarmRinging) {
+                stopPrayerAlarm();
+                return;
+            }
+
+            // 2. If countdown is currently running, tapping cancels it
+            if (testAlarmSecondsLeft > 0) {
+                cancelTestAlarmCountdown();
+                return;
+            }
+
+            // 3. Start 10-second countdown
+            testAlarmSecondsLeft = 10;
+            if (fullBtn) {
+                fullBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Ringing in ${testAlarmSecondsLeft}s... (Tap to Cancel)`;
+                fullBtn.classList.add('ringing');
+            }
+
+            if ('vibrate' in navigator) {
+                try { navigator.vibrate(120); } catch (e) { }
+            }
+
+            // Also schedule background push through server if push available,
+            // so phone lock screen wakes up even if browser tab is suspended by mobile OS!
+            try {
+                if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+                    const reg = await navigator.serviceWorker.ready;
+                    const sub = await reg.pushManager.getSubscription();
+                    if (sub) {
+                        fetch(`${getPushServerUrl()}/api/send-test`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                subscription: sub.toJSON(),
+                                delaySeconds: 10,
+                                prayer: 'Fajr'
+                            })
+                        }).catch(() => { });
+                    }
+                }
+            } catch (e) { }
+
+            function onTimerTick(sec) {
+                testAlarmSecondsLeft = sec;
+                if (sec > 0) {
+                    if (fullBtn && !isAlarmRinging) {
+                        fullBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Ringing in ${sec}s... (Tap to Cancel)`;
+                    }
+                } else {
+                    cancelTestAlarmCountdown();
+                    triggerPrayerAlarm('Test Adhan', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                    if (fullBtn) {
+                        fullBtn.innerHTML = '<i class="fas fa-stop me-1"></i> Stop Alarm';
+                        fullBtn.classList.add('ringing');
+                    }
+                }
+            }
+
+            // Use background Web Worker (won't be throttled in background/minimized tab)
+            try {
+                const blob = new Blob([
+                    "let timer = null; onmessage = function(e) { if (e.data === 'start') { let s = 10; timer = setInterval(() => { s--; postMessage(s); if (s <= 0) clearInterval(timer); }, 1000); } else if (e.data === 'stop') { clearInterval(timer); } };"
+                ], { type: 'application/javascript' });
+                testAlarmWorker = new Worker(URL.createObjectURL(blob));
+                testAlarmWorker.onmessage = function (e) {
+                    onTimerTick(e.data);
+                };
+                testAlarmWorker.postMessage('start');
+            } catch (err) {
+                // Fallback to standard setInterval
+                testAlarmInterval = setInterval(() => {
+                    onTimerTick(testAlarmSecondsLeft - 1);
+                }, 1000);
             }
         }
 
@@ -2087,6 +2124,7 @@
         }
 
         function stopPrayerAlarm() {
+            cancelTestAlarmCountdown();
             stopAlarmAudio();
             const modal = document.getElementById('alarmRingingModal');
             if (modal) {
@@ -2094,8 +2132,40 @@
             }
             const testBtn = document.getElementById('testAlarmBtn');
             if (testBtn) {
-                testBtn.innerHTML = '<i class="fas fa-play me-1"></i> Play Adhan';
+                testBtn.innerHTML = '<i class="fas fa-play me-1"></i> Preview';
                 testBtn.classList.remove('ringing');
+            }
+            const fullBtn = document.getElementById('testFullAlarmBtn');
+            if (fullBtn) {
+                fullBtn.innerHTML = '<i class="fa-solid fa-stopwatch me-1"></i> Test Alarm in 10s (Lock/Minimize to test)';
+                fullBtn.classList.remove('ringing');
+            }
+        }
+
+        function showAudioUnlockPrompt() {
+            const promptEl = document.getElementById('tapToPlayBanner');
+            if (promptEl) {
+                promptEl.style.display = 'block';
+            }
+            const unlockAndPlay = function () {
+                if (currentAudioElement && isAlarmRinging) {
+                    currentAudioElement.play().then(() => {
+                        if (promptEl) promptEl.style.display = 'none';
+                    }).catch(() => { });
+                }
+                document.removeEventListener('click', unlockAndPlay);
+                document.removeEventListener('touchstart', unlockAndPlay);
+            };
+            document.addEventListener('click', unlockAndPlay, { once: true });
+            document.addEventListener('touchstart', unlockAndPlay, { once: true });
+        }
+
+        function resumeAdhanAudio() {
+            if (currentAudioElement && isAlarmRinging) {
+                currentAudioElement.play().then(() => {
+                    const promptEl = document.getElementById('tapToPlayBanner');
+                    if (promptEl) promptEl.style.display = 'none';
+                }).catch(() => { });
             }
         }
 
@@ -2113,20 +2183,30 @@
                 const playPromise = currentAudioElement.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(error => {
-                        console.warn('Adhan playback error, falling back to backup Makkah Adhan:', error);
+                        console.warn('Adhan playback blocked by browser or backgrounded:', error);
+                        showAudioUnlockPrompt();
                         if (audioSrc !== '/audio/adhan_makkah.mp3') {
-                            currentAudioElement = new Audio('/audio/adhan_makkah.mp3');
-                            currentAudioElement.play().catch(e => console.warn(e));
+                            try {
+                                currentAudioElement = new Audio('/audio/adhan_makkah.mp3');
+                                currentAudioElement.play().catch(() => showAudioUnlockPrompt());
+                            } catch (e) {
+                                showAudioUnlockPrompt();
+                            }
                         }
                     });
                 }
             } catch (e) {
                 console.warn('Audio play exception:', e);
+                showAudioUnlockPrompt();
             }
         }
 
         function stopAlarmAudio() {
             isAlarmRinging = false;
+            const promptEl = document.getElementById('tapToPlayBanner');
+            if (promptEl) {
+                promptEl.style.display = 'none';
+            }
             if (currentAudioElement) {
                 try {
                     currentAudioElement.pause();
@@ -2142,12 +2222,28 @@
                 if (params.get('ring') === '1') {
                     const prayerName = params.get('prayer') || 'Salah';
                     const prayerTime = params.get('time') || '';
+                    window.history.replaceState({}, document.title, window.location.pathname);
                     setTimeout(() => {
                         triggerPrayerAlarm(prayerName, prayerTime);
-                    }, 400);
+                    }, 200);
                 }
             } catch (e) { }
         }
+
+        // Service Worker message listener (triggers alarm when push notification is clicked)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'TRIGGER_ALARM') {
+                    triggerPrayerAlarm(event.data.prayer || 'Salah', '');
+                }
+            });
+        }
+        window.addEventListener('focus', checkUrlAlarmParam);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                checkUrlAlarmParam();
+            }
+        });
 
         function exportPrayerCalendar() {
             if (!currentTimings) {
