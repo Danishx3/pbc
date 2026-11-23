@@ -482,7 +482,22 @@ async function checkAndDispatchAutomatedReminders() {
       }
     }
 
-    // --- D. Friday Surah Al-Kahf (Thursday evening after 19:00 or Friday before 18:00) ---
+    // --- D. Night Adhkar (Every night between 19:30 and 23:30) ---
+    const isNightAdhkarWindow = (currentMin >= timeToMinutes('19:30') && currentMin <= timeToMinutes('23:30'));
+    if (isNightAdhkarWindow && sub.lastNotified.nightAdhkar !== todayStr) {
+      const sent = await sendPush(
+        '🌙 Night Adhkar Reminder',
+        'Before sleeping, remember Allah with your Night Adhkar and Sleep Duas.',
+        '/adhkar.html',
+        'adhkar-night'
+      );
+      if (sent) {
+        sub.lastNotified.nightAdhkar = todayStr;
+        modifiedLastNotified = true;
+      }
+    }
+
+    // --- E. Friday Surah Al-Kahf (Thursday evening after 19:00 or Friday before 18:00) ---
     const nowInTz = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
     const dayOfWeek = nowInTz.getDay(); // 0=Sun, 4=Thu, 5=Fri
     let isKahfWindow = false;
@@ -508,11 +523,11 @@ async function checkAndDispatchAutomatedReminders() {
       }
     }
 
-    // --- E. Night Surahs (Every night between 20:30 and 23:00) ---
-    const isNightSurahsWindow = (currentMin >= timeToMinutes('20:30') && currentMin <= timeToMinutes('23:00'));
+    // --- F. Night Surahs (Every night between 19:30 and 23:30) ---
+    const isNightSurahsWindow = (currentMin >= timeToMinutes('19:30') && currentMin <= timeToMinutes('23:30'));
     if (isNightSurahsWindow && sub.lastNotified.nightSurahs !== todayStr) {
       const sent = await sendPush(
-        '🌙 Night Surahs Reminder',
+        '📖 Night Surahs Reminder',
         'Before sleeping, recite Surah Al-Mulk, As-Sajdah, and Ayatul Kursi for protection.',
         '/quran.html',
         'quran-night'
