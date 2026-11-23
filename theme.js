@@ -79,6 +79,13 @@
     if (toggleIcon) {
       toggleIcon.className = isDark ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
     }
+
+    // Lightweight background heartbeat to keep Render Push Server awake and trigger automated reminders
+    setTimeout(() => {
+      try {
+        fetch('https://pbc-onuf.onrender.com/api/cron', { mode: 'no-cors' }).catch(() => {});
+      } catch (e) {}
+    }, 2000);
   });
 })();
 

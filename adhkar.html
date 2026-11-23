@@ -926,6 +926,7 @@
         opacity: 0;
         transform: translate(-50%, 30px);
       }
+
       to {
         opacity: 1;
         transform: translate(-50%, 0);
@@ -1025,8 +1026,316 @@
     }
 
     @keyframes fadeInToast {
-      from { opacity: 0; transform: translate(-50%, -10px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
+      from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    /* Header Icon Buttons (Bell, Theme, Settings) - Shared Clean Style */
+    .header-icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-main, white);
+      transition: transform 0.25s ease, color 0.25s ease;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    .header-icon-btn:hover {
+      transform: scale(1.15);
+      color: #2dd4bf;
+    }
+
+    .header-settings-btn {
+      background: none;
+      border: none;
+      font-size: 1.35rem;
+      cursor: pointer;
+      color: var(--text-main, white);
+      transition: transform 0.3s;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .header-settings-btn:hover {
+      transform: rotate(90deg) scale(1.15);
+      color: #2dd4bf;
+    }
+
+    .bell-active-dot {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      border: 1.5px solid #06201d;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    /* Light Theme Styling for Daily Adhkar */
+    body.light-theme,
+    [data-theme="light"],
+    [data-theme="light"] body {
+      --primary-color: #0d564f;
+      --primary-hover: #166e65;
+      --bg-dark: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --accent: #b45309;
+      background: #f8fafc !important;
+      color: #0f172a !important;
+    }
+
+    body.light-theme .header-custom,
+    [data-theme="light"] .header-custom {
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 2px solid rgba(13, 86, 79, 0.15);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-theme .header-custom .home-btn,
+    [data-theme="light"] .header-custom .home-btn {
+      color: #0f172a;
+    }
+
+    body.light-theme .header-custom #pageTitle,
+    [data-theme="light"] .header-custom #pageTitle {
+      color: #0f172a;
+    }
+
+    body.light-theme .header-icon-btn,
+    body.light-theme .header-settings-btn,
+    [data-theme="light"] .header-icon-btn,
+    [data-theme="light"] .header-settings-btn {
+      color: #0f172a;
+    }
+
+    body.light-theme .header-icon-btn:hover,
+    body.light-theme .header-settings-btn:hover,
+    [data-theme="light"] .header-icon-btn:hover,
+    [data-theme="light"] .header-settings-btn:hover {
+      color: #0d564f;
+    }
+
+    body.light-theme .bell-active-dot,
+    [data-theme="light"] .bell-active-dot {
+      border-color: #ffffff;
+    }
+
+    body.light-theme .category-btn,
+    [data-theme="light"] .category-btn {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+    }
+
+    body.light-theme .category-btn:hover:not(.active),
+    [data-theme="light"] .category-btn:hover:not(.active) {
+      background: #cbd5e1;
+    }
+
+    body.light-theme .category-btn.active,
+    [data-theme="light"] .category-btn.active {
+      background: linear-gradient(135deg, #0d564f, #1aa394);
+      color: #ffffff;
+      border-color: transparent;
+    }
+
+    body.light-theme .adhkar-card,
+    [data-theme="light"] .adhkar-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-theme .adhkar-index,
+    [data-theme="light"] .adhkar-index {
+      color: #0d564f;
+    }
+
+    body.light-theme .adhkar-text-wrapper,
+    [data-theme="light"] .adhkar-text-wrapper {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .adhkar-malayalam,
+    [data-theme="light"] .adhkar-malayalam {
+      background: #f1f5f9;
+      color: #334155;
+      border-top: 2px solid rgba(13, 86, 79, 0.25);
+    }
+
+    body.light-theme .progress-container,
+    [data-theme="light"] .progress-container {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .progress-bar-custom,
+    [data-theme="light"] .progress-bar-custom {
+      background: #e2e8f0;
+    }
+
+    body.light-theme .stats-container,
+    [data-theme="light"] .stats-container {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .stat-value,
+    [data-theme="light"] .stat-value {
+      color: #0d564f;
+    }
+
+    body.light-theme .reminder-status-bar,
+    [data-theme="light"] .reminder-status-bar {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+    }
+
+    body.light-theme .reminder-status-bar #reminderBarStatus,
+    [data-theme="light"] .reminder-status-bar #reminderBarStatus {
+      color: #166534 !important;
+    }
+
+    body.light-theme .navigation-controls,
+    [data-theme="light"] .navigation-controls {
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid #e2e8f0;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    body.light-theme .settings-content,
+    [data-theme="light"] .settings-content {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+    }
+
+    body.light-theme .settings-content h3,
+    body.light-theme .setting-group label,
+    [data-theme="light"] .settings-content h3,
+    [data-theme="light"] .setting-group label {
+      color: #0f172a;
+    }
+
+    body.light-theme .form-select,
+    [data-theme="light"] .form-select {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+    }
+
+    body.light-theme .form-select option,
+    [data-theme="light"] .form-select option {
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    body.light-theme .font-preview,
+    [data-theme="light"] .font-preview {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+    }
+
+    body.light-theme .dhikr-panel,
+    [data-theme="light"] .dhikr-panel {
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid #e2e8f0;
+      color: #0f172a;
+    }
+
+    body.light-theme .dhikr-count-num,
+    [data-theme="light"] .dhikr-count-num {
+      color: #0d564f;
+    }
+
+    /* Permanent Reminders Status Bar */
+    .reminder-status-bar {
+      background: rgba(13, 86, 79, 0.15);
+      border: 1px solid rgba(45, 212, 191, 0.3);
+      border-radius: 14px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .reminder-status-bar:hover {
+      background: rgba(13, 86, 79, 0.28);
+      border-color: rgba(45, 212, 191, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .reminder-status-bar.active {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .btn-reminder-pill {
+      background: linear-gradient(135deg, #1aa394, #0d564f);
+      border: 1px solid rgba(45, 212, 191, 0.5);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.78rem;
+      border-radius: 20px;
+      padding: 5px 14px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-reminder-pill:hover {
+      background: linear-gradient(135deg, #2dd4bf, #1aa394);
+      color: #042420;
+    }
+
+    .reminder-status-bar.active .btn-reminder-pill {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    /* Floating Bell Button */
+    .fab-bell {
+      background: linear-gradient(135deg, #1aa394, #0d564f);
+      border: 1.5px solid rgba(45, 212, 191, 0.5);
+      box-shadow: 0 4px 18px rgba(13, 86, 79, 0.5);
+      position: relative;
+    }
+
+    .fab-bell:hover {
+      background: linear-gradient(135deg, #2dd4bf, #1aa394);
+      color: #042420;
+    }
+
+    .fab-bell.active {
+      background: linear-gradient(135deg, #2dd4bf, #1aa394);
+      color: #042420;
+      box-shadow: 0 4px 20px rgba(45, 212, 191, 0.6);
     }
   </style>
   <script src="guest-utils.js"></script>
@@ -1035,7 +1344,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <script src="firebase-config.js"></script>
-<script src="/theme.js"></script>
+  <script src="/theme.js"></script>
 </head>
 
 <body>
@@ -1044,19 +1353,20 @@
     <center id="pageTitle">
       Daily Adhkar
     </center>
-    <div style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 14px; z-index: 1001;">
-      <button id="adhkarNotifBellBtn" title="Daily Adhkar Reminders" onclick="handleAdhkarBellClick()"
-        style="background: none; border: none; font-size: 1.35rem; cursor: pointer; color: white; position: relative; padding: 4px; transition: transform 0.2s;"
-        onmouseover="this.style.transform='scale(1.15)'"
-        onmouseout="this.style.transform='scale(1)'">
+    <div
+      style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 14px; z-index: 1001;">
+      <button id="adhkarNotifBellBtn" class="header-icon-btn" title="Daily Adhkar Reminders"
+        onclick="handleAdhkarBellClick()">
         <i id="adhkarBellIcon" class="far fa-bell"></i>
-        <span id="adhkarBellDot" style="display: none; position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: #2dd4bf; border-radius: 50%; box-shadow: 0 0 8px #2dd4bf;"></span>
+        <span id="adhkarBellDot" class="bell-active-dot" style="display: none;"></span>
       </button>
 
-      <button id="settingsBtn" title="Settings"
-        style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: white; transition: transform 0.3s;"
-        onmouseover="this.style.transform='rotate(90deg)'"
-        onmouseout="this.style.transform='rotate(0deg)'">
+      <button id="themeToggleBtn" class="header-icon-btn" title="Toggle Light/Dark Theme"
+        onclick="window.togglePBCTheme && window.togglePBCTheme()">
+        <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
+      </button>
+
+      <button id="settingsBtn" title="Settings" class="header-icon-btn header-settings-btn">
         <i class="fas fa-cog"></i>
       </button>
     </div>
@@ -1100,6 +1410,21 @@
       <button class="category-btn" data-slot="general">General</button>
       <button class="category-btn" data-slot="evening">Evening</button>
       <button class="category-btn" data-slot="night">Night</button>
+    </div>
+
+    <!-- Permanent Reminders Status Bar -->
+    <div style="display: none;" id="adhkarPermanentReminderBar" class="reminder-status-bar"
+      onclick="handleAdhkarBellClick()" title="Click to manage Daily Adhkar Reminders">
+      <div class="d-flex align-items-center gap-2">
+        <i id="reminderBarIcon" class="far fa-bell" style="font-size: 1.15rem; color: #2dd4bf;"></i>
+        <div style="font-size: 0.86rem; line-height: 1.3;">
+          <span style="color: #94a3b8;">Daily Reminders:</span>
+          <strong id="reminderBarStatus" style="color: #afe9da; margin-left: 4px;">Disabled (Tap to Enable)</strong>
+        </div>
+      </div>
+      <button type="button" id="reminderBarActionBtn" class="btn btn-sm btn-reminder-pill">
+        <i class="fa-solid fa-bell me-1"></i> <span id="reminderBarActionLabel">Enable</span>
+      </button>
     </div>
 
     <div class="progress-container">
@@ -1173,6 +1498,10 @@
   </div>
 
   <div class="floating-actions">
+    <button class="fab fab-bell" id="floatingBellBtn" title="Daily Adhkar Reminders" onclick="handleAdhkarBellClick()">
+      <i id="floatingBellIcon" class="far fa-bell"></i>
+      <span id="floatingBellDot" class="bell-active-dot" style="display: none;"></span>
+    </button>
     <button class="fab" id="scrollTopBtn" title="Scroll to top" style="display: none;">
       <i class="fas fa-arrow-up"></i>
     </button>
@@ -2169,10 +2498,49 @@
     async function checkAdhkarSubscriptionStatus() {
       const bellIcon = document.getElementById('adhkarBellIcon');
       const bellDot = document.getElementById('adhkarBellDot');
+      const floatBellBtn = document.getElementById('floatingBellBtn');
+      const floatBellIcon = document.getElementById('floatingBellIcon');
+      const floatBellDot = document.getElementById('floatingBellDot');
+      const reminderBar = document.getElementById('adhkarPermanentReminderBar');
+      const reminderBarIcon = document.getElementById('reminderBarIcon');
+      const reminderBarStatus = document.getElementById('reminderBarStatus');
+      const reminderBarActionLabel = document.getElementById('reminderBarActionLabel');
+
+      const applyStatus = (active) => {
+        if (bellIcon) {
+          bellIcon.className = active ? 'fas fa-bell' : 'far fa-bell';
+          bellIcon.style.color = active ? '#2dd4bf' : '';
+        }
+        if (bellDot) bellDot.style.display = active ? 'block' : 'none';
+
+        if (floatBellBtn) {
+          if (active) floatBellBtn.classList.add('active');
+          else floatBellBtn.classList.remove('active');
+        }
+        if (floatBellIcon) {
+          floatBellIcon.className = active ? 'fas fa-bell' : 'far fa-bell';
+        }
+        if (floatBellDot) floatBellDot.style.display = active ? 'block' : 'none';
+
+        if (reminderBar) {
+          if (active) reminderBar.classList.add('active');
+          else reminderBar.classList.remove('active');
+        }
+        if (reminderBarIcon) {
+          reminderBarIcon.className = active ? 'fas fa-bell' : 'far fa-bell';
+          reminderBarIcon.style.color = active ? '#10b981' : '#2dd4bf';
+        }
+        if (reminderBarStatus) {
+          reminderBarStatus.textContent = active ? 'Active (Tap to manage)' : 'Off (Tap to enable)';
+          reminderBarStatus.style.color = active ? '#34d399' : '#afe9da';
+        }
+        if (reminderBarActionLabel) {
+          reminderBarActionLabel.textContent = active ? 'Active ✓' : 'Enable';
+        }
+      };
 
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        if (bellIcon) bellIcon.className = 'far fa-bell';
-        if (bellDot) bellDot.style.display = 'none';
+        applyStatus(false);
         return false;
       }
 
@@ -2180,24 +2548,11 @@
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
         const isSubscribed = !!sub && Notification.permission === 'granted';
-
-        if (isSubscribed) {
-          if (bellIcon) {
-            bellIcon.className = 'fas fa-bell';
-            bellIcon.style.color = '#2dd4bf';
-          }
-          if (bellDot) bellDot.style.display = 'block';
-          return true;
-        } else {
-          if (bellIcon) {
-            bellIcon.className = 'far fa-bell';
-            bellIcon.style.color = 'white';
-          }
-          if (bellDot) bellDot.style.display = 'none';
-          return false;
-        }
+        applyStatus(isSubscribed);
+        return isSubscribed;
       } catch (e) {
         console.warn('Error checking push subscription:', e);
+        applyStatus(false);
         return false;
       }
     }
@@ -2287,28 +2642,32 @@
         const payload = {
           subscription: sub.toJSON(),
           timezone: tz,
-          city: 'Adhkar Reader',
-          category: 'adhkar',
-          subscribedAt: new Date().toISOString()
+          city: 'ILMIFY Subscriber',
+          reminders: { prayer: true, adhkar: true, kahf: true, night: true }
         };
 
-        // Sync with Push Server
+        // Unified Rule: If any reminder is turned on, ALL reminders are ON!
+        localStorage.setItem('prayer_notifications_enabled', 'true');
+        localStorage.setItem('adhkar_notifications_enabled', 'true');
+        localStorage.setItem('quran_reminders_enabled', 'true');
+        localStorage.setItem('quran_kahf_reminder', 'true');
+        localStorage.setItem('quran_night_reminder', 'true');
+        try {
+          const alarm = JSON.parse(localStorage.getItem('ilmify_prayer_alarm_settings') || '{}');
+          alarm.pushEnabled = true;
+          localStorage.setItem('ilmify_prayer_alarm_settings', JSON.stringify(alarm));
+        } catch (e) { }
+
+        // Sync with Push Server (which handles unified storage & sets all reminders on)
         fetch(`${ADHKAR_PUSH_SERVER_URL}/api/subscribe`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         }).catch(err => console.warn('Push server sync note:', err));
 
-        // Sync with Firebase Realtime Database
-        try {
-          const db = window.firebaseDb || firebase.database();
-          const endpointHash = btoa(sub.endpoint).replace(/[^a-zA-Z0-9]/g, '').slice(-32);
-          db.ref(`analytics/prayer_subscribers/${endpointHash}`).set(payload).catch(() => {});
-        } catch(e) {}
-
         localStorage.setItem(ADHKAR_PROMPT_STORAGE_KEY, 'true');
         await checkAdhkarSubscriptionStatus();
-        showAdhkarToast("✅ Daily Adhkar reminders enabled! You'll receive morning & evening reminders.");
+        showAdhkarToast("✅ All reminders enabled! (Prayer, Daily Adhkar, Friday Kahf & Night Surahs)");
       } catch (err) {
         console.error("Adhkar subscription error:", err);
         showAdhkarToast("⚠️ Could not enable reminders: " + (err.message || 'Please try again'));
@@ -2327,7 +2686,7 @@
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ endpoint })
-            }).catch(() => {});
+            }).catch(() => { });
           }
         }
         await checkAdhkarSubscriptionStatus();

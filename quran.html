@@ -1384,6 +1384,155 @@
         #ramadanCard {
             display: none !important;
         }
+
+        /* Quran Header Reminder Bell Button */
+        .header-icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: rgb(251, 249, 249);
+            transition: transform 0.25s ease, color 0.25s ease;
+            padding: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            line-height: 1;
+            text-decoration: none;
+        }
+
+        .header-icon-btn:hover {
+            transform: scale(1.15);
+            color: #2dd4bf;
+        }
+
+        .bell-active-dot {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            border: 1.5px solid #06201d;
+            box-shadow: 0 0 6px #10b981;
+        }
+
+        /* Reminder Modal for Friday Kahf & Night Surahs */
+        .quran-reminder-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: quranFadeIn 0.25s ease;
+        }
+
+        .quran-reminder-modal {
+            background: linear-gradient(145deg, #06201d, #031412);
+            border: 1.5px solid rgba(45, 212, 191, 0.4);
+            border-radius: 22px;
+            max-width: 440px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            color: #fff;
+            position: relative;
+            animation: quranPopIn 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+        }
+
+        @keyframes quranFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes quranPopIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .reminder-card-item {
+            background: rgba(13, 86, 79, 0.22);
+            border: 1px solid rgba(45, 212, 191, 0.25);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .reminder-card-item:hover {
+            border-color: rgba(45, 212, 191, 0.6);
+            background: rgba(13, 86, 79, 0.35);
+        }
+
+        .reminder-card-item .item-title {
+            font-size: 0.96rem;
+            font-weight: 700;
+            color: #afe9da;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reminder-card-item .item-desc {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.35;
+        }
+
+        .form-switch .form-check-input {
+            width: 2.8em;
+            height: 1.5em;
+            cursor: pointer;
+            background-color: #334155;
+            border-color: #64748b;
+        }
+
+        .form-switch .form-check-input:checked {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+
+        .btn-card-reminder {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #afe9da;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            margin-left: auto;
+        }
+
+        .btn-card-reminder:hover {
+            background: #2dd4bf;
+            color: #042420;
+            border-color: #2dd4bf;
+            transform: scale(1.1);
+        }
+
+        .btn-card-reminder.active {
+            background: #10b981;
+            color: #ffffff;
+            border-color: #10b981;
+        }
     </style>
     <script src="guest-utils.js"></script>
 <script src="/theme.js"></script>
@@ -1392,13 +1541,88 @@
 <body>
     <header class="fix intro" style="z-index: 1000;">
         <center>
-            <a style="position: fixed; left: 20px; color: rgb(251, 249, 249);" href="/main.html"><i
+            <a style="position: fixed; left: 20px; top: 12px; color: rgb(251, 249, 249); font-size: 1.25rem; text-decoration: none;" href="/main.html" title="Home"><i
                     class="fa fa-home"></i></a>
             Quran
-            <a style="position: fixed; right: 20px; color: rgb(251, 249, 249); cursor: pointer;"
-                onclick="toggleSettings()"><i class="fa fa-cog" id="settingsIcon"></i></a>
+            <div style="position: fixed; right: 18px; top: 10px; display: flex; align-items: center; gap: 14px; z-index: 1001;">
+                <button id="quranReminderBellBtn" class="header-icon-btn" title="Quran Reminders (Friday Kahf & Night Surahs)" onclick="openQuranReminderModal()">
+                    <i id="quranBellIcon" class="far fa-bell"></i>
+                    <span id="quranBellDot" class="bell-active-dot" style="display: none;"></span>
+                </button>
+                <a style="color: rgb(251, 249, 249); cursor: pointer; display: flex; align-items: center; text-decoration: none;"
+                    onclick="toggleSettings()" title="Settings"><i class="fa fa-cog" id="settingsIcon" style="font-size: 1.3rem;"></i></a>
+            </div>
         </center>
     </header><br><br><br>
+
+    <!-- ── Quran Reminders Modal (Friday Kahf & Night Surahs) ── -->
+    <div id="quranReminderModal" class="quran-reminder-overlay" onclick="closeQuranReminderModal(event)">
+        <div class="quran-reminder-modal" onclick="event.stopPropagation()">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-bell" style="font-size: 1.25rem; color: #2dd4bf;"></i>
+                    <h5 class="m-0" style="font-weight: 700; color: #afe9da;">Quran Reminders</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" onclick="closeQuranReminderModal()" title="Close"></button>
+            </div>
+
+            <p style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 16px; line-height: 1.4;">
+                Never miss your blessed Quran recitations. Enable gentle reminders on this device:
+            </p>
+
+            <!-- Friday Kahf Item -->
+            <div class="reminder-card-item">
+                <div style="flex: 1;">
+                    <div class="item-title">
+                        <i class="fas fa-mosque" style="color: #1abc9c;"></i> Friday Surah Al-Kahf
+                    </div>
+                    <p class="item-desc">
+                        Weekly reminder every Thursday evening & Friday to recite Surah Al-Kahf.
+                    </p>
+                </div>
+                <div class="form-check form-switch m-0 ms-2">
+                    <input class="form-check-input" type="checkbox" id="toggleKahfSwitch" onchange="handleKahfToggle(this.checked)">
+                </div>
+            </div>
+
+            <!-- Night Surahs Item -->
+            <div class="reminder-card-item">
+                <div style="flex: 1;">
+                    <div class="item-title">
+                        <i class="fas fa-moon" style="color: #a78bfa;"></i> Night Surahs
+                    </div>
+                    <p class="item-desc">
+                        Daily night reminder (7:00 PM onwards) for Surah Al-Mulk, As-Sajdah, and Ayatul Kursi.
+                    </p>
+                </div>
+                <div class="form-check form-switch m-0 ms-2">
+                    <input class="form-check-input" type="checkbox" id="toggleNightSwitch" onchange="handleNightToggle(this.checked)">
+                </div>
+            </div>
+
+            <!-- Device Status Banner -->
+            <div id="reminderPermBanner" class="p-2 px-3 rounded mb-3" style="background: rgba(255,255,255,0.06); font-size: 0.82rem; display: flex; align-items: center; justify-content: space-between;">
+                <span id="reminderPermStatusText" style="color: #94a3b8;">
+                    <i class="fa-solid fa-circle-info me-1"></i> Checking status...
+                </span>
+                <span id="reminderActiveBadge" class="badge bg-success" style="display: none;">Active</span>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+                <button type="button" id="btnEnableQuranReminders" class="btn btn-success w-100 py-2" style="font-weight: 700; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669); border: none;" onclick="enableAllQuranReminders()">
+                    <i class="fa-solid fa-bell me-1"></i> Enable Reminders
+                </button>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-info btn-sm flex-grow-1" style="border-radius: 10px;" onclick="testQuranReminder()">
+                        <i class="fa-solid fa-paper-plane me-1"></i> Test Notification
+                    </button>
+                    <button type="button" id="btnDisableQuranReminders" class="btn btn-outline-danger btn-sm" style="border-radius: 10px; display: none;" onclick="disableAllQuranReminders()">
+                        Turn Off
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Mode Selection Overlay -->
     <div id="entryOverlay" class="mode-selection-overlay">
@@ -1427,7 +1651,12 @@
                         <i class="fas fa-moon fa-lg"></i>
                     </div>
                     <div class="mode-card-content">
-                        <h3>Night Surahs</h3>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="m-0">Night Surahs</h3>
+                            <button type="button" class="btn-card-reminder" id="cardNightReminderBtn" title="Night Surahs Reminder" onclick="event.stopPropagation(); openQuranReminderModal('night')">
+                                <i class="fa-regular fa-bell"></i>
+                            </button>
+                        </div>
                         <p>Al-Mulk · As-Sajdah · Ayatul Kursi · &amp; more</p>
                         <div class="progress"
                             style="height: 5px; background-color: rgba(255,255,255,0.1); border-radius:4px;">
@@ -1443,7 +1672,12 @@
                         <i class="fas fa-mosque fa-lg"></i>
                     </div>
                     <div class="mode-card-content">
-                        <h3>Friday Kahf</h3>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="m-0">Friday Kahf</h3>
+                            <button type="button" class="btn-card-reminder" id="cardKahfReminderBtn" title="Friday Kahf Reminder" onclick="event.stopPropagation(); openQuranReminderModal('kahf')">
+                                <i class="fa-regular fa-bell"></i>
+                            </button>
+                        </div>
                         <p>Read Surah Al-Kahf</p>
                         <div class="progress"
                             style="height: 5px; background-color: rgba(255,255,255,0.1); border-radius:4px;">
@@ -1562,8 +1796,19 @@
 
             <hr class="border-secondary my-3">
 
-            <div class="text-white-50 small" style="margin-bottom: 12px;">
-                Allow push notifications in your browser to receive Kahf & Night Surah reminders.
+            <div class="p-3 mb-3" style="background: rgba(13, 86, 79, 0.3); border: 1px solid rgba(45, 212, 191, 0.35); border-radius: 12px;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span style="font-weight: 700; color: #afe9da; font-size: 0.95rem;">
+                        <i class="fa-solid fa-bell me-2" style="color: #2dd4bf;"></i>Quran Reminders
+                    </span>
+                    <span id="settingsReminderBadge" class="badge bg-secondary">Disabled</span>
+                </div>
+                <p class="small text-white-50 mb-3" style="font-size: 0.82rem; margin: 0 0 10px 0; line-height: 1.35;">
+                    Stay consistent with Friday Surah Al-Kahf and daily Night Surahs (Al-Mulk, etc.).
+                </p>
+                <button type="button" class="btn btn-sm btn-outline-info w-100" onclick="openQuranReminderModal()">
+                    <i class="fa-solid fa-sliders me-1"></i> Configure Reminders
+                </button>
             </div>
 
             <hr class="border-secondary my-3">
@@ -1675,7 +1920,12 @@
             style="display: none; background: linear-gradient(135deg, #0e6b56, #084a3b); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #1abc9c; box-shadow: 0 0 15px rgba(26, 188, 156, 0.3);">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="m-0" style="color: #1abc9c;"><i class="fas fa-mosque"></i> Friday Kahf</h5>
-                <span class="badge bg-white text-dark" id="kahfProgressText">0% Complete</span>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" id="kahfDashReminderBtn" class="btn btn-sm" style="background: rgba(26, 188, 156, 0.2); border: 1px solid #1abc9c; color: #1abc9c; font-size: 0.78rem; border-radius: 20px; padding: 2px 10px;" onclick="openQuranReminderModal('kahf')">
+                        <i class="fa-regular fa-bell me-1"></i> Reminder
+                    </button>
+                    <span class="badge bg-white text-dark" id="kahfProgressText">0% Complete</span>
+                </div>
             </div>
 
             <div class="progress mb-2" style="height: 20px; background-color: rgba(255,255,255,0.1);">
@@ -1691,7 +1941,12 @@
             style="display: none; background: linear-gradient(135deg, #2e1065, #4c1d95); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #a78bfa; box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="m-0" style="color: #a78bfa;"><i class="fas fa-moon"></i> Night Surahs</h5>
-                <span class="badge" style="background: #a78bfa; color: #fff;" id="nightProgressText">0% Complete</span>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" id="nightDashReminderBtn" class="btn btn-sm" style="background: rgba(167, 139, 250, 0.2); border: 1px solid #a78bfa; color: #a78bfa; font-size: 0.78rem; border-radius: 20px; padding: 2px 10px;" onclick="openQuranReminderModal('night')">
+                        <i class="fa-regular fa-bell me-1"></i> Reminder
+                    </button>
+                    <span class="badge" style="background: #a78bfa; color: #fff;" id="nightProgressText">0% Complete</span>
+                </div>
             </div>
             <div class="progress mb-2" style="height: 20px; background-color: rgba(255,255,255,0.1);">
                 <div id="nightProgressBar" class="progress-bar progress-bar-striped progress-bar-animated"
@@ -1923,7 +2178,295 @@
             renderSavedAyahs();
         };
 
-        // --- Notification Logic ---
+        // --- Quran Reminders Logic (Friday Kahf & Night Surahs) ---
+        const QURAN_PUSH_SERVER_URL = 'https://pbc-onuf.onrender.com';
+        const QURAN_VAPID_PUBLIC_KEY = 'BOV6m-17pyTWwl0hIO5lI8IXvDFyGmE8ZjS6TWbbsTi8iFAWGpeBKzpZ0qfRjOjUKEEfOP9EGd0csd70F10ff14';
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        let quranReminderInterval = null;
+
+        function openQuranReminderModal(focusTarget) {
+            const modal = document.getElementById('quranReminderModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                syncQuranReminderUI();
+            }
+        }
+
+        function closeQuranReminderModal(e) {
+            if (e && e.target !== e.currentTarget && e.target.id !== 'quranReminderModal') return;
+            const modal = document.getElementById('quranReminderModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function isQuranPushSubscribed() {
+            return localStorage.getItem('quran_reminders_enabled') === 'true' &&
+                'Notification' in window && Notification.permission === 'granted';
+        }
+
+        async function syncQuranReminderUI() {
+            const bellIcon = document.getElementById('quranBellIcon');
+            const bellDot = document.getElementById('quranBellDot');
+            const permStatusText = document.getElementById('reminderPermStatusText');
+            const activeBadge = document.getElementById('reminderActiveBadge');
+            const btnEnable = document.getElementById('btnEnableQuranReminders');
+            const btnDisable = document.getElementById('btnDisableQuranReminders');
+            const kahfSwitch = document.getElementById('toggleKahfSwitch');
+            const nightSwitch = document.getElementById('toggleNightSwitch');
+            const settingsBadge = document.getElementById('settingsReminderBadge');
+            const cardKahfBtn = document.getElementById('cardKahfReminderBtn');
+            const cardNightBtn = document.getElementById('cardNightReminderBtn');
+            const kahfDashBtn = document.getElementById('kahfDashReminderBtn');
+            const nightDashBtn = document.getElementById('nightDashReminderBtn');
+
+            // Default preferences (true if not set)
+            const kahfEnabled = localStorage.getItem('quran_kahf_reminder') !== 'false';
+            const nightEnabled = localStorage.getItem('quran_night_reminder') !== 'false';
+
+            if (kahfSwitch) kahfSwitch.checked = kahfEnabled;
+            if (nightSwitch) nightSwitch.checked = nightEnabled;
+
+            let isSubscribed = false;
+            if ('serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window) {
+                if (Notification.permission === 'granted') {
+                    try {
+                        const reg = await navigator.serviceWorker.ready;
+                        const sub = await reg.pushManager.getSubscription();
+                        isSubscribed = !!sub || localStorage.getItem('quran_reminders_enabled') === 'true';
+                    } catch (e) {
+                        isSubscribed = localStorage.getItem('quran_reminders_enabled') === 'true';
+                    }
+                }
+            }
+
+            // Sync Header Bell
+            if (bellIcon) {
+                bellIcon.className = isSubscribed ? 'fas fa-bell' : 'far fa-bell';
+                bellIcon.style.color = isSubscribed ? '#2dd4bf' : '';
+            }
+            if (bellDot) {
+                bellDot.style.display = isSubscribed ? 'block' : 'none';
+            }
+
+            // Sync Modal Status
+            if (permStatusText) {
+                if (!('Notification' in window)) {
+                    permStatusText.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-warning me-1"></i> Notifications not supported';
+                } else if (Notification.permission === 'denied') {
+                    permStatusText.innerHTML = '<i class="fa-solid fa-ban text-danger me-1"></i> Blocked in browser settings';
+                } else if (isSubscribed) {
+                    permStatusText.innerHTML = '<i class="fa-solid fa-check text-success me-1"></i> Reminders active on this device';
+                } else {
+                    permStatusText.innerHTML = '<i class="fa-solid fa-circle-info text-secondary me-1"></i> Reminders currently off';
+                }
+            }
+
+            if (activeBadge) activeBadge.style.display = isSubscribed ? 'inline-block' : 'none';
+            if (btnEnable) {
+                btnEnable.innerHTML = isSubscribed ? '<i class="fa-solid fa-check me-1"></i> Reminders Enabled' : '<i class="fa-solid fa-bell me-1"></i> Enable Reminders';
+                btnEnable.className = isSubscribed ? 'btn btn-secondary w-100 py-2' : 'btn btn-success w-100 py-2';
+            }
+            if (btnDisable) btnDisable.style.display = isSubscribed ? 'inline-block' : 'none';
+
+            // Sync Settings Badge
+            if (settingsBadge) {
+                if (isSubscribed) {
+                    settingsBadge.className = 'badge bg-success';
+                    settingsBadge.textContent = 'Active';
+                } else {
+                    settingsBadge.className = 'badge bg-secondary';
+                    settingsBadge.textContent = 'Disabled';
+                }
+            }
+
+            // Sync Card & Dashboard Buttons
+            if (cardKahfBtn) {
+                if (isSubscribed && kahfEnabled) {
+                    cardKahfBtn.classList.add('active');
+                    cardKahfBtn.innerHTML = '<i class="fa-solid fa-bell"></i>';
+                } else {
+                    cardKahfBtn.classList.remove('active');
+                    cardKahfBtn.innerHTML = '<i class="fa-regular fa-bell"></i>';
+                }
+            }
+            if (cardNightBtn) {
+                if (isSubscribed && nightEnabled) {
+                    cardNightBtn.classList.add('active');
+                    cardNightBtn.innerHTML = '<i class="fa-solid fa-bell"></i>';
+                } else {
+                    cardNightBtn.classList.remove('active');
+                    cardNightBtn.innerHTML = '<i class="fa-regular fa-bell"></i>';
+                }
+            }
+            if (kahfDashBtn) {
+                kahfDashBtn.innerHTML = (isSubscribed && kahfEnabled) ?
+                    '<i class="fa-solid fa-bell me-1"></i> Active ✓' : '<i class="fa-regular fa-bell me-1"></i> Reminder';
+            }
+            if (nightDashBtn) {
+                nightDashBtn.innerHTML = (isSubscribed && nightEnabled) ?
+                    '<i class="fa-solid fa-bell me-1"></i> Active ✓' : '<i class="fa-regular fa-bell me-1"></i> Reminder';
+            }
+        }
+
+        async function handleKahfToggle(checked) {
+            localStorage.setItem('quran_kahf_reminder', checked ? 'true' : 'false');
+            if (checked && !isQuranPushSubscribed()) {
+                await enableAllQuranReminders();
+            } else {
+                syncQuranReminderUI();
+                syncPushSubscriptionBackend();
+            }
+        }
+
+        async function handleNightToggle(checked) {
+            localStorage.setItem('quran_night_reminder', checked ? 'true' : 'false');
+            if (checked && !isQuranPushSubscribed()) {
+                await enableAllQuranReminders();
+            } else {
+                syncQuranReminderUI();
+                syncPushSubscriptionBackend();
+            }
+        }
+
+        async function enableAllQuranReminders() {
+            if (!('Notification' in window)) {
+                alert('Push notifications are not supported on this browser.');
+                return;
+            }
+
+            let perm = Notification.permission;
+            if (perm !== 'granted') {
+                try {
+                    perm = await Notification.requestPermission();
+                } catch (e) {
+                    perm = Notification.permission;
+                }
+            }
+
+            if (perm !== 'granted') {
+                alert('Notifications are blocked. Please allow notification permission in your browser site settings.');
+                syncQuranReminderUI();
+                return;
+            }
+
+            try {
+                // Unified rule: If any reminder is on, ALL reminders are ON!
+                localStorage.setItem('prayer_notifications_enabled', 'true');
+                localStorage.setItem('adhkar_notifications_enabled', 'true');
+                localStorage.setItem('quran_reminders_enabled', 'true');
+                localStorage.setItem('quran_kahf_reminder', 'true');
+                localStorage.setItem('quran_night_reminder', 'true');
+                try {
+                    const alarm = JSON.parse(localStorage.getItem('ilmify_prayer_alarm_settings') || '{}');
+                    alarm.pushEnabled = true;
+                    localStorage.setItem('ilmify_prayer_alarm_settings', JSON.stringify(alarm));
+                } catch (e) { }
+
+                if ('serviceWorker' in navigator) {
+                    const reg = await navigator.serviceWorker.register('/sw.js');
+                    await navigator.serviceWorker.ready;
+
+                    let sub = await reg.pushManager.getSubscription();
+                    if (!sub) {
+                        const convertedKey = urlBase64ToUint8Array(QURAN_VAPID_PUBLIC_KEY);
+                        sub = await reg.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: convertedKey
+                        });
+                    }
+
+                    await syncPushSubscriptionBackend(sub);
+                }
+
+                startQuranReminderCheck();
+                syncQuranReminderUI();
+                sendNotification('✅ All Reminders Active', 'You will receive reminders for Prayer, Daily Adhkar, Friday Surah Al-Kahf & Night Surahs.');
+            } catch (err) {
+                console.error('Quran subscription error:', err);
+                startQuranReminderCheck();
+                syncQuranReminderUI();
+            }
+        }
+
+        async function disableAllQuranReminders() {
+            localStorage.setItem('quran_reminders_enabled', 'false');
+            localStorage.setItem('quran_kahf_reminder', 'false');
+            localStorage.setItem('quran_night_reminder', 'false');
+
+            try {
+                if ('serviceWorker' in navigator) {
+                    const reg = await navigator.serviceWorker.ready;
+                    const sub = await reg.pushManager.getSubscription();
+                    if (sub) {
+                        const endpoint = sub.endpoint;
+                        fetch(`${QURAN_PUSH_SERVER_URL}/api/unsubscribe`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ endpoint })
+                        }).catch(() => {});
+                    }
+                }
+            } catch (e) {}
+
+            if (quranReminderInterval) {
+                clearInterval(quranReminderInterval);
+                quranReminderInterval = null;
+            }
+
+            syncQuranReminderUI();
+            alert('🔔 Quran reminders turned off.');
+        }
+
+        async function syncPushSubscriptionBackend(existingSub) {
+            try {
+                if (!('serviceWorker' in navigator)) return;
+                const reg = await navigator.serviceWorker.ready;
+                const sub = existingSub || await reg.pushManager.getSubscription();
+                if (!sub) return;
+
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+                const payload = {
+                    subscription: sub.toJSON(),
+                    timezone: tz,
+                    city: 'ILMIFY Subscriber',
+                    reminders: { prayer: true, adhkar: true, kahf: true, night: true }
+                };
+
+                // Sync with Push Server
+                fetch(`${QURAN_PUSH_SERVER_URL}/api/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(err => console.warn('Push server sync note:', err));
+            } catch(err) {
+                console.warn('Backend sync note:', err);
+            }
+        }
+
+        async function testQuranReminder() {
+            if (!('Notification' in window)) {
+                alert('Notifications not supported on this browser.');
+                return;
+            }
+            if (Notification.permission !== 'granted') {
+                await enableAllQuranReminders();
+                return;
+            }
+            sendNotification('📖 Friday Kahf & Night Surah Reminder', 'Testing notification: It is time for your blessed recitations!');
+        }
+
         function sendNotification(title, body) {
             if ('Notification' in window && Notification.permission === 'granted') {
                 if ('serviceWorker' in navigator) {
@@ -1945,25 +2488,10 @@
             }
         }
 
-        let quranReminderInterval;
         async function initPushNotificationReminders() {
-            if (!('Notification' in window)) return;
-
-            if (Notification.permission === 'granted') {
+            syncQuranReminderUI();
+            if (localStorage.getItem('quran_reminders_enabled') === 'true' && Notification.permission === 'granted') {
                 startQuranReminderCheck();
-                return;
-            }
-
-            // Request permission once (only when permission is in "default" state).
-            if (Notification.permission === 'default') {
-                try {
-                    const permission = await Notification.requestPermission();
-                    if (permission === 'granted') {
-                        startQuranReminderCheck();
-                    }
-                } catch (e) {
-                    // Ignore: browser may block prompt or user may dismiss it.
-                }
             }
         }
 
@@ -1975,19 +2503,21 @@
 
         function checkQuranReminders() {
             if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            if (localStorage.getItem('quran_reminders_enabled') === 'false') return;
             if (typeof isGuestMode === 'function' && isGuestMode()) return;
 
             const now = new Date();
-
             const day = now.getDay();
             const hour = now.getHours();
             const min = now.getMinutes();
 
+            // Friday Kahf Reminder (Thursday 6:40 PM to Friday 6:40 PM)
+            const kahfPref = localStorage.getItem('quran_kahf_reminder') !== 'false';
             let isKahfTime = false;
             if (day === 4 && (hour > 18 || (hour === 18 && min >= 40))) isKahfTime = true;
             else if (day === 5 && (hour < 18 || (hour === 18 && min < 40))) isKahfTime = true;
 
-            if (isKahfTime) {
+            if (kahfPref && isKahfTime) {
                 const d = new Date(now);
                 if (d.getDay() === 4) d.setDate(d.getDate() + 1);
                 const kahfKey = `kahf_notified_${d.toDateString()}`;
@@ -1997,12 +2527,14 @@
                 }
             }
 
-            if (hour >= 19 || hour < 4) {
+            // Night Surahs Reminder (7:00 PM to 4:00 AM)
+            const nightPref = localStorage.getItem('quran_night_reminder') !== 'false';
+            if (nightPref && (hour >= 19 || hour < 4)) {
                 let d = new Date();
                 if (hour < 4) d.setDate(d.getDate() - 1);
                 const nightKey = `night_notified_${d.toDateString()}`;
                 if (!localStorage.getItem(nightKey)) {
-                    sendNotification('Night Surahs Reminder', 'It is time for your night recitations (Al-Mulk, etc).');
+                    sendNotification('Night Surahs Reminder', 'It is time for your night recitations (Al-Mulk, As-Sajdah, etc).');
                     localStorage.setItem(nightKey, 'true');
                 }
             }

@@ -1420,10 +1420,21 @@
             updateAlarmUIState();
 
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js').then(reg => {
+                navigator.serviceWorker.register('/sw.js').then(async reg => {
                     if (currentTimings) {
                         scheduleAlarmsWithServiceWorker(currentTimings);
                     }
+                    // Unified check: If this device has an active push subscription, sync and enable
+                    try {
+                        const existingSub = await reg.pushManager.getSubscription();
+                        if (existingSub && Notification.permission === 'granted') {
+                            if (!alarmSettings.pushEnabled) {
+                                alarmSettings.pushEnabled = true;
+                                saveAlarmSettings(alarmSettings);
+                            }
+                            syncPushSubscriptionWithServer(existingSub);
+                        }
+                    } catch (e) { }
                     if (alarmSettings.pushEnabled) {
                         registerWebPushSubscription();
                     }
@@ -1476,13 +1487,20 @@
 
                 if (perm === 'granted') {
                     saveAlarmSettings({ pushEnabled: true });
+                    // Unified rule: If any reminder is turned on, ALL reminders are ON!
+                    localStorage.setItem('prayer_notifications_enabled', 'true');
+                    localStorage.setItem('adhkar_notifications_enabled', 'true');
+                    localStorage.setItem('quran_reminders_enabled', 'true');
+                    localStorage.setItem('quran_kahf_reminder', 'true');
+                    localStorage.setItem('quran_night_reminder', 'true');
+
                     if ('serviceWorker' in navigator) {
                         navigator.serviceWorker.register('/sw.js').then(async () => {
                             if (currentTimings) scheduleAlarmsWithServiceWorker(currentTimings);
                             await registerWebPushSubscription();
                         });
                     }
-                    sendNotification('Web Push Notifications Active', 'You will receive prayer reminders even if this site is closed.', 'Fajr');
+                    sendNotification('All Reminders Active', 'You will receive prayer times, daily adhkar, and Quran reminders even if this site is closed.', 'Fajr');
                 } else {
                     alert('Notification permission was denied. Please allow notifications in your browser settings.');
                     saveAlarmSettings({ pushEnabled: false });
