@@ -1,5 +1,5 @@
-// ILMIFY Service Worker - Web Push Notifications (v2 - Clean Notifications)
-const SW_VERSION = 'ilmify-sw-v2';
+// ILMIFY Service Worker - Web Push Notifications (v3 - Robust Notifications)
+const SW_VERSION = 'ilmify-sw-v3';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -75,12 +75,14 @@ self.addEventListener('push', function(event) {
 
   const title = data.title || (data.prayer ? `Time for ${data.prayer} Prayer` : 'ILMIFY Notification');
   const targetUrl = data.url || (data.prayer ? '/times.html' : '/main.html');
+  const tag = data.tag || (data.prayer ? `prayer-${data.prayer}` : `ilmify-${Date.now()}`);
+
   const options = {
     body: data.body || (data.prayer ? `It is time for ${data.prayer} prayer.` : ''),
     icon: '/logoo.png',
     badge: '/logoo.png',
     vibrate: [300, 150, 300],
-    tag: 'ilmify-push-' + (data.prayer || Date.now()),
+    tag: tag,
     renotify: true,
     requireInteraction: false,
     data: {
@@ -92,7 +94,14 @@ self.addEventListener('push', function(event) {
     ]
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(title, options).catch((err) => {
+      console.warn('showNotification failed with actions, retrying without actions:', err);
+      // Fallback without actions in case browser environment rejects actions array
+      delete options.actions;
+      return self.registration.showNotification(title, options);
+    })
+  );
 });
 
 // Periodic Sync handler

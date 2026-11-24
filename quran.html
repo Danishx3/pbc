@@ -2437,10 +2437,20 @@
                 if (!sub) return;
 
                 const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+                let cachedCity = 'ILMIFY Subscriber';
+                let cachedTimings = null;
+                try {
+                    const pSettings = JSON.parse(localStorage.getItem('prayerSettings_v4') || '{}');
+                    if (pSettings.city) cachedCity = pSettings.city;
+                    const pCached = JSON.parse(localStorage.getItem('prayer_cached_timings') || '{}');
+                    if (pCached.timings) cachedTimings = pCached.timings;
+                } catch (e) {}
+
                 const payload = {
                     subscription: sub.toJSON(),
                     timezone: tz,
-                    city: 'ILMIFY Subscriber',
+                    city: cachedCity,
+                    timings: cachedTimings,
                     reminders: { prayer: true, adhkar: true, kahf: true, night: true }
                 };
 

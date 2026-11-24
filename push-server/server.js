@@ -26,6 +26,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Version & Health check endpoint
+app.get('/api/version', (req, res) => {
+  res.json({
+    version: '2.2.0',
+    nightWindow: '19:00 - 23:30',
+    currentTimeUTC: new Date().toISOString()
+  });
+});
+
 // Firebase Realtime Database Configuration
 const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL || 'https://piousbrothers-c5e99-default-rtdb.firebaseio.com/analytics/prayer_subscribers';
 const DB_FILE = path.join(__dirname, 'subscribers.json');
@@ -402,6 +411,7 @@ async function checkAndDispatchAutomatedReminders() {
         title,
         body,
         url,
+        tag: tag || ('ilmify-' + Date.now()),
         timestamp: Date.now()
       });
       try {
@@ -420,7 +430,10 @@ async function checkAndDispatchAutomatedReminders() {
     }
 
     // --- A. Prayer Times ---
-    const defaultTimings = { Fajr: '05:15', Dhuhr: '12:30', Asr: '16:00', Maghrib: '18:30', Isha: '20:00' };
+    const isIndia = (tz.includes('Calcutta') || tz.includes('Kolkata'));
+    const defaultTimings = isIndia
+      ? { Fajr: '05:10', Dhuhr: '12:15', Asr: '15:35', Maghrib: '18:00', Isha: '19:15' }
+      : { Fajr: '05:15', Dhuhr: '12:30', Asr: '16:00', Maghrib: '18:30', Isha: '20:00' };
     const timings = sub.timings || defaultTimings;
     const activePrayers = sub.prayers || ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
@@ -482,8 +495,8 @@ async function checkAndDispatchAutomatedReminders() {
       }
     }
 
-    // --- D. Night Adhkar (Every night between 19:30 and 23:30) ---
-    const isNightAdhkarWindow = (currentMin >= timeToMinutes('19:30') && currentMin <= timeToMinutes('23:30'));
+    // --- D. Night Adhkar (Every night between 19:00 and 23:30) ---
+    const isNightAdhkarWindow = (currentMin >= timeToMinutes('19:00') && currentMin <= timeToMinutes('23:30'));
     if (isNightAdhkarWindow && sub.lastNotified.nightAdhkar !== todayStr) {
       const sent = await sendPush(
         '🌙 Night Adhkar Reminder',
@@ -523,8 +536,8 @@ async function checkAndDispatchAutomatedReminders() {
       }
     }
 
-    // --- F. Night Surahs (Every night between 19:30 and 23:30) ---
-    const isNightSurahsWindow = (currentMin >= timeToMinutes('19:30') && currentMin <= timeToMinutes('23:30'));
+    // --- F. Night Surahs (Every night between 19:00 and 23:30) ---
+    const isNightSurahsWindow = (currentMin >= timeToMinutes('19:00') && currentMin <= timeToMinutes('23:30'));
     if (isNightSurahsWindow && sub.lastNotified.nightSurahs !== todayStr) {
       const sent = await sendPush(
         '📖 Night Surahs Reminder',

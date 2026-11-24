@@ -2592,12 +2592,48 @@
     async function handleAdhkarBellClick() {
       const isSubscribed = await checkAdhkarSubscriptionStatus();
       if (isSubscribed) {
-        const confirmDisable = confirm("🔔 Daily Adhkar reminders are active on this device.\n\nWould you like to turn off reminders?");
-        if (confirmDisable) {
-          await unsubscribeFromAdhkarReminders();
+        const wantTest = confirm("🔔 Daily Reminders are ACTIVE on this device!\n\n• Tap [OK] to send an INSTANT TEST NOTIFICATION to your screen right now.\n• Tap [Cancel] if you want to turn reminders off.");
+        if (wantTest) {
+          await triggerAdhkarTestPush();
+        } else {
+          const confirmDisable = confirm("Turn off Daily Adhkar reminders on this device?");
+          if (confirmDisable) {
+            await unsubscribeFromAdhkarReminders();
+          }
         }
       } else {
         await subscribeToAdhkarReminders();
+      }
+    }
+
+    async function triggerAdhkarTestPush() {
+      try {
+        showAdhkarToast("⏳ Sending test notification to this device...");
+        if (!('serviceWorker' in navigator)) return;
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (!sub) {
+          showAdhkarToast("⚠️ No active push subscription found.");
+          return;
+        }
+        const res = await fetch(`${ADHKAR_PUSH_SERVER_URL}/api/send-custom-notification`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: "🌙 Night Adhkar & Surahs Test",
+            body: "Reminders are active! Night Adhkar & Surahs will notify you every evening.",
+            url: "/adhkar.html",
+            targetKey: sub.endpoint
+          })
+        });
+        const data = await res.json();
+        if (data.sentCount > 0) {
+          showAdhkarToast("✅ Test notification sent! Check your notification bar / lock screen.");
+        } else {
+          showAdhkarToast("⚠️ Could not deliver: " + (data.message || 'Check permissions'));
+        }
+      } catch (e) {
+        showAdhkarToast("⚠️ Error sending test: " + (e.message || e));
       }
     }
 
@@ -2639,10 +2675,20 @@
         }
 
         const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+        let cachedCity = 'ILMIFY Subscriber';
+        let cachedTimings = null;
+        try {
+          const pSettings = JSON.parse(localStorage.getItem('prayerSettings_v4') || '{}');
+          if (pSettings.city) cachedCity = pSettings.city;
+          const pCached = JSON.parse(localStorage.getItem('prayer_cached_timings') || '{}');
+          if (pCached.timings) cachedTimings = pCached.timings;
+        } catch (e) {}
+
         const payload = {
           subscription: sub.toJSON(),
           timezone: tz,
-          city: 'ILMIFY Subscriber',
+          city: cachedCity,
+          timings: cachedTimings,
           reminders: { prayer: true, adhkar: true, kahf: true, night: true }
         };
 
