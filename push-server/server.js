@@ -29,7 +29,8 @@ app.use((req, res, next) => {
 // Version & Health check endpoint
 app.get('/api/version', (req, res) => {
   res.json({
-    version: '2.2.0',
+    version: '2.3.0',
+    features: ['urgency-high', 'ttl-86400', 'night-window-1900'],
     nightWindow: '19:00 - 23:30',
     currentTimeUTC: new Date().toISOString()
   });
@@ -304,7 +305,7 @@ app.post('/api/send-test', (req, res) => {
         url: '/times.html',
         timestamp: Date.now()
       });
-      await webpush.sendNotification(subscription, payload);
+      await webpush.sendNotification(subscription, payload, { TTL: 86400, urgency: 'high' });
       console.log('[PUSH TEST] Delivered successfully');
     } catch (err) {
       console.error('[PUSH TEST ERROR]:', err);
@@ -414,8 +415,12 @@ async function checkAndDispatchAutomatedReminders() {
         tag: tag || ('ilmify-' + Date.now()),
         timestamp: Date.now()
       });
+      const pushOptions = {
+        TTL: 86400,
+        urgency: 'high'
+      };
       try {
-        await webpush.sendNotification(sub.subscription, payload);
+        await webpush.sendNotification(sub.subscription, payload, pushOptions);
         console.log(`[AUTO-REMINDER SENT] "${title}" to device ${key.substring(0, 8)}...`);
         subReport.notificationsSent.push(title);
         return true;
@@ -622,7 +627,7 @@ app.post('/api/send-custom-notification', async (req, res) => {
     });
 
     try {
-      await webpush.sendNotification(sub.subscription, payload);
+      await webpush.sendNotification(sub.subscription, payload, { TTL: 86400, urgency: 'high' });
       sentCount++;
     } catch (err) {
       failedCount++;

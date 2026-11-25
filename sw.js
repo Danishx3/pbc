@@ -1,5 +1,5 @@
-// ILMIFY Service Worker - Web Push Notifications (v3 - Robust Notifications)
-const SW_VERSION = 'ilmify-sw-v3';
+// ILMIFY Service Worker - Web Push Notifications (v4 - High Priority & Persistent)
+const SW_VERSION = 'ilmify-sw-v4';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -81,10 +81,10 @@ self.addEventListener('push', function(event) {
     body: data.body || (data.prayer ? `It is time for ${data.prayer} prayer.` : ''),
     icon: '/logoo.png',
     badge: '/logoo.png',
-    vibrate: [300, 150, 300],
+    vibrate: [400, 200, 400, 200, 400],
     tag: tag,
     renotify: true,
-    requireInteraction: false,
+    requireInteraction: true,
     data: {
       url: targetUrl
     },
